@@ -168,8 +168,10 @@
 									</goals>
 								</execution>
 							</executions>
+							<configuration>
+								<chmod>false</chmod>
+							</configuration>
 						</plugin>
-
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-jar-plugin</artifactId>
@@ -236,6 +238,28 @@
 							<artifactId>maven-enforcer-plugin</artifactId>
 							<version>${maven.plugin.enforcer}</version>
 							<executions>
+								<execution>
+									<id>enforce-site</id>
+									<goals>
+										<goal>enforce</goal>
+									</goals>
+									<configuration>
+										<rules>
+											<requireProperty>
+												<property>siteURL</property>
+												<message><![CDATA[siteURL]]></message>
+												<regex>.*</regex>
+												<regexMessage>siteURL</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>siteUploadURL</property>
+												<message><![CDATA[siteUploadURL]]></message>
+												<regex>.*</regex>
+												<regexMessage>siteUploadURL</regexMessage>
+											</requireProperty>
+										</rules>
+									</configuration>
+								</execution>
 								<execution>
 									<id>enforce-property</id>
 									<goals>
@@ -305,7 +329,6 @@
 							<configuration>
 								<tagNameFormat>@{project.version}</tagNameFormat>
 								<autoVersionSubmodules>true</autoVersionSubmodules>
-								<!--<arguments>-DsettingsRepositoryReleaseURL=${settingsRepositoryReleaseURL} -DsettingsRepositorySnapshotURL=${settingsRepositorySnapshotURL} -DsettingsRepositorySiteURL=${settingsRepositorySiteURL} -DsettingsRepositorySiteProtocol=${settingsRepositorySiteProtocol} -DsettingsRepositoryPublicSiteURL=${settingsRepositoryPublicSiteURL} -DsettingsRepositoryPublicSiteProtocol=${settingsRepositoryPublicSiteProtocol}</arguments>-->
 								<useReleaseProfile>false</useReleaseProfile>
 							</configuration>
 						</plugin>
@@ -515,14 +538,12 @@
 			</activation>
 			<properties>
 				<includeSource>true</includeSource>
-				<repositorySiteURL>${settingsRepositorySiteURL}/${ecosystemArtifactId}</repositorySiteURL>
-				<repositorySiteProtocol>${settingsRepositorySiteProtocol}</repositorySiteProtocol>
+				<repositorySiteURL>${siteURL}</repositorySiteURL>
 			</properties>
 			<distributionManagement>
 				<site>
 					<id>t3.site</id>
-					<!-- <url>${repositorySiteProtocol}:${repositorySiteURL}</url> -->
-					<url>${repositorySiteURL}</url>
+					<url>${siteUploadURL}/${ecosystemArtifactId}</url>
 				</site>
 			</distributionManagement>
 			<reporting>
@@ -582,14 +603,12 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
-				<repositorySiteURL>${settingsRepositoryPublicSiteURL}/${ecosystemArtifactId}</repositorySiteURL>
-				<repositorySiteProtocol>${settingsRepositoryPublicSiteProtocol}</repositorySiteProtocol>
+				<repositorySiteURL>${siteURL}</repositorySiteURL>
 			</properties>
 			<distributionManagement>
 				<site>
 					<id>t3.site.public</id>
-					<!-- <url>${repositorySiteProtocol}:${repositorySiteURL}</url> -->
-					<url>${repositorySiteURL}</url>
+					<url>${siteUploadURL}/${ecosystemArtifactId}</url>
 				</site>
 			</distributionManagement>
 			<reporting>
