@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>t3.tic</groupId>
+		<artifactId>tic</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	
+	<artifactId>tic-maven</artifactId>
+
+	<packaging>maven-plugin</packaging>
+
+	<name>${ecosystemName} - ${ticName} - Maven plugin</name>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-plugin-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<!-- dependencies to annotations -->
+		<dependency>
+			<groupId>org.apache.maven.plugin-tools</groupId>
+			<artifactId>maven-plugin-annotations</artifactId>
+			<!-- Not needed for execution -->
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+</project>
