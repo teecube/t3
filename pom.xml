@@ -28,9 +28,22 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+		<maven.wagon.webdav-jackrabbit>2.8</maven.wagon.webdav-jackrabbit>
+		<settingsRepositorySiteProtocol/>
+		<settingsRepositoryPublicSiteProtocol/>
 		<repositoryReleaseURL>${settingsRepositoryReleaseURL}</repositoryReleaseURL>
 		<repositorySnapshotURL>${settingsRepositorySnapshotURL}</repositorySnapshotURL>
 	</properties>
+
+	<build>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-webdav-jackrabbit</artifactId>
+				<version>${maven.wagon.webdav-jackrabbit}</version>
+			</extension>
+		</extensions>
+	</build>
 
 	<profiles>
 		<profile> <!-- Maven plugins & dependencies -->
@@ -69,20 +82,9 @@
 				<maven.plugin.invoker>1.9</maven.plugin.invoker>
 				<maven.plugin.plugin>3.3</maven.plugin.plugin>
 				<maven.plugin.release>2.5.1</maven.plugin.release>
-				
-				<maven.wagon.webdav-jackrabbit>2.8</maven.wagon.webdav-jackrabbit>
 			</properties>
 			
 			<build>
-				<!--
-				<extensions>
-					<extension>
-						<groupId>org.apache.maven.wagon</groupId>
-						<artifactId>wagon-webdav-jackrabbit</artifactId>
-						<version>${maven.wagon.webdav-jackrabbit}</version>
-					</extension>
-				</extensions>
-				-->
 				<pluginManagement>
 					<plugins>
 						<plugin>
@@ -145,7 +147,7 @@
 								<dependency>
 									<groupId>org.apache.maven.wagon</groupId>
 									<artifactId>wagon-webdav-jackrabbit</artifactId>
-									<version>2.6</version>
+									<version>${maven.wagon.webdav-jackrabbit}</version>
 								</dependency>
 								<!-- force slf4j 1.6.x or it fails due to missing class StaticLoggerBinder -->
 								<dependency>
@@ -305,7 +307,6 @@
 							<configuration>
 								<tagNameFormat>@{project.version}</tagNameFormat>
 								<autoVersionSubmodules>true</autoVersionSubmodules>
-								<!--<arguments>-DsettingsRepositoryReleaseURL=${settingsRepositoryReleaseURL} -DsettingsRepositorySnapshotURL=${settingsRepositorySnapshotURL} -DsettingsRepositorySiteURL=${settingsRepositorySiteURL} -DsettingsRepositorySiteProtocol=${settingsRepositorySiteProtocol} -DsettingsRepositoryPublicSiteURL=${settingsRepositoryPublicSiteURL} -DsettingsRepositoryPublicSiteProtocol=${settingsRepositoryPublicSiteProtocol}</arguments>-->
 								<useReleaseProfile>false</useReleaseProfile>
 							</configuration>
 						</plugin>
@@ -516,13 +517,11 @@
 			<properties>
 				<includeSource>true</includeSource>
 				<repositorySiteURL>${settingsRepositorySiteURL}/${ecosystemArtifactId}</repositorySiteURL>
-				<repositorySiteProtocol>${settingsRepositorySiteProtocol}</repositorySiteProtocol>
 			</properties>
 			<distributionManagement>
 				<site>
 					<id>t3.site</id>
-					<!-- <url>${repositorySiteProtocol}:${repositorySiteURL}</url> -->
-					<url>${repositorySiteURL}</url>
+					<url>${settingsRepositorySiteProtocol}${repositorySiteURL}</url>
 				</site>
 			</distributionManagement>
 			<reporting>
@@ -583,13 +582,11 @@
 			</activation>
 			<properties>
 				<repositorySiteURL>${settingsRepositoryPublicSiteURL}/${ecosystemArtifactId}</repositorySiteURL>
-				<repositorySiteProtocol>${settingsRepositoryPublicSiteProtocol}</repositorySiteProtocol>
 			</properties>
 			<distributionManagement>
 				<site>
 					<id>t3.site.public</id>
-					<!-- <url>${repositorySiteProtocol}:${repositorySiteURL}</url> -->
-					<url>${repositorySiteURL}</url>
+					<url>${settingsRepositoryPublicSiteProtocol}${repositorySiteURL}</url>
 				</site>
 			</distributionManagement>
 			<reporting>
@@ -616,10 +613,12 @@
 	</profiles>
 
 	<!-- Project management -->
+	<!--
 	<ciManagement>
 		<system>Jenkins</system>
 		<url>[TODO]</url>
 	</ciManagement>
+	-->
 
 	<distributionManagement>
 		<repository>
@@ -633,7 +632,7 @@
 	</distributionManagement>
 
 	<scm>
-		<developerConnection>scm:svn:https://[TODO]</developerConnection>
+		<developerConnection>scm:git:http://git.t3soft.org/t3</developerConnection>
 	</scm>
 
 </project>
