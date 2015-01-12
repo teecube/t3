@@ -170,8 +170,10 @@
 									</goals>
 								</execution>
 							</executions>
+							<configuration>
+								<chmod>false</chmod>
+							</configuration>
 						</plugin>
-
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-jar-plugin</artifactId>
@@ -238,6 +240,28 @@
 							<artifactId>maven-enforcer-plugin</artifactId>
 							<version>${maven.plugin.enforcer}</version>
 							<executions>
+								<execution>
+									<id>enforce-site</id>
+									<goals>
+										<goal>enforce</goal>
+									</goals>
+									<configuration>
+										<rules>
+											<requireProperty>
+												<property>siteURL</property>
+												<message><![CDATA[siteURL]]></message>
+												<regex>.*</regex>
+												<regexMessage>siteURL</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>siteUploadURL</property>
+												<message><![CDATA[siteUploadURL]]></message>
+												<regex>.*</regex>
+												<regexMessage>siteUploadURL</regexMessage>
+											</requireProperty>
+										</rules>
+									</configuration>
+								</execution>
 								<execution>
 									<id>enforce-property</id>
 									<goals>
@@ -516,12 +540,20 @@
 			</activation>
 			<properties>
 				<includeSource>true</includeSource>
+<<<<<<< HEAD
 				<repositorySiteURL>${settingsRepositorySiteURL}/${ecosystemArtifactId}</repositorySiteURL>
+=======
+				<repositorySiteURL>${siteURL}</repositorySiteURL>
+>>>>>>> 078d96c711d569bc6ad45e53865c8b44e041156c
 			</properties>
 			<distributionManagement>
 				<site>
 					<id>t3.site</id>
+<<<<<<< HEAD
 					<url>${settingsRepositorySiteProtocol}${repositorySiteURL}</url>
+=======
+					<url>${siteUploadURL}/${ecosystemArtifactId}</url>
+>>>>>>> 078d96c711d569bc6ad45e53865c8b44e041156c
 				</site>
 			</distributionManagement>
 			<reporting>
@@ -581,12 +613,20 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
+<<<<<<< HEAD
 				<repositorySiteURL>${settingsRepositoryPublicSiteURL}/${ecosystemArtifactId}</repositorySiteURL>
+=======
+				<repositorySiteURL>${siteURL}</repositorySiteURL>
+>>>>>>> 078d96c711d569bc6ad45e53865c8b44e041156c
 			</properties>
 			<distributionManagement>
 				<site>
 					<id>t3.site.public</id>
+<<<<<<< HEAD
 					<url>${settingsRepositoryPublicSiteProtocol}${repositorySiteURL}</url>
+=======
+					<url>${siteUploadURL}/${ecosystemArtifactId}</url>
+>>>>>>> 078d96c711d569bc6ad45e53865c8b44e041156c
 				</site>
 			</distributionManagement>
 			<reporting>
