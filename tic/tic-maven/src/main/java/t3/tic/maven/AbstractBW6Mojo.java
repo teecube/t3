@@ -1,5 +1,7 @@
 package t3.tic.maven;
 
-public class AbstractBW6Mojo {
+import org.apache.maven.plugin.AbstractMojo;
+
+public abstract class AbstractBW6Mojo extends AbstractMojo {
 
 }

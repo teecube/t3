@@ -3,23 +3,23 @@
 	<components>
 		<component>
 			<role>org.apache.maven.artifact.handler.ArtifactHandler</role>
-			<role-hint>bw6-ear</role-hint>
+			<role-hint>bw6-app-module</role-hint>
 			<implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler
 			</implementation>
 			<configuration>
-				<type>bw6-ear</type>
-				<extension>ear</extension>
+				<type>bw6-app-module</type>
+				<extension>jar</extension>
 				<language>java</language>
 			</configuration>
 		</component>
 		<component>
 			<role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
-			<role-hint>bw6-ear</role-hint>
+			<role-hint>bw6-app-module</role-hint>
 			<implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping
 			</implementation>
 			<configuration>
 				<phases>
-					<package>t3.tic.maven:tic-maven:bw-package</package>
+					<package>t3.tic:tic-maven:bw6-package</package>
 					<install>org.apache.maven.plugins:maven-install-plugin:install
 					</install>
 					<deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy
