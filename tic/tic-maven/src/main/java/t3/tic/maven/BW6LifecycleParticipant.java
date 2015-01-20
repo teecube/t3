@@ -24,28 +24,24 @@ public class BW6LifecycleParticipant extends TychoMavenLifecycleParticipant {
 	@Requirement
 	private Logger logger;
 
-	List<BW6Requirement> dependencies;
-
 	/**
-	 * Used to retrieve self (this plugin)
+	 * Used to retrieve BW6 requirements from this plugin (self) configuration
+	 * 
+	 * @throws IOException 
+	 * @throws XmlPullParserException 
 	 */
-	private Plugin getPlugin(MavenProject mavenProject) {
+	private List<BW6Requirement> getBW6Requirements(MavenProject mavenProject) throws XmlPullParserException, IOException {
+		List<BW6Requirement> requirements = new ArrayList<BW6Requirement>();
+
 		List<Plugin> plugins = mavenProject.getBuild().getPlugins();
 		for (Plugin plugin : plugins) {
-			logger.info(plugin.getArtifactId());
-			plugin.getConfiguration();
+			// TODO: if (plugin.equals(self)) {
 			String config = plugin.getConfiguration().toString();
 			
-			Xpp3Dom dom = null;
-			try {
-				dom = Xpp3DomBuilder.build(new ByteArrayInputStream(config.getBytes()),"UTF-8");
-			} catch (XmlPullParserException | IOException e) {
-				e.printStackTrace();
-			}
+			Xpp3Dom dom = Xpp3DomBuilder.build(new ByteArrayInputStream(config.getBytes()), "UTF-8"); // FIXME: encoding
 			
-			Xpp3Dom dependenciesNode = dom.getChild(0);
+			Xpp3Dom dependenciesNode = dom.getChild(0); // FIXME: really find <dependencies>
 			if (dependenciesNode != null && "dependencies".equals(dependenciesNode.getName())) {
-				dependencies = new ArrayList<BW6Requirement>();
 				for (Xpp3Dom requirementNode : dependenciesNode.getChildren()) {
 					if ("requirement".equals(requirementNode.getName())) {
 						Xpp3Dom type = requirementNode.getChild("type");
@@ -56,7 +52,7 @@ public class BW6LifecycleParticipant extends TychoMavenLifecycleParticipant {
 							requirement.setType(type.getValue());
 							requirement.setId(id.getValue());
 							requirement.setVersionRange(versionRange.getValue());
-							dependencies.add(requirement);
+							requirements.add(requirement);
 						} else {
 							logger.warn("wrong requirement");
 						}
@@ -64,27 +60,37 @@ public class BW6LifecycleParticipant extends TychoMavenLifecycleParticipant {
 				}
 			}
 		}
-		return null;
+
+		return requirements;
 	}
 
-	private MavenProject prepareBW6AppModule(MavenProject mavenProject) {
-		mavenProject.setPackaging("eclipse-plugin");
+	private MavenProject prepareBW6AppModule(MavenProject mavenProject) throws XmlPullParserException, IOException {
+		mavenProject.setPackaging("eclipse-plugin"); // change packaging of the POM to "eclipse-plugin"
 
-		Plugin self = getPlugin(mavenProject);
+		List<BW6Requirement> requirements = getBW6Requirements(mavenProject);
+
+		for (BW6Requirement bw6Requirement : requirements) {
+			logger.info(bw6Requirement.getId());
+		}
 
 		return mavenProject;
 	}
 
 	@Override
-	public void afterProjectsRead(MavenSession session)
-			throws MavenExecutionException {
+	public void afterProjectsRead(MavenSession session)	throws MavenExecutionException {
 		List<MavenProject> projects = session.getProjects();
+
 		for (MavenProject mavenProject : projects) {
 			if ("bw6-app-module".equals(mavenProject.getPackaging())) {
-				prepareBW6AppModule(mavenProject);
+				try {
+					prepareBW6AppModule(mavenProject);
+				} catch (XmlPullParserException | IOException e) {
+					throw new MavenExecutionException(e.getLocalizedMessage(), e);
+				}
 			}
 		}
+
 		// super.afterProjectsRead(session);
-		logger.info("HELLO WORLD!");
+		logger.info("TIC...");
 	}
 }
