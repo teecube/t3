@@ -19,7 +19,16 @@
 			</implementation>
 			<configuration>
 				<phases>
-					<package>t3.tic:tic-maven:bw6-package</package>
+					<validate>
+						t3.tic:tic-maven:set-eclipse-plugin,
+						org.eclipse.tycho:tycho-packaging-plugin:build-qualifier,
+						org.eclipse.tycho:tycho-packaging-plugin:validate-id,
+						org.eclipse.tycho:tycho-packaging-plugin:validate-version
+					</validate>
+					<package>
+						t3.tic:tic-maven:bw6-package,
+						org.eclipse.tycho:tycho-packaging-plugin:package-plugin
+					</package>
 					<install>org.apache.maven.plugins:maven-install-plugin:install
 					</install>
 					<deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy
@@ -27,5 +36,16 @@
 				</phases>
 			</configuration>
 		</component>
+
+		<component>
+			<role>org.apache.maven.plugin.Mojo</role>
+			<role-hint>default-it-deploy-bw</role-hint>
+			<implementation>fr.fastconnect.factory.tibco.bw.maven.builtin.ITRunTestsMojo
+			</implementation>
+			<isolated-realm>false</isolated-realm>
+			<configuration>
+			</configuration>
+		</component>
+
 	</components>
 </component-set>
