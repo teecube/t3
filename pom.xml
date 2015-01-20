@@ -82,6 +82,8 @@
 				<maven.plugin.invoker>1.9</maven.plugin.invoker>
 				<maven.plugin.plugin>3.3</maven.plugin.plugin>
 				<maven.plugin.release>2.5.1</maven.plugin.release>
+
+				<plexus.component.metadata>1.6</plexus.component.metadata>
 			</properties>
 			
 			<build>
@@ -333,6 +335,11 @@
 								<autoVersionSubmodules>true</autoVersionSubmodules>
 								<useReleaseProfile>false</useReleaseProfile>
 							</configuration>
+						</plugin>
+						<plugin>
+							<groupId>org.codehaus.plexus</groupId>
+							<artifactId>plexus-component-metadata</artifactId>
+							<version>${plexus.component.metadata}</version>
 						</plugin>
 					</plugins>
 				</pluginManagement>
