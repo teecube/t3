@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <extension>
-	<!-- 
 	<exportedPackages>
 		<exportedPackage>org.eclipse.tycho</exportedPackage>
 		<exportedPackage>org.osgi.framework</exportedPackage>
@@ -36,5 +35,4 @@
 
 		<exportedArtifact>de.pdark:decentxml</exportedArtifact>
 	</exportedArtifacts>
-	-->
 </extension>
