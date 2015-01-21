@@ -12,6 +12,7 @@
 				<language>java</language>
 			</configuration>
 		</component>
+
 		<component>
 			<role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
 			<role-hint>bw6-app-module</role-hint>
@@ -20,30 +21,38 @@
 			<configuration>
 				<phases>
 					<validate>
-						t3.tic:tic-maven:set-eclipse-plugin,
-						org.eclipse.tycho:tycho-packaging-plugin:build-qualifier,
-						org.eclipse.tycho:tycho-packaging-plugin:validate-id,
-						org.eclipse.tycho:tycho-packaging-plugin:validate-version
+						org.eclipse.tycho:tycho-packaging-plugin:${tycho.version}:build-qualifier,
+						org.eclipse.tycho:tycho-packaging-plugin:${tycho.version}:validate-id,
+						org.eclipse.tycho:tycho-packaging-plugin:${tycho.version}:validate-version
 					</validate>
+					<process-resources>
+						org.apache.maven.plugins:maven-resources-plugin:${maven.plugin.resources}:resources
+					</process-resources>
+					<compile>
+						org.eclipse.tycho:tycho-compiler-plugin:${tycho.version}:compile
+					</compile>
+					<process-test-resources>
+						org.apache.maven.plugins:maven-resources-plugin:${maven.plugin.resources}:testResources
+					</process-test-resources>
+					<test-compile>
+					</test-compile>
+					<test>
+					</test>
 					<package>
-						t3.tic:tic-maven:bw6-package,
-						org.eclipse.tycho:tycho-packaging-plugin:package-plugin
+						org.eclipse.tycho:target-platform-configuration:${tycho.version}:target-platform,
+						org.eclipse.tycho:tycho-packaging-plugin:${tycho.version}:package-plugin,
+						org.eclipse.tycho:tycho-p2-plugin:${tycho.version}:p2-metadata-default
 					</package>
-					<install>org.apache.maven.plugins:maven-install-plugin:install
+					<integration-test>
+					</integration-test>
+					<install>
+						org.apache.maven.plugins:maven-install-plugin:${maven.plugin.install}:install,
+						org.eclipse.tycho:tycho-p2-plugin:${tycho.version}:update-local-index
 					</install>
-					<deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy
+					<deploy>
+						org.apache.maven.plugins:maven-deploy-plugin:${maven.plugin.deploy}:deploy
 					</deploy>
 				</phases>
-			</configuration>
-		</component>
-
-		<component>
-			<role>org.apache.maven.plugin.Mojo</role>
-			<role-hint>default-it-deploy-bw</role-hint>
-			<implementation>fr.fastconnect.factory.tibco.bw.maven.builtin.ITRunTestsMojo
-			</implementation>
-			<isolated-realm>false</isolated-realm>
-			<configuration>
 			</configuration>
 		</component>
 

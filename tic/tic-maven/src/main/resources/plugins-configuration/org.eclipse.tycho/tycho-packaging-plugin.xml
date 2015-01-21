@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin>
+	<executions>
+		<execution>
+			<id>default-package-plugin</id>
+			<phase>package</phase>
+			<goals>
+				<goal>package-plugin</goal>
+			</goals>
+			<configuration>
+				<finalName>${project.artifactId}_${unqualifiedVersion}.${buildQualifier}</finalName>
+			</configuration>
+		</execution>
+	</executions>
+	<configuration>
+		<archive>
+			<addMavenDescriptor>false</addMavenDescriptor>
+		</archive>
+	</configuration>
+</plugin>
