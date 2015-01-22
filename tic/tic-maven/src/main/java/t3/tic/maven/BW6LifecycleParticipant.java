@@ -32,7 +32,7 @@ public class BW6LifecycleParticipant extends TychoMavenLifecycleParticipant {
 			if ("bw6-app-module".equals(mavenProject.getPackaging())) {
 				try {
 					convertor.prepareBW6AppModule(mavenProject);
-				} catch (XmlPullParserException | IOException | MojoExecutionException e) {
+				} catch (Exception e) {
 					throw new MavenExecutionException(e.getLocalizedMessage(), e);
 				}
 			}
