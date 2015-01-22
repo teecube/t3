@@ -18,7 +18,10 @@ import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 
+import t3.tic.bw6.core.BW6ProjectHelper;
 import t3.tic.maven.configuration.BW6Requirement;
+
+import com.tibco.bw.maven.utils.BWProjectInfo;
 
 /**
  * 
@@ -213,12 +216,14 @@ public class EclipsePluginConvertor {
 		}
 	}
 
-	public MavenProject prepareBW6AppModule(MavenProject mavenProject) throws XmlPullParserException, IOException, MojoExecutionException {
+	public MavenProject prepareBW6AppModule(MavenProject mavenProject) throws Exception {
 		mavenProject.setPackaging("eclipse-plugin"); // change packaging of the POM to "eclipse-plugin"
 
 		updatePluginsConfiguration(mavenProject);
 		addTychoTargetPlatformPlugin(mavenProject);
 		addEnforcerPlugin(mavenProject);
+
+		BWProjectInfo bwProjectInfo = BW6ProjectHelper.readBWProjectInfo(mavenProject);
 
 		return mavenProject;
 	}

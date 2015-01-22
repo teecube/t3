@@ -18,10 +18,14 @@
 
 	<properties>
 		<ticName>TIC</ticName>
-		<ticSlogan>TIBCO Infrastructure Core</ticSlogan>		
+		<ticSlogan>TIBCO Infrastructure Core</ticSlogan>
+
+		<tycho-version>0.22.0</tycho-version>
 	</properties>
 
 	<modules>
+		<module>tic-bw6-core</module>
 		<module>tic-maven</module>
 	</modules>
+
 </project>

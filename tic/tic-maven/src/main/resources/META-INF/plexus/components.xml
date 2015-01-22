@@ -21,15 +21,15 @@
 			<configuration>
 				<phases>
 					<validate>
-						org.eclipse.tycho:tycho-packaging-plugin:${tycho.version}:build-qualifier,
-						org.eclipse.tycho:tycho-packaging-plugin:${tycho.version}:validate-id,
-						org.eclipse.tycho:tycho-packaging-plugin:${tycho.version}:validate-version
+						org.eclipse.tycho:tycho-packaging-plugin:${tycho-version}:build-qualifier,
+						org.eclipse.tycho:tycho-packaging-plugin:${tycho-version}:validate-id,
+						org.eclipse.tycho:tycho-packaging-plugin:${tycho-version}:validate-version
 					</validate>
 					<process-resources>
 						org.apache.maven.plugins:maven-resources-plugin:${maven.plugin.resources}:resources
 					</process-resources>
 					<compile>
-						org.eclipse.tycho:tycho-compiler-plugin:${tycho.version}:compile
+						org.eclipse.tycho:tycho-compiler-plugin:${tycho-version}:compile
 					</compile>
 					<process-test-resources>
 						org.apache.maven.plugins:maven-resources-plugin:${maven.plugin.resources}:testResources
@@ -39,15 +39,15 @@
 					<test>
 					</test>
 					<package>
-						org.eclipse.tycho:target-platform-configuration:${tycho.version}:target-platform,
-						org.eclipse.tycho:tycho-packaging-plugin:${tycho.version}:package-plugin,
-						org.eclipse.tycho:tycho-p2-plugin:${tycho.version}:p2-metadata-default
+						org.eclipse.tycho:target-platform-configuration:${tycho-version}:target-platform,
+						org.eclipse.tycho:tycho-packaging-plugin:${tycho-version}:package-plugin,
+						org.eclipse.tycho:tycho-p2-plugin:${tycho-version}:p2-metadata-default
 					</package>
 					<integration-test>
 					</integration-test>
 					<install>
 						org.apache.maven.plugins:maven-install-plugin:${maven.plugin.install}:install,
-						org.eclipse.tycho:tycho-p2-plugin:${tycho.version}:update-local-index
+						org.eclipse.tycho:tycho-p2-plugin:${tycho-version}:update-local-index
 					</install>
 					<deploy>
 						org.apache.maven.plugins:maven-deploy-plugin:${maven.plugin.deploy}:deploy
