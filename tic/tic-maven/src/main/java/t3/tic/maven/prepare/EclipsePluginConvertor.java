@@ -4,11 +4,17 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.element;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
+import org.apache.commons.collections4.list.SetUniqueList;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -16,12 +22,11 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.eclipse.osgi.util.ManifestElement;
+import org.osgi.framework.BundleException;
 import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 
-import t3.tic.bw6.core.BW6ProjectHelper;
 import t3.tic.maven.configuration.BW6Requirement;
-
-import com.tibco.bw.maven.utils.BWProjectInfo;
 
 /**
  * 
@@ -34,6 +39,32 @@ public class EclipsePluginConvertor {
 
 	public EclipsePluginConvertor(Logger logger) {
 		this.logger = logger;
+	}
+
+	/**
+	 * Create the list of Plugins which provides the capabilities. The list is now hardcoded.
+	 *
+	 * @param caps the list of capabilities for the given module.
+	 *
+	 * @return the List of plugins providing the capability.
+	 */
+	protected List<String> processCapabilites(String caps) {
+		List<String> list = new ArrayList<String>();
+
+		if (caps == null || caps.equals("")) {
+			return list;
+		}
+		String[] capArray = caps.split(",");
+		for (String cap : capArray) {
+			cap = cap.trim();
+			String plugin = BWMavenConstants.capabilities.get(cap);
+			if (plugin == null || plugin.equals("")) {
+				continue;
+			}
+			list.add(plugin);
+		}
+
+		return list;
 	}
 
 	/**
@@ -91,11 +122,35 @@ public class EclipsePluginConvertor {
 		return bw6Requirements;
 	}
 
-	private List<Element> getTychoTargetPlatformConfiguration(List<BW6Requirement> bw6Requirements) {
+	private List<BW6Requirement> getBW6Requirements(List<String> capabilities) {
+		List<BW6Requirement> bw6Requirements = new ArrayList<BW6Requirement>();
+
+		for (String capability : capabilities) {
+			BW6Requirement bw6Requirement = new BW6Requirement();
+			bw6Requirement.setId(capability);
+			bw6Requirement.setType("eclipse-plugin"); // TODO: externalize in static string
+			bw6Requirement.setVersionRange("6.0.0"); // FIXME: externalize in configuration
+
+			bw6Requirements.add(bw6Requirement);
+		}
+
+		return bw6Requirements;
+	}
+
+	private List<Element> getRequirementsConfiguration(List<BW6Requirement> bw6Requirements) {
 		List<Element> configuration = new ArrayList<Element>();
 
-		// <resolver>p2</resolver>
-		configuration.add(element("resolver", "p2"));
+		ArrayList<Element> requirements = new ArrayList<Element>();
+		for (BW6Requirement bw6Requirement : bw6Requirements) {
+			requirements.add(
+				element(
+					"requirement",
+					element("type", bw6Requirement.getType()),
+					element("id", bw6Requirement.getId()),
+					element("versionRange", bw6Requirement.getVersionRange())
+				)
+			);
+		}
 
 		/*
 		 * <dependency-resolution>
@@ -108,59 +163,10 @@ public class EclipsePluginConvertor {
 		 *   </extraRequirements>
 		 * </dependency-resolution>
 		 */
-		// <requirement>
-		ArrayList<Element> requirements = new ArrayList<Element>();
-		for (BW6Requirement bw6Requirement : bw6Requirements) {
-			requirements.add(
-				element(
-					"requirement",
-					element("type", bw6Requirement.getType()),
-					element("id", bw6Requirement.getId()),
-					element("versionRange", bw6Requirement.getVersionRange())
-				)
-			);
-		}
-		// <extraRequirements>
-		Element extraRequirements = element("extraRequirements", requirements.toArray(new Element[0]));
-		// <dependency-resolution>
-		Element dependencyResolution = element("dependency-resolution", extraRequirements);
-		configuration.add(dependencyResolution);
-
-		/*
-		* <environments>
-		*   <environment>
-		*     <os>win32</os>
-		*     <ws>win32</ws>
-		*     <arch>x86</arch>
-		*   </environment>
-		*   <environment>
-		*     <os>linux</os>
-		*     <ws>gtk</ws>
-		*     <arch>x86_64</arch>
-		*   </environment>
-		*   <environment>
-		*     <os>macosx</os>
-		*     <ws>cocoa</ws>
-		*     <arch>x86_84</arch>
-		*   </environment>
-		* </environments>
-		*/
 		configuration.add(
-			element("environments",
-				element("environment",
-					element("os", "win32"),
-					element("ws", "win32"),
-					element("arch", "x86")
-				),
-				element("environment",
-					element("os", "linux"),
-					element("ws", "gtk"),
-					element("arch", "x86_84")
-				),
-				element("environment",
-					element("os", "macosx"),
-					element("ws", "cocoa"),
-					element("arch", "x86_84")
+			element("dependency-resolution", 
+				element("extraRequirements",
+					requirements.toArray(new Element[0])
 				)
 			)
 		);
@@ -168,19 +174,20 @@ public class EclipsePluginConvertor {
 		return configuration;
 	}
 
-	private void addTychoTargetPlatformPlugin(MavenProject mavenProject) throws XmlPullParserException, IOException {
+	private void addTychoTargetPlatformPlugin(MavenProject mavenProject, List<String> capabilities) throws XmlPullParserException, IOException {
 		if (mavenProject == null) return;
 		
-		List<BW6Requirement> bw6Requirements = getBW6Requirements(mavenProject);
+		List<BW6Requirement> bw6Requirements = SetUniqueList.setUniqueList(new ArrayList<BW6Requirement>());
+		bw6Requirements.addAll(getBW6Requirements(mavenProject)); // retrieve from configuration of this plugin
+		bw6Requirements.addAll(getBW6Requirements(capabilities));
 
-		PluginBuilder pluginBuilder = new PluginBuilder("org.eclipse.tycho", "target-platform-configuration", "0.22.0"); // TODO: externalize, allow external version management by end-user
+		// the target-platform-configuration plugin exists because it is part of the lifecycle (see 'plexus/components.xml')
+		Plugin tychoTargetPlatformPlugin = mavenProject.getPlugin("org.eclipse.tycho:target-platform-configuration");
+		PluginBuilder pluginBuilder = new PluginBuilder(tychoTargetPlatformPlugin);
 		
-		List<Element> configuration = getTychoTargetPlatformConfiguration(bw6Requirements);
+		List<Element> requirementsConfiguration = getRequirementsConfiguration(bw6Requirements);
 
-		pluginBuilder.addConfiguration(configuration(configuration.toArray(new Element[0])));
-		
-		Plugin p = pluginBuilder.getPlugin();
-		mavenProject.getBuild().addPlugin(p);
+		pluginBuilder.addConfiguration(configuration(requirementsConfiguration.toArray(new Element[0])));
 	}
 
 	private void addEnforcerPlugin(MavenProject mavenProject) throws MojoExecutionException {
@@ -216,14 +223,29 @@ public class EclipsePluginConvertor {
 		}
 	}
 
+	public File getManifest(MavenProject mavenProject) {
+		if (mavenProject == null) return null;
+
+		File manifest = new File(mavenProject.getFile().getParentFile(), "META-INF/MANIFEST.MF");
+
+		return manifest;
+	}
+
+	private List<String> getCapabilities(MavenProject mavenProject) throws FileNotFoundException, IOException, BundleException {
+		Map<String,String> headers = new HashMap<String,String>();
+		ManifestElement.parseBundleManifest(new FileInputStream(getManifest(mavenProject)), headers);
+
+		List<String> capabilities = processCapabilites( headers.get("Require-Capability"));
+
+		return capabilities;
+	}
+
 	public MavenProject prepareBW6AppModule(MavenProject mavenProject) throws Exception {
 		mavenProject.setPackaging("eclipse-plugin"); // change packaging of the POM to "eclipse-plugin"
 
 		updatePluginsConfiguration(mavenProject);
-		addTychoTargetPlatformPlugin(mavenProject);
+		addTychoTargetPlatformPlugin(mavenProject, getCapabilities(mavenProject));
 		addEnforcerPlugin(mavenProject);
-
-		BWProjectInfo bwProjectInfo = BW6ProjectHelper.readBWProjectInfo(mavenProject);
 
 		return mavenProject;
 	}

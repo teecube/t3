@@ -78,13 +78,6 @@
 	</build>
 
 	<dependencies>
-		<!-- TIC dependencies -->
-		<dependency>
-			<groupId>t3.tic</groupId>
-			<artifactId>tic-bw6-core</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
 		<!-- Maven dependencies -->
 		<dependency>
 			<groupId>org.apache.maven.plugin-tools</groupId>
@@ -111,6 +104,10 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
 		</dependency>
 
 		<!-- Tycho -->

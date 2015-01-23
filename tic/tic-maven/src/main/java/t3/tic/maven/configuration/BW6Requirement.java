@@ -48,4 +48,25 @@ public class BW6Requirement {
 	public void setVersionRange(String versionRange) {
 		this.versionRange = versionRange;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == null) {
+			return false;
+		} else {
+			return o.hashCode() == this.hashCode();
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		String concat =
+		(this.type == null ? "" : this.type)
+		+
+		(this.id == null ? "" : this.id)
+		+
+		(this.versionRange == null ? "" : this.versionRange);
+	    return concat.hashCode();
+	}
+
 }
