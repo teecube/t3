@@ -14,19 +14,16 @@
  * limitations under the License.
  *
  */
-
-package com.tibco.bw.maven.utils;
+package t3.tic.maven.prepare;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class BWMavenConstants 
-{
+public class BWMavenConstants {
 
 	public static Map<String,String> capabilities = new HashMap<String,String>();
-	
-	static
-	{
+
+	static {
 		capabilities.put("com.tibco.bw.model; filter:=\"(name=bw.file)\"", "com.tibco.bw.palette.file.model");
 		capabilities.put("com.tibco.bw.binding.model; filter:=\"(name=bw.rest)\"", "com.tibco.bw.binding.rest.model");
 		capabilities.put("com.tibco.bw.palette; filter:=\"(name=bw.xml)\"", "com.tibco.bw.palette.xml.design");
@@ -69,14 +66,11 @@ public class BWMavenConstants
 		capabilities.put("com.tibco.bw.sharedresource.model; filter:=\"(name=bw.sslserver)\"", "com.tibco.bw.sharedresource.trinity.ssl.server.model");
 		capabilities.put("com.tibco.bw.sharedresource.model; filter:=\"(name=bw.userid)\"", "com.tibco.bw.sharedresource.trinity.useridentity.model");
 		capabilities.put("com.tibco.bw.binding.model; filter:=\"(name=bw.soap)\"", "com.tibco.bw.binding.soap.axis2.model");
-		
+
 		capabilities.put("com.tibco.bw.sharedresource.model; filter:=\"(name=bw.miserver)\"", "com.tibco.bw.sharedresource.mi.model");
 		capabilities.put("com.tibco.bw.sharedresource.model; filter:=\"(name=bw.pnscommunicator)\"", "com.tibco.bw.sharedresource.mi.model");
 		capabilities.put("com.tibco.bw.palette; filter:=\"(name=bw.mi)\"", "com.tibco.bw.palette.mi.runtime");
-		capabilities.put("com.tibco.bw.palette; filter:=\"(name=bw.restjson)\"", "com.tibco.bw.palette.restjson.runtime");
-
-		
-		
+		capabilities.put("com.tibco.bw.palette; filter:=\"(name=bw.restjson)\"", "com.tibco.bw.palette.restjson.runtime");		
 	}
 
 }

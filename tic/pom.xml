@@ -24,7 +24,6 @@
 	</properties>
 
 	<modules>
-		<module>tic-bw6-core</module>
 		<module>tic-maven</module>
 	</modules>
 

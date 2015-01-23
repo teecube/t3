@@ -33,7 +33,8 @@ public class PluginBuilder {
 	}
 
 	public void addConfiguration(Xpp3Dom configuration) {
-		this.plugin.setConfiguration(configuration);
+		// TODO: take care of priority (dominant vs recessive)
+		this.plugin.setConfiguration(Xpp3Dom.mergeXpp3Dom(configuration, (Xpp3Dom) this.plugin.getConfiguration()));
 	}
 
 	public boolean addConfigurationFromClasspath() throws MojoExecutionException {

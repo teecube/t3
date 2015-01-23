@@ -12,6 +12,8 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.settings.Settings;
 
+import org.eclipse.osgi.framework.util.ArrayMap;
+
 public abstract class AbstractBW6Mojo extends AbstractMojo {
 
 	@Parameter( property = "project.build.directory")
