@@ -74,6 +74,10 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -114,14 +118,20 @@
 		<dependency>
 			<groupId>org.eclipse.tycho</groupId>
 			<artifactId>tycho-core</artifactId>
-			<version>${tycho-version}</version>
+			<version>${tycho.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.tycho</groupId>
 			<artifactId>tycho-p2-facade</artifactId>
-			<version>${tycho-version}</version>
+			<version>${tycho.version}</version>
 		</dependency>
 
+		<!-- others -->
+		<dependency>
+			<groupId>org.reflections</groupId>
+			<artifactId>reflections</artifactId>
+			<version>0.9.9</version>
+		</dependency>
 		<dependency>
 			<groupId>org.twdata.maven</groupId>
 			<artifactId>mojo-executor</artifactId>

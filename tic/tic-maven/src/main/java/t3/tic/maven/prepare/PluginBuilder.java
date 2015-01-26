@@ -1,3 +1,19 @@
+/**
+ * (C) Copyright 2014-2015 T3Soft
+ * (http://www.t3soft.org) and others.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package t3.tic.maven.prepare;
 
 import java.io.ByteArrayInputStream;
@@ -15,6 +31,11 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
+/**
+ *
+ * @author Mathieu Debove <mad@t3soft.org>
+ *
+ */
 public class PluginBuilder {
 
 	private Plugin plugin;
@@ -30,6 +51,10 @@ public class PluginBuilder {
 		plugin.setVersion(version);
 
 		this.plugin = plugin;
+	}
+
+	public PluginBuilder(String groupId, String artifactId) {
+		this(groupId, artifactId, "");
 	}
 
 	public void addConfiguration(Xpp3Dom configuration) {
@@ -50,6 +75,11 @@ public class PluginBuilder {
 			Xpp3Dom pluginConfiguration = Xpp3DomBuilder.build(new ByteArrayInputStream(configString.getBytes()), "UTF-8"); // FIXME: encoding
 
 			if (pluginConfiguration != null) {
+				Xpp3Dom version = pluginConfiguration.getChild("version");
+				if (version != null) {
+					this.plugin.setVersion(version.getValue());
+				}
+
 				Xpp3Dom configuration = pluginConfiguration.getChild("configuration");
 				if (configuration != null) {
 					this.plugin.setConfiguration(Xpp3Dom.mergeXpp3Dom((Xpp3Dom) this.plugin.getConfiguration(), configuration));
@@ -98,15 +128,18 @@ public class PluginBuilder {
 							if (id != null && !id.isEmpty()) {
 								PluginExecution oldEx = this.plugin.getExecutionsAsMap().get(id);
 								if (oldEx != null) {									
-									oldEx.setConfiguration(Xpp3Dom.mergeXpp3Dom((Xpp3Dom) oldEx.getConfiguration(), (Xpp3Dom) ex.getConfiguration()));
-									this.plugin.getExecutionsAsMap().put(id, oldEx);
+									ex.setConfiguration(Xpp3Dom.mergeXpp3Dom((Xpp3Dom) oldEx.getConfiguration(), (Xpp3Dom) ex.getConfiguration()));
+									this.plugin.getExecutionsAsMap().put(id, ex);
+								} else {
+									pluginExecutions.add(ex);
+									this.plugin.setExecutions(pluginExecutions);
 								}
 							} else {
 								pluginExecutions.add(ex);
+								this.plugin.setExecutions(pluginExecutions);
 							}
 						}
 					}
-					this.plugin.setExecutions(pluginExecutions);
 				}
 			}
 		} catch (IOException | XmlPullParserException e) {
