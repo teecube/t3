@@ -20,7 +20,7 @@
 		<ticName>TIC</ticName>
 		<ticSlogan>TIBCO Infrastructure Core</ticSlogan>
 
-		<tycho-version>0.22.0</tycho-version>
+		<tycho.version>0.22.0</tycho.version>
 	</properties>
 
 	<modules>
