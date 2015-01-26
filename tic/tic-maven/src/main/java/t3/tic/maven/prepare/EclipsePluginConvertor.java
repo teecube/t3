@@ -326,6 +326,9 @@ public class EclipsePluginConvertor {
 
 	public MavenProject prepareBW6AppModule() throws Exception {
 		mavenProject.setPackaging("eclipse-plugin"); // change packaging of the POM to "eclipse-plugin"
+		String tibcoHome = mavenProject.getModel().getProperties().getProperty("tibco.home");
+		String bwVersion = mavenProject.getModel().getProperties().getProperty("tibco.bw.version");
+		mavenProject.getModel().addProperty("main.p2.repo", tibcoHome + "/bw/" + bwVersion + "/maven/p2repo");
 
 		updatePluginsConfiguration(true);
 		updateTychoTargetPlatformPlugin(getCapabilities(mavenProject));

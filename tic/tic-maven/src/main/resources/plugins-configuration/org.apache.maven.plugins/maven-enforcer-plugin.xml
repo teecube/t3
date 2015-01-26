@@ -40,10 +40,10 @@
 							<regex>.*</regex>
 						</requireProperty>
 						<requireProperty>
-							<property>bw.version</property>
-							<message>The "bw.version" property must be set.</message>
+							<property>tibco.bw.version</property>
+							<message>The "tibco.bw.version" property must be set.</message>
 							<regex>6\.\d*</regex>
-							<regexMessage>The "bw.version" property must start with '6.' but is '${bw.version}'.</regexMessage>
+							<regexMessage>The "tibco.bw.version" property must start with '6.' but is '${tibco.bw.version}'.</regexMessage>
 						</requireProperty>
 					</rules>
 				</configuration>
