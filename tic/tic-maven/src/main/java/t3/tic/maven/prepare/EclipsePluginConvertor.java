@@ -314,8 +314,8 @@ public class EclipsePluginConvertor {
 	private void addBW6P2Repository() throws UnknownRepositoryLayoutException  {
 		if (artifactRepositoryFactory != null) {
 			ArtifactRepository artifactRepository = artifactRepositoryFactory.createArtifactRepository(
-			"main.bw.bundle",
-			"file:///" + mavenProject.getProperties().getProperty("main.p2.repo"),
+			"tibco.bw6.p2repository",
+			"file:///" + mavenProject.getProperties().getProperty("tibco.bw6.p2repository"),
 			"p2",
 			new ArtifactRepositoryPolicy(true, ArtifactRepositoryPolicy.UPDATE_POLICY_ALWAYS, ArtifactRepositoryPolicy.CHECKSUM_POLICY_WARN),
 			new ArtifactRepositoryPolicy(false, ArtifactRepositoryPolicy.UPDATE_POLICY_ALWAYS, ArtifactRepositoryPolicy.CHECKSUM_POLICY_WARN));
@@ -327,8 +327,8 @@ public class EclipsePluginConvertor {
 	public MavenProject prepareBW6AppModule() throws Exception {
 		mavenProject.setPackaging("eclipse-plugin"); // change packaging of the POM to "eclipse-plugin"
 		String tibcoHome = mavenProject.getModel().getProperties().getProperty("tibco.home");
-		String bwVersion = mavenProject.getModel().getProperties().getProperty("tibco.bw.version");
-		mavenProject.getModel().addProperty("main.p2.repo", tibcoHome + "/bw/" + bwVersion + "/maven/p2repo");
+		String bwVersion = mavenProject.getModel().getProperties().getProperty("tibco.bw6.version");
+		mavenProject.getModel().addProperty("tibco.bw6.p2repository", tibcoHome + "/bw/" + bwVersion + "/maven/p2repo");
 
 		updatePluginsConfiguration(true);
 		updateTychoTargetPlatformPlugin(getCapabilities(mavenProject));
