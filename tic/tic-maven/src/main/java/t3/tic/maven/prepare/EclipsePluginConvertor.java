@@ -64,6 +64,8 @@ public class EclipsePluginConvertor {
 	private Logger logger;
 	private MavenProject mavenProject;
 	private ArtifactRepositoryFactory artifactRepositoryFactory;
+	private String tibcoHome;
+	private String bw6Version;
 
 	public EclipsePluginConvertor(Logger logger) {
 		this.logger = logger;
@@ -324,11 +326,9 @@ public class EclipsePluginConvertor {
 		}
 	}
 
-	public MavenProject prepareBW6AppModule() throws Exception {
+	private MavenProject prepareBW6Module() throws MojoExecutionException, IOException, XmlPullParserException, BundleException, UnknownRepositoryLayoutException {
 		mavenProject.setPackaging("eclipse-plugin"); // change packaging of the POM to "eclipse-plugin"
-		String tibcoHome = mavenProject.getModel().getProperties().getProperty("tibco.home");
-		String bwVersion = mavenProject.getModel().getProperties().getProperty("tibco.bw6.version");
-		mavenProject.getModel().addProperty("tibco.bw6.p2repository", tibcoHome + "/bw/" + bwVersion + "/maven/p2repo");
+		mavenProject.getModel().addProperty("tibco.bw6.p2repository", tibcoHome + "/bw/" + bw6Version + "/maven/p2repo");
 
 		updatePluginsConfiguration(true);
 		updateTychoTargetPlatformPlugin(getCapabilities(mavenProject));
@@ -337,12 +337,28 @@ public class EclipsePluginConvertor {
 		return mavenProject;
 	}
 
-	public void setMavenProject(MavenProject mavenProject) {
-		this.mavenProject = mavenProject;
+	public MavenProject prepareBW6AppModule() throws MojoExecutionException, UnknownRepositoryLayoutException, IOException, XmlPullParserException, BundleException {
+		return prepareBW6Module();
+	}
+
+	public MavenProject prepareBW6SharedModule() throws MojoExecutionException, UnknownRepositoryLayoutException, IOException, XmlPullParserException, BundleException {
+		return prepareBW6Module();
 	}
 
 	public void setArtifactRepositoryRepository(ArtifactRepositoryFactory artifactRepositoryFactory) {
 		this.artifactRepositoryFactory = artifactRepositoryFactory;
+	}
+
+	public void setBW6Version(String bw6Version) {
+		this.bw6Version = bw6Version;
+	}
+
+	public void setMavenProject(MavenProject mavenProject) {
+		this.mavenProject = mavenProject;
+	}
+
+	public void setTIBCOHome(String tibcoHome) {
+		this.tibcoHome = tibcoHome;
 	}
 
 }

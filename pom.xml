@@ -455,6 +455,7 @@
 				<apache.plugin.commons-configuration>1.10</apache.plugin.commons-configuration>
 				<apache.plugin.commons-exec>1.3</apache.plugin.commons-exec>
 				<apache.plugin.commons-io>2.4</apache.plugin.commons-io>
+				<apache.plugin.commons-lang3>3.3.2</apache.plugin.commons-lang3>
 
 				<junit.plugin>4.12</junit.plugin>
 
@@ -482,6 +483,12 @@
 						<artifactId>commons-io</artifactId>
 						<version>${apache.plugin.commons-io}</version>
 					</dependency>
+					<dependency>
+						<groupId>org.apache.commons</groupId>
+						<artifactId>commons-lang3</artifactId>
+						<version>${apache.plugin.commons-lang3}</version>
+					</dependency>
+
 
 					<dependency>
 						<groupId>junit</groupId>
