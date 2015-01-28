@@ -20,6 +20,7 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.element;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -37,9 +38,17 @@ import org.apache.maven.artifact.UnknownRepositoryLayoutException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
 import org.apache.maven.artifact.repository.ArtifactRepositoryPolicy;
+import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
+import org.apache.maven.model.building.StringModelSource;
+import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.ProjectBuilder;
+import org.apache.maven.project.ProjectBuildingException;
+import org.apache.maven.project.ProjectBuildingRequest;
+import org.apache.maven.project.ProjectBuildingResult;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
@@ -52,6 +61,7 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 
+import t3.tic.maven.POMManager;
 import t3.tic.maven.configuration.BW6Requirement;
 
 /**
@@ -66,6 +76,8 @@ public class EclipsePluginConvertor {
 	private ArtifactRepositoryFactory artifactRepositoryFactory;
 	private String tibcoHome;
 	private String bw6Version;
+	private ProjectBuilder projectBuilder;
+	private ProjectBuildingRequest projectBuildingRequest;
 
 	public EclipsePluginConvertor(Logger logger) {
 		this.logger = logger;
@@ -345,6 +357,103 @@ public class EclipsePluginConvertor {
 		return prepareBW6Module();
 	}
 
+	public boolean hasBW6ModuleOrDependency() {
+		if (mavenProject == null) return false;
+
+		List<String> modules = mavenProject.getModel().getModules();
+		for (String module : modules) {
+			try {
+				Model model = POMManager.getModelOfModule(mavenProject, module);
+
+				if ("bw6-app-module".equals(model.getPackaging())) {
+					return true;
+				}
+			} catch (IOException | XmlPullParserException e) {
+				logger.debug(e.getLocalizedMessage());
+			}
+		}
+		return false;
+	}
+
+	private List<Model> getBW6Modules() {
+		List<Model> result = new ArrayList<Model>();
+		if (mavenProject == null) return result;
+
+		List<String> modules = mavenProject.getModel().getModules();
+		for (String module : modules) {
+			try {
+				Model model = POMManager.getModelOfModule(mavenProject, module);
+
+				if ("bw6-app-module".equals(model.getPackaging()) || // TODO: add OSGi ?
+					"bw6-shared-module".equals(model.getPackaging())) {
+					result.add(model);
+				}
+			} catch (IOException | XmlPullParserException e) {
+				logger.debug(e.getLocalizedMessage());
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * <p>
+	 * A BW6 application can be defined by a "pom" packaging and have
+	 * &lt;modules>.
+	 * However, the internal lifecycle to use is the one of "bw6-application"
+	 * packaging.
+	 * </p>
+	 * @return
+	 * @throws MojoExecutionException
+	 * @throws UnknownRepositoryLayoutException
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 * @throws BundleException
+	 */
+	public MavenProject prepareBW6Application() throws MojoExecutionException, UnknownRepositoryLayoutException, IOException, XmlPullParserException, BundleException {
+		mavenProject.setPackaging("bw6-application"); // change packaging of the POM from "pom" to "bw6-application"
+
+		// all BW6 modules become dependency
+		List<Model> bw6Modules = getBW6Modules();
+		for (Model bw6Module : bw6Modules) {
+			Dependency dependency = new Dependency();
+			dependency.setGroupId(bw6Module.getGroupId());
+			dependency.setArtifactId(bw6Module.getArtifactId());
+			dependency.setVersion(bw6Module.getVersion());
+			dependency.setType(bw6Module.getPackaging());
+
+			mavenProject.getModel().addDependency(dependency);
+		}
+
+		// hack: save <modules> and remove them to allow Model validation
+		List<String> modules = new ArrayList<String>(mavenProject.getModel().getModules());
+		mavenProject.getModel().getModules().clear();
+
+		// convert this hacked Model as a StringModelSource
+		MavenXpp3Writer writer = new MavenXpp3Writer();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		writer.write(baos, mavenProject.getModel());
+		String model = baos.toString();
+		StringModelSource modelSource = new StringModelSource(model);
+
+		// recreate a MavenProject from the hacked model
+		// this is useful to have the correct <executions> in this <plugin>
+		ProjectBuildingResult projectBuildingResult = null;
+		try {
+			projectBuildingResult = projectBuilder.build(modelSource, projectBuildingRequest);
+		} catch (ProjectBuildingException e) {
+			e.printStackTrace();
+		}
+		MavenProject newMavenProject = projectBuildingResult.getProject();
+
+		// hack: put back the <modules> in the Model
+		newMavenProject.getModel().getModules().addAll(modules);
+
+		mavenProject = newMavenProject;
+
+		return newMavenProject;
+	}
+
 	public void setArtifactRepositoryRepository(ArtifactRepositoryFactory artifactRepositoryFactory) {
 		this.artifactRepositoryFactory = artifactRepositoryFactory;
 	}
@@ -355,6 +464,14 @@ public class EclipsePluginConvertor {
 
 	public void setMavenProject(MavenProject mavenProject) {
 		this.mavenProject = mavenProject;
+	}
+
+	public void setProjectBuilder(ProjectBuilder projectBuilder) {
+		this.projectBuilder = projectBuilder;
+	}
+
+	public void setProjectBuildingRequest(ProjectBuildingRequest projectBuildingRequest) {
+		this.projectBuildingRequest = projectBuildingRequest;
 	}
 
 	public void setTIBCOHome(String tibcoHome) {
