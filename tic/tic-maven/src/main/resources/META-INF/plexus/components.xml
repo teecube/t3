@@ -97,6 +97,7 @@
 			<configuration>
 				<phases>
 					<validate>
+						t3.tic:tic-maven:bw6-clean-build-properties,
 						org.eclipse.tycho:tycho-packaging-plugin:${tycho.version}:build-qualifier,
 						org.eclipse.tycho:tycho-packaging-plugin:${tycho.version}:validate-id,
 						org.eclipse.tycho:tycho-packaging-plugin:${tycho.version}:validate-version
@@ -150,6 +151,11 @@
 			<implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping
 			</implementation>
 			<configuration>
+				<phases>
+					<package>
+						t3.tic:tic-maven:bw6-package
+					</package>
+				</phases>
 			</configuration>
 		</component>
 

@@ -20,6 +20,7 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.maven.AbstractMavenLifecycleParticipant;
@@ -30,6 +31,8 @@ import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.ProjectBuilder;
+import org.apache.maven.project.ProjectBuildingRequest;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
@@ -56,18 +59,27 @@ public class BW6LifecycleParticipant extends TychoMavenLifecycleParticipant {
 	@Requirement
 	protected BuildPluginManager pluginManager;
 
+	@Requirement
+	protected ProjectBuilder projectBuilder;
+
 	private String tibcoHome;
 
 	private String bw6Version;
 
 	@Override
 	public void afterProjectsRead(MavenSession session)	throws MavenExecutionException {
-		enforceProperties(session);
-		convertProjects(session.getProjects());
+		enforceProperties(session); // check that all mandatory properties are correct
+		List<MavenProject> projects = convertProjects(session.getProjects(), session.getProjectBuildingRequest());
+		session.setProjects(projects);
 
+		logger.info(Messages.RESOLVING_BW6_DEPENDENCIES);
+		logger.info(Messages.MESSAGE_SPACE);
 		super.afterProjectsRead(session);
-		logger.info("");
-		logger.info("~-> TIC is loaded.");
+		logger.info(Messages.MESSAGE_SPACE);
+		logger.info(Messages.RESOLVED_BW6_DEPENDENCIES);
+
+		logger.info(Messages.MESSAGE_SPACE);
+		logger.info(Messages.LOADED);
 
 		session.getUserProperties().put("tycho.mode", "maven"); // to avoid duplicate call of TychoMavenLifecycleParticipant.afterProjectsRead()
 	}
@@ -78,31 +90,50 @@ public class BW6LifecycleParticipant extends TychoMavenLifecycleParticipant {
 	 * </p>
 	 *
 	 * @param projects
+	 * @param projectBuildingRequest
 	 * @throws MavenExecutionException
 	 */
-	private void convertProjects(List<MavenProject> projects) throws MavenExecutionException {
+	private List<MavenProject> convertProjects(List<MavenProject> projects, ProjectBuildingRequest projectBuildingRequest) throws MavenExecutionException {
+		List<MavenProject> result = new ArrayList<MavenProject>();
+
 		if (projects == null) {
 			logger.warn("No projects to convert.");
-			return;
+			return result;
 		}
 
 		EclipsePluginConvertor convertor = new EclipsePluginConvertor(logger);
-		convertor.setArtifactRepositoryRepository(artifactRepositoryFactory);
-		convertor.setTIBCOHome(this.tibcoHome);
 		convertor.setBW6Version(this.bw6Version);
+		convertor.setTIBCOHome(this.tibcoHome);
+		convertor.setArtifactRepositoryRepository(artifactRepositoryFactory);
+		convertor.setProjectBuilder(projectBuilder);
+		convertor.setProjectBuildingRequest(projectBuildingRequest);
 
 		for (MavenProject mavenProject : projects) {
 			convertor.setMavenProject(mavenProject);
 			try {
-				if ("bw6-app-module".equals(mavenProject.getPackaging())) {
-					convertor.prepareBW6AppModule();
-				} else if ("bw6-shared-module".equals(mavenProject.getPackaging())) {
-					convertor.prepareBW6SharedModule();
+				switch (mavenProject.getPackaging()) {
+				case "bw6-app-module":
+					result.add(convertor.prepareBW6AppModule());
+					break;
+				case "bw6-shared-module":
+					result.add(convertor.prepareBW6SharedModule());
+					break;
+				case "pom":
+					if (convertor.hasBW6ModuleOrDependency()) {
+						// a BW6 application has a "pom" packaging and at least one module or dependency with "bw6-app-module" packaging
+						result.add(convertor.prepareBW6Application());
+					}
+					break;
+				default:
+					logger.debug("No conversion for : " + mavenProject.getName());
+					break;
 				}
 			} catch (Exception e) {
 				throw new MavenExecutionException(e.getLocalizedMessage(), e);
 			}
 		}
+
+		return result;
 	}
 
 	/**
@@ -116,7 +147,6 @@ public class BW6LifecycleParticipant extends TychoMavenLifecycleParticipant {
 	private void enforceProperties(MavenSession session) throws MavenExecutionException {
 		logger.info(Messages.MESSAGE_SPACE);
 		logger.info(Messages.ENFORCING_RULES);
-		logger.info(Messages.MESSAGE_SPACE);
 
 		session.getCurrentProject().getModel().addProperty("tibco.bw6.p2repository", "${tibco.home}/bw/${tibco.bw6.version}/maven/p2repo");
 
@@ -145,5 +175,8 @@ public class BW6LifecycleParticipant extends TychoMavenLifecycleParticipant {
 
 		this.tibcoHome = session.getCurrentProject().getModel().getProperties().getProperty("tibco.home");
 		this.bw6Version = session.getCurrentProject().getModel().getProperties().getProperty("tibco.bw6.version");
+
+		logger.info(Messages.ENFORCED_RULES);
+		logger.info(Messages.MESSAGE_SPACE);
 	}
 }

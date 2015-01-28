@@ -24,8 +24,18 @@ package t3.tic.maven;
 public class Messages {
 	
 	public static final String MESSAGE_PREFIX = "~-> TIC: ";
+	public static final String MESSAGE_EMPTY_PREFIX = "         ";
 	public static final String MESSAGE_SPACE = "";
+
+	public static final String LOADED = MESSAGE_PREFIX + "Loaded.";
+
+	public static final String RESOLVING_BW6_DEPENDENCIES = MESSAGE_PREFIX + "Resolving BW6 dependencies...";
+	public static final String RESOLVED_BW6_DEPENDENCIES = MESSAGE_EMPTY_PREFIX + "BW6 dependencies resolved.";
+
 	public static final String ENFORCING_RULES = MESSAGE_PREFIX + "Enforcing rules...";
-	public static final String ENFORCER_RULES_FAILURE = MESSAGE_PREFIX + "The required rules are invalid.";
+	public static final String ENFORCED_RULES = MESSAGE_EMPTY_PREFIX + "Rules are validated.";
+	public static final String ENFORCER_RULES_FAILURE = MESSAGE_EMPTY_PREFIX + "The required rules are invalid.";
+
+	public static final String DEPENDENCY_RESOLUTION_FAILED = MESSAGE_EMPTY_PREFIX + "Failed to resolve a dependency.";
 
 }
