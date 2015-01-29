@@ -152,6 +152,9 @@
 			</implementation>
 			<configuration>
 				<phases>
+					<process-resources>
+						t3.tic:tic-maven:prepare-meta
+					</process-resources>
 					<package>
 						t3.tic:tic-maven:bw6-package
 					</package>

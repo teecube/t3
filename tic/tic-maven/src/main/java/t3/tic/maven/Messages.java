@@ -38,4 +38,7 @@ public class Messages {
 
 	public static final String DEPENDENCY_RESOLUTION_FAILED = MESSAGE_EMPTY_PREFIX + "Failed to resolve a dependency.";
 
+	public static final String APPLICATION_PACKAGING = MESSAGE_PREFIX + "Packaging BW6 application (EAR)...";
+	public static final String APPLICATION_ADDING_MODULE = MESSAGE_EMPTY_PREFIX + "Adding BW6 module: ";
+
 }

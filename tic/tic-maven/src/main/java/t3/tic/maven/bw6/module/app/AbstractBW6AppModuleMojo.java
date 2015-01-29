@@ -14,9 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package t3.tic.maven.bw6.module.app;
+
+import t3.tic.maven.bw6.module.AbstractBW6ModuleMojo;
 
 /**
+ *
  * @author Mathieu Debove <mad@t3soft.org>
  *
  */
-package t3.tic.maven.prepare;
+public abstract class AbstractBW6AppModuleMojo extends AbstractBW6ModuleMojo {
+
+}

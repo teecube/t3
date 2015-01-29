@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3.tic.maven.prepare;
+package t3.tic.maven.bw6;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class BWMavenConstants {
+public class BW6Constants {
 
 	public static Map<String,String> capabilities = new HashMap<String,String>();
 
@@ -43,7 +43,7 @@ public class BWMavenConstants {
 		capabilities.put("com.tibco.bw.palette; filter:=\"(name=bw.jdbc)\"", "com.tibco.bw.palette.jdbc.runtime");
 		capabilities.put("com.tibco.bw.palette; filter:=\"(name=bw.mail)\"", "com.tibco.bw.palette.mail.runtime");
 		capabilities.put("com.tibco.bw.palette; filter:=\"(name=bw.rv)\"", "com.tibco.bw.palette.rv.runtime");
-		capabilities.put("com.tibco.bw.model; filter:=\"(name=bwext)\"", "com.tibco.bw.core.model");				
+		capabilities.put("com.tibco.bw.model; filter:=\"(name=bwext)\"", "com.tibco.bw.core.model");
 		capabilities.put("com.tibco.bw.sharedresource.model; filter:=\"(name=bw.dataformat)\"", "com.tibco.bw.sharedresource.dataformat.model");
 		capabilities.put("com.tibco.bw.sharedresource.model; filter:=\"(name=bw.ftp)\"", "com.tibco.bw.sharedresource.ftpconnection.model");
 		capabilities.put("com.tibco.bw.sharedresource.model; filter:=\"(name=bw.httpconnector)\"", "com.tibco.bw.sharedresource.http.model");
@@ -70,7 +70,8 @@ public class BWMavenConstants {
 		capabilities.put("com.tibco.bw.sharedresource.model; filter:=\"(name=bw.miserver)\"", "com.tibco.bw.sharedresource.mi.model");
 		capabilities.put("com.tibco.bw.sharedresource.model; filter:=\"(name=bw.pnscommunicator)\"", "com.tibco.bw.sharedresource.mi.model");
 		capabilities.put("com.tibco.bw.palette; filter:=\"(name=bw.mi)\"", "com.tibco.bw.palette.mi.runtime");
-		capabilities.put("com.tibco.bw.palette; filter:=\"(name=bw.restjson)\"", "com.tibco.bw.palette.restjson.runtime");		
+		capabilities.put("com.tibco.bw.palette; filter:=\"(name=bw.restjson)\"", "com.tibco.bw.palette.restjson.runtime");
 	}
 
+	public static String ns_PackagingModel = "http://schemas.tibco.com/tra/model/core/PackagingModel";
 }

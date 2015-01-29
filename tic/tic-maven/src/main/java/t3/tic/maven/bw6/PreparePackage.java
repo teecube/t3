@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3.tic.maven;
+package t3.tic.maven.bw6;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,7 +33,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
 /**
- * 
+ *
  * @author Mathieu Debove <mad@t3soft.org>
  *
  */
@@ -52,8 +52,8 @@ public class PreparePackage extends AbstractBW6Mojo {
 	/**
 	 * <p>
 	 * This updates the build.properties.
-	 * </p>  
-	 * @throws IOException 
+	 * </p>
+	 * @throws IOException
 	 */
 	private void updateBuildProperties() throws IOException {
 		Properties properties = new Properties();
@@ -64,7 +64,7 @@ public class PreparePackage extends AbstractBW6Mojo {
 		is.close();
 
 		String binIncludes = (String) properties.get("bin.includes");
-		List<String> includes = new ArrayList<String>(); 
+		List<String> includes = new ArrayList<String>();
 		includes.addAll(Arrays.asList(binIncludes.split(",")));
 		for (Iterator<String> it = includes.iterator(); it.hasNext();) {
 			String include = it.next();
@@ -78,6 +78,5 @@ public class PreparePackage extends AbstractBW6Mojo {
 
 		properties.store(new FileOutputStream(file), null);
 	}
-	
 
 }
