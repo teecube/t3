@@ -14,15 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3.tic.maven;
+package t3.tic.maven.bw6;
 
 import java.io.File;
 
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.execution.MavenSession;
-import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecution;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -40,7 +40,7 @@ public abstract class AbstractBW6Mojo extends AbstractMojo {
 	@Parameter( property = "project.build.directory", required = true )
 	protected File outputDirectory;
 
-	@Parameter( property = "project.basedir")
+	@Parameter( defaultValue = "${basedir}", readonly = true)
 	protected File projectBasedir;
 
 	@Parameter ( defaultValue = "${session}", readonly = true)
@@ -61,29 +61,19 @@ public abstract class AbstractBW6Mojo extends AbstractMojo {
 	@Component
 	protected ProjectBuilder builder;
 
-	protected Boolean isBW6(Dependency dependency) {
-		if (dependency == null) return false;
-		return isBW6(dependency.getType());
-	}
-
-	protected Boolean isBW6(Artifact artifact) {
-		if (artifact == null) return false;
-		return isBW6(artifact.getType());
-	}
-
-	private Boolean isBW6(String type) {
-		if (type == null) {
-			return false;
+	/**
+	 * <p>Create the output directory ("target/") if it doesn't exist yet.</p>
+	 */
+	protected void createOutputDirectory() {
+		if (outputDirectory == null || outputDirectory.exists()) {
+			return;
 		}
 
-		switch (type) {
-		case "bw6-app-module":
-		case "bw6-shared-module":
-			// TODO: osgi
-			return true;
-		default:
-			return false;
-		}
+		outputDirectory.mkdirs();
 	}
 
+	@Override
+	public void execute() throws MojoExecutionException, MojoFailureException  {
+		createOutputDirectory();
+	}
 }

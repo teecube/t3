@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3.tic.maven.prepare;
+package t3.tic.maven.bw6;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.element;
@@ -62,14 +62,14 @@ import org.reflections.util.ConfigurationBuilder;
 import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 
 import t3.tic.maven.POMManager;
-import t3.tic.maven.configuration.BW6Requirement;
+import t3.tic.maven.PluginBuilder;
 
 /**
- * 
+ *
  * @author Mathieu Debove <mad@t3soft.org>
  *
  */
-public class EclipsePluginConvertor {
+public class BW6PackagingConvertor {
 
 	private Logger logger;
 	private MavenProject mavenProject;
@@ -79,7 +79,7 @@ public class EclipsePluginConvertor {
 	private ProjectBuilder projectBuilder;
 	private ProjectBuildingRequest projectBuildingRequest;
 
-	public EclipsePluginConvertor(Logger logger) {
+	public BW6PackagingConvertor(Logger logger) {
 		this.logger = logger;
 	}
 
@@ -99,7 +99,7 @@ public class EclipsePluginConvertor {
 		String[] capArray = caps.split(",");
 		for (String cap : capArray) {
 			cap = cap.trim();
-			String plugin = BWMavenConstants.capabilities.get(cap);
+			String plugin = BW6Constants.capabilities.get(cap);
 			if (plugin == null || plugin.equals("")) {
 				continue;
 			}
@@ -111,9 +111,9 @@ public class EclipsePluginConvertor {
 
 	/**
 	 * Used to retrieve BW6 requirements from this plugin (self) configuration
-	 * 
-	 * @throws IOException 
-	 * @throws XmlPullParserException 
+	 *
+	 * @throws IOException
+	 * @throws XmlPullParserException
 	 */
 	private List<BW6Requirement> getBW6Requirements(MavenProject mavenProject) throws XmlPullParserException, IOException {
 		List<BW6Requirement> bw6Requirements = new ArrayList<BW6Requirement>();
@@ -131,7 +131,7 @@ public class EclipsePluginConvertor {
 				}
 
 				Xpp3Dom dom = Xpp3DomBuilder.build(new ByteArrayInputStream(config.getBytes()), "UTF-8"); // FIXME: encoding
-	
+
 				for (Xpp3Dom child : dom.getChildren()) {
 					if ("dependencies".equals(child.getName())) {
 						for (Xpp3Dom requirementNode : child.getChildren()) {
@@ -206,7 +206,7 @@ public class EclipsePluginConvertor {
 		 * </dependency-resolution>
 		 */
 		configuration.add(
-			element("dependency-resolution", 
+			element("dependency-resolution",
 				element("extraRequirements",
 					requirements.toArray(new Element[0])
 				)
@@ -218,7 +218,7 @@ public class EclipsePluginConvertor {
 
 	private void updateTychoTargetPlatformPlugin(List<String> capabilities) throws XmlPullParserException, IOException {
 		if (mavenProject == null) return;
-		
+
 		List<BW6Requirement> bw6Requirements = SetUniqueList.setUniqueList(new ArrayList<BW6Requirement>());
 		bw6Requirements.addAll(getBW6Requirements(mavenProject)); // retrieve from configuration of this plugin
 		bw6Requirements.addAll(getBW6Requirements(capabilities));
@@ -226,7 +226,7 @@ public class EclipsePluginConvertor {
 		// the target-platform-configuration plugin exists because it is part of the lifecycle (see 'plexus/components.xml')
 		Plugin tychoTargetPlatformPlugin = mavenProject.getPlugin("org.eclipse.tycho:target-platform-configuration");
 		PluginBuilder pluginBuilder = new PluginBuilder(tychoTargetPlatformPlugin);
-		
+
 		List<Element> requirementsConfiguration = getRequirementsConfiguration(bw6Requirements);
 
 		pluginBuilder.addConfiguration(configuration(requirementsConfiguration.toArray(new Element[0])));
@@ -236,9 +236,9 @@ public class EclipsePluginConvertor {
 	 * <p>
 	 * Merge configuration in "plugins-configuration" of existing plugins.
 	 * </p>
-	 * 
+	 *
 	 * @throws MojoExecutionException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private void updatePluginsConfiguration(boolean createIfNotExists) throws MojoExecutionException, IOException {
 		if (mavenProject == null) return;
@@ -266,17 +266,12 @@ public class EclipsePluginConvertor {
 				PluginBuilder pluginBuilder;
 				if (plugin == null) {
 					pluginBuilder = new PluginBuilder(groupId, artifactId);
+					mavenProject.getBuild().addPlugin(pluginBuilder.getPlugin());
 				} else {
 					pluginBuilder = new PluginBuilder(plugin);
 				}
 				pluginBuilder.addConfigurationFromClasspath();
 
-				if (plugin == null) {
-					mavenProject.getBuild().addPlugin(pluginBuilder.getPlugin());
-				} else {
-					mavenProject.getBuild().removePlugin(pluginBuilder.getPlugin());
-					mavenProject.getBuild().addPlugin(pluginBuilder.getPlugin());
-				}
 			}
 		}
 	}
@@ -285,7 +280,7 @@ public class EclipsePluginConvertor {
 		List<File> result = new ArrayList<File>();
 
 		Reflections reflections = new Reflections(new ConfigurationBuilder()
-			.setUrls(ClasspathHelper.forClass(EclipsePluginConvertor.class))
+			.setUrls(ClasspathHelper.forClass(BW6PackagingConvertor.class))
 			.setScanners(new ResourcesScanner())
 		);
 
@@ -445,6 +440,7 @@ public class EclipsePluginConvertor {
 			e.printStackTrace();
 		}
 		MavenProject newMavenProject = projectBuildingResult.getProject();
+		newMavenProject.setFile(mavenProject.getFile());
 
 		// hack: put back the <modules> in the Model
 		newMavenProject.getModel().getModules().addAll(modules);

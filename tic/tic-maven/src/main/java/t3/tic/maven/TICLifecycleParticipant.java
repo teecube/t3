@@ -39,8 +39,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.eclipse.tycho.core.maven.TychoMavenLifecycleParticipant;
 
-import t3.tic.maven.prepare.EclipsePluginConvertor;
-import t3.tic.maven.prepare.PluginBuilder;
+import t3.tic.maven.bw6.BW6PackagingConvertor;
 
 /**
  *
@@ -48,7 +47,7 @@ import t3.tic.maven.prepare.PluginBuilder;
  *
  */
 @Component(role = AbstractMavenLifecycleParticipant.class, hint = "BW6LifecycleListener")
-public class BW6LifecycleParticipant extends TychoMavenLifecycleParticipant {
+public class TICLifecycleParticipant extends TychoMavenLifecycleParticipant {
 
 	@Requirement
 	private Logger logger;
@@ -101,7 +100,7 @@ public class BW6LifecycleParticipant extends TychoMavenLifecycleParticipant {
 			return result;
 		}
 
-		EclipsePluginConvertor convertor = new EclipsePluginConvertor(logger);
+		BW6PackagingConvertor convertor = new BW6PackagingConvertor(logger);
 		convertor.setBW6Version(this.bw6Version);
 		convertor.setTIBCOHome(this.tibcoHome);
 		convertor.setArtifactRepositoryRepository(artifactRepositoryFactory);

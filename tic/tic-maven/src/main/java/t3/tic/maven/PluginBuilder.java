@@ -14,19 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3.tic.maven.prepare;
+package t3.tic.maven;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginExecution;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
@@ -64,7 +64,7 @@ public class PluginBuilder {
 
 	public boolean addConfigurationFromClasspath() throws MojoExecutionException {
 		String filename = "/plugins-configuration/" +
-						  this.plugin.getGroupId() + "/" + 
+						  this.plugin.getGroupId() + "/" +
 						  this.plugin.getArtifactId()  + ".xml";
 
 		InputStream configStream = PluginBuilder.class.getResourceAsStream(filename);
@@ -84,7 +84,7 @@ public class PluginBuilder {
 				if (configuration != null) {
 					this.plugin.setConfiguration(Xpp3Dom.mergeXpp3Dom((Xpp3Dom) this.plugin.getConfiguration(), configuration));
 				}
-				
+
 				Xpp3Dom executions = pluginConfiguration.getChild("executions");
 				if (executions != null) {
 					List<PluginExecution> pluginExecutions = new ArrayList<PluginExecution>();
@@ -92,7 +92,7 @@ public class PluginBuilder {
 					for (Xpp3Dom execution : executions.getChildren()) {
 						if ("execution".equals(execution.getName())) {
 							PluginExecution ex = new PluginExecution();
-							
+
 							Xpp3Dom inherited = execution.getChild("inherited");
 							if (inherited != null && inherited.getValue() != null && !inherited.getValue().isEmpty()) {
 								ex.setInherited(inherited.getValue());
@@ -124,12 +124,21 @@ public class PluginBuilder {
 							if (configuration != null) {
 								ex.setConfiguration(configuration);
 							}
-							
+
 							if (id != null && !id.isEmpty()) {
 								PluginExecution oldEx = this.plugin.getExecutionsAsMap().get(id);
-								if (oldEx != null) {									
+								if (oldEx != null) {
 									ex.setConfiguration(Xpp3Dom.mergeXpp3Dom((Xpp3Dom) oldEx.getConfiguration(), (Xpp3Dom) ex.getConfiguration()));
+									ex.setInherited(oldEx.getInherited());
+									ex.setPriority(oldEx.getPriority());
+
 									this.plugin.getExecutionsAsMap().put(id, ex);
+									for (ListIterator<PluginExecution> it = this.plugin.getExecutions().listIterator(); it.hasNext();) {
+										PluginExecution pluginExecution = it.next();
+										if (id.equals(pluginExecution.getId())) {
+											it.set(ex);
+										}
+									}
 								} else {
 									pluginExecutions.add(ex);
 									this.plugin.setExecutions(pluginExecutions);
@@ -153,16 +162,4 @@ public class PluginBuilder {
 		return this.plugin;
 	}
 
-	public static MavenProject addPluginFirst(MavenProject mavenProject, Plugin plugin) {
-		if (mavenProject == null || plugin == null) return mavenProject;
-
-		List<Plugin> plugins = mavenProject.getBuild().getPlugins();
-		if (plugins != null) {
-			plugins.add(0, plugin);
-		}
-
-		mavenProject.getBuild().setPlugins(plugins);
-
-		return mavenProject;
-	}
 }
