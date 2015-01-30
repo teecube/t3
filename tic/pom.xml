@@ -16,10 +16,9 @@
 
 	<name>${ecosystemName} - ${ticName}</name>
 
-	<properties>
-		<ticName>TIC</ticName>
-		<ticSlogan>TIBCO Infrastructure Core</ticSlogan>
+	<url>${repositorySiteURL}/${project.artifactId}</url>
 
+	<properties>
 		<tycho.version>0.22.0</tycho.version>
 	</properties>
 

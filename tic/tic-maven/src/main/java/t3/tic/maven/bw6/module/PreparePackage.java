@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3.tic.maven.bw6;
+package t3.tic.maven.bw6.module;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,7 +38,7 @@ import org.apache.maven.plugins.annotations.Mojo;
  *
  */
 @Mojo( name="bw6-clean-build-properties", defaultPhase=LifecyclePhase.PREPARE_PACKAGE  )
-public class PreparePackage extends AbstractBW6Mojo {
+public class PreparePackage extends AbstractBW6ModuleMojo {
 
 	@Override
 	public void execute() throws MojoExecutionException {

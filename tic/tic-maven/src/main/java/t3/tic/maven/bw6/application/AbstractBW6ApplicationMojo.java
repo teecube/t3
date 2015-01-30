@@ -47,10 +47,10 @@ import t3.tic.maven.bw6.BW6Utils;
  */
 public abstract class AbstractBW6ApplicationMojo extends AbstractBW6ProjectMojo {
 
-	@Parameter (property = "tibco.bw6.tibco.xml", defaultValue = "${project.build.directory}/META-INF/TIBCO.xml", required = true)
+	@Parameter (property = "tibco.bw6.project.application.tibco.xml", defaultValue = "${project.build.directory}/META-INF/TIBCO.xml", required = true)
 	protected File tibcoXML;
 
-	@Parameter (property = "tibco.bw6.tibco.xml.source", defaultValue = "${basedir}/META-INF/TIBCO.xml", required = true)
+	@Parameter (property = "tibco.bw6.project.application.tibco.xml.source", defaultValue = "${basedir}/META-INF/TIBCO.xml", required = true)
 	protected File tibcoXMLSource;
 
 	@Requirement

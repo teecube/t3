@@ -15,20 +15,20 @@ start with ${ecosystemNameHighlight} common [installation](./installation.html)
 
 ---
 
-$h1 TIC
+$h1 ${ticName}
 
-The TIBCO Infrastructure Core provides a full lifecyle management for TIBCO
-products.
+The ${ticFullName} (${ticAcronym}) provides a full lifecyle management for
+TIBCO products.
 <div>[Learn more »](./tic/index.html)</div>
 
-$h1 TAC
+$h1 ${tacName}
 
-The TIBCO Advanced Components accelerates development with ready-to-use
+The ${tacFullName} (${tacAcronym}) accelerates development with ready-to-use
 solution for common patterns.
 <div>[Learn more »](./tac/index.html)</div>
 
-$h1 TOE
+$h1 ${toeName}
 
-The TIBCO Overview Extractor improves global management of projects by
+The ${toeFullName} (${toeAcronym}) improves global management of projects by
 simplifying the relation between functional and technical team.
 <div>[Learn more »](./toe/index.html)</div>

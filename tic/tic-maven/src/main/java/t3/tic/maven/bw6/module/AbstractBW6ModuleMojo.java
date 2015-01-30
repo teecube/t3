@@ -16,13 +16,32 @@
  */
 package t3.tic.maven.bw6.module;
 
+import java.io.File;
+
+import org.apache.maven.plugins.annotations.Parameter;
+
 import t3.tic.maven.bw6.AbstractBW6ProjectMojo;
 
 /**
- *
+ * <p>
+ * A BW6 module can be:
+ *  <ul>
+ *   <li>an app module</li>
+ *   <li>an shared module</li>
+ *  </ul>
+ *  They both have in common:
+ *  <ul>
+ *   <li>a build.properties file</li>
+ * </p>
  * @author Mathieu Debove <mad@t3soft.org>
  *
  */
 public abstract class AbstractBW6ModuleMojo extends AbstractBW6ProjectMojo {
+
+	@Parameter (property = "tibco.bw6.project.module.build.properties", defaultValue = "${project.build.directory}/build.properties", required = true)
+	protected File buildProperties;
+
+	@Parameter (property = "tibco.bw6.project.module.build.properties.source", defaultValue = "${basedir}/build.properties", required = true)
+	protected File buildPropertiesSource;
 
 }
