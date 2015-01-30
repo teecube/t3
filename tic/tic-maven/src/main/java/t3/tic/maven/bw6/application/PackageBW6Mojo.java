@@ -17,37 +17,24 @@
 package t3.tic.maven.bw6.application;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.jar.JarInputStream;
-import java.util.jar.Manifest;
 
 import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.archiver.MavenArchiver;
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
-import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.archiver.jar.ManifestException;
-import org.codehaus.plexus.component.annotations.Requirement;
 
 import t3.tic.maven.Messages;
 import t3.tic.maven.bw6.AbstractBW6ArtifactMojo;
-import t3.tic.maven.bw6.BW6Utils;
 
 /**
  *
@@ -56,6 +43,10 @@ import t3.tic.maven.bw6.BW6Utils;
  */
 @Mojo(name="bw6-package", defaultPhase = LifecyclePhase.PACKAGE, requiresProject = true)
 public class PackageBW6Mojo extends AbstractBW6ApplicationMojo implements AbstractBW6ArtifactMojo {
+
+	private JarArchiver jarArchiver;
+	private MavenArchiver mavenArchiver;
+	private MavenArchiveConfiguration archiveConfiguration;
 
 // TODO: mutualize "artifact" information
 	@Parameter(property = "project.build.classifier")
@@ -66,13 +57,7 @@ public class PackageBW6Mojo extends AbstractBW6ApplicationMojo implements Abstra
 	 */
 	@Parameter(property = "project.build.finalName", required = true)
 	protected String finalName;
-//
 
-	private JarArchiver jarArchiver;
-	private MavenArchiver mavenArchiver;
-	private MavenArchiveConfiguration archiveConfiguration;
-
-// TODO: mutualize "artifact" information
 	@Override
 	public String getArtifactFileExtension() {
 		return ".ear"; // TODO: externalize

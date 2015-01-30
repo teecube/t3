@@ -15,7 +15,9 @@
 
 	<packaging>maven-plugin</packaging>
 
-	<name>${ecosystemName} - ${ticName} - Maven plugin</name>
+	<name>${ecosystemName} - ${ticName} - ${ticMavenName}</name>
+
+	<url>${repositorySiteURL}/${project.parent.artifactId}/${project.artifactId}</url>
 
 	<build>
 		<resources>

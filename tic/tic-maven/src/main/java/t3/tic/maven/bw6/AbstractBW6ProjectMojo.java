@@ -46,22 +46,22 @@ import org.apache.maven.plugins.annotations.Parameter;
  */
 public abstract class AbstractBW6ProjectMojo extends AbstractBW6Mojo {
 
-	@Parameter (property = "tibco.bw6.metainf.source", defaultValue = "${basedir}/META-INF", required = true)
+	@Parameter (property = "tibco.bw6.project.metainf.source", defaultValue = "${basedir}/META-INF", required = true)
 	protected File metaInfSource;
 
-	@Parameter (property = "tibco.bw6.metainf", defaultValue = "${project.build.directory}/META-INF", required = true)
+	@Parameter (property = "tibco.bw6.project.metainf", defaultValue = "${project.build.directory}/META-INF", required = true)
 	protected File metaInf;
 
-	@Parameter (property = "tibco.bw6.manifest.source", defaultValue = "${basedir}/META-INF/MANIFEST.MF", required = true)
+	@Parameter (property = "tibco.bw6.project.manifest.source", defaultValue = "${basedir}/META-INF/MANIFEST.MF", required = true)
 	protected File manifestSource;
 
-	@Parameter (property = "tibco.bw6.manifest", defaultValue = "${project.build.directory}/META-INF/MANIFEST.MF", required = true)
+	@Parameter (property = "tibco.bw6.project.manifest", defaultValue = "${project.build.directory}/META-INF/MANIFEST.MF", required = true)
 	protected File manifest;
 
-	@Parameter (property = "tibco.bw6.dot.config", defaultValue = "${basedir}/.config", required = true)
+	@Parameter (property = "tibco.bw6.project.dot.config", defaultValue = "${basedir}/.config", required = true)
 	protected File dotConfig;
 
-	@Parameter (property = "tibco.bw6.dot.project", defaultValue = "${basedir}/.project", required = true)
+	@Parameter (property = "tibco.bw6.project.dot.project", defaultValue = "${basedir}/.project", required = true)
 	protected File dotProject;
 
 }

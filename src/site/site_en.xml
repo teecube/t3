@@ -17,7 +17,7 @@
 			<item name="Naming conventions" href="naming-conventions.html" />
 		</menu>
 
-		<menu name="Plugins">
+		<menu name="Components">
 			<item name="Current versions" href="./current-versions.html" />
 			<item name="" />
 			<item name="TIC" href="./tic/index.html" />
@@ -33,8 +33,8 @@
 		<reflowSkin>
 			<localResources>true</localResources>
 
-			<absoluteResourceURL>${repositorySiteURL}</absoluteResourceURL>
-			<protocolRelativeURLs>true</protocolRelativeURLs>
+			<absoluteResourceURL>${repositorySiteURL}/t3</absoluteResourceURL>
+			<protocolRelativeURLs>false</protocolRelativeURLs>
 
 			<theme>site</theme>
 
@@ -60,7 +60,7 @@
 
 			<bottomNav maxSpan="9">
 				<column>Documentation</column>
-				<column>Plugins</column>
+				<column>Components</column>
 			</bottomNav>
 			<bottomDescription>
 		        <![CDATA[

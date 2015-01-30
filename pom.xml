@@ -24,8 +24,22 @@
 		<ecosystemCompanyURL>http://www.t3soft.org</ecosystemCompanyURL>
 		<inceptionYear>2014</inceptionYear>
 		<notaBene><![CDATA[<b>NB:</b>]]></notaBene>
+
+		<ticName>TIC</ticName>
+		<ticFullName>TIBCO Infrastructure Core</ticFullName>
+		<ticSlogan>TIBCO Infrastructure Core</ticSlogan>
 		<ticAcronym><![CDATA[<abbr title="TIBCO Infrastructure Core">TIC</abbr>]]></ticAcronym>
+
+		<ticMavenName>Maven plugin</ticMavenName>
+
+		<tacName>TAC</tacName>
+		<tacFullName>TIBCO Advanced Components</tacFullName>
+		<tacSlogan>TIBCO Advanced Components</tacSlogan>
 		<tacAcronym><![CDATA[<abbr title="TIBCO Advanced Components">TAC</abbr>]]></tacAcronym>
+
+		<toeName>TIC</toeName>
+		<toeFullName>TIBCO Overview Extractor</toeFullName>
+		<toeSlogan>TIBCO Overview Extractor</toeSlogan>
 		<toeAcronym><![CDATA[<abbr title="TIBCO Overview Extractor">TOE</abbr>]]></toeAcronym>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -33,7 +47,6 @@
 
 		<maven.wagon.webdav-jackrabbit>2.8</maven.wagon.webdav-jackrabbit>
 		<settingsRepositorySiteProtocol/>
-		<settingsRepositoryPublicSiteProtocol/>
 		<repositoryReleaseURL>${settingsRepositoryReleaseURL}</repositoryReleaseURL>
 		<repositorySnapshotURL>${settingsRepositorySnapshotURL}</repositorySnapshotURL>
 	</properties>
@@ -363,11 +376,63 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<version>${maven.plugin.javadoc}</version>
+						<reportSets>
+							<reportSet>
+								<id>non-aggregate</id>
+								<reports>
+									<report>javadoc</report>
+								</reports>
+							</reportSet>
+						</reportSets>
+						<configuration>
+							<aggregate>false</aggregate>
+							<detectLinks>true</detectLinks>
+							<detectOfflineLinks>false</detectOfflineLinks>
+							<links>
+								<link>http://java.sun.com/javase/6/docs/api</link>
+								<link>http://maven.apache.org/ref/${maven.version}/maven-artifact/apidocs</link>
+								<link>http://maven.apache.org/shared/maven-reporting-api/apidocs</link>
+								<link>http://maven.apache.org/ref/${maven.version}/maven-plugin-api/apidocs</link>
+								<link>http://maven.apache.org/ref/${maven.version}/maven-model/apidocs</link>
+								<link>http://maven.apache.org/ref/${maven.version}/maven-core/apidocs</link>
+								<link>http://maven.apache.org/ref/${maven.version}/maven-settings/apidocs</link>
+							</links>
+							<linksource>true</linksource>
+							<sourceFileIncludes>
+								<include>**\/\*Mojo.java</include>
+							</sourceFileIncludes>
+							<tags>
+								<tag>
+									<name>example.</name>
+									<placement>aoptcmf</placement>
+									<head>Example :</head>
+								</tag>
+							</tags>
+							<doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+							<docletArtifact>
+								<groupId>org.umlgraph</groupId>
+								<artifactId>umlgraph</artifactId>
+								<version>5.6.6</version>
+							</docletArtifact>
+							<additionalparam>-views</additionalparam>
+							<useStandardDocletOptions>false</useStandardDocletOptions>
+						</configuration>
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-jxr-plugin</artifactId>
 						<version>${maven.plugin.jxr}</version>
+						<reportSets>
+							<reportSet>
+								<id>non-aggregate</id>
+								<reports>
+									<report>jxr</report>
+								</reports>
+							</reportSet>
+						</reportSets>
+						<configuration>
+							<linkJavadoc>true</linkJavadoc>
+						</configuration>
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
@@ -582,7 +647,7 @@
 		<profile> <!-- Site -->
 			<id>site</id>
 			<activation>
-				<activeByDefault>false</activeByDefault>
+				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
 				<includeSource>true</includeSource>
@@ -594,91 +659,6 @@
 					<url>${settingsRepositorySiteProtocol}${repositorySiteURL}</url>
 				</site>
 			</distributionManagement>
-			<reporting>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>${maven.plugin.javadoc}</version>
-						<reportSets>
-							<reportSet>
-								<id>non-aggregate</id>
-								<reports>
-									<report>javadoc</report>
-								</reports>
-							</reportSet>
-						</reportSets>
-						<configuration>
-							<aggregate>false</aggregate>
-							<detectLinks>true</detectLinks>
-							<detectOfflineLinks>false</detectOfflineLinks>
-							<links>
-								<link>http://java.sun.com/javase/6/docs/api</link>
-								<link>http://maven.apache.org/ref/${maven.version}/maven-artifact/apidocs</link>
-								<link>http://maven.apache.org/shared/maven-reporting-api/apidocs</link>
-								<link>http://maven.apache.org/ref/${maven.version}/maven-plugin-api/apidocs</link>
-								<link>http://maven.apache.org/ref/${maven.version}/maven-model/apidocs</link>
-								<link>http://maven.apache.org/ref/${maven.version}/maven-core/apidocs</link>
-								<link>http://maven.apache.org/ref/${maven.version}/maven-settings/apidocs</link>
-							</links>
-							<linksource>true</linksource>
-							<sourceFileIncludes>
-								<include>**\/\*Mojo.java</include>
-							</sourceFileIncludes>
-							<tags>
-								<tag>
-									<name>example.</name>
-									<placement>aoptcmf</placement>
-									<head>Example :</head>
-								</tag>
-							</tags>
-							<doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
-							<docletArtifact>
-								<groupId>org.umlgraph</groupId>
-								<artifactId>umlgraph</artifactId>
-								<version>5.6.6</version>
-							</docletArtifact>
-							<additionalparam>-views</additionalparam>
-							<useStandardDocletOptions>false</useStandardDocletOptions>
-						</configuration>
-					</plugin>
-				</plugins>
-			</reporting>
-		</profile>
-		<profile> <!-- Public Site -->
-			<id>public-site</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<repositorySiteURL>${settingsRepositoryPublicSiteURL}/${ecosystemArtifactId}</repositorySiteURL>
-			</properties>
-			<distributionManagement>
-				<site>
-					<id>t3.site.public</id>
-					<url>${settingsRepositoryPublicSiteProtocol}${repositorySiteURL}</url>
-				</site>
-			</distributionManagement>
-			<reporting>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>${maven.plugin.javadoc}</version>
-						<reportSets>
-							<reportSet>
-								<id>aggregate</id>
-								<reports>
-									<!-- empty because public-site does not publish Javadocs -->
-								</reports>
-							</reportSet>
-						</reportSets>
-						<configuration>
-							<aggregate>true</aggregate>
-						</configuration>
-					</plugin>
-				</plugins>
-			</reporting>
 		</profile>
 	</profiles>
 
@@ -689,6 +669,20 @@
 		<url>[TODO]</url>
 	</ciManagement>
 	-->
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<organization>
+		<name>${ecosystemCompany}</name>
+		<url>${ecosystemCompanyURL}</url>
+	</organization>
+
+	<url>${repositorySiteURL}</url>
 
 	<distributionManagement>
 		<repository>
