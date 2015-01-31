@@ -20,7 +20,7 @@ import java.io.File;
 
 /**
  *
- * @author Mathieu Debove <mad@t3soft.org>
+ * @author Mathieu Debove &lt;mad@t3soft.org&gt;
  *
  */
 public interface AbstractBW6ArtifactMojo {

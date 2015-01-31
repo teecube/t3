@@ -36,7 +36,7 @@ import org.w3c.dom.NodeList;
 
 /**
  *
- * @author Mathieu Debove <mad@t3soft.org>
+ * @author Mathieu Debove &lt;mad@t3soft.org&gt;
  *
  */
 public class BW6Utils {

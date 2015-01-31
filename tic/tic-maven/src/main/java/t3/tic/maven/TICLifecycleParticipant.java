@@ -43,7 +43,7 @@ import t3.tic.maven.bw6.BW6PackagingConvertor;
 
 /**
  *
- * @author Mathieu Debove <mad@t3soft.org>
+ * @author Mathieu Debove &lt;mad@t3soft.org&gt;
  *
  */
 @Component(role = AbstractMavenLifecycleParticipant.class, hint = "BW6LifecycleListener")

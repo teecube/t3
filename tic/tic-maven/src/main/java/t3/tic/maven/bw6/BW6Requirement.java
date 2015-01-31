@@ -18,24 +18,25 @@ package t3.tic.maven.bw6;
 
 /**
  * <p>
- * A BW6 requirement is specified as a &lt;requirement> child element of the
- * &lt;dependencies> element of this plugin configuration.
+ * A BW6 requirement is specified as a &lt;requirement&gt;s child element of the
+ * &lt;dependencies&gt; element of this plugin configuration.
  * </p>
- * <p>For instance:
+ * <p>
+ * For instance:
+ * </p>
  * 	<pre>
- *&lt;configuration>
- *  &lt;dependencies>
- *    &lt;requirement>
- *      &lt;type>eclipse-plugin&lt;/type>
- *      &lt;id>com.tibco.bw.core.model&lt;/id>
- *      &lt;versionRange>6.0.0&lt;/versionRange>
- *    &lt;/requirement>
- *  &lt;/dependencies>
- *&lt;/configuration>
+ *&lt;configuration&gt;
+ *  &lt;dependencies&gt;
+ *    &lt;requirement&gt;
+ *      &lt;type&gt;eclipse-plugin&lt;/type&gt;
+ *      &lt;id&gt;com.tibco.bw.core.model&lt;/id&gt;
+ *      &lt;versionRange&gt;6.0.0&lt;/versionRange&gt;
+ *    &lt;/requirement&gt;
+ *  &lt;/dependencies&gt;
+ *&lt;/configuration&gt;
  * 	</pre>
- * </p>
  *
- * @author Mathieu Debove <mad@t3soft.org>
+ * @author Mathieu Debove &lt;mad@t3soft.org&gt;
  *
  */
 public class BW6Requirement {

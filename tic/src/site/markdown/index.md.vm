@@ -13,8 +13,4 @@ $h1 ${ticName} - ${ticMavenName}
 
 The ${ticName} - ${ticMavenName} is the core Maven plugin defining the BW6
 lifecycles.
-
 <div>[Learn more »](./tic-maven/index.html)</div>
-<div>[Learn more »](./index.html)</div>
-
-[Test](http://www.google.com)

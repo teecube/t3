@@ -16,7 +16,7 @@
 	<custom>
 		<reflowSkin>
 			<protocolRelativeURLs>false</protocolRelativeURLs>
-			<absoluteResourceURL>${repositorySiteURL}/t3</absoluteResourceURL>
+			<absoluteResourceURL>${repositorySiteURL}</absoluteResourceURL>
 
 			<brand>
 				<name>

@@ -32,7 +32,7 @@ import org.apache.maven.settings.Settings;
 
 /**
  *
- * @author Mathieu Debove <mad@t3soft.org>
+ * @author Mathieu Debove &lt;mad@t3soft.org&gt;
  *
  */
 public abstract class AbstractBW6Mojo extends AbstractMojo {

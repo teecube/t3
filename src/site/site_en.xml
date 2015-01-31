@@ -17,7 +17,7 @@
 			<item name="Naming conventions" href="naming-conventions.html" />
 		</menu>
 
-		<menu name="Components">
+		<menu name="${ecosystemName}">
 			<item name="Current versions" href="./current-versions.html" />
 			<item name="" />
 			<item name="TIC" href="./tic/index.html" />
@@ -33,7 +33,7 @@
 		<reflowSkin>
 			<localResources>true</localResources>
 
-			<absoluteResourceURL>${repositorySiteURL}/t3</absoluteResourceURL>
+			<absoluteResourceURL>${repositorySiteURL}</absoluteResourceURL>
 			<protocolRelativeURLs>false</protocolRelativeURLs>
 
 			<theme>site</theme>

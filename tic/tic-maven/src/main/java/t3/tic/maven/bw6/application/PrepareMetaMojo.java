@@ -36,7 +36,7 @@ import t3.tic.maven.bw6.BW6Utils;
 
 /**
  *
- * @author Mathieu Debove <mad@t3soft.org>
+ * @author Mathieu Debove &lt;mad@t3soft.org&gt;
  *
  */
 @Mojo(name="prepare-meta", defaultPhase = LifecyclePhase.PROCESS_RESOURCES, requiresProject = true)
