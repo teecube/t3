@@ -23,25 +23,27 @@ import org.apache.maven.plugins.annotations.Parameter;
 /**
  * <p>
  *  There are three kinds of BW6 projects:
+ * </p>
  *  <ul>
  *   <li>BW6 app module</li>
  *   <li>BW6 shared module</li>
  *   <li>BW6 application</li>
  *  </ul>
- *  <br />
+ * <p>
  *  They all have in common:
+ * </p>
  *  <ul>
  *   <li>a META-INF folder</li>
  *   <li>a MANIFEST.MF file in the META-INF folder</li>
  *   <li>a .config file</li>
  *   <li>a .project file</li>
  *  </ul>
- *  <br />
- *  This abstract Mojo (which can be inherited my concrete ones) defines all
+ * <p>
+ * This abstract Mojo (which can be inherited by concrete ones) defines all
  * these common objects as Mojo parameters.
  * </p>
  *
- * @author Mathieu Debove <mad@t3soft.org>
+ * @author Mathieu Debove &lt;mad@t3soft.org&gt;
  *
  */
 public abstract class AbstractBW6ProjectMojo extends AbstractBW6Mojo {

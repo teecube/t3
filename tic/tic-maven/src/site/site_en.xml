@@ -15,10 +15,15 @@
 
 	<custom>
 		<reflowSkin>
+			<protocolRelativeURLs>false</protocolRelativeURLs>
+			<absoluteResourceURL>${repositorySiteURL}</absoluteResourceURL>
+
 			<brand>
 				<name>
 		          <![CDATA[
-		          <style>.navbar .brand { padding: 5px 20px;}</style><a class="brand" href="${repositorySiteURL}/index.html">${ecosystemNameHighlight2}</a><span class="brand" style="padding: 5px 5px;">/</span><a class="brand" href="${repositorySiteURL}/${project.artifactId}/index.html">${ticName}</a>
+		          <style>.navbar .brand { padding: 5px 20px;}</style><a class="brand" href="${repositorySiteURL}/index.html">${ecosystemNameHighlight2}</a>
+		          <span class="brand" style="padding: 5px 5px;">/</span><a class="brand" href="${repositorySiteURL}/${project.parent.artifactId}/index.html">${ticName}</a>
+		          <span class="brand" style="padding: 5px 5px;">/</span><a class="brand" href="${repositorySiteURL}/${project.parent.artifactId}/${project.artifactId}/index.html">${ticMavenName}</a>
 		          ]]>
 				</name>
 			</brand>

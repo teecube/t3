@@ -42,7 +42,7 @@ import t3.tic.maven.bw6.BW6Utils;
 
 /**
  *
- * @author Mathieu Debove <mad@t3soft.org>
+ * @author Mathieu Debove &lt;mad@t3soft.org&gt;
  *
  */
 public abstract class AbstractBW6ApplicationMojo extends AbstractBW6ProjectMojo {

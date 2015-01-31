@@ -66,7 +66,7 @@ import t3.tic.maven.PluginBuilder;
 
 /**
  *
- * @author Mathieu Debove <mad@t3soft.org>
+ * @author Mathieu Debove &lt;mad@t3soft.org&gt;
  *
  */
 public class BW6PackagingConvertor {
@@ -195,15 +195,15 @@ public class BW6PackagingConvertor {
 		}
 
 		/*
-		 * <dependency-resolution>
-		 *   <extraRequirements>
-		 *     <requirement>
-		 *       <type>eclipse-plugin</type>
-		 *       <id>com.tibco.bw.core.model</id>
-		 *       <versionRange>6.0.0</versionRange>
-		 *     </requirement>
-		 *   </extraRequirements>
-		 * </dependency-resolution>
+		 * &lt;dependency-resolution&gt;
+		 *   &lt;extraRequirements&gt;
+		 *     &lt;requirement&gt;
+		 *       &lt;type&gt;eclipse-plugin&lt;/type&gt;
+		 *       &lt;id&gt;com.tibco.bw.core.model&lt;/id&gt;
+		 *       &lt;versionRange&gt;6.0.0&lt;/versionRange&gt;
+		 *     &lt;/requirement&gt;
+		 *   &lt;/extraRequirements&gt;
+		 * &lt;/dependency-resolution&gt;
 		 */
 		configuration.add(
 			element("dependency-resolution",
@@ -394,7 +394,7 @@ public class BW6PackagingConvertor {
 	/**
 	 * <p>
 	 * A BW6 application can be defined by a "pom" packaging and have
-	 * &lt;modules>.
+	 * &lt;modules&gt;.
 	 * However, the internal lifecycle to use is the one of "bw6-application"
 	 * packaging.
 	 * </p>

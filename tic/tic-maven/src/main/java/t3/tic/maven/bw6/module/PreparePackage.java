@@ -34,7 +34,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 
 /**
  *
- * @author Mathieu Debove <mad@t3soft.org>
+ * @author Mathieu Debove &lt;mad@t3soft.org&gt;
  *
  */
 @Mojo( name="bw6-clean-build-properties", defaultPhase=LifecyclePhase.PREPARE_PACKAGE  )

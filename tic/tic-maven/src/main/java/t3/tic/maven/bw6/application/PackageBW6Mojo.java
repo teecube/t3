@@ -38,7 +38,7 @@ import t3.tic.maven.bw6.AbstractBW6ArtifactMojo;
 
 /**
  *
- * @author Mathieu Debove <mad@t3soft.org>
+ * @author Mathieu Debove &lt;mad@t3soft.org&gt;
  *
  */
 @Mojo(name="bw6-package", defaultPhase = LifecyclePhase.PACKAGE, requiresProject = true)

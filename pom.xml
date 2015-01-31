@@ -221,15 +221,8 @@
 								</links>
 								<linksource>true</linksource>
 								<sourceFileIncludes>
-									<include>**\/\*Mojo.java</include>
+									<include>**\/\*.java</include>
 								</sourceFileIncludes>
-								<tags>
-									<tag>
-										<name>example.</name>
-										<placement>aoptcmf</placement>
-										<head>Example :</head>
-									</tag>
-								</tags>
 							</configuration>
 						</plugin>
 

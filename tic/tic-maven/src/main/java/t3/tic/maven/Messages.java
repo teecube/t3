@@ -18,7 +18,7 @@ package t3.tic.maven;
 
 /**
  * 
- * @author Mathieu Debove <mad@t3soft.org>
+ * @author Mathieu Debove &lt;mad@t3soft.org&gt;
  *
  */
 public class Messages {

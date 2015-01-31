@@ -25,15 +25,18 @@ import t3.tic.maven.bw6.AbstractBW6ProjectMojo;
 /**
  * <p>
  * A BW6 module can be:
+ * </p>
  *  <ul>
  *   <li>an app module</li>
  *   <li>an shared module</li>
  *  </ul>
+ * <p>
  *  They both have in common:
+ * </p>
  *  <ul>
  *   <li>a build.properties file</li>
- * </p>
- * @author Mathieu Debove <mad@t3soft.org>
+ *  </ul>
+ * @author Mathieu Debove &lt;mad@t3soft.org&gt;
  *
  */
 public abstract class AbstractBW6ModuleMojo extends AbstractBW6ProjectMojo {

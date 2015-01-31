@@ -33,7 +33,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 /**
  *
- * @author Mathieu Debove <mad@t3soft.org>
+ * @author Mathieu Debove &lt;mad@t3soft.org&gt;
  *
  */
 public class PluginBuilder {

@@ -38,7 +38,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
  * This class handles POM file manipulation using the Maven API.
  * </p>
  *
- * @author Mathieu Debove <mad@t3soft.org>
+ * @author Mathieu Debove &lt;mad@t3soft.org&gt;
  *
  */
 public class POMManager {
