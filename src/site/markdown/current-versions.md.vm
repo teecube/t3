@@ -1,0 +1,10 @@
+# Current versions of elements
+
+---
+
+| Name                                                 | Version             | Maven coordinates                                              |
+|------------------------------------------------------|---------------------|----------------------------------------------------------------|
+| [${ecosystemName}](./index.html)                     | ${ecosystemVersion} | ${ecosystemGroupId}:${ecosystemArtifactId}:${ecosystemVersion} |
+| [${ticDisplayedName}](./${ticArtifactId}/index.html) | ${ticVersion}       | ${ticGroupId}:${ticArtifactId}:${ticVersion}                   |
+| [${tacDisplayedName}](./${tacArtifactId}/index.html) | ${tacVersion}       | ${tacGroupId}:${tacArtifactId}:${tacVersion}                   |
+| [${toeDisplayedName}](./${toeArtifactId}/index.html) | ${toeVersion}       | ${toeGroupId}:${toeArtifactId}:${toeVersion}                   |

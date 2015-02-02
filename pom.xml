@@ -16,7 +16,7 @@
 		<ecosystemName>T³</ecosystemName>
 		<ecosystemNameHighlight><![CDATA[<i>T<span class="color-highlight">³</span></i>]]></ecosystemNameHighlight>
 		<ecosystemNameHighlight2><![CDATA[T<span class="color-highlight">³</span>]]></ecosystemNameHighlight2>
-		<ecosystemSlogan>T³ = TIC TAC TOE</ecosystemSlogan>
+		<ecosystemSlogan><![CDATA[T<span class="color-highlight">³</span> = <span class="color-highlight">T</span>IC T<span class="color-highlight">A</span>C TO<span class="color-highlight">E</span>]]></ecosystemSlogan>
 		<ecosystemGroupId>t3</ecosystemGroupId>
 		<ecosystemArtifactId>t3</ecosystemArtifactId>
 		<ecosystemVersion>${releaseVersion}</ecosystemVersion>
@@ -26,21 +26,30 @@
 		<notaBene><![CDATA[<b>NB:</b>]]></notaBene>
 
 		<ticName>TIC</ticName>
+		<ticDisplayedName><![CDATA[<span class="color-highlight">T</span>IC]]></ticDisplayedName>
 		<ticFullName>TIBCO Infrastructure Core</ticFullName>
 		<ticSlogan>TIBCO Infrastructure Core</ticSlogan>
-		<ticAcronym><![CDATA[<abbr title="TIBCO Infrastructure Core">TIC</abbr>]]></ticAcronym>
+		<ticAcronym><![CDATA[<abbr title="TIBCO Infrastructure Core"><span class="color-highlight">T</span>IC</abbr>]]></ticAcronym>
+		<ticGroupId>t3.tic</ticGroupId>
+		<ticArtifactId>tic</ticArtifactId>
 
 		<ticMavenName>Maven plugin</ticMavenName>
 
 		<tacName>TAC</tacName>
+		<tacDisplayedName><![CDATA[T<span class="color-highlight">A</span>C]]></tacDisplayedName>
 		<tacFullName>TIBCO Advanced Components</tacFullName>
 		<tacSlogan>TIBCO Advanced Components</tacSlogan>
-		<tacAcronym><![CDATA[<abbr title="TIBCO Advanced Components">TAC</abbr>]]></tacAcronym>
+		<tacAcronym><![CDATA[<abbr title="TIBCO Advanced Components">T<span class="color-highlight">A</span>C</abbr>]]></tacAcronym>
+		<tacGroupId>t3.tac</tacGroupId>
+		<tacArtifactId>tac</tacArtifactId>
 
-		<toeName>TIC</toeName>
+		<toeName>TOE</toeName>
+		<toeDisplayedName><![CDATA[TO<span class="color-highlight">E</span>]]></toeDisplayedName>
 		<toeFullName>TIBCO Overview Extractor</toeFullName>
 		<toeSlogan>TIBCO Overview Extractor</toeSlogan>
-		<toeAcronym><![CDATA[<abbr title="TIBCO Overview Extractor">TOE</abbr>]]></toeAcronym>
+		<toeAcronym><![CDATA[<abbr title="TIBCO Overview Extractor">TO<span class="color-highlight">E</span></abbr>]]></toeAcronym>
+		<toeGroupId>t3.toe</toeGroupId>
+		<toeArtifactId>toe</toeArtifactId>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -474,7 +483,7 @@
 					<dependency>
 						<groupId>org.apache.maven</groupId>
 						<artifactId>maven-core</artifactId>
-						<version>3.1.1</version>
+						<version>3.2.1</version>
 					</dependency>
 					<dependency>
 						<groupId>org.apache.maven</groupId>
@@ -484,7 +493,7 @@
 					<dependency>
 						<groupId>org.apache.maven</groupId>
 						<artifactId>maven-plugin-api</artifactId>
-						<version>3.1.1</version>
+						<version>3.2.1</version>
 					</dependency>
 					<dependency>
 						<groupId>org.apache.maven.plugin-tools</groupId>
@@ -584,6 +593,7 @@
 						<version>1.0</version>
 						<executions>
 							<execution>
+								<id>set-current-year</id>
 								<phase>validate</phase>
 								<goals>
 									<goal>execute</goal>
@@ -595,6 +605,63 @@
 										def vartimestamp = MessageFormat.format("{0,date,yyyy}", new Date())
 										project.properties['currentYear'] = vartimestamp
 									</source>
+								</configuration>
+							</execution>
+							<execution>
+								<id>set-current-versions</id>
+								<phase>pre-site</phase>
+								<goals>
+									<goal>execute</goal>
+								</goals>
+								<configuration>
+									<source><![CDATA[
+										import java.io.File
+										import java.util.Scanner
+										import javax.xml.xpath.*
+										import org.xml.sax.InputSource
+
+										def setCurrentVersion(String coordinates, String propertyName) {
+											def result = null
+
+											def path = "$settings.localRepository/$coordinates/maven-metadata-local.xml"
+											def f = new File(path)
+											if (f != null && f.exists()) {
+												def fis = new FileInputStream(f)
+
+												def xpath = XPathFactory.newInstance().newXPath()
+
+												def nodes = xpath.evaluate('/metadata/versioning/release', new InputSource(fis), XPathConstants.NODESET)
+												nodes.each{ 
+													result = xpath.evaluate('text()', it)
+												}
+												if (result == null) {
+													fis = new FileInputStream(f)
+													nodes = xpath.evaluate('/metadata/versioning/latest', new InputSource(fis), XPathConstants.NODESET)
+													nodes.each{ 
+														result = xpath.evaluate('text()', it)
+													}
+												}
+												if (result == null) {
+													fis = new FileInputStream(f)
+													nodes = xpath.evaluate('/metadata/versioning/versions/version', new InputSource(fis), XPathConstants.NODESET)
+													nodes.each{ 
+														result = xpath.evaluate('text()', it)
+													}
+												}
+											}
+
+											def pName = "$propertyName"
+											if (result != null) {
+												//println "Setting $propertyName to $result"
+												project.properties["$propertyName"] = result
+											} else {
+												project.properties["$propertyName"] = "unknown"												
+											}
+										}
+										setCurrentVersion("t3/tic/tic", "ticVersion")
+										setCurrentVersion("t3/tac/tac", "tacVersion")
+										setCurrentVersion("t3/toe/toe", "toeVersion")
+									]]></source>
 								</configuration>
 							</execution>
 						</executions>
@@ -674,6 +741,10 @@
 		<name>${ecosystemCompany}</name>
 		<url>${ecosystemCompanyURL}</url>
 	</organization>
+
+	<prerequisites>
+		<maven>3.2.1</maven>
+	</prerequisites>
 
 	<url>${repositorySiteURL}</url>
 

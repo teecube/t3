@@ -1,0 +1,20 @@
+#set($h1 = '#')
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+
+$h1 Introduction
+
+${tacDisplayedName} is a framework of components to be used with other ${ecosystemNameHighlight} elements.
+
+---
+
+$h1 ${tacDisplayedName} - Error management
+
+Coming soon...
+
+$h1 ${tacDisplayedName} - Commons
+
+Based on Apache Commons.
+
+Coming soon...

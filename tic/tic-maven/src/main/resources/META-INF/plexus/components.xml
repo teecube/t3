@@ -162,5 +162,18 @@
 			</configuration>
 		</component>
 
+		<component>
+			<role>org.apache.maven.lifecycle.Lifecycle</role>
+			<implementation>org.apache.maven.lifecycle.Lifecycle</implementation>
+			<role-hint>bw6deploy</role-hint>
+			<configuration>
+				<id>bw6deploy</id>
+				<phases>
+					<phase>prepare-bw6-config</phase>
+					<phase>bw6-deploy</phase>
+				</phases>
+			</configuration>
+		</component>
+
 	</components>
 </component-set>

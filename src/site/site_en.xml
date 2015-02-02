@@ -18,11 +18,11 @@
 		</menu>
 
 		<menu name="${ecosystemName}">
-			<item name="Current versions" href="./current-versions.html" />
+			<item name="Current versions" href="${repositorySiteURL}/current-versions.html" />
 			<item name="" />
-			<item name="TIC" href="./tic/index.html" />
-			<item name="TAC" href="./tac/index.html" />
-			<item name="TOE" href="./toe/index.html" />
+			<item name="TIC" href="${repositorySiteURL}/tic/index.html" />
+			<item name="TAC" href="${repositorySiteURL}/tac/index.html" />
+			<item name="TOE" href="${repositorySiteURL}/toe/index.html" />
 		</menu>
 	</body>
 
@@ -56,7 +56,8 @@
 		          ]]>
 				</name>
 			</brand>
-			<slogan>${ecosystemSlogan}</slogan>
+			<!-- <slogan><![CDATA[T<span class="color-highlight">³</span> = <span class="color-highlight">T</span>IC T<span class="color-highlight">A</span>C TO<span class="color-highlight">E</span>]]></slogan> -->
+			<slogan><![CDATA[${ecosystemSlogan}]]></slogan>
 
 			<bottomNav maxSpan="9">
 				<column>Documentation</column>
