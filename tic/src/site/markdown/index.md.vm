@@ -5,12 +5,12 @@
 
 $h1 Introduction
 
-${ticName} is the lowest stack of ${ecosystemNameHighlight}.
+${ticDisplayedName} is the lowest stack of ${ecosystemNameHighlight}.
 
 ---
 
-$h1 ${ticName} - ${ticMavenName}
+$h1 ${ticDisplayedName} - ${ticMavenName}
 
-The ${ticName} - ${ticMavenName} is the core Maven plugin defining the BW6
+The ${ticDisplayedName} - ${ticMavenName} is the core Maven plugin defining the BW6
 lifecycles.
 <div>[Learn more »](./tic-maven/index.html)</div>

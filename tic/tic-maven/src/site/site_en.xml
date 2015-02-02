@@ -11,6 +11,16 @@
 		</menu>
 		-->
 		<menu name="Reports" ref="reports" />
+
+		<menu name="${ecosystemName}">
+			<item name="Current versions" href="${repositorySiteURL}/current-versions.html" />
+			<item name="" />
+			<item name="TIC" href="${repositorySiteURL}/tic/index.html" />
+			<item name="- ${ticName} Maven plugin" href="${repositorySiteURL}/tic/tic-maven/index.html" />
+			<item name="" />
+			<item name="TAC" href="${repositorySiteURL}/tac/index.html" />
+			<item name="TOE" href="${repositorySiteURL}/toe/index.html" />
+		</menu>
 	</body>
 
 	<custom>
