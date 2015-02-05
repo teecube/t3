@@ -3,8 +3,6 @@
 #set($h3 = '###')
 #set($h4 = '####')
 
-$h1 Introduction
-
 ${ecosystemNameHighlight} gives a full stack composed of a three-layered
 elements: the ${ticAcronym}, ${tacAcronym} & ${toeAcronym}.
 
@@ -27,6 +25,8 @@ $h1 ${tacDisplayedName}
 The ${tacFullName} (${tacAcronym}) accelerates development with ready-to-use
 solution for common patterns.
 <div>[Learn more »](./tac/index.html)</div>
+
+---
 
 $h1 ${toeDisplayedName}
 

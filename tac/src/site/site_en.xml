@@ -21,13 +21,6 @@
 			<protocolRelativeURLs>false</protocolRelativeURLs>
 			<absoluteResourceURL>${repositorySiteURL}</absoluteResourceURL>
 
-			<brand>
-				<name>
-		          <![CDATA[
-		          <style>.navbar .brand { padding: 5px 20px;}</style><a class="brand" href="${repositorySiteURL}/index.html">${ecosystemNameHighlight2}</a><span class="brand" style="padding: 5px 5px;">/</span><a class="brand" href="${repositorySiteURL}/${project.artifactId}/index.html">${tacDisplayedName}</a>
-		          ]]>
-				</name>
-			</brand>
 			<slogan>${tacSlogan}</slogan>
 
 			<pages>

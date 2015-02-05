@@ -15,7 +15,6 @@
 		<!-- Velocity-proof properties -->
 		<ecosystemName>T³</ecosystemName>
 		<ecosystemNameHighlight><![CDATA[<i>T<span class="color-highlight">³</span></i>]]></ecosystemNameHighlight>
-		<ecosystemNameHighlight2><![CDATA[T<span class="color-highlight">³</span>]]></ecosystemNameHighlight2>
 		<ecosystemSlogan><![CDATA[T<span class="color-highlight">³</span> = <span class="color-highlight">T</span>IC T<span class="color-highlight">A</span>C TO<span class="color-highlight">E</span>]]></ecosystemSlogan>
 		<ecosystemGroupId>t3</ecosystemGroupId>
 		<ecosystemArtifactId>t3</ecosystemArtifactId>
@@ -24,6 +23,8 @@
 		<ecosystemCompanyURL>http://www.t3soft.org</ecosystemCompanyURL>
 		<inceptionYear>2014</inceptionYear>
 		<notaBene><![CDATA[<b>NB:</b>]]></notaBene>
+
+		<siteTopCaption><![CDATA[T<span class="color-highlight">³</span>]]></siteTopCaption>
 
 		<ticName>TIC</ticName>
 		<ticDisplayedName><![CDATA[<span class="color-highlight">T</span>IC]]></ticDisplayedName>
@@ -719,6 +720,25 @@
 					<url>${settingsRepositorySiteProtocol}${repositorySiteURL}</url>
 				</site>
 			</distributionManagement>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>t3</groupId>
+						<artifactId>site-enhancer</artifactId>
+						<version>${project.version}</version>
+						<executions>
+							<execution>
+								<id>update-site</id>
+								<goals>
+									<goal>update-menu</goal>
+									<goal>update-brand</goal>
+								</goals>
+								<phase>post-site</phase>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
 

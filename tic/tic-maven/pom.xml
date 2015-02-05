@@ -19,6 +19,10 @@
 
 	<url>${repositorySiteURL}/${project.parent.artifactId}/${project.artifactId}</url>
 
+	<properties>
+		<siteTopCaption>${ticMavenName}</siteTopCaption>
+	</properties>
+
 	<build>
 		<resources>
 			<resource>

@@ -19,6 +19,8 @@
 	<url>${repositorySiteURL}/${project.artifactId}</url>
 
 	<properties>
+		<siteTopCaption>${ticDisplayedName}</siteTopCaption>
+
 		<tycho.version>0.22.0</tycho.version>
 	</properties>
 

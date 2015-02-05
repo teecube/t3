@@ -49,14 +49,7 @@
 			<tocTopMax>6</tocTopMax>
 			<skinAttribution>false</skinAttribution>
 
-			<brand>
-				<name>
-		          <![CDATA[
-		          <style>.navbar .brand { padding: 5px 20px;}</style><a class="brand" href="${repositorySiteURL}/index.html">${ecosystemNameHighlight2}</a>
-		          ]]>
-				</name>
-			</brand>
-			<!-- <slogan><![CDATA[T<span class="color-highlight">³</span> = <span class="color-highlight">T</span>IC T<span class="color-highlight">A</span>C TO<span class="color-highlight">E</span>]]></slogan> -->
+			<brand></brand>
 			<slogan><![CDATA[${ecosystemSlogan}]]></slogan>
 
 			<bottomNav maxSpan="9">
@@ -83,35 +76,9 @@
 					<sections>
 						<body />
 						<thumbs>2</thumbs>
+						<thumbs>2</thumbs>
 					</sections>
 				</index>
-		        <installation>
-					<sections>
-						<body />
-						<columns>2</columns>
-						<columns>2</columns>
-					</sections>
-		        </installation>
-		        <configuration>
-					<sections>
-						<body />
-						<sidebar />
-						<columns>1</columns>
-						<columns>1</columns>
-						<thumbs>2</thumbs>
-						<columns>2</columns>
-					</sections>
-		        </configuration>
-		        <naming-conventions>
-		        	<toc>top</toc>
-					<sections>
-						<body />
-						<columns>2</columns>
-						<thumbs>2</thumbs>
-						<thumbs>2</thumbs>
-						<columns>1</columns>
-					</sections>
-		        </naming-conventions>
 			</pages>
 		</reflowSkin>
 	</custom>
@@ -119,7 +86,7 @@
 	<bannerLeft>
 		<name>
           <![CDATA[
-          ${ecosystemNameHighlight2}
+          ${siteTopCaption}
           ]]>
 		</name>
 		<href>./index.html</href>
