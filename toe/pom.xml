@@ -18,4 +18,8 @@
 
 	<url>${repositorySiteURL}/${project.artifactId}</url>
 
+	<properties>
+		<siteTopCaption>${toeDisplayedName}</siteTopCaption>
+	</properties>
+
 </project>

@@ -32,3 +32,15 @@ footer.well {
 	height: 0px;
 	margin-top: -25px;
 }
+
+.navbar div.brand {
+	padding: 0px 20px;
+}
+
+.navbar span.brand {
+	padding: 10px 7px;
+}
+
+.main-body {
+	min-height: 350px;
+}
