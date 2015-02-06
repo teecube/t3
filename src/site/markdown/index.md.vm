@@ -6,11 +6,16 @@
 ${ecosystemNameHighlight} gives a full stack composed of a three-layered
 elements: the ${ticAcronym}, ${tacAcronym} & ${toeAcronym}.
 
-The ${ecosystemNameHighlight} is plugin-based and below is a description of
+${ecosystemNameHighlight} is plugin-based and below is a description of
 [each element](./current-versions.html). Before using a plugin, it is advised
 to start with ${ecosystemNameHighlight} common
 [installation](./installation.html) & [configuration](./configuration.html)
 instructions.
+
+---
+
+* Full support for TIBCO BusinessWorks 6
+* Full support for TIBCO Enterprise Administrator 2
 
 ---
 

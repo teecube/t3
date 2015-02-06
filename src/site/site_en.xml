@@ -75,6 +75,7 @@
 					<markPageHeader>false</markPageHeader>
 					<sections>
 						<body />
+						<sidebar />
 						<thumbs>2</thumbs>
 						<thumbs>2</thumbs>
 					</sections>

@@ -49,9 +49,9 @@
 
 		<toeName>TOE</toeName>
 		<toeDisplayedName><![CDATA[TO<span class="color-highlight">E</span>]]></toeDisplayedName>
-		<toeFullName>TIBCO Overview Extractor</toeFullName>
-		<toeSlogan>TIBCO Overview Extractor</toeSlogan>
-		<toeAcronym><![CDATA[<abbr title="TIBCO Overview Extractor">TO<span class="color-highlight">E</span></abbr>]]></toeAcronym>
+		<toeFullName>TOpology Editor</toeFullName>
+		<toeSlogan>TOpology Editor</toeSlogan>
+		<toeAcronym><![CDATA[<abbr title="TOpology Editor">TO<span class="color-highlight">E</span></abbr>]]></toeAcronym>
 		<toeGroupId>t3.toe</toeGroupId>
 		<toeArtifactId>toe</toeArtifactId>
 		<toeURLBase>${toeArtifactId}/${toeVersion}</toeURLBase>
@@ -819,7 +819,7 @@
 							<execution>
 								<id>update-site</id>
 								<goals>
-									<goal>update-menu</goal>
+									<goal>update-site</goal>
 									<goal>update-brand</goal>
 									<goal>update-general</goal>
 								</goals>

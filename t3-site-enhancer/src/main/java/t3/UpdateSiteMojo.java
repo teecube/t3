@@ -37,19 +37,24 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.rendersnake.HtmlCanvas;
 import org.rendersnake.Renderable;
 
-@Mojo(name = "update-menu", defaultPhase = LifecyclePhase.POST_SITE)
+@Mojo(name = "update-site", defaultPhase = LifecyclePhase.POST_SITE)
 public class UpdateSiteMojo extends AbstractSiteMojo {
 
 	@Parameter (defaultValue = "true")
 	protected Boolean generateSubMenuFromModules;
 	private SubMenuReplacement subMenuReplacement;
 	private SubMenuReplacement subMenuReplacementParent;
+	private SimpleReplacement span4to5;
+	private SimpleReplacement span8to7;
 
 	@Override
 	public void processHTMLFile(File htmlFile) throws MojoExecutionException {
 		try {
 			updateMenu(htmlFile, subMenuReplacement);
 			updateMenu(htmlFile, subMenuReplacementParent);
+
+			updateSimple(htmlFile, span4to5);
+			updateSimple(htmlFile, span8to7);
 		} catch (MojoExecutionException | IOException e) {
 			throw new MojoExecutionException(e.getLocalizedMessage(), e);
 		}
@@ -59,6 +64,15 @@ public class UpdateSiteMojo extends AbstractSiteMojo {
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		subMenuReplacement = new SubMenuReplacement();
 		subMenuReplacementParent = new SubMenuReplacement();
+
+		span4to5 = new SimpleReplacement();
+		span4to5.setFrom("<div class=\"span4\">");
+		span4to5.setTo("<div class=\"span5\"><style>ul { margin: 0 0 0 25px; }</style>");
+
+		span8to7 = new SimpleReplacement();
+		span8to7.setFrom("<div class=\"span8\">");
+		span8to7.setTo("<div class=\"span7\">");
+
 		if (generateSubMenuFromModules) {
 			try {
 				subMenuReplacement = generateSubMenuFromModules();
@@ -133,6 +147,17 @@ public class UpdateSiteMojo extends AbstractSiteMojo {
 		replaceRegExp.execute();
 	}
 
+	private void updateSimple(File htmlFile, SimpleReplacement simpleReplacement) {
+		if (htmlFile == null || simpleReplacement == null) return;
+
+		ReplaceRegExp replaceRegExp = new ReplaceRegExp();
+		replaceRegExp.setFile(htmlFile);
+		replaceRegExp.setMatch(simpleReplacement.getFrom());
+		replaceRegExp.setReplace(simpleReplacement.getTo());
+		replaceRegExp.setByLine(true);
+		replaceRegExp.execute();
+	}
+
 	protected class SubMenuElement implements Renderable {
 
 		private String subMenuElement;
@@ -148,6 +173,24 @@ public class UpdateSiteMojo extends AbstractSiteMojo {
 			html.li().a(href(subMenuLink)).write(subMenuElement)._a()._li();
 		}
 
+	}
+
+	protected class SimpleReplacement {
+		private String from;
+		private String to;
+
+		public String getFrom() {
+			return from;
+		}
+		public void setFrom(String from) {
+			this.from = from;
+		}
+		public String getTo() {
+			return to;
+		}
+		public void setTo(String to) {
+			this.to = to;
+		}
 	}
 
 	protected class SubMenuReplacement {
