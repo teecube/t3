@@ -39,7 +39,7 @@
 			<configuration>
 				<phases>
 					<validate>
-						t3.tic:tic-maven:bw6-clean-build-properties,
+						t3.tic:tic-bw6-maven:bw6-clean-build-properties,
 						org.eclipse.tycho:tycho-packaging-plugin:${tycho.version}:build-qualifier,
 						org.eclipse.tycho:tycho-packaging-plugin:${tycho.version}:validate-id,
 						org.eclipse.tycho:tycho-packaging-plugin:${tycho.version}:validate-version
@@ -97,7 +97,7 @@
 			<configuration>
 				<phases>
 					<validate>
-						t3.tic:tic-maven:bw6-clean-build-properties,
+						t3.tic:tic-bw6-maven:bw6-clean-build-properties,
 						org.eclipse.tycho:tycho-packaging-plugin:${tycho.version}:build-qualifier,
 						org.eclipse.tycho:tycho-packaging-plugin:${tycho.version}:validate-id,
 						org.eclipse.tycho:tycho-packaging-plugin:${tycho.version}:validate-version
@@ -153,10 +153,10 @@
 			<configuration>
 				<phases>
 					<process-resources>
-						t3.tic:tic-maven:prepare-meta
+						t3.tic:tic-bw6-maven:prepare-meta
 					</process-resources>
 					<package>
-						t3.tic:tic-maven:bw6-package
+						t3.tic:tic-bw6-maven:bw6-package
 					</package>
 				</phases>
 			</configuration>

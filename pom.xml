@@ -34,7 +34,7 @@
 		<ticGroupId>t3.tic</ticGroupId>
 		<ticArtifactId>tic</ticArtifactId>
 
-		<ticMavenName>Maven plugin</ticMavenName>
+		<ticMavenName>BW6 Maven plugin</ticMavenName>
 
 		<tacName>TAC</tacName>
 		<tacDisplayedName><![CDATA[T<span class="color-highlight">A</span>C]]></tacDisplayedName>
@@ -61,6 +61,10 @@
 		<repositorySnapshotURL>${settingsRepositorySnapshotURL}</repositorySnapshotURL>
 	</properties>
 
+	<modules>
+		<module>t3-common</module>
+	</modules>
+
 	<build>
 		<extensions>
 			<extension>
@@ -75,7 +79,9 @@
 		<profile> <!-- Maven plugins & dependencies -->
 			<id>maven</id> <!-- Maven plugins and dependencies -->
 			<activation>
-				<activeByDefault>true</activeByDefault>
+				<file>
+					<exists>pom.xml</exists>
+				</file>
 			</activation>
 			<properties>
 				<java.source.version>1.7</java.source.version>
@@ -483,13 +489,18 @@
 					<!-- Maven dependencies -->
 					<dependency>
 						<groupId>org.apache.maven</groupId>
+						<artifactId>maven-project</artifactId>
+						<version>3.0-alpha-2</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.maven</groupId>
 						<artifactId>maven-core</artifactId>
 						<version>3.2.1</version>
 					</dependency>
 					<dependency>
 						<groupId>org.apache.maven</groupId>
-						<artifactId>maven-project</artifactId>
-						<version>3.0-alpha-2</version>
+						<artifactId>maven-model</artifactId>
+						<version>3.2.1</version>
 					</dependency>
 					<dependency>
 						<groupId>org.apache.maven</groupId>
@@ -521,7 +532,9 @@
 		<profile> <!-- Additional plugins & dependencies -->
 			<id>additional</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
+				<file>
+					<exists>pom.xml</exists>
+				</file>
 			</activation>
 			<properties>
 				<apache.plugin.commons-collections>4.0</apache.plugin.commons-collections>
@@ -536,6 +549,12 @@
 			</properties>
 			<dependencyManagement>
 				<dependencies>
+					<dependency>
+						<groupId>${ecosystemGroupId}</groupId>
+						<artifactId>t3-common</artifactId>
+						<version>${ecosystemVersion}</version>
+					</dependency>
+
 					<dependency>
 						<groupId>org.apache.commons</groupId>
 						<artifactId>commons-collections4</artifactId>
@@ -708,7 +727,9 @@
 		<profile> <!-- Site -->
 			<id>site</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
+				<file>
+					<exists>pom.xml</exists>
+				</file>
 			</activation>
 			<properties>
 				<includeSource>true</includeSource>
@@ -723,9 +744,9 @@
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>t3</groupId>
-						<artifactId>site-enhancer</artifactId>
-						<version>${project.version}</version>
+						<groupId>${ecosystemGroupId}</groupId>
+						<artifactId>t3-site-enhancer</artifactId>
+						<version>${ecosystemVersion}</version>
 						<executions>
 							<execution>
 								<id>update-site</id>
@@ -739,6 +760,107 @@
 					</plugin>
 				</plugins>
 			</build>
+		</profile>
+		<profile>
+			<id>maven-plugin</id>
+		    <activation>
+				<file>
+		            <exists>maven.plugin.enabled</exists>
+		        </file>
+		    </activation>
+			<build>
+				<resources>
+					<resource>
+						<directory>src/main/resources</directory>
+						<filtering>true</filtering>
+						<includes>
+							<include>META-INF/**/*</include>
+						</includes>
+						<targetPath>filtered</targetPath>
+					</resource>
+					<resource>
+						<directory>src/main/resources</directory>
+						<filtering>true</filtering>
+						<includes>
+							<include>**/*</include>
+						</includes>
+						<excludes>
+							<exclude>plugins-configuration/**/*</exclude>
+						</excludes>
+					</resource>
+					<resource>
+						<directory>src/main/resources</directory>
+						<filtering>false</filtering>
+						<includes>
+							<include>plugins-configuration/**/*</include>
+						</includes>
+					</resource>
+				</resources>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-plugin-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<configuration>
+							<excludes>
+								<exclude>filtered/</exclude>
+							</excludes>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.plexus</groupId>
+						<artifactId>plexus-component-metadata</artifactId>
+						<executions>
+							<execution>
+								<phase>process-classes</phase>
+								<goals>
+									<goal>generate-metadata</goal>
+								</goals>
+								<configuration>
+									<staticMetadataDirectory>${project.build.outputDirectory}/filtered/META-INF/plexus</staticMetadataDirectory>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>com.mycila</groupId>
+						<artifactId>license-maven-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+
+			<dependencies>
+				<!-- Maven dependencies -->
+				<dependency>
+					<groupId>org.apache.maven.plugin-tools</groupId>
+					<artifactId>maven-plugin-annotations</artifactId>
+					<version>3.2</version>
+					<scope>provided</scope>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.maven</groupId>
+					<artifactId>maven-plugin-api</artifactId>
+					<version>3.2.1</version>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.maven</groupId>
+					<artifactId>maven-model</artifactId>
+					<version>3.2.1</version>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.maven</groupId>
+					<artifactId>maven-artifact</artifactId>
+					<version>3.2.1</version>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.maven</groupId>
+					<artifactId>maven-project</artifactId>
+					<version>3.0-alpha-2</version>
+				</dependency>
+			</dependencies>
 		</profile>
 	</profiles>
 

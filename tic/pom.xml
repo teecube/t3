@@ -25,7 +25,7 @@
 	</properties>
 
 	<modules>
-		<module>tic-maven</module>
+		<module>tic-bw6-maven</module>
 	</modules>
 
 </project>

@@ -11,30 +11,33 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>t3-site-enhancer</artifactId>
+	<artifactId>t3-common</artifactId>
 
 	<packaging>maven-plugin</packaging>
 
-	<name>${ecosystemName} - Site enhancer</name>
-	<description>Automatic Maven sites enhanecr for ${ecosystemName} projects</description>
+	<name>${ecosystemName} - Common</name>
+	<description>Utility classes for ${ecosystemName} projects</description>
 
 	<dependencies>
+		<!-- Maven dependencies -->
 		<dependency>
-			<groupId>${ecosystemGroupId}</groupId>
-			<artifactId>t3-common</artifactId>
-			<version>${ecosystemVersion}</version>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-model</artifactId>
 		</dependency>
-
 		<dependency>
-			<groupId>org.rendersnake</groupId>
-			<artifactId>rendersnake</artifactId>
-			<version>1.8</version>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-project</artifactId>
 		</dependency>
-
 		<dependency>
-			<groupId>org.apache.ant</groupId>
-			<artifactId>ant</artifactId>
-			<version>1.9.4</version>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-plugin-api</artifactId>
+		</dependency>
+		
+		<!-- Apache commons -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
 		</dependency>
 	</dependencies>
+
 </project>
