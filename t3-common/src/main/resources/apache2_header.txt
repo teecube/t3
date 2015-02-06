@@ -1,4 +1,4 @@
-(C) Copyright ${h_inceptionYear}-${h_currentYear} ${h_ecosystemCompany} 
+(C) Copyright ${h_inceptionYear}-${h_currentYear} ${h_ecosystemCompany}
 (${h_ecosystemCompanyURL}) and others.
 
 Licensed under the Apache License, Version 2.0 (the "License");
