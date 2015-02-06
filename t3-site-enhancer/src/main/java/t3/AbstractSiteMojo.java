@@ -90,6 +90,10 @@ public abstract class AbstractSiteMojo extends AbstractMojo {
 		}
     }
 
+	protected String getRootProjectProperty(MavenProject mavenProject, String propertyName) {
+		return mavenProject == null ? "" : (mavenProject.getParent() == null ? mavenProject.getModel().getProperties().getProperty(propertyName) : getRootProjectProperty(mavenProject.getParent(), propertyName));
+	}
+
 	public abstract void processHTMLFile(File htmlFile) throws Exception;
 
 	@Override

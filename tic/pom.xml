@@ -10,15 +10,22 @@
 	
 	<groupId>t3.tic</groupId>
 	<artifactId>tic</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
 	<name>${ecosystemName} - ${ticName}</name>
 
-	<url>${repositorySiteURL}/${project.artifactId}</url>
+	<url>${parent.project.url}/${ticURLBase}</url>
+	<distributionManagement>
+		<site>
+			<id>t3.site</id>
+			<url>${settingsRepositorySiteProtocol}${repositorySiteURL}/${ticURLBase}</url>
+		</site>
+	</distributionManagement>
 
 	<properties>
+		<releaseVersion></releaseVersion>
 		<siteTopCaption>${ticDisplayedName}</siteTopCaption>
 
 		<tycho.version>0.22.0</tycho.version>

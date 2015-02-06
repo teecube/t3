@@ -3,14 +3,12 @@
 #set($h3 = '###')
 #set($h4 = '####')
 
-$h1 Introduction
-
 ${ticDisplayedName} is the lowest stack of ${ecosystemNameHighlight}.
 
 ---
 
-$h1 ${ticDisplayedName} - ${ticMavenName}
+$h1 ${ticDisplayedName} - ${ticDisplayedMavenName}
 
-The ${ticDisplayedName} - ${ticMavenName} is the core Maven plugin defining the BW6
+The ${ticDisplayedName} - ${ticDisplayedMavenName} is the core Maven plugin defining the BW6
 lifecycles.
 <div>[Learn more »](./tic-bw6-maven/index.html)</div>

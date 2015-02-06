@@ -18,13 +18,13 @@ $h1 ${ticDisplayedName}
 
 The ${ticFullName} (${ticAcronym}) provides a full lifecyle management for
 TIBCO products.
-<div>[Learn more »](./tic/index.html)</div>
+<div>[Learn more »](./${ticURLBase}/index.html)</div>
 
 $h1 ${tacDisplayedName}
 
 The ${tacFullName} (${tacAcronym}) accelerates development with ready-to-use
 solution for common patterns.
-<div>[Learn more »](./tac/index.html)</div>
+<div>[Learn more »](./${tacURLBase}/index.html)</div>
 
 ---
 
@@ -32,4 +32,4 @@ $h1 ${toeDisplayedName}
 
 The ${toeFullName} (${toeAcronym}) improves global management of projects by
 simplifying the relation between functional and technical team.
-<div>[Learn more »](./toe/index.html)</div>
+<div>[Learn more »](./${toeURLBase}/index.html)</div>

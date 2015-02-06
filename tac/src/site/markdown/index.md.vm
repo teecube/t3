@@ -3,8 +3,6 @@
 #set($h3 = '###')
 #set($h4 = '####')
 
-$h1 Introduction
-
 ${tacDisplayedName} is a framework of components to be used with other ${ecosystemNameHighlight} elements.
 
 ---
