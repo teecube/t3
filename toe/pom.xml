@@ -16,7 +16,13 @@
 
 	<name>${ecosystemName} - ${toeName}</name>
 
-	<url>${repositorySiteURL}/${project.artifactId}</url>
+	<url>${parent.project.url}/${toeURLBase}</url>
+	<distributionManagement>
+		<site>
+			<id>t3.site</id>
+			<url>${settingsRepositorySiteProtocol}${repositorySiteURL}/${toeURLBase}</url>
+		</site>
+	</distributionManagement>
 
 	<properties>
 		<siteTopCaption>${toeDisplayedName}</siteTopCaption>

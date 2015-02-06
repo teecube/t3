@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>t3.tic</groupId>
 		<artifactId>tic</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.2-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>tic-bw6-maven</artifactId>
@@ -17,10 +17,12 @@
 
 	<name>${ecosystemName} - ${ticName} - ${ticMavenName}</name>
 
-	<url>${repositorySiteURL}/${project.parent.artifactId}/${project.artifactId}</url>
+	<url>${parent.project.url}/${project.artifactId}</url>
 
 	<properties>
-		<siteTopCaption>${ticMavenName}</siteTopCaption>
+		<releaseVersion />
+
+		<siteTopCaption>${ticDisplayedMavenName}</siteTopCaption>
 	</properties>
 
 	<dependencies>

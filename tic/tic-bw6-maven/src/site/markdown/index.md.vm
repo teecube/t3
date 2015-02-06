@@ -3,4 +3,5 @@
 #set($h3 = '###')
 #set($h4 = '####')
 
-${ticName} - ${ticMavenName} is the core Maven plugin defining the BW6 lifecycles.
+${ticDisplayedName} - ${ticDisplayedMavenName} is the core Maven plugin defining
+the BW6 lifecycles.
