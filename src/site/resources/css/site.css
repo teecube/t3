@@ -44,3 +44,7 @@ footer.well {
 .main-body {
 	min-height: 350px;
 }
+
+div.pull-left {
+	height: 100%;
+}
