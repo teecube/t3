@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3.tic.maven;
+package t3.tic.maven.bw6;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
@@ -39,15 +39,15 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.eclipse.tycho.core.maven.TychoMavenLifecycleParticipant;
 
-import t3.tic.maven.bw6.BW6PackagingConvertor;
+import t3.PluginBuilder;
 
 /**
  *
  * @author Mathieu Debove &lt;mad@t3soft.org&gt;
  *
  */
-@Component(role = AbstractMavenLifecycleParticipant.class, hint = "BW6LifecycleListener")
-public class TICLifecycleParticipant extends TychoMavenLifecycleParticipant {
+@Component(role = AbstractMavenLifecycleParticipant.class, hint = "TICBW6LifecycleParticipant")
+public class BW6LifecycleParticipant extends TychoMavenLifecycleParticipant {
 
 	@Requirement
 	private Logger logger;

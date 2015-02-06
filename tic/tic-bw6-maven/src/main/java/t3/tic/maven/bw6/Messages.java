@@ -14,15 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3.tic.maven;
+package t3.tic.maven.bw6;
 
 /**
- * 
+ *
  * @author Mathieu Debove &lt;mad@t3soft.org&gt;
  *
  */
 public class Messages {
-	
+
 	public static final String MESSAGE_PREFIX = "~-> TIC: ";
 	public static final String MESSAGE_EMPTY_PREFIX = "         ";
 	public static final String MESSAGE_SPACE = "";

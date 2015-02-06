@@ -24,6 +24,11 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>${ecosystemGroupId}</groupId>
+			<artifactId>t3-common</artifactId>
+		</dependency>
+
 		<!-- Maven dependencies -->
 		<dependency>
 			<groupId>org.apache.maven</groupId>

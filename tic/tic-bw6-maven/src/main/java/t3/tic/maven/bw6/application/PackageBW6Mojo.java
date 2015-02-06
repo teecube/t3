@@ -33,8 +33,8 @@ import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.archiver.jar.ManifestException;
 
-import t3.tic.maven.Messages;
 import t3.tic.maven.bw6.AbstractBW6ArtifactMojo;
+import t3.tic.maven.bw6.Messages;
 
 /**
  *

@@ -61,8 +61,8 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 
-import t3.tic.maven.POMManager;
-import t3.tic.maven.PluginBuilder;
+import t3.POMManager;
+import t3.PluginBuilder;
 
 /**
  *
