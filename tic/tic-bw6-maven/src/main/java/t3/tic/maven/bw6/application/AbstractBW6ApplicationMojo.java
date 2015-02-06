@@ -36,9 +36,9 @@ import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.component.annotations.Requirement;
 
-import t3.tic.maven.Messages;
 import t3.tic.maven.bw6.AbstractBW6ProjectMojo;
 import t3.tic.maven.bw6.BW6Utils;
+import t3.tic.maven.bw6.Messages;
 
 /**
  *

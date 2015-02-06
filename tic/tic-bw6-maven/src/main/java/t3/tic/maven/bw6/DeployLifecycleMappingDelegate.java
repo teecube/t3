@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3.tic.maven;
+package t3.tic.maven.bw6;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,7 +38,7 @@ import org.apache.maven.project.MavenProject;
 
 @Named("post")
 public class DeployLifecycleMappingDelegate implements LifecycleMappingDelegate {
-	
+
 	@Override
 	public Map<String, List<MojoExecution>> calculateLifecycleMappings(MavenSession session,
 																		MavenProject project,
