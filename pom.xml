@@ -975,8 +975,8 @@
 	</distributionManagement>
 
 	<scm>
-		<connection>scm:git:http://git.t3soft.org/t3</connection>
-		<developerConnection>scm:git:http://git.t3soft.org/t3</developerConnection>
+		<connection>scm:git:http://git.t3soft.org/t3.git</connection>
+		<developerConnection>scm:git:http://git.t3soft.org/t3.git</developerConnection>
 		<url>http://git.t3soft.org/view/?a=summary&amp;p=t3</url>
 	</scm>
 
