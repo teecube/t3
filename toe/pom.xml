@@ -28,4 +28,13 @@
 		<siteTopCaption>${toeDisplayedName}</siteTopCaption>
 	</properties>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>${ecosystemGroupId}</groupId>
+				<artifactId>t3-site-enhancer</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>

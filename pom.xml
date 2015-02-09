@@ -67,6 +67,7 @@
 
 	<modules>
 		<module>t3-common</module>
+		<module>t3-site-enhancer</module>
 	</modules>
 
 	<build>
@@ -107,7 +108,7 @@
 				<maven.plugin.changelog>2.3</maven.plugin.changelog>
 				<maven.plugin.javadoc>2.10.1</maven.plugin.javadoc>
 				<maven.plugin.jxr>2.5</maven.plugin.jxr>
-				<maven.plugin.project-info-reports>2.7</maven.plugin.project-info-reports>
+				<maven.plugin.project-info-reports>2.8</maven.plugin.project-info-reports>
 
 				<maven.plugin.antrun>1.7</maven.plugin.antrun>
 				<maven.plugin.archetype>2.2</maven.plugin.archetype>
@@ -382,7 +383,7 @@
 						<artifactId>maven-changelog-plugin</artifactId>
 						<version>${maven.plugin.changelog}</version>
 						<configuration>
-							<skip>true</skip>
+							<skip>false</skip>
 						</configuration>
 					</plugin>
 					<plugin>
@@ -455,28 +456,29 @@
 							<dependencyDetailsEnabled>true</dependencyDetailsEnabled>
 							<dependencyLocationsEnabled>true</dependencyLocationsEnabled>
 						</configuration>
+						<inherited>false</inherited>
 						<reportSets>
 							<reportSet>
-								<id>aggregate</id>
-								<inherited>true</inherited>
+								<!-- <id>non-aggregate</id> -->
+								<inherited>false</inherited>
 								<reports>
 									<report>cim</report>
 									<report>dependencies</report>
 									<!-- <report>dependency-convergence</report> -->
 									<report>dependency-info</report>
-									<!-- <report>dependency-management</report> -->
-									<report>distribution-management</report>
-									<report>help</report>
+									<report>dependency-management</report>
+									<!-- <report>distribution-management</report> -->
+									<!-- <report>help</report> -->
 									<!-- <report>index</report> -->
 									<!-- <report>issue-tracking</report> -->
 									<report>license</report>
-									<report>mailing-list</report>
-									<report>modules</report>
+									<!-- <report>mailing-list</report> -->
+									<!-- <report>modules</report> -->
 									<report>plugin-management</report>
-									<!-- <report>plugins</report> -->
-									<report>project-team</report>
+									<report>plugins</report>
+									<!-- <report>project-team</report> -->
 									<report>scm</report>
-									<!-- <report>summary</report> -->
+									<report>summary</report>
 								</reports>
 							</reportSet>
 						</reportSets>
@@ -803,29 +805,38 @@
 				</site>
 			</distributionManagement>
 			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>${ecosystemGroupId}</groupId>
+							<artifactId>t3-site-enhancer</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<executions>
+								<execution>
+									<id>prepare-site</id>
+									<goals>
+										<goal>prepare-general</goal>
+									</goals>
+									<phase>pre-site</phase>
+								</execution>
+								<execution>
+									<id>update-site</id>
+									<goals>
+										<goal>update-site</goal>
+										<goal>update-brand</goal>
+										<goal>update-general</goal>
+									</goals>
+									<phase>post-site</phase>
+								</execution>
+							</executions>
+						</plugin>
+					</plugins>
+				</pluginManagement>
 				<plugins>
 					<plugin>
 						<groupId>${ecosystemGroupId}</groupId>
 						<artifactId>t3-site-enhancer</artifactId>
-						<version>0.0.1-SNAPSHOT</version>
-						<executions>
-							<execution>
-								<id>prepare-site</id>
-								<goals>
-									<goal>prepare-general</goal>
-								</goals>
-								<phase>pre-site</phase>
-							</execution>
-							<execution>
-								<id>update-site</id>
-								<goals>
-									<goal>update-site</goal>
-									<goal>update-brand</goal>
-									<goal>update-general</goal>
-								</goals>
-								<phase>post-site</phase>
-							</execution>
-						</executions>
+						<inherited>false</inherited>
 					</plugin>
 				</plugins>
 			</build>
@@ -964,7 +975,9 @@
 	</distributionManagement>
 
 	<scm>
+		<connection>scm:git:http://git.t3soft.org/t3</connection>
 		<developerConnection>scm:git:http://git.t3soft.org/t3</developerConnection>
+		<url>http://git.t3soft.org/view/?a=summary&amp;p=t3</url>
 	</scm>
 
 </project>
