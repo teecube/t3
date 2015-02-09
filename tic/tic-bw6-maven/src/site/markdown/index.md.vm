@@ -5,3 +5,7 @@
 
 ${ticDisplayedName} - ${ticDisplayedMavenName} is the core Maven plugin defining
 the BW6 lifecycles.
+
+* [Plugin documentation](./plugin-info.html)
+* [Sources](./xref/index.html)
+* [Javadoc](./apidocs/index.html)

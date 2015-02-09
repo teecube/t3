@@ -9,6 +9,13 @@ ${ticDisplayedName} is the lowest stack of ${ecosystemNameHighlight}.
 
 $h1 ${ticDisplayedName} - ${ticDisplayedMavenName}
 
-The ${ticDisplayedName} - ${ticDisplayedMavenName} is the core Maven plugin defining the BW6
-lifecycles.
+The ${ticDisplayedName} - ${ticDisplayedMavenName} is the core Maven plugin
+defining the BW6 lifecycles.
 <div>[Learn more »](./tic-bw6-maven/index.html)</div>
+
+$h1 ${ticDisplayedName} - Hawk-Eye
+
+The ${ticDisplayedName} - Hawk-Eye is a monitoring helper tool to create, test
+and deploy a full set of rules to monitor real-life projects.
+
+Coming soon...

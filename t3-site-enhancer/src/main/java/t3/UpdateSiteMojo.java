@@ -135,10 +135,6 @@ public class UpdateSiteMojo extends AbstractSiteMojo {
 			._ul()
 		._li();
 
-		getLog().info(
-			formatHtml(html.toHtml())
-		);
-
 		ReplaceRegExp replaceRegExp = new ReplaceRegExp();
 		replaceRegExp.setFile(htmlFile);
 		replaceRegExp.setMatch("<li.*><a href=.*>" + subMenuReplacement.getOriginalMenuElement() + "</a></li>");

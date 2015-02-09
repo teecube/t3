@@ -106,7 +106,7 @@ public abstract class AbstractSiteMojo extends AbstractMojo {
 			List<File> htmlFiles = getHTMLFiles();
 
 			for (File htmlFile : htmlFiles) {
-				getLog().info(htmlFile.getAbsolutePath());
+				getLog().debug(htmlFile.getAbsolutePath());
 				processHTMLFile(htmlFile);
 			}
 		} catch (Exception e) {

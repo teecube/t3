@@ -9,6 +9,7 @@
 			<link rel="stylesheet" href="$resourcePath/css/github.min.css"/>
 		</head>
 
+		<menu name="Doc" ref="reports"></menu>
 		<menu name="Documentation">
 			<item name="Installation" href="installation.html" />
 			<item name="Configuration" href="configuration.html" />
@@ -58,9 +59,10 @@
 			</bottomNav>
 			<bottomDescription>
 		        <![CDATA[
-		          ${ecosystemNameHighlight}
-		          is a modular, plugin-based, full-featured solution to improve
-		          development & management of TIBCO applications.
+				${ecosystemNameHighlight}
+				is a modular, plugin-based, full-featured,
+				<a href="./license.html">open-source</a> solution
+				to improve development & management of TIBCO applications.
 		        ]]>
 			</bottomDescription>
 

@@ -48,3 +48,7 @@ footer.well {
 div.pull-left {
 	height: 100%;
 }
+
+div.thumbnail {
+	min-height: 160px;
+}
