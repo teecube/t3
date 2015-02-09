@@ -361,7 +361,7 @@
 							<artifactId>maven-release-plugin</artifactId>
 							<version>${maven.plugin.release}</version>
 							<configuration>
-								<tagNameFormat>@{project.version}</tagNameFormat>
+								<tagNameFormat>@{project.artifactId}/@{project.version}</tagNameFormat>
 								<autoVersionSubmodules>true</autoVersionSubmodules>
 								<useReleaseProfile>false</useReleaseProfile>
 							</configuration>
