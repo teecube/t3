@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.t3soft</groupId>
@@ -94,14 +95,14 @@
 
 				<!-- default Maven plugins versions -->
 				<maven.version>3.2.2</maven.version>
-				
+
 				<maven.plugin.clean>2.6.1</maven.plugin.clean>
 				<maven.plugin.compiler>3.2</maven.plugin.compiler>
 				<maven.plugin.deploy>2.8.2</maven.plugin.deploy>
 				<maven.plugin.install>2.5.2</maven.plugin.install>
 				<maven.plugin.resources>2.7</maven.plugin.resources>
 				<maven.plugin.site>3.4</maven.plugin.site>
-				
+
 				<maven.plugin.jar>2.5</maven.plugin.jar>
 				<maven.plugin.source>2.4</maven.plugin.source>
 
@@ -122,7 +123,7 @@
 
 				<plexus.component.metadata>1.6</plexus.component.metadata>
 			</properties>
-			
+
 			<build>
 				<pluginManagement>
 					<plugins>
@@ -323,10 +324,8 @@
 							<version>${maven.plugin.invoker}</version>
 						</plugin>
 						<plugin>
-							<!--
-							plugin configuration and executions to properly use Java5
-							annotations, see http://jira.codehaus.org/browse/MNG-5346
-							-->
+							<!-- plugin configuration and executions to properly use Java5 annotations, 
+								see http://jira.codehaus.org/browse/MNG-5346 -->
 							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-plugin-plugin</artifactId>
 							<version>${maven.plugin.plugin}</version>
@@ -345,15 +344,8 @@
 									</goals>
 									<phase>process-classes</phase>
 								</execution>
-<!--
- 								<execution>
-									<id>help-descriptor</id>
-									<goals>
-										<goal>helpmojo</goal>
-									</goals>
-									<phase>process-classes</phase>
-								</execution>
--->
+								<!-- <execution> <id>help-descriptor</id> <goals> <goal>helpmojo</goal> 
+									</goals> <phase>process-classes</phase> </execution> -->
 							</executions>
 						</plugin>
 						<plugin>
@@ -601,8 +593,8 @@
 						<version>3.0.21</version>
 					</dependency>
 
-					<!-- force version of this transitive dependencies to avoid this bug:
-						 https://bugs.eclipse.org/bugs/show_bug.cgi?id=418583 -->
+					<!-- force version of this transitive dependencies to avoid this bug: 
+						https://bugs.eclipse.org/bugs/show_bug.cgi?id=418583 -->
 					<dependency>
 						<groupId>com.ibm.icu</groupId>
 						<artifactId>icu4j</artifactId>
@@ -628,7 +620,9 @@
 									<source>
 										import java.util.Date
 										import java.text.MessageFormat
-										def vartimestamp = MessageFormat.format("{0,date,yyyy}", new Date())
+										def
+										vartimestamp = MessageFormat.format("{0,date,yyyy}", new
+										Date())
 										project.properties['currentYear'] = vartimestamp
 									</source>
 								</configuration>
@@ -843,11 +837,11 @@
 		</profile>
 		<profile> <!-- Maven plugin configuration (to be inherited) -->
 			<id>maven-plugin</id>
-		    <activation>
+			<activation>
 				<file>
-		            <exists>maven.plugin.enabled</exists>
-		        </file>
-		    </activation>
+					<exists>maven.plugin.enabled</exists>
+				</file>
+			</activation>
 			<build>
 				<resources>
 					<resource>
@@ -978,7 +972,7 @@
 		<connection>scm:git:http://git.t3soft.org/t3.git</connection>
 		<developerConnection>scm:git:http://git.t3soft.org/t3.git</developerConnection>
 		<url>http://git.t3soft.org/view/?a=summary&amp;p=t3</url>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 
 </project>
