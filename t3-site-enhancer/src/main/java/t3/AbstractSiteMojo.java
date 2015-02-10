@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.model.FileSet;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -40,6 +41,9 @@ public abstract class AbstractSiteMojo extends AbstractMojo {
 
 	@Parameter ( defaultValue = "${project}", readonly = true)
 	protected MavenProject project;
+
+	@Parameter(defaultValue = "${localRepository}", readonly = true, required = true)
+	protected ArtifactRepository localRepository;
 
 	@Parameter(property = "siteOutputDirectory", defaultValue = "${project.reporting.outputDirectory}")
 	protected File outputDirectory;

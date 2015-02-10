@@ -98,7 +98,7 @@ public class UpdateSiteMojo extends AbstractSiteMojo {
 
 			List<String> modules = project.getModel().getModules();
 			for (String module : modules) {
-				Model model = POMManager.getModelOfModule(project, module);
+				Model model = POMManager.getModelOfModule(project, module, localRepository);
 				if (addParentToLink) {
 					result.getSubMenuElements().put(model.getArtifactId().toUpperCase(), model.getArtifactId() + "/../index.html");
 				} else {

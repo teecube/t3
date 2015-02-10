@@ -3,12 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>t3</groupId>
+		<groupId>org.t3soft</groupId>
 		<artifactId>t3</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.2-SNAPSHOT</version>
 	</parent>
 	
-	<groupId>t3.tic</groupId>
+	<groupId>org.t3soft.tic</groupId>
 	<artifactId>tic</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
 

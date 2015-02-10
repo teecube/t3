@@ -3,14 +3,8 @@
 #set($h3 = '###')
 #set($h4 = '####')
 
-${ecosystemNameHighlight} gives a full stack composed of a three-layered
-elements: the ${ticAcronym}, ${tacAcronym} & ${toeAcronym}.
-
-${ecosystemNameHighlight} is plugin-based and below is a description of
-[each element](./current-versions.html). Before using a plugin, it is advised
-to start with ${ecosystemNameHighlight} common
-[installation](./installation.html) & [configuration](./configuration.html)
-instructions.
+${ecosystemNameHighlight} is a three-layered stack composed of these elements:
+${ticAcronym}, ${tacAcronym} & ${toeAcronym}.
 
 ---
 
@@ -23,7 +17,7 @@ $h1 ${ticDisplayedName}
 
 The ${ticFullName} (${ticAcronym}) provides a full lifecyle management for
 TIBCO products.
-<div>[Learn more »](./${ticURLBase}/index.html)</div>
+<div>[Learn more »](${ticURLBase}/index.html)</div>
 
 $h1 ${tacDisplayedName}
 

@@ -9,14 +9,7 @@
 			<link rel="stylesheet" href="$resourcePath/css/github.min.css"/>
 		</head>
 
-		<menu name="Doc" ref="reports"></menu>
-		<menu name="Documentation">
-			<item name="Installation" href="installation.html" />
-			<item name="Configuration" href="configuration.html" />
-			<item name="" />
-			<item name="FAQ" href="faq.html" />
-			<item name="Naming conventions" href="naming-conventions.html" />
-		</menu>
+		<menu name="Documentation" ref="reports"></menu>
 
 		<menu name="${ecosystemName}">
 			<item name="Current versions" href="${repositorySiteURL}/current-versions.html" />
@@ -61,7 +54,7 @@
 		        <![CDATA[
 				${ecosystemNameHighlight}
 				is a modular, plugin-based, full-featured,
-				<a href="./license.html">open-source</a> solution
+				<a href="${repositorySiteURL}/license.html">open-source</a> solution
 				to improve development & management of TIBCO applications.
 		        ]]>
 			</bottomDescription>

@@ -17,6 +17,8 @@
 package t3;
 
 import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -29,18 +31,44 @@ public class PrepareGeneralMojo extends AbstractSiteMojo {
 	private String rootVersion;
 	private String parentUrl;
 
-	private String prepareURL(String url) {
+	private String replaceURL(String url) {
 		if (url == null) return null;
 
-		url = url.replaceAll("\\$\\{ticVersion\\}", project.getModel().getProperties().getProperty("ticVersion"));
-		url = url.replaceAll("\\$\\{tacVersion\\}", project.getModel().getProperties().getProperty("tacVersion"));
-		url = url.replaceAll("\\$\\{toeVersion\\}", project.getModel().getProperties().getProperty("toeVersion"));
 		if (rootVersion != null) {
 			url = url.replaceAll("\\$\\{ecosystemSiteVersion\\}", rootVersion);
 		}
 		if (parentUrl != null) {
 			url = url.replaceAll("\\$\\{parent.project.url\\}", parentUrl);
 		}
+
+		return url;
+	}
+
+	private String prepareURL(String url) {
+		if (url == null) return null;
+
+		Pattern p = Pattern.compile("\\$\\{([^}]*)\\}");
+		Matcher m = p.matcher(url);
+
+		StringBuffer sb = new StringBuffer();
+
+		while (m.find()) {
+			String propertyName = m.group(1);
+			String propertyValue = project.getModel().getProperties().getProperty(propertyName);
+			if (propertyValue != null) {
+				propertyValue = replaceURL(propertyValue);
+//				url = m.replaceFirst(propertyValue);
+			    m.appendReplacement(sb, Matcher.quoteReplacement(propertyValue));
+			}
+		}
+		m.appendTail(sb);
+		url = sb.toString();
+		url = replaceURL(url);
+/*
+		url = url.replaceAll("\\$\\{ticVersion\\}", project.getModel().getProperties().getProperty("ticVersion"));
+		url = url.replaceAll("\\$\\{tacVersion\\}", project.getModel().getProperties().getProperty("tacVersion"));
+		url = url.replaceAll("\\$\\{toeVersion\\}", project.getModel().getProperties().getProperty("toeVersion"));
+*/
 		
 		return url;
 	}

@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>t3</groupId>
+	<groupId>org.t3soft</groupId>
 	<artifactId>t3</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
@@ -16,7 +16,7 @@
 		<ecosystemName>T³</ecosystemName>
 		<ecosystemNameHighlight><![CDATA[<i>T<span class="color-highlight">³</span></i>]]></ecosystemNameHighlight>
 		<ecosystemSlogan><![CDATA[T<span class="color-highlight">³</span> = <span class="color-highlight">T</span>IC T<span class="color-highlight">A</span>C TO<span class="color-highlight">E</span>]]></ecosystemSlogan>
-		<ecosystemGroupId>t3</ecosystemGroupId>
+		<ecosystemGroupId>org.t3soft</ecosystemGroupId>
 		<ecosystemArtifactId>t3</ecosystemArtifactId>
 		<ecosystemVersion>${releaseVersion}</ecosystemVersion>
 		<ecosystemCompany>T3Soft</ecosystemCompany>
@@ -31,9 +31,9 @@
 		<ticFullName>TIBCO Infrastructure Core</ticFullName>
 		<ticSlogan>TIBCO Infrastructure Core</ticSlogan>
 		<ticAcronym><![CDATA[<abbr title="TIBCO Infrastructure Core"><span class="color-highlight">T</span>IC</abbr>]]></ticAcronym>
-		<ticGroupId>t3.tic</ticGroupId>
+		<ticGroupId>org.t3soft.tic</ticGroupId>
 		<ticArtifactId>tic</ticArtifactId>
-		<ticURLBase>${ticArtifactId}/${ticVersion}</ticURLBase>
+		<ticURLBase>../${ticArtifactId}/${ticVersion}</ticURLBase>
 
 		<ticMavenName>BW6 Maven plugin</ticMavenName>
 		<ticDisplayedMavenName><![CDATA[BW<span class="color-highlight">6</span> Maven plugin]]></ticDisplayedMavenName>
@@ -43,18 +43,18 @@
 		<tacFullName>TIBCO Advanced Components</tacFullName>
 		<tacSlogan>TIBCO Advanced Components</tacSlogan>
 		<tacAcronym><![CDATA[<abbr title="TIBCO Advanced Components">T<span class="color-highlight">A</span>C</abbr>]]></tacAcronym>
-		<tacGroupId>t3.tac</tacGroupId>
+		<tacGroupId>org.t3soft.tac</tacGroupId>
 		<tacArtifactId>tac</tacArtifactId>
-		<tacURLBase>${tacArtifactId}/${tacVersion}</tacURLBase>
+		<tacURLBase>../${tacArtifactId}/${tacVersion}</tacURLBase>
 
 		<toeName>TOE</toeName>
 		<toeDisplayedName><![CDATA[TO<span class="color-highlight">E</span>]]></toeDisplayedName>
 		<toeFullName>TOpology Editor</toeFullName>
 		<toeSlogan>TOpology Editor</toeSlogan>
 		<toeAcronym><![CDATA[<abbr title="TOpology Editor">TO<span class="color-highlight">E</span></abbr>]]></toeAcronym>
-		<toeGroupId>t3.toe</toeGroupId>
+		<toeGroupId>org.t3soft.toe</toeGroupId>
 		<toeArtifactId>toe</toeArtifactId>
-		<toeURLBase>${toeArtifactId}/${toeVersion}</toeURLBase>
+		<toeURLBase>../${toeArtifactId}/${toeVersion}</toeURLBase>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -684,9 +684,9 @@
 												project.properties["$propertyName"] = "unknown"												
 											}
 										}
-										setCurrentVersion("t3/tic/tic", "ticVersion")
-										setCurrentVersion("t3/tac/tac", "tacVersion")
-										setCurrentVersion("t3/toe/toe", "toeVersion")
+										setCurrentVersion((project.properties["ticGroupId"] + "." + project.properties["ticArtifactId"]).replaceAll("\\.", "/"), "ticVersion")
+										setCurrentVersion((project.properties["tacGroupId"] + "." + project.properties["tacArtifactId"]).replaceAll("\\.", "/"), "tacVersion")
+										setCurrentVersion((project.properties["toeGroupId"] + "." + project.properties["toeArtifactId"]).replaceAll("\\.", "/"), "toeVersion")
 									]]></source>
 								</configuration>
 							</execution>
@@ -714,20 +714,20 @@
 												def xpath = XPathFactory.newInstance().newXPath()
 
 												def nodes = xpath.evaluate('/metadata/versioning/release', new InputSource(fis), XPathConstants.NODESET)
-												nodes.each{ 
+												nodes.each {
 													result = xpath.evaluate('text()', it)
 												}
 												if (result == null) {
 													fis = new FileInputStream(f)
 													nodes = xpath.evaluate('/metadata/versioning/latest', new InputSource(fis), XPathConstants.NODESET)
-													nodes.each{ 
+													nodes.each {
 														result = xpath.evaluate('text()', it)
 													}
 												}
 												if (result == null) {
 													fis = new FileInputStream(f)
 													nodes = xpath.evaluate('/metadata/versioning/versions/version', new InputSource(fis), XPathConstants.NODESET)
-													nodes.each{ 
+													nodes.each {
 														result = xpath.evaluate('text()', it)
 													}
 												}
@@ -741,9 +741,9 @@
 												project.properties["$propertyName"] = "unknown"												
 											}
 										}
-										setCurrentVersion("t3/tic/tic", "ticVersion")
-										setCurrentVersion("t3/tac/tac", "tacVersion")
-										setCurrentVersion("t3/toe/toe", "toeVersion")
+										setCurrentVersion((project.properties["ticGroupId"] + "." + project.properties["ticArtifactId"]).replaceAll("\\.", "/"), "ticVersion")
+										setCurrentVersion((project.properties["tacGroupId"] + "." + project.properties["tacArtifactId"]).replaceAll("\\.", "/"), "tacVersion")
+										setCurrentVersion((project.properties["toeGroupId"] + "." + project.properties["toeArtifactId"]).replaceAll("\\.", "/"), "toeVersion")
 									]]></source>
 								</configuration>
 							</execution>
