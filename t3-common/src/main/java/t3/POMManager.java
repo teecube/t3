@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.Model;
@@ -72,14 +73,33 @@ public class POMManager {
 		return model;
 	}
 
-	public static Model getModelOfModule(MavenProject mavenProject, String module) throws IOException, XmlPullParserException {
+	public static String getRepositoryPathFromGroupId(String groupId) {
+		if (groupId == null) return null;
+
+		return groupId.replaceAll("\\.", File.separator);
+	}
+
+	public static Model getModelOfModule(MavenProject mavenProject, String module, ArtifactRepository localRepository) throws IOException, XmlPullParserException {
 		if (mavenProject == null || module == null || module.trim().isEmpty()) {
 			return null;
 		}
 
 		File pom = new File(mavenProject.getBasedir(), module);
 		if (pom == null || !pom.exists()) {
-			return null;
+			// maybe the POM is in the local repository, assuming that module == artifactId
+			if (localRepository != null) {
+				String repositoryPOMFileName = localRepository.getBasedir() + File.separator
+											 + getRepositoryPathFromGroupId(mavenProject.getGroupId())  + File.separator
+											 + module + File.separator
+											 + mavenProject.getVersion() + File.separator
+											 + module + "-" + mavenProject.getVersion() + ".pom";
+				pom = new File(repositoryPOMFileName);
+				if (pom == null || !pom.exists()) {
+					return null;
+				}
+			} else {
+				return null;
+			}
 		}
 
 		if (pom.isDirectory()) {
@@ -108,6 +128,10 @@ public class POMManager {
 		}
 
 		return model;
+	}
+
+	public static Model getModelOfModule(MavenProject mavenProject, String module) throws IOException, XmlPullParserException {
+		return getModelOfModule(mavenProject, module, null);
 	}
 
 	/**

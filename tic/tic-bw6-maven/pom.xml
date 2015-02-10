@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>t3.tic</groupId>
+		<groupId>org.t3soft.tic</groupId>
 		<artifactId>tic</artifactId>
 		<version>0.0.2-SNAPSHOT</version>
 	</parent>
