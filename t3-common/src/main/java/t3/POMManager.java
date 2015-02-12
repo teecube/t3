@@ -76,7 +76,7 @@ public class POMManager {
 	public static String getRepositoryPathFromGroupId(String groupId) {
 		if (groupId == null) return null;
 
-		return groupId.replaceAll("\\.", File.separator);
+		return groupId.replace(".", File.separator);
 	}
 
 	public static Model getModelOfModule(MavenProject mavenProject, String module, ArtifactRepository localRepository) throws IOException, XmlPullParserException {
