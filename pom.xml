@@ -791,6 +791,7 @@
 			<properties>
 				<includeSource>true</includeSource>
 				<repositorySiteURL>${settingsRepositorySiteURL}/${ecosystemArtifactId}/${ecosystemSiteVersion}</repositorySiteURL>
+				<siteURL>${settingsSiteURL}/${ecosystemArtifactId}/${ecosystemSiteVersion}</siteURL>
 			</properties>
 			<distributionManagement>
 				<site>
@@ -939,6 +940,17 @@
 	</profiles>
 
 	<!-- Project management -->
+	<distributionManagement>
+		<repository>
+			<id>t3.repo</id>
+			<url>${repositoryReleaseURL}</url>
+		</repository>
+		<snapshotRepository>
+			<id>t3.repo.snapshot</id>
+			<url>${repositorySnapshotURL}</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -955,24 +967,13 @@
 		<maven>3.2.1</maven>
 	</prerequisites>
 
-	<url>${repositorySiteURL}</url>
-
-	<distributionManagement>
-		<repository>
-			<id>t3.repo</id>
-			<url>${repositoryReleaseURL}</url>
-		</repository>
-		<snapshotRepository>
-			<id>t3.repo.snapshot</id>
-			<url>${repositorySnapshotURL}</url>
-		</snapshotRepository>
-	</distributionManagement>
-
 	<scm>
 		<connection>scm:git:http://git.t3soft.org/t3.git</connection>
 		<developerConnection>scm:git:http://git.t3soft.org/t3.git</developerConnection>
 		<url>http://git.t3soft.org/view/?a=summary&amp;p=t3</url>
 		<tag>HEAD</tag>
 	</scm>
+
+	<url>${siteURL}</url>
 
 </project>
