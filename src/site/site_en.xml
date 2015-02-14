@@ -12,11 +12,11 @@
 		<menu name="Documentation" ref="reports"></menu>
 
 		<menu name="${ecosystemName}">
-			<item name="Current versions" href="${repositorySiteURL}/current-versions.html" />
+			<item name="Current versions" href="${siteURL}/current-versions.html" />
 			<item name="" />
-			<item name="TIC" href="${repositorySiteURL}/${ticURLBase}/index.html" />
-			<item name="TAC" href="${repositorySiteURL}/${tacURLBase}/index.html" />
-			<item name="TOE" href="${repositorySiteURL}/${toeURLBase}/index.html" />
+			<item name="TIC" href="${siteURL}/${ticURLBase}/index.html" />
+			<item name="TAC" href="${siteURL}/${tacURLBase}/index.html" />
+			<item name="TOE" href="${siteURL}/${toeURLBase}/index.html" />
 		</menu>
 	</body>
 
@@ -27,7 +27,7 @@
 		<reflowSkin>
 			<localResources>true</localResources>
 
-			<absoluteResourceURL>${repositorySiteURL}</absoluteResourceURL>
+			<absoluteResourceURL>${siteURL}</absoluteResourceURL>
 			<protocolRelativeURLs>false</protocolRelativeURLs>
 
 			<theme>site</theme>
@@ -54,7 +54,7 @@
 		        <![CDATA[
 				${ecosystemNameHighlight}
 				is a modular, plugin-based, full-featured,
-				<a href="${repositorySiteURL}/license.html">open-source</a> solution
+				<a href="${siteURL}/license.html">open-source</a> solution
 				to improve development & management of TIBCO applications.
 		        ]]>
 			</bottomDescription>
