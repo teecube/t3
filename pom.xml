@@ -790,7 +790,7 @@
 			<properties>
 				<includeSource>true</includeSource>
 				<repositorySiteURL>${settingsRepositorySiteURL}/${ecosystemArtifactId}/${ecosystemSiteVersion}</repositorySiteURL>
-				<siteURL>${settingsSiteURL}/${ecosystemArtifactId}/${ecosystemSiteVersion}</siteURL>
+				<siteURL>${settingsSiteURL}/${ecosystemSiteVersion}</siteURL>
 			</properties>
 			<distributionManagement>
 				<site>
