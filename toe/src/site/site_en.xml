@@ -6,18 +6,18 @@
 
 	<body>
 		<menu name="${ecosystemName}">
-			<item name="Current versions" href="${repositorySiteURL}/current-versions.html" />
+			<item name="Current versions" href="${siteURL}/current-versions.html" />
 			<item name="" />
-			<item name="TIC" href="${repositorySiteURL}/${ticURLBase}/index.html" />
-			<item name="TAC" href="${repositorySiteURL}/${tacURLBase}/index.html" />
-			<item name="TOE" href="${repositorySiteURL}/${toeURLBase}/index.html" />
+			<item name="TIC" href="${siteURL}/${ticURLBase}/index.html" />
+			<item name="TAC" href="${siteURL}/${tacURLBase}/index.html" />
+			<item name="TOE" href="${siteURL}/${toeURLBase}/index.html" />
 		</menu>
 	</body>
 
 	<custom>
 		<reflowSkin>
 			<protocolRelativeURLs>false</protocolRelativeURLs>
-			<absoluteResourceURL>${repositorySiteURL}</absoluteResourceURL>
+			<absoluteResourceURL>${siteURL}</absoluteResourceURL>
 
 			<slogan>${toeSlogan}</slogan>
 

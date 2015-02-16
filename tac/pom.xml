@@ -20,7 +20,7 @@
 	<distributionManagement>
 		<site>
 			<id>t3.site</id>
-			<url>${settingsRepositorySiteProtocol}${repositorySiteURL}/${tacURLBase}</url>
+			<url>${settingsRepositorySiteProtocol}${siteUploadURL}/${tacURLBase}</url>
 		</site>
 	</distributionManagement>
 

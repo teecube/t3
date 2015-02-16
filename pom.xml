@@ -374,7 +374,7 @@
 						<artifactId>maven-changelog-plugin</artifactId>
 						<version>${maven.plugin.changelog}</version>
 						<configuration>
-							<skip>false</skip>
+							<skip>true</skip>
 						</configuration>
 					</plugin>
 					<plugin>
@@ -789,13 +789,13 @@
 			</activation>
 			<properties>
 				<includeSource>true</includeSource>
-				<repositorySiteURL>${settingsRepositorySiteURL}/${ecosystemArtifactId}/${ecosystemSiteVersion}</repositorySiteURL>
-				<siteURL>${settingsSiteURL}/${ecosystemSiteVersion}</siteURL>
+				<siteUploadURL>${settingsRepositorySiteURL}/${ecosystemArtifactId}/${ecosystemSiteVersion}</siteUploadURL>
+				<siteURL>${settingsSiteURL}/${ecosystemArtifactId}/${ecosystemSiteVersion}</siteURL>
 			</properties>
 			<distributionManagement>
 				<site>
 					<id>t3.site</id>
-					<url>${settingsRepositorySiteProtocol}${repositorySiteURL}</url>
+					<url>${settingsRepositorySiteProtocol}${siteUploadURL}</url>
 				</site>
 			</distributionManagement>
 			<build>
