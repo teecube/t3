@@ -89,7 +89,6 @@ public class UpdateBrandMojo extends AbstractSiteMojo {
 
 			if (caption == null || caption.trim().isEmpty()) return;
 
-//			String link = repositorySiteURL + "/" + project.getArtifactId() + "/index.html";
 			String link = project.getUrl() + "/index.html";
 
 			html
