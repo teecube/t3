@@ -24,6 +24,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.FileSet;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -38,6 +39,9 @@ import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.InputSource;
 
 public abstract class AbstractSiteMojo extends AbstractMojo {
+
+	@Parameter ( defaultValue = "${session}", readonly = true)
+	protected MavenSession session;
 
 	@Parameter ( defaultValue = "${project}", readonly = true)
 	protected MavenProject project;
