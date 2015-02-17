@@ -16,7 +16,14 @@
 		<ecosystemName>T³</ecosystemName>
 		<ecosystemNameHighlight><![CDATA[<i>T<span class="color-highlight">³</span></i>]]></ecosystemNameHighlight>
 		<ecosystemSlogan><![CDATA[T<span class="color-highlight">³</span> = <span class="color-highlight">T</span>IC T<span class="color-highlight">A</span>C TO<span class="color-highlight">E</span>]]></ecosystemSlogan>
+		<ecosystemSumUp><![CDATA[
+			${ecosystemNameHighlight}
+			is a modular, plugin-based, full-featured,
+			<a href="${siteURL}/license.html">open-source</a> solution
+			to improve development & management of TIBCO applications.
+		]]></ecosystemSumUp>
 		<ecosystemGroupId>org.t3soft</ecosystemGroupId>
+		<ecosystemGroupIdCommon>org.t3soft.t3</ecosystemGroupIdCommon>
 		<ecosystemArtifactId>t3</ecosystemArtifactId>
 		<ecosystemVersion>${releaseVersion}</ecosystemVersion>
 		<ecosystemCompany>T3Soft</ecosystemCompany>
@@ -549,7 +556,7 @@
 			<dependencyManagement>
 				<dependencies>
 					<dependency>
-						<groupId>${ecosystemGroupId}</groupId>
+						<groupId>${ecosystemGroupIdCommon}</groupId>
 						<artifactId>t3-common</artifactId>
 						<version>0.0.10-SNAPSHOT</version>
 					</dependency>

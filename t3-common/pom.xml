@@ -8,6 +8,7 @@
 		<version>0.0.10-SNAPSHOT</version>
 	</parent>
 
+	<groupId>org.t3soft.t3</groupId>
 	<artifactId>t3-common</artifactId>
 
 	<packaging>jar</packaging>

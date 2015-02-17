@@ -85,7 +85,7 @@ public class UpdateBrandMojo extends AbstractSiteMojo {
 
 		@Override
 		public void renderOn(HtmlCanvas html) throws IOException {
-			String caption = getPropertyValue("siteTopCaption");
+			String caption = getPropertyValue(project, "siteTopCaption", false);
 
 			if (caption == null || caption.trim().isEmpty()) return;
 
