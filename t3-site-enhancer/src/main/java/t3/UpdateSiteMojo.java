@@ -1,6 +1,6 @@
 /**
  * (C) Copyright 2014-2015 T3Soft
- * (http://www.t3soft.org) and others.
+ * (http://t3soft.org) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
