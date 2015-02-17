@@ -52,10 +52,7 @@
 			</bottomNav>
 			<bottomDescription>
 		        <![CDATA[
-				${ecosystemNameHighlight}
-				is a modular, plugin-based, full-featured,
-				<a href="${siteURL}/license.html">open-source</a> solution
-				to improve development & management of TIBCO applications.
+				${ecosystemSumUp}
 		        ]]>
 			</bottomDescription>
 

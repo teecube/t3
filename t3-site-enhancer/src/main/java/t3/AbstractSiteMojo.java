@@ -98,7 +98,7 @@ public abstract class AbstractSiteMojo extends AbstractMojo {
 		}
     }
 
-	private String getPropertyValue(MavenProject mavenProject, String propertyName, boolean lookInSettingsProperties) {
+	protected String getPropertyValue(MavenProject mavenProject, String propertyName, boolean lookInSettingsProperties) {
 		if (mavenProject == null) return null;
 
 		String result = null;

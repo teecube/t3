@@ -22,9 +22,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>${ecosystemGroupIdCommon}</groupId>
 			<artifactId>t3-common</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>

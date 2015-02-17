@@ -55,12 +55,8 @@ public class PrepareGeneralMojo extends AbstractSiteMojo {
 		while (m.find()) {
 			String propertyName = m.group(1);
 			String propertyValue = getPropertyValue(propertyName);
-			if (propertyValue == null || propertyValue.isEmpty()) {
-				getLog().info("empty property value : " + propertyName);
-			}
 			if (propertyValue != null) {
 				propertyValue = replaceURL(propertyValue);
-//				url = m.replaceFirst(propertyValue);
 			    m.appendReplacement(sb, Matcher.quoteReplacement(propertyValue));
 			}
 		}
@@ -77,10 +73,13 @@ public class PrepareGeneralMojo extends AbstractSiteMojo {
 		rootVersion = getRootProjectProperty(project, "ecosystemVersion");
 		project.getModel().getProperties().put("ecosystemSiteVersion", rootVersion);
 
+		String siteURL = getPropertyValue("siteURL");
+		siteURL = prepareURL(siteURL);
+		project.getModel().getProperties().put("siteURL", siteURL);
+
 		// set parentUrl
 		if (project.getParent() != null) {
 			parentUrl = project.getParent().getUrl();
-			getLog().info("parent url : " + parentUrl);
 			parentUrl = prepareURL(parentUrl);
 		}
 		String url = project.getUrl();
