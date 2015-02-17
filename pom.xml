@@ -4,7 +4,7 @@
 
 	<groupId>org.t3soft</groupId>
 	<artifactId>t3</artifactId>
-	<version>0.0.7-SNAPSHOT</version>
+	<version>0.0.8-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>${ecosystemName}</name>
@@ -551,7 +551,7 @@
 					<dependency>
 						<groupId>${ecosystemGroupId}</groupId>
 						<artifactId>t3-common</artifactId>
-						<version>0.0.7-SNAPSHOT</version>
+						<version>0.0.8-SNAPSHOT</version>
 					</dependency>
 
 					<dependency>
@@ -806,7 +806,7 @@
 						<plugin>
 							<groupId>${ecosystemGroupId}</groupId>
 							<artifactId>t3-site-enhancer</artifactId>
-							<version>0.0.7-SNAPSHOT</version>
+							<version>0.0.8-SNAPSHOT</version>
 							<executions>
 								<execution>
 									<id>prepare-site</id>
