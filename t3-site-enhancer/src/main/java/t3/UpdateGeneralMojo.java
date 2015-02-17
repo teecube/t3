@@ -42,7 +42,7 @@ public class UpdateGeneralMojo extends AbstractSiteMojo {
 		if (propertyInRootProject) {
 			replaceRegExp.setReplace(getRootProjectProperty(project, modelPropertyName));
 		} else {
-			replaceRegExp.setReplace(project.getModel().getProperties().getProperty(modelPropertyName));
+			replaceRegExp.setReplace(getPropertyValue(modelPropertyName));
 		}
 		replaceRegExp.setByLine(true);
 		replaceRegExp.execute();

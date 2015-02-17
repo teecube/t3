@@ -98,8 +98,24 @@ public abstract class AbstractSiteMojo extends AbstractMojo {
 		}
     }
 
+	protected String getPropertyValue(String propertyName) {
+		if (project == null) return null;
+
+		String result = null;
+
+		result = project.getModel().getProperties().getProperty(propertyName);
+		if (result == null || result.isEmpty()) {
+			result = session.getUserProperties().getProperty(propertyName);
+		}
+		if (result == null || result.isEmpty()) {
+			result = session.getSystemProperties().getProperty(propertyName);
+		}
+
+		return result;
+	}
+
 	protected String getRootProjectProperty(MavenProject mavenProject, String propertyName) {
-		return mavenProject == null ? "" : (mavenProject.getParent() == null ? mavenProject.getModel().getProperties().getProperty(propertyName) : getRootProjectProperty(mavenProject.getParent(), propertyName));
+		return mavenProject == null ? "" : (mavenProject.getParent() == null ? mavenProject.getPropertyValue(propertyName) : getRootProjectProperty(mavenProject.getParent(), propertyName));
 	}
 
 	public abstract void processHTMLFile(File htmlFile) throws Exception;
