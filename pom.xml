@@ -20,7 +20,7 @@
 		<ecosystemArtifactId>t3</ecosystemArtifactId>
 		<ecosystemVersion>${releaseVersion}</ecosystemVersion>
 		<ecosystemCompany>T3Soft</ecosystemCompany>
-		<ecosystemCompanyURL>http://www.t3soft.org</ecosystemCompanyURL>
+		<ecosystemCompanyURL>http://t3soft.org</ecosystemCompanyURL>
 		<inceptionYear>2014</inceptionYear>
 		<notaBene><![CDATA[<b>NB:</b>]]></notaBene>
 
@@ -87,6 +87,7 @@
 				<file>
 					<exists>pom.xml</exists>
 				</file>
+				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
 				<java.source.version>1.7</java.source.version>
@@ -532,6 +533,7 @@
 				<file>
 					<exists>pom.xml</exists>
 				</file>
+				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
 				<apache.plugin.commons-collections>4.0</apache.plugin.commons-collections>

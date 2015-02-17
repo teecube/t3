@@ -20,11 +20,6 @@
 		<maven.site.deploy.skip>true</maven.site.deploy.skip>
 	</properties>
 
-	<build>
-		<plugins>
-
-		</plugins>
-	</build>
 	<dependencies>
 		<!-- Maven dependencies -->
 		<dependency>
