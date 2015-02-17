@@ -54,7 +54,7 @@ public class PrepareGeneralMojo extends AbstractSiteMojo {
 
 		while (m.find()) {
 			String propertyName = m.group(1);
-			String propertyValue = project.getModel().getProperties().getProperty(propertyName);
+			String propertyValue = getPropertyValue(propertyName);
 			if (propertyValue == null || propertyValue.isEmpty()) {
 				getLog().info("empty property value : " + propertyName);
 			}
@@ -67,11 +67,6 @@ public class PrepareGeneralMojo extends AbstractSiteMojo {
 		m.appendTail(sb);
 		url = sb.toString();
 		url = replaceURL(url);
-/*
-		url = url.replaceAll("\\$\\{ticVersion\\}", project.getModel().getProperties().getProperty("ticVersion"));
-		url = url.replaceAll("\\$\\{tacVersion\\}", project.getModel().getProperties().getProperty("tacVersion"));
-		url = url.replaceAll("\\$\\{toeVersion\\}", project.getModel().getProperties().getProperty("toeVersion"));
-*/
 		
 		return url;
 	}
