@@ -811,7 +811,7 @@
 				<pluginManagement>
 					<plugins>
 						<plugin>
-							<groupId>${ecosystemGroupId}</groupId>
+							<groupId>${ecosystemGroupIdCommon}</groupId>
 							<artifactId>t3-site-enhancer</artifactId>
 							<version>0.0.11-SNAPSHOT</version>
 							<executions>
@@ -837,7 +837,7 @@
 				</pluginManagement>
 				<plugins>
 					<plugin>
-						<groupId>${ecosystemGroupId}</groupId>
+						<groupId>${ecosystemGroupIdCommon}</groupId>
 						<artifactId>t3-site-enhancer</artifactId>
 						<inherited>false</inherited>
 					</plugin>
