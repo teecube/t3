@@ -99,10 +99,12 @@ public class UpdateSiteMojo extends AbstractSiteMojo {
 			List<String> modules = project.getModel().getModules();
 			for (String module : modules) {
 				Model model = POMManager.getModelOfModule(project, module, localRepository);
-				if (addParentToLink) {
-					result.getSubMenuElements().put(model.getArtifactId().toUpperCase(), model.getArtifactId() + "/../index.html");
-				} else {
-					result.getSubMenuElements().put(model.getArtifactId().toUpperCase(), model.getArtifactId() + "/index.html");
+				if (model != null) {
+					if (addParentToLink) {
+						result.getSubMenuElements().put(model.getArtifactId().toUpperCase(), model.getArtifactId() + "/../index.html");
+					} else {
+						result.getSubMenuElements().put(model.getArtifactId().toUpperCase(), model.getArtifactId() + "/index.html");
+					}
 				}
 			}
 		}
@@ -127,8 +129,10 @@ public class UpdateSiteMojo extends AbstractSiteMojo {
 			.a(href(subMenuReplacement.getOriginalMenuElementLink())).write(subMenuReplacement.getOriginalMenuElement())._a()
 			.ul(class_("dropdown-menu"));
 
-		for (String subMenuElement : subMenuReplacement.getSubMenuElements().keySet()) {
-			html.render(new SubMenuElement(subMenuElement, subMenuReplacement.getSubMenuElements().get(subMenuElement)));
+		if (subMenuReplacement.getSubMenuElements() != null) {
+			for (String subMenuElement : subMenuReplacement.getSubMenuElements().keySet()) {
+				html.render(new SubMenuElement(subMenuElement, subMenuReplacement.getSubMenuElements().get(subMenuElement)));
+			}
 		}
 
 		html
