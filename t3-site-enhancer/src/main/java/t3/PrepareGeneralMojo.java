@@ -24,6 +24,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.project.MavenProject;
 
 @Mojo(name = "prepare-general", defaultPhase = LifecyclePhase.PRE_SITE)
 public class PrepareGeneralMojo extends AbstractSiteMojo {
@@ -67,6 +68,17 @@ public class PrepareGeneralMojo extends AbstractSiteMojo {
 		return url;
 	}
 
+	private String getParentUrl(String url, MavenProject currentProject) {
+		if (currentProject == null) {
+			return url;
+		}
+		String tmp = getParentUrl(currentProject.getUrl(), currentProject.getParent());
+		tmp = prepareURL(tmp);
+		url = url.replaceAll("\\$\\{parent.project.url\\}", tmp);
+
+		return url;
+	}
+
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		// set rootVersion
@@ -78,10 +90,11 @@ public class PrepareGeneralMojo extends AbstractSiteMojo {
 		project.getModel().getProperties().put("siteURL", siteURL);
 
 		// set parentUrl
-		if (project.getParent() != null) {
-			parentUrl = project.getParent().getUrl();
+		if (project.hasParent()) {
+			parentUrl = getParentUrl(project.getUrl(), project.getParent());
 			parentUrl = prepareURL(parentUrl);
 		}
+
 		String url = project.getUrl();
 		url = prepareURL(url);
 		String siteUrl = project.getDistributionManagement().getSite().getUrl();
