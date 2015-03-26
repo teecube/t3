@@ -17,15 +17,21 @@
 package t3;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.tools.ant.taskdefs.optional.ReplaceRegExp;
 
 @Mojo(name = "update-general", defaultPhase = LifecyclePhase.POST_SITE)
 public class UpdateGeneralMojo extends AbstractSiteMojo {
+
+	@Parameter()
+	private List<String> properties;
 
 	private void replaceProperty(File htmlFile, String propertyName) {
 		replaceProperty(htmlFile, propertyName, propertyName);
@@ -51,13 +57,16 @@ public class UpdateGeneralMojo extends AbstractSiteMojo {
 	@Override
 	public void processHTMLFile(File htmlFile) throws Exception {
 		replaceProperty(htmlFile, "ecosystemSiteVersion", "ecosystemVersion", true);
-		replaceProperty(htmlFile, "ticVersion");
-		replaceProperty(htmlFile, "tacVersion");
-		replaceProperty(htmlFile, "toeVersion");
+		for (String propertyToUpdate : properties) {
+			replaceProperty(htmlFile, propertyToUpdate);
+		}
 	}
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
+		if (properties == null) {
+			properties = new ArrayList<String>();
+		}
 		super.execute();
 	}
 

@@ -42,8 +42,10 @@
 		<ticArtifactId>tic</ticArtifactId>
 		<ticURLBase>../${ticArtifactId}/${ticVersion}</ticURLBase>
 
-		<ticMavenName>BW6 Maven plugin</ticMavenName>
-		<ticDisplayedMavenName><![CDATA[BW<span class="color-highlight">6</span> Maven plugin]]></ticDisplayedMavenName>
+		<ticBW6MavenArtifactId>tic-bw6-maven</ticBW6MavenArtifactId>
+		<ticBW6MavenURLBase>../${ticBW6MavenArtifactId}/${ticBW6MavenVersion}</ticBW6MavenURLBase>
+		<ticBW6MavenName>BW6 Maven plugin</ticBW6MavenName>
+		<ticDisplayedBW6MavenName><![CDATA[BW<span class="color-highlight">6</span> Maven plugin]]></ticDisplayedBW6MavenName>
 
 		<tacName>TAC</tacName>
 		<tacDisplayedName><![CDATA[T<span class="color-highlight">A</span>C]]></tacDisplayedName>
@@ -687,6 +689,7 @@
 											}
 										}
 										setCurrentVersion((project.properties["ticGroupId"] + "." + project.properties["ticArtifactId"]).replaceAll("\\.", "/"), "ticVersion")
+										setCurrentVersion((project.properties["ticGroupId"] + "." + project.properties["ticArtifactId"]).replaceAll("\\.", "/"), "ticBW6MavenVersion")
 										setCurrentVersion((project.properties["tacGroupId"] + "." + project.properties["tacArtifactId"]).replaceAll("\\.", "/"), "tacVersion")
 										setCurrentVersion((project.properties["toeGroupId"] + "." + project.properties["toeArtifactId"]).replaceAll("\\.", "/"), "toeVersion")
 									]]></source>
@@ -744,6 +747,7 @@
 											}
 										}
 										setCurrentVersion((project.properties["ticGroupId"] + "." + project.properties["ticArtifactId"]).replaceAll("\\.", "/"), "ticVersion")
+										setCurrentVersion((project.properties["ticGroupId"] + "." + project.properties["ticArtifactId"]).replaceAll("\\.", "/"), "ticBW6MavenVersion")
 										setCurrentVersion((project.properties["tacGroupId"] + "." + project.properties["tacArtifactId"]).replaceAll("\\.", "/"), "tacVersion")
 										setCurrentVersion((project.properties["toeGroupId"] + "." + project.properties["toeArtifactId"]).replaceAll("\\.", "/"), "toeVersion")
 									]]></source>
@@ -829,6 +833,14 @@
 										<goal>update-brand</goal>
 										<goal>update-general</goal>
 									</goals>
+									<configuration>
+										<properties>
+											<property>ticVersion</property>
+											<property>ticBW6MavenVersion</property>
+											<property>tacVersion</property>
+											<property>toeVersion</property>
+										</properties>
+									</configuration>
 									<phase>post-site</phase>
 								</execution>
 							</executions>
