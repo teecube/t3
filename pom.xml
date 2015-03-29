@@ -26,6 +26,7 @@
 		<ecosystemGroupIdCommon>org.t3soft.t3</ecosystemGroupIdCommon>
 		<ecosystemArtifactId>t3</ecosystemArtifactId>
 		<ecosystemVersion>${releaseVersion}</ecosystemVersion>
+		<ecosystemSiteVersion>${ecosystemVersion}</ecosystemSiteVersion>
 		<ecosystemCompany>T3Soft</ecosystemCompany>
 		<ecosystemCompanyURL>http://t3soft.org</ecosystemCompanyURL>
 		<inceptionYear>2014</inceptionYear>
