@@ -19,7 +19,9 @@ package t3;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -31,6 +33,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.settings.Profile;
+import org.apache.maven.settings.Settings;
 import org.codehaus.plexus.util.FileUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
@@ -46,11 +50,26 @@ public abstract class AbstractSiteMojo extends AbstractMojo {
 	@Parameter ( defaultValue = "${project}", readonly = true)
 	protected MavenProject project;
 
+	@Parameter ( defaultValue = "${settings}", readonly = true)
+	protected Settings settings;
+
 	@Parameter(defaultValue = "${localRepository}", readonly = true, required = true)
 	protected ArtifactRepository localRepository;
 
 	@Parameter(property = "siteOutputDirectory", defaultValue = "${project.reporting.outputDirectory}")
 	protected File outputDirectory;
+
+	@Parameter
+	protected List<String> siteProperties;
+
+	@Parameter
+	protected List<String> fromRootParentProperties;
+
+	@Parameter
+	protected List<String> inOriginalModelProperties;
+
+	@Parameter
+	protected List<String> lookInSettingsProperties;
 
 	private static String toCommaSeparatedString(List<String> strings) {
 		StringBuilder sb = new StringBuilder();
@@ -98,28 +117,71 @@ public abstract class AbstractSiteMojo extends AbstractMojo {
 		}
     }
 
-	protected String getPropertyValue(MavenProject mavenProject, String propertyName, boolean lookInSettingsProperties) {
+	@SuppressWarnings("unchecked")
+	protected String getPropertyValueInSettings(String propertyName, Settings settings) {
+		List<String> activeProfiles = settings.getActiveProfiles();
+
+		for (Object _profileWithId : settings.getProfilesAsMap().entrySet()) {
+			Entry<String, Profile> profileWithId = (Entry<String, Profile>) _profileWithId;
+			if (activeProfiles.indexOf(profileWithId.getKey()) > 0) {
+				Profile profile = profileWithId.getValue();
+
+				String value = profile.getProperties().getProperty(propertyName);
+				if (value != null) {
+					return value;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	protected String getPropertyValue(MavenProject mavenProject, String propertyName, boolean lookInSettingsProperties, boolean onlyInOriginalModel) {
 		if (mavenProject == null) return null;
 
 		String result = null;
 
-		result = mavenProject.getModel().getProperties().getProperty(propertyName);
-		if (lookInSettingsProperties && (result == null || result.isEmpty())) {
-			result = session.getUserProperties().getProperty(propertyName);
+		if (onlyInOriginalModel) {
+			result = mavenProject.getOriginalModel().getProperties().getProperty(propertyName);
+		} else {
+			result = mavenProject.getModel().getProperties().getProperty(propertyName);
 		}
 		if (lookInSettingsProperties && (result == null || result.isEmpty())) {
-			result = session.getSystemProperties().getProperty(propertyName);
+			result = getPropertyValueInSettings(propertyName, session.getSettings());
 		}
 
 		return result;
 	}
 
+	protected String getPropertyValue(String propertyName, boolean onlyInOriginalModel) {
+		return getPropertyValue(project, propertyName, true, onlyInOriginalModel);
+	}
+
 	protected String getPropertyValue(String propertyName) {
-		return getPropertyValue(project, propertyName, true);
+		return getPropertyValue(propertyName, false);
 	}
 
 	protected String getRootProjectProperty(MavenProject mavenProject, String propertyName) {
-		return mavenProject == null ? "" : (mavenProject.getParent() == null ? getPropertyValue(mavenProject, propertyName, false) : getRootProjectProperty(mavenProject.getParent(), propertyName));
+		return mavenProject == null ? "" : (mavenProject.getParent() == null ? getPropertyValue(mavenProject, propertyName, false, false) : getRootProjectProperty(mavenProject.getParent(), propertyName));
+	}
+
+	protected String getRootProjectProperty(MavenProject mavenProject, String propertyName, boolean onlyInOriginalModel) {
+		return mavenProject == null ? "" : (mavenProject.getParent() == null ? getPropertyValue(mavenProject, propertyName, false, onlyInOriginalModel) : getRootProjectProperty(mavenProject.getParent(), propertyName, onlyInOriginalModel));
+	}
+
+	protected String getPropertyValue(String modelPropertyName, boolean propertyInRootProject, boolean onlyInOriginalModel, boolean lookInSettings) {
+		String value = null;
+		if (lookInSettings) {
+			value = getPropertyValueInSettings(modelPropertyName, settings);
+		}
+		if (value == null) {
+			if (propertyInRootProject) {
+				value = getRootProjectProperty(project, modelPropertyName, onlyInOriginalModel);
+			} else {
+				value = getPropertyValue(modelPropertyName, onlyInOriginalModel);
+			}
+		}
+		return value;
 	}
 
 	public abstract void processHTMLFile(File htmlFile) throws Exception;
@@ -128,6 +190,19 @@ public abstract class AbstractSiteMojo extends AbstractMojo {
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		if (outputDirectory == null || !outputDirectory.exists() || !outputDirectory.isDirectory()) {
 			return;
+		}
+
+		if (siteProperties == null) {
+			siteProperties = new ArrayList<String>();
+		}
+		if (fromRootParentProperties == null) {
+			fromRootParentProperties = new ArrayList<String>();
+		}
+		if (inOriginalModelProperties == null) {
+			inOriginalModelProperties = new ArrayList<String>();
+		}
+		if (lookInSettingsProperties == null) {
+			lookInSettingsProperties = new ArrayList<String>();
 		}
 
 		try {
