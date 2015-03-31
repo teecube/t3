@@ -12,6 +12,10 @@
 	<properties>
 		<releaseVersion>${project.version}</releaseVersion> <!-- default value will be overridden by release:perform command line -->
 
+		<siteURL>${siteDisplayURL}/${ecosystemURLBase}</siteURL>
+		<siteUploadURL>http://localhost</siteUploadURL>
+
+		<ecosystemURLBase>${ecosystemArtifactId}/${ecosystemVersion}</ecosystemURLBase>
 		<!-- Velocity-proof properties -->
 		<ecosystemName>T³</ecosystemName>
 		<ecosystemNameHighlight><![CDATA[<i>T<span class="color-highlight">³</span></i>]]></ecosystemNameHighlight>
@@ -19,14 +23,13 @@
 		<ecosystemSumUp><![CDATA[
 			${ecosystemNameHighlight}
 			is a modular, plugin-based, full-featured,
-			<a href="${siteURL}/license.html">open-source</a> solution
+			<a href="${siteURL2}/license.html">open-source</a> solution
 			to improve development & management of TIBCO applications.
 		]]></ecosystemSumUp>
 		<ecosystemGroupId>org.t3soft</ecosystemGroupId>
 		<ecosystemGroupIdCommon>org.t3soft.t3</ecosystemGroupIdCommon>
 		<ecosystemArtifactId>t3</ecosystemArtifactId>
 		<ecosystemVersion>${releaseVersion}</ecosystemVersion>
-		<ecosystemSiteVersion>${ecosystemVersion}</ecosystemSiteVersion>
 		<ecosystemCompany>T3Soft</ecosystemCompany>
 		<ecosystemCompanyURL>http://t3soft.org</ecosystemCompanyURL>
 		<inceptionYear>2014</inceptionYear>
@@ -41,10 +44,11 @@
 		<ticAcronym><![CDATA[<abbr title="TIBCO Infrastructure Core"><span class="color-highlight">T</span>IC</abbr>]]></ticAcronym>
 		<ticGroupId>org.t3soft.tic</ticGroupId>
 		<ticArtifactId>tic</ticArtifactId>
-		<ticURLBase>../${ticArtifactId}/${ticVersion}</ticURLBase>
+		<ticURLBase>${ticArtifactId}/${ticVersion}</ticURLBase>
 
+		<ticBW6MavenGroupId>${ticGroupId}</ticBW6MavenGroupId>
 		<ticBW6MavenArtifactId>tic-bw6-maven</ticBW6MavenArtifactId>
-		<ticBW6MavenURLBase>../${ticBW6MavenArtifactId}/${ticBW6MavenVersion}</ticBW6MavenURLBase>
+		<ticBW6MavenURLBase>${ticBW6MavenArtifactId}/${ticBW6MavenVersion}</ticBW6MavenURLBase>
 		<ticBW6MavenName>BW6 Maven plugin</ticBW6MavenName>
 		<ticDisplayedBW6MavenName><![CDATA[BW<span class="color-highlight">6</span> Maven plugin]]></ticDisplayedBW6MavenName>
 
@@ -55,7 +59,7 @@
 		<tacAcronym><![CDATA[<abbr title="TIBCO Advanced Components">T<span class="color-highlight">A</span>C</abbr>]]></tacAcronym>
 		<tacGroupId>org.t3soft.tac</tacGroupId>
 		<tacArtifactId>tac</tacArtifactId>
-		<tacURLBase>../${tacArtifactId}/${tacVersion}</tacURLBase>
+		<tacURLBase>${tacArtifactId}/${tacVersion}</tacURLBase>
 
 		<toeName>TOE</toeName>
 		<toeDisplayedName><![CDATA[TO<span class="color-highlight">E</span>]]></toeDisplayedName>
@@ -64,13 +68,14 @@
 		<toeAcronym><![CDATA[<abbr title="TOpology Editor">TO<span class="color-highlight">E</span></abbr>]]></toeAcronym>
 		<toeGroupId>org.t3soft.toe</toeGroupId>
 		<toeArtifactId>toe</toeArtifactId>
-		<toeURLBase>../${toeArtifactId}/${toeVersion}</toeURLBase>
+		<toeURLBase>${toeArtifactId}/${toeVersion}</toeURLBase>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<maven.wagon.webdav-jackrabbit>2.8</maven.wagon.webdav-jackrabbit>
-		<settingsRepositorySiteProtocol />
+		<siteUploadProtocol />
+
 		<repositoryReleaseURL>${settingsRepositoryReleaseURL}</repositoryReleaseURL>
 		<repositorySnapshotURL>${settingsRepositorySnapshotURL}</repositorySnapshotURL>
 	</properties>
@@ -288,19 +293,26 @@
 									<goals>
 										<goal>enforce</goal>
 									</goals>
+									<phase>pre-site</phase>
 									<configuration>
 										<rules>
 											<requireProperty>
-												<property>siteURL</property>
-												<message><![CDATA[siteURL]]></message>
+												<property>siteDisplayURL</property>
+												<message><![CDATA[siteDisplayURL]]></message>
 												<regex>.*</regex>
-												<regexMessage>siteURL</regexMessage>
+												<regexMessage>siteDisplayURL</regexMessage>
 											</requireProperty>
 											<requireProperty>
 												<property>siteUploadURL</property>
 												<message><![CDATA[siteUploadURL]]></message>
 												<regex>.*</regex>
 												<regexMessage>siteUploadURL</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>siteUploadProtocol</property>
+												<message><![CDATA[siteUploadProtocol]]></message>
+												<regex>.*</regex>
+												<regexMessage>siteUploadProtocol</regexMessage>
 											</requireProperty>
 										</rules>
 									</configuration>
@@ -590,7 +602,6 @@
 						<version>${apache.plugin.commons-lang3}</version>
 					</dependency>
 
-
 					<dependency>
 						<groupId>junit</groupId>
 						<artifactId>junit</artifactId>
@@ -690,7 +701,7 @@
 											}
 										}
 										setCurrentVersion((project.properties["ticGroupId"] + "." + project.properties["ticArtifactId"]).replaceAll("\\.", "/"), "ticVersion")
-										setCurrentVersion((project.properties["ticGroupId"] + "." + project.properties["ticArtifactId"]).replaceAll("\\.", "/"), "ticBW6MavenVersion")
+										setCurrentVersion((project.properties["ticBW6MavenGroupId"] + "." + project.properties["ticBW6MavenArtifactId"]).replaceAll("\\.", "/"), "ticBW6MavenVersion")
 										setCurrentVersion((project.properties["tacGroupId"] + "." + project.properties["tacArtifactId"]).replaceAll("\\.", "/"), "tacVersion")
 										setCurrentVersion((project.properties["toeGroupId"] + "." + project.properties["toeArtifactId"]).replaceAll("\\.", "/"), "toeVersion")
 									]]></source>
@@ -748,7 +759,7 @@
 											}
 										}
 										setCurrentVersion((project.properties["ticGroupId"] + "." + project.properties["ticArtifactId"]).replaceAll("\\.", "/"), "ticVersion")
-										setCurrentVersion((project.properties["ticGroupId"] + "." + project.properties["ticArtifactId"]).replaceAll("\\.", "/"), "ticBW6MavenVersion")
+										setCurrentVersion((project.properties["ticBW6MavenGroupId"] + "." + project.properties["ticBW6MavenArtifactId"]).replaceAll("\\.", "/"), "ticBW6MavenVersion")
 										setCurrentVersion((project.properties["tacGroupId"] + "." + project.properties["tacArtifactId"]).replaceAll("\\.", "/"), "tacVersion")
 										setCurrentVersion((project.properties["toeGroupId"] + "." + project.properties["toeArtifactId"]).replaceAll("\\.", "/"), "toeVersion")
 									]]></source>
@@ -803,13 +814,11 @@
 			</activation>
 			<properties>
 				<includeSource>true</includeSource>
-				<siteUploadURL>${settingsRepositorySiteURL}/${ecosystemArtifactId}/${ecosystemSiteVersion}</siteUploadURL>
-				<siteURL>${settingsSiteURL}/${ecosystemArtifactId}/${ecosystemSiteVersion}</siteURL>
 			</properties>
 			<distributionManagement>
 				<site>
 					<id>t3.site</id>
-					<url>${settingsRepositorySiteProtocol}${siteUploadURL}</url>
+					<url>${siteUploadProtocol}${siteUploadURL}/${ecosystemURLBase}</url>
 				</site>
 			</distributionManagement>
 			<build>
@@ -835,12 +844,27 @@
 										<goal>update-general</goal>
 									</goals>
 									<configuration>
-										<properties>
-											<property>ticVersion</property>
-											<property>ticBW6MavenVersion</property>
-											<property>tacVersion</property>
-											<property>toeVersion</property>
-										</properties>
+										<siteProperties>
+											<siteProperty>ticVersion</siteProperty>
+											<siteProperty>ticBW6MavenVersion</siteProperty>
+											<siteProperty>tacVersion</siteProperty>
+											<siteProperty>toeVersion</siteProperty>
+
+											<siteProperty>siteDisplayURL</siteProperty>
+											<siteProperty>ecosystemURLBase</siteProperty>
+											<siteProperty>ecosystemArtifactId</siteProperty>
+											<siteProperty>ecosystemVersion</siteProperty>
+										</siteProperties>
+										<fromRootParentProperties>
+											<fromRootParentProperty>ecosystemURLBase</fromRootParentProperty>
+											<fromRootParentProperty>ecosystemVersion</fromRootParentProperty>
+										</fromRootParentProperties>
+										<inOriginalModelProperties>
+											<inOriginalModelProperty>ecosystemURLBase</inOriginalModelProperty>
+										</inOriginalModelProperties>
+										<lookInSettingsProperties>
+											<lookInSettingsProperty>ecosystemURLBase</lookInSettingsProperty>
+										</lookInSettingsProperties>
 									</configuration>
 									<phase>post-site</phase>
 								</execution>
@@ -849,6 +873,11 @@
 					</plugins>
 				</pluginManagement>
 				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<inherited>false</inherited>
+					</plugin>
 					<plugin>
 						<groupId>${ecosystemGroupIdCommon}</groupId>
 						<artifactId>t3-site-enhancer</artifactId>

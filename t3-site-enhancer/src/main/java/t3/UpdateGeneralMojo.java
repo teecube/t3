@@ -17,57 +17,51 @@
 package t3;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
 import org.apache.tools.ant.taskdefs.optional.ReplaceRegExp;
 
 @Mojo(name = "update-general", defaultPhase = LifecyclePhase.POST_SITE)
 public class UpdateGeneralMojo extends AbstractSiteMojo {
 
-	@Parameter()
-	private List<String> properties;
-
-	private void replaceProperty(File htmlFile, String propertyName) {
-		replaceProperty(htmlFile, propertyName, propertyName);
-	}
-
-	private void replaceProperty(File htmlFile, String propertyName, String modelPropertyName) {
-		replaceProperty(htmlFile, propertyName, propertyName, false);
-	}
-
-	private void replaceProperty(File htmlFile, String propertyName, String modelPropertyName, boolean propertyInRootProject) {
+	private void replaceProperty(File htmlFile, String propertyName, String modelPropertyName, boolean propertyInRootProject, boolean onlyInOriginalModel, boolean lookInSettings) {
 		ReplaceRegExp replaceRegExp = new ReplaceRegExp();
 		replaceRegExp.setFile(htmlFile);
 		replaceRegExp.setMatch("\\$\\{" + propertyName + "\\}");
-		if (propertyInRootProject) {
-			replaceRegExp.setReplace(getRootProjectProperty(project, modelPropertyName));
-		} else {
-			replaceRegExp.setReplace(getPropertyValue(modelPropertyName));
-		}
+		replaceRegExp.setReplace(getPropertyValue(modelPropertyName, propertyInRootProject, onlyInOriginalModel, lookInSettings));
 		replaceRegExp.setByLine(true);
 		replaceRegExp.execute();
 	}
 
 	@Override
 	public void processHTMLFile(File htmlFile) throws Exception {
-		replaceProperty(htmlFile, "ecosystemSiteVersion", "ecosystemVersion", true);
-		for (String propertyToUpdate : properties) {
-			replaceProperty(htmlFile, propertyToUpdate);
+		replaceProperty(htmlFile, "siteURL2", "siteURL", true, true, false); // TODO: externalize in configuration ?
+		for (String propertyToUpdate : siteProperties) {
+			boolean propertyInRootProject = fromRootParentProperties.contains(propertyToUpdate);
+			boolean onlyInOriginalModel = inOriginalModelProperties.contains(propertyToUpdate);
+			boolean lookInSettings = lookInSettingsProperties.contains(propertyToUpdate);
+			replaceProperty(htmlFile, propertyToUpdate, propertyToUpdate, propertyInRootProject, onlyInOriginalModel, lookInSettings);
 		}
 	}
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		if (properties == null) {
-			properties = new ArrayList<String>();
-		}
 		super.execute();
+
+		removeParent(project); // avoid Doxia SiteTool to mess up with parent loading
+	}
+
+	private void removeParent(MavenProject project) {
+		if (project == null) return;
+
+		MavenProject parent = project.getParent();
+		removeParent(parent);
+
+		project.setFile(null);
 	}
 
 }
