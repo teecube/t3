@@ -172,6 +172,7 @@ public abstract class AbstractSiteMojo extends AbstractMojo {
 	protected String getPropertyValue(String modelPropertyName, boolean propertyInRootProject, boolean onlyInOriginalModel, boolean lookInSettings) {
 		String value = null;
 		if (lookInSettings) {
+			getLog().info("looking in settings: " + modelPropertyName);
 			value = getPropertyValueInSettings(modelPropertyName, settings);
 		}
 		if (value == null) {
