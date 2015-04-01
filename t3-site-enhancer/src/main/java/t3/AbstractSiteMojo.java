@@ -125,8 +125,10 @@ public abstract class AbstractSiteMojo extends AbstractMojo {
 		
 		for (Object _profileWithId : settings.getProfilesAsMap().entrySet()) {
 			Entry<String, Profile> profileWithId = (Entry<String, Profile>) _profileWithId;
+			getLog().info(profileWithId.getKey());
 			if (activeProfiles.indexOf(profileWithId.getKey()) > 0) {
 				Profile profile = profileWithId.getValue();
+				getLog().info("active:" + profile.getId());
 
 				String value = profile.getProperties().getProperty(propertyName);
 				if (value != null) {
