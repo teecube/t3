@@ -120,7 +120,9 @@ public abstract class AbstractSiteMojo extends AbstractMojo {
 	@SuppressWarnings("unchecked")
 	protected String getPropertyValueInSettings(String propertyName, Settings settings) {
 		List<String> activeProfiles = settings.getActiveProfiles();
-
+		
+		getLog().info("profiles: " + activeProfiles.toString());
+		
 		for (Object _profileWithId : settings.getProfilesAsMap().entrySet()) {
 			Entry<String, Profile> profileWithId = (Entry<String, Profile>) _profileWithId;
 			if (activeProfiles.indexOf(profileWithId.getKey()) > 0) {
