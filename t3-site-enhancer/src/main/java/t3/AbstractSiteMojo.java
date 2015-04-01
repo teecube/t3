@@ -121,14 +121,10 @@ public abstract class AbstractSiteMojo extends AbstractMojo {
 	protected String getPropertyValueInSettings(String propertyName, Settings settings) {
 		List<String> activeProfiles = settings.getActiveProfiles();
 		
-		getLog().info("profiles: " + activeProfiles.toString());
-		
 		for (Object _profileWithId : settings.getProfilesAsMap().entrySet()) {
 			Entry<String, Profile> profileWithId = (Entry<String, Profile>) _profileWithId;
-			getLog().info(profileWithId.getKey());
 			if (activeProfiles.contains(profileWithId.getKey())) {
 				Profile profile = profileWithId.getValue();
-				getLog().info("active:" + profile.getId());
 
 				String value = profile.getProperties().getProperty(propertyName);
 				if (value != null) {
@@ -176,9 +172,7 @@ public abstract class AbstractSiteMojo extends AbstractMojo {
 	protected String getPropertyValue(String modelPropertyName, boolean propertyInRootProject, boolean onlyInOriginalModel, boolean lookInSettings) {
 		String value = null;
 		if (lookInSettings) {
-			getLog().info("looking in settings: " + modelPropertyName);
 			value = getPropertyValueInSettings(modelPropertyName, settings);
-			getLog().info("result:" + value + "end");
 		}
 		if (value == null) {
 			if (propertyInRootProject) {
