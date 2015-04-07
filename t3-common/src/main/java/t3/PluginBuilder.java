@@ -1,6 +1,6 @@
 /**
- * (C) Copyright 2014-${h_currentYear} T3Soft
- * (http://www.t3soft.org) and others.
+ * (C) Copyright 2014-2015 T3Soft
+ * (http://t3soft.org) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,7 +88,19 @@ public class PluginBuilder {
 				Xpp3Dom executions = pluginConfiguration.getChild("executions");
 				if (executions != null) {
 					List<PluginExecution> pluginExecutions = new ArrayList<PluginExecution>();
-					pluginExecutions.addAll(this.plugin.getExecutions());
+
+					// add existing executions only if they are not overridden in configuration file
+					List<String> ids = new ArrayList<String>();
+					for (Xpp3Dom execution : executions.getChildren("execution")) {
+						ids.add(execution.getChild("id").getValue());
+					}
+					for (PluginExecution pluginExecution : this.plugin.getExecutions()) {
+						if (!ids.contains(pluginExecution.getId())) {
+							pluginExecutions.add(pluginExecution);
+						}
+					}
+					//
+
 					for (Xpp3Dom execution : executions.getChildren()) {
 						if ("execution".equals(execution.getName())) {
 							PluginExecution ex = new PluginExecution();
