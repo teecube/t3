@@ -33,4 +33,6 @@ public abstract class Messages {
 	public static final String ENFORCED_RULES = MESSAGE_EMPTY_PREFIX + "Rules are validated.";
 	public static final String ENFORCER_RULES_FAILURE = MESSAGE_EMPTY_PREFIX + "The required rules are invalid.";
 
+	public static final String ARTIFACT_NOT_FOUND = "The artifact was not found."; // improve this message
+
 }

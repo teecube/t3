@@ -118,7 +118,7 @@
 				<maven.version>3.2.2</maven.version>
 
 				<maven.plugin.clean>2.6.1</maven.plugin.clean>
-				<maven.plugin.compiler>3.2</maven.plugin.compiler>
+				<maven.plugin.compiler>3.3</maven.plugin.compiler>
 				<maven.plugin.deploy>2.8.2</maven.plugin.deploy>
 				<maven.plugin.install>2.5.2</maven.plugin.install>
 				<maven.plugin.resources>2.7</maven.plugin.resources>
@@ -592,6 +592,9 @@
 				<junit.plugin>4.12</junit.plugin>
 
 				<mycila.plugin.license>2.6</mycila.plugin.license>
+
+				<jvnet.maven-jaxb2-plugin>0.12.3</jvnet.maven-jaxb2-plugin>
+				<codehaus.build-helper-maven-plugin>1.9.1</codehaus.build-helper-maven-plugin>
 			</properties>
 			<dependencyManagement>
 				<dependencies>
@@ -858,6 +861,48 @@
 								</execution>
 							</executions>
 						</plugin>
+						<plugin>
+							<groupId>org.jvnet.jaxb2.maven2</groupId>
+							<artifactId>maven-jaxb2-plugin</artifactId>
+							<version>${jvnet.maven-jaxb2-plugin}</version>
+							<executions>
+								<execution>
+									<id>xjc</id>
+									<goals>
+										<goal>generate</goal>
+									</goals>
+									<configuration>
+										<schemaDirectory>src/main/resources/xsd</schemaDirectory>
+										<schemaIncludes>
+											<include>**/*.xsd</include>
+										</schemaIncludes>
+										<locale>en_US</locale>
+										<generateDirectory>${project.basedir}/src/main/ajaxb</generateDirectory>
+										<cleanPackageDirectories>false</cleanPackageDirectories>
+									</configuration>
+								</execution>
+							</executions>
+						</plugin>
+<!--
+ 						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>build-helper-maven-plugin</artifactId>
+							<version>${codehaus.build-helper-maven-plugin}</version>
+							<executions>
+								<execution>
+									<phase>generate-sources</phase>
+									<goals>
+										<goal>add-source</goal>
+									</goals>
+									<configuration>
+										<sources>
+											<source>${basedir}/src/main/jaxb</source>
+										</sources>
+									</configuration>
+								</execution>
+							</executions>
+						</plugin>
+ -->
 					</plugins>
 				</pluginManagement>
 			</build>
@@ -1008,6 +1053,14 @@
 							</execution>
 						</executions>
 					</plugin>
+					<plugin>
+						<groupId>org.jvnet.jaxb2.maven2</groupId>
+						<artifactId>maven-jaxb2-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+					</plugin>
 				</plugins>
 			</build>
 
@@ -1038,6 +1091,14 @@
 					<artifactId>maven-project</artifactId>
 					<version>3.0-alpha-2</version>
 				</dependency>
+				<!--
+				<dependency>
+					<groupId>org.apache.maven.plugin-testing</groupId>
+					<artifactId>maven-plugin-testing-harness</artifactId>
+					<version>3.1.0</version>
+					<scope>test</scope>
+				</dependency>
+				-->
 			</dependencies>
 		</profile>
 	</profiles>

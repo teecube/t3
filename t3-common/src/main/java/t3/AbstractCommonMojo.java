@@ -35,6 +35,11 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.settings.Settings;
 
+/**
+ *
+ * @author Mathieu Debove &lt;mad@t3soft.org&gt;
+ *
+ */
 public class AbstractCommonMojo extends AbstractMojo {
 
 	@Parameter (property = "tibco.home", required = true)
@@ -43,34 +48,38 @@ public class AbstractCommonMojo extends AbstractMojo {
 	@Parameter (property = "executables.extension", required = true)
 	protected String executablesExtension;
 
-	@Parameter( property = "project.build.directory", required = true, defaultValue = "${basedir}/target" ) // target
-	@_Parameter( property = "project.build.directory", required = true, defaultValue = "${basedir}/target" ) // target
+	@Parameter (property = "project.build.directory", required = true, defaultValue = "${basedir}/target" ) // target
+	@_Parameter (property = "project.build.directory", required = true, defaultValue = "${basedir}/target" ) // target
 	protected File directory;
 
-	@Parameter( property = "project.output.directory", required = true, defaultValue = "${project.build.directory}/output" ) // target/output (instead of target/classes)
-	@_Parameter( property = "project.output.directory", required = true, defaultValue = "${project.build.directory}/output" ) // target/output (instead of target/classes)
+	@Parameter (property = "project.output.directory", required = true, defaultValue = "${project.build.directory}/output" ) // target/output (instead of target/classes)
+	@_Parameter (property = "project.output.directory", required = true, defaultValue = "${project.build.directory}/output" ) // target/output (instead of target/classes)
 	protected File outputDirectory;
 
-	@Parameter( property = "project.test.directory", required = true, defaultValue = "${project.build.directory}/test" ) // target/test
-	@_Parameter( property = "project.test.directory", required = true, defaultValue = "${project.build.directory}/test" ) // target/test
+	@Parameter (property = "project.test.directory", required = true, defaultValue = "${project.build.directory}/test" ) // target/test
+	@_Parameter (property = "project.test.directory", required = true, defaultValue = "${project.build.directory}/test" ) // target/test
 	protected File testOutputDirectory;
 
-	@Parameter( defaultValue = "${basedir}", readonly = true)
+	@Parameter (property="project.build.sourceEncoding", required=true, defaultValue = "UTF-8")
+	@_Parameter (property="project.build.sourceEncoding", required=true, defaultValue = "UTF-8")
+	protected String sourceEncoding;
+
+	@Parameter (defaultValue = "${basedir}", readonly = true)
 	protected File projectBasedir;
 
-	@Parameter ( defaultValue = "${session}", readonly = true)
+	@Parameter (defaultValue = "${session}", readonly = true)
 	protected MavenSession session;
 
-	@Parameter ( defaultValue = "${project}", readonly = true)
+	@Parameter (defaultValue = "${project}", readonly = true)
 	protected MavenProject project;
 
-	@Parameter ( defaultValue = "${mojoExecution}", readonly = true)
+	@Parameter (defaultValue = "${mojoExecution}", readonly = true)
 	protected MojoExecution mojoExecution;
 
-	@Parameter ( defaultValue = "${plugin}", readonly = true)
+	@Parameter (defaultValue = "${plugin}", readonly = true)
 	protected PluginDescriptor pluginDescriptor; // plugin descriptor of this plugin
 
-	@Parameter ( defaultValue = "${settings}", readonly = true)
+	@Parameter (defaultValue = "${settings}", readonly = true)
 	protected Settings settings;
 
 	@Component
