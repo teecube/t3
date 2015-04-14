@@ -877,17 +877,17 @@
 											<include>**/*.xsd</include>
 										</schemaIncludes>
 										<locale>en_US</locale>
-										<generateDirectory>${project.basedir}/src/main/ajaxb</generateDirectory>
+										<generateDirectory>${project.basedir}/src/main/jaxb</generateDirectory>
 										<cleanPackageDirectories>false</cleanPackageDirectories>
 									</configuration>
 								</execution>
 							</executions>
 						</plugin>
-<!--
  						<plugin>
 							<groupId>org.codehaus.mojo</groupId>
 							<artifactId>build-helper-maven-plugin</artifactId>
 							<version>${codehaus.build-helper-maven-plugin}</version>
+							<!--
 							<executions>
 								<execution>
 									<phase>generate-sources</phase>
@@ -901,8 +901,8 @@
 									</configuration>
 								</execution>
 							</executions>
+							-->
 						</plugin>
- -->
 					</plugins>
 				</pluginManagement>
 			</build>
@@ -1057,10 +1057,12 @@
 						<groupId>org.jvnet.jaxb2.maven2</groupId>
 						<artifactId>maven-jaxb2-plugin</artifactId>
 					</plugin>
+					<!--
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>build-helper-maven-plugin</artifactId>
 					</plugin>
+					-->
 				</plugins>
 			</build>
 
