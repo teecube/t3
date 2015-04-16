@@ -58,8 +58,8 @@ public class XMLMarshall<Type, Factory> {
 	public XMLMarshall(File xmlFile, Class<?>... classesToBeBound) throws JAXBException {
 		this.xmlFile = xmlFile;
 		this.classesToBound = new ArrayList<Class<?>>();
-		this.classesToBound.addAll(Arrays.asList(classesToBeBound));
 		this.classesToBound.add(getActualFactoryClass());
+		this.classesToBound.addAll(Arrays.asList(classesToBeBound));
 		load();
 	}
 
@@ -77,8 +77,7 @@ public class XMLMarshall<Type, Factory> {
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 		Object o =  jaxbUnmarshaller.unmarshal(xmlFile);
 
-		JAXBElement<Type> j = (JAXBElement<Type>) o;
-		this.object = j.getValue();
+		this.object = (Type) o;
 	}
 
 	/**
@@ -91,6 +90,7 @@ public class XMLMarshall<Type, Factory> {
 	public void save() throws JAXBException {
 		Marshaller m = jaxbContext.createMarshaller();
 		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		m.setProperty("com.sun.xml.bind.indentString", "    ");
 		m.marshal(object, xmlFile);
 	}
 
@@ -105,6 +105,7 @@ public class XMLMarshall<Type, Factory> {
 			@SuppressWarnings("unchecked") // safe because "? extends ParentType" and "ChildType extends ParentType"
 			Class<ChildType> childType = (Class<ChildType>) j.getDeclaredType();
 			if (childType.isAssignableFrom(childElement.getClass())) {
+				@SuppressWarnings("unchecked") // safe because "? extends ParentType" and "ChildType extends ParentType"
 				ChildType objectAsChildType = (ChildType) actualChildType.cast(j.getValue());
 				result.add(objectAsChildType);
 			}
