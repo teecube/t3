@@ -672,6 +672,13 @@
 						<artifactId>guava</artifactId>
 						<version>18.0</version>
 					</dependency>
+
+					<!-- We use MOXy to have proper namespace prefixes handling -->
+					<dependency>
+						<groupId>org.eclipse.persistence</groupId>
+						<artifactId>org.eclipse.persistence.moxy</artifactId>
+						<version>2.6.0</version>
+					</dependency>
 				</dependencies>
 			</dependencyManagement>
 			<build>
@@ -887,21 +894,6 @@
 							<groupId>org.codehaus.mojo</groupId>
 							<artifactId>build-helper-maven-plugin</artifactId>
 							<version>${codehaus.build-helper-maven-plugin}</version>
-							<!--
-							<executions>
-								<execution>
-									<phase>generate-sources</phase>
-									<goals>
-										<goal>add-source</goal>
-									</goals>
-									<configuration>
-										<sources>
-											<source>${basedir}/src/main/jaxb</source>
-										</sources>
-									</configuration>
-								</execution>
-							</executions>
-							-->
 						</plugin>
 					</plugins>
 				</pluginManagement>
@@ -1023,6 +1015,13 @@
 							<include>plugins-configuration/**/*</include>
 						</includes>
 					</resource>
+					<resource>
+						<directory>src/main/java</directory>
+						<filtering>false</filtering>
+						<includes>
+							<include>**/*.properties</include>
+						</includes>
+					</resource>
 				</resources>
 				<plugins>
 					<plugin>
@@ -1101,6 +1100,11 @@
 					<scope>test</scope>
 				</dependency>
 				-->
+
+				<dependency>
+					<groupId>org.eclipse.persistence</groupId>
+					<artifactId>org.eclipse.persistence.moxy</artifactId>
+				</dependency>
 			</dependencies>
 		</profile>
 	</profiles>
