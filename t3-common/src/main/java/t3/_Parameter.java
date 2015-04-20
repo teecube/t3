@@ -30,9 +30,9 @@ import java.lang.annotation.Target;
  * a <b>RUNTIME retention policy</b>.
  * </p>
  * <p>
- * The <b>RUNTIME retention policy</b> allows to read the annotation parameters at
- * run-time and to inject properly the default values for builtin properties in
- * the Maven model.
+ * The <b>RUNTIME retention policy</b> allows to read the annotation parameters
+ * at run-time and to inject properly the default values for builtin properties
+ * in the Maven model.
  * </p>
  * 
  * @author Mathieu Debove &lt;mad@t3soft.org&gt;
@@ -40,7 +40,7 @@ import java.lang.annotation.Target;
  */
 
 //@Documented
-@Retention( RetentionPolicy.RUNTIME )
+@Retention( RetentionPolicy.RUNTIME ) // RUNTIME retention policy
 @Target( { ElementType.FIELD } )
 @Inherited
 public @interface _Parameter

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3;
+package t3.plugin;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
@@ -30,6 +30,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
+
+import t3.Messages;
 
 /**
 *
@@ -56,14 +58,14 @@ public class PropertiesEnforcer {
 	 * </p>
 	 *
 	 * @param session
-	 * @param pluginManager 
+	 * @param pluginManager
 	 * @param logger
 	 * @throws MavenExecutionException
 	 */
 	public static void enforceProperties(MavenSession session, BuildPluginManager pluginManager, Logger logger) throws MavenExecutionException {
 		logger.info(Messages.MESSAGE_SPACE);
 		logger.info(Messages.ENFORCING_RULES);
-		
+
 		setExecutablesExtension(session);
 
 		File file = new File("plugins-configuration/org.apache.maven.plugins/maven-enforcer-plugin.xml");
