@@ -14,9 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3;
+package t3.xml;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +30,11 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.XMLWriter;
+
+import t3.xml.RootElementNamespaceFilter.NamespaceDeclaration;
 
 /**
  *
@@ -45,6 +53,9 @@ public class XMLMarshall<Type, Factory> {
 	private File xmlFile;
 	private List<Class<?>> classesToBound;
 
+	protected String rootElementLocalName;
+	protected List<NamespaceDeclaration> namespaceDeclarationsToRemove;
+
 	public XMLMarshall(File xmlFile) throws JAXBException {
 		this(xmlFile, Object.class);
 	}
@@ -57,9 +68,14 @@ public class XMLMarshall<Type, Factory> {
 
 	public XMLMarshall(File xmlFile, Class<?>... classesToBeBound) throws JAXBException {
 		this.xmlFile = xmlFile;
+
 		this.classesToBound = new ArrayList<Class<?>>();
 		this.classesToBound.add(getActualFactoryClass());
 		this.classesToBound.addAll(Arrays.asList(classesToBeBound));
+
+		this.rootElementLocalName = "";
+		this.namespaceDeclarationsToRemove = new ArrayList<NamespaceDeclaration>();
+
 		load();
 	}
 
@@ -86,12 +102,24 @@ public class XMLMarshall<Type, Factory> {
 	 * </p>
 	 *
 	 * @throws JAXBException
+	 * @throws FileNotFoundException
+	 * @throws UnsupportedEncodingException
 	 */
-	public void save() throws JAXBException {
+	public void save() throws JAXBException, UnsupportedEncodingException, FileNotFoundException {
 		Marshaller m = jaxbContext.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.setProperty("com.sun.xml.bind.indentString", "    ");
-		m.marshal(object, xmlFile);
+
+		RootElementNamespaceFilter outFilter = new RootElementNamespaceFilter(rootElementLocalName, namespaceDeclarationsToRemove);
+
+		OutputFormat format = new OutputFormat();
+		format.setIndent(true);
+		format.setIndent("    ");
+		format.setNewlines(true);
+
+		XMLWriter writer = new XMLWriter(new FileOutputStream(xmlFile), format);
+
+		outFilter.setContentHandler(writer);
+
+		m.marshal(object, outFilter);
 	}
 
 	public static <ParentType, ChildType extends ParentType> List<ChildType> convertList(List<JAXBElement<? extends ParentType>> listToConvert, ChildType childElement) {

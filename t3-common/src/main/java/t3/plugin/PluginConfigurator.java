@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3;
+package t3.plugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,8 +35,10 @@ import org.reflections.scanners.ResourcesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
+import t3._Parameter;
+
 /**
- * 
+ *
  * @author Mathieu Debove &lt;mad@t3soft.org&gt;
  *
  */
@@ -114,7 +116,7 @@ public class PluginConfigurator {
 
 	/**
 	 * <p>
-	 * 
+	 *
 	 * </p>
 	 *
 	 * @param mavenProject
@@ -127,16 +129,16 @@ public class PluginConfigurator {
 					 ClasspathHelper.forClass(_Parameter.class)) // clone of org.apache.maven.plugins.annotations.Parameter annotation
 			.setScanners(new FieldAnnotationsScanner())
 		);
-		
+
 		Set<Field> parameters = reflections.getFieldsAnnotatedWith(_Parameter.class);
-		
+
 		for (Field field : parameters) {
 			_Parameter anno = field.getAnnotation(_Parameter.class);
 			String property = anno.property();
 			String defaultValue = anno.defaultValue();
-			
+
 			if (property != null && !property.isEmpty() && defaultValue != null) {
-				if (!mavenProject.getProperties().containsKey(property)) { // do not overwrite with default value 
+				if (!mavenProject.getProperties().containsKey(property)) { // do not overwrite with default value
 					mavenProject.getProperties().put(property, defaultValue);
 				} else if ("project.build.directory".equals(property)) {
 					mavenProject.getBuild().setDirectory(mavenProject.getProperties().getProperty(property, defaultValue));

@@ -563,6 +563,11 @@
 						<artifactId>maven-dependency-plugin</artifactId>
 						<version>${maven.plugin.dependency}</version>
 					</dependency>
+					<dependency>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>${maven.plugin.resources}</version>
+					</dependency>
 
 					<!-- dependencies to annotations -->
 					<dependency>
