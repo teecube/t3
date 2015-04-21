@@ -139,7 +139,7 @@
 				<maven.plugin.enforcer>1.3.1</maven.plugin.enforcer>
 				<maven.plugin.help>2.2</maven.plugin.help>
 				<maven.plugin.invoker>1.9</maven.plugin.invoker>
-				<maven.plugin.plugin>3.3</maven.plugin.plugin>
+				<maven.plugin.plugin>3.4</maven.plugin.plugin>
 				<maven.plugin.release>2.5.1</maven.plugin.release>
 
 				<plexus.component.metadata>1.6</plexus.component.metadata>
@@ -369,7 +369,7 @@
 								<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
 								<extractors>
 									<extractor>java-annotations</extractor>
-									<extractor>java</extractor>
+									<!-- <extractor>java</extractor> -->
 								</extractors>
 							</configuration>
 							<executions>

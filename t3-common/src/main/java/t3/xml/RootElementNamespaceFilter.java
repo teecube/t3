@@ -40,7 +40,7 @@ public class RootElementNamespaceFilter extends XMLFilterImpl {
         private String uri;
 
         /**
-         * 
+         *
          * @param prefix, prefix in the form xmlns:prefix
          * @param uri, the namespace URI
          */
@@ -66,7 +66,7 @@ public class RootElementNamespaceFilter extends XMLFilterImpl {
     }
 
 	/**
-	 * 
+	 *
 	 * @param rootElementLocalName, the document root element local name
 	 * @param prefixes, list of prefix in the form "xmlns:prefix"
 	 */
