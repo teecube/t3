@@ -127,7 +127,7 @@ public class AbstractCommonMojo extends AbstractMojo {
 
 	/**
 	 * <p>
-	 * Create the output directory ("target/") if it doesn't exist yet.
+	 * Create the output directory (usually "target/") if it doesn't exist yet.
 	 * </p>
 	 */
 	protected void createOutputDirectory() {

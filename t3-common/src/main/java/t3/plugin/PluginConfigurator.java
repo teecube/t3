@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.maven.model.Plugin;
@@ -126,7 +127,7 @@ public class PluginConfigurator {
 	public static <T> void addPluginsParameterInModel(MavenProject mavenProject, Class<T> fromClass, Logger logger) {
 		Reflections reflections = new Reflections(new ConfigurationBuilder()
 			.setUrls(ClasspathHelper.forClass(fromClass),
-					 ClasspathHelper.forClass(_Parameter.class)) // clone of org.apache.maven.plugins.annotations.Parameter annotation
+					 ClasspathHelper.forClass(_Parameter.class)) // clone of org.apache.maven.plugins.annotations.Parameter annotation (with RUNTIME retention policy)
 			.setScanners(new FieldAnnotationsScanner())
 		);
 
@@ -138,10 +139,32 @@ public class PluginConfigurator {
 			String defaultValue = anno.defaultValue();
 
 			if (property != null && !property.isEmpty() && defaultValue != null) {
-				if (!mavenProject.getProperties().containsKey(property)) { // do not overwrite with default value
+				if (!mavenProject.getProperties().containsKey(property)) { // do not overwrite with default value if the property exists in model (i.e. in POM)
 					mavenProject.getProperties().put(property, defaultValue);
 				} else if ("project.build.directory".equals(property)) {
 					mavenProject.getBuild().setDirectory(mavenProject.getProperties().getProperty(property, defaultValue));
+//					mavenProject.getProperties().put(property, mavenProject.getProperties().getProperty(property, defaultValue));
+				} else {
+					String value = mavenProject.getOriginalModel().getProperties().getProperty(property);
+
+					if (value != null) {
+						Pattern p = Pattern.compile("\\$\\{([^}]*)\\}");
+						Matcher m = p.matcher(value);
+
+						StringBuffer sb = new StringBuffer();
+
+						while (m.find()) {
+							String propertyName = m.group(1);
+							String propertyValue = mavenProject.getModel().getProperties().getProperty(propertyName);
+							if (propertyValue != null) {
+							    m.appendReplacement(sb, Matcher.quoteReplacement(propertyValue));
+							}
+						}
+						m.appendTail(sb);
+						value = sb.toString();
+
+						mavenProject.getProperties().put(property, value);
+					}
 				}
 			}
 		}
