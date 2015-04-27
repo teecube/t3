@@ -36,6 +36,9 @@ import org.reflections.scanners.ResourcesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+
 import t3._Parameter;
 
 /**
@@ -125,6 +128,8 @@ public class PluginConfigurator {
 	 * @param logger
 	 */
 	public static <T> void addPluginsParameterInModel(MavenProject mavenProject, Class<T> fromClass, Logger logger) {
+//		Reflections.log = NOPLogger.NOP_LOGGER;
+
 		Reflections reflections = new Reflections(new ConfigurationBuilder()
 			.setUrls(ClasspathHelper.forClass(fromClass),
 					 ClasspathHelper.forClass(_Parameter.class)) // clone of org.apache.maven.plugins.annotations.Parameter annotation (with RUNTIME retention policy)
