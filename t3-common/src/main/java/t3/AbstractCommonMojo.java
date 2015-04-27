@@ -17,11 +17,6 @@
 package t3;
 
 import java.io.File;
-import java.math.BigInteger;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Properties;
-import java.util.TreeSet;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
@@ -34,6 +29,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.settings.Settings;
+import org.apache.maven.shared.filtering.MavenResourcesFiltering;
 
 /**
  *
@@ -85,45 +81,8 @@ public class AbstractCommonMojo extends AbstractMojo {
 	@Component
 	protected ProjectBuilder builder;
 
-	/**
-	 * <p>
-	 * This inner-class extends java.util.Properties with all properties sorted
-	 * alphabetically. Also, the setProperty method is overridden to support
-	 * multiple input types and check for null values.
-	 * </p>
-	 *
-	 */
-	public static class SortedProperties extends Properties {
-		private static final long serialVersionUID = 3733070302160913988L;
-		
-		@Override
-	    public synchronized Enumeration<Object> keys() {
-	        return Collections.enumeration(new TreeSet<Object>(super.keySet()));
-	    }
-
-		@Override
-		public synchronized Object setProperty(String key, String value) {
-			if (value != null) {
-				return super.setProperty(key, value);
-			}
-			return null;
-		}
-
-		public synchronized Object setProperty(String key, BigInteger value) {
-			if (value != null) {
-				return super.setProperty(key, value.toString());
-			}
-			return null;
-		}
-
-		public synchronized Object setProperty(String key, Boolean value) {
-			if (value != null) {
-				return super.setProperty(key, value.toString());
-			}
-			return null;
-		}
-
-	}
+	@Component( role=org.apache.maven.shared.filtering.MavenResourcesFiltering.class, hint="default")
+	protected MavenResourcesFiltering mavenResourcesFiltering;
 
 	/**
 	 * <p>
@@ -151,4 +110,7 @@ public class AbstractCommonMojo extends AbstractMojo {
 		createOutputDirectory();
 	}
 
+//	public <T extends AbstractCommonMojo> AbstractCommonMojo(T mojo) {
+//		System.out.println("deep copy AbstractCommonMojo");
+//	}
 }
