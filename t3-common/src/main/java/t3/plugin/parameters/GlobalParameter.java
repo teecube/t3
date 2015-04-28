@@ -14,21 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3;
+package t3.plugin.parameters;
 
-import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import javax.inject.Scope;
+/**
+ * <p>
+ * This annotation is used to add a global parameter to one or several Mojos.
+ * </p>
+ *
+ * @author Mathieu Debove &lt;mad@t3soft.org&gt;
+ *
+ */
 
-@Scope
-@Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target( { ElementType.FIELD } )
+@Inherited
 public @interface GlobalParameter {
 	String property();
-	String defaultValue();
+	String defaultValue() default "";
+	boolean required() default false;
 }

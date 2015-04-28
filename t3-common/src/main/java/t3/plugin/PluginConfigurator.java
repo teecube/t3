@@ -36,10 +36,8 @@ import org.reflections.scanners.ResourcesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-
-import t3._Parameter;
+import t3.plugin.parameters.GlobalParameter;
+import t3.plugin.parameters.MojoParameter;
 
 /**
  *
@@ -48,6 +46,18 @@ import t3._Parameter;
  */
 public class PluginConfigurator {
 
+	public static final Pattern mavenPropertyPattern = Pattern.compile("\\$\\{([^}]*)\\}");
+
+	/**
+	 * <p>
+	 * Look for XML files inside "plugins-configuration/" folder of the current
+	 * plugin.
+	 * </p>
+	 *
+	 * @param logger
+	 * @param fromClass
+	 * @return
+	 */
 	public static <T> List<File> getPluginsConfigurationFromClasspath(Logger logger, Class<T> fromClass) {
 		List<File> result = new ArrayList<File>();
 
@@ -120,7 +130,144 @@ public class PluginConfigurator {
 
 	/**
 	 * <p>
+	 * Retrieve the property value of a property.
+	 * The order is:
+	 *  <ul>
+	 *   <li>
+	 *    the original model (the POM file)
+	 *   </li>
+	 *   <li>
+	 *    the calculated model (POM file + parents + injected properties)
+	 *   </li>
+	 *   <li>
+	 *    built-in Maven properties ("basedir", "project.build.directory"...)
+	 *   </li>
+	 *  </ul>
+	 * </p>
 	 *
+	 * @param mavenProject
+	 * @param propertyName
+	 * @return
+	 */
+	private static String getPropertyValue(MavenProject mavenProject, String propertyName) {
+		String value = mavenProject.getOriginalModel().getProperties().getProperty(propertyName);
+
+		if (value == null) {
+			value = mavenProject.getModel().getProperties().getProperty(propertyName);
+		}
+
+		if (value == null) {
+			if ("basedir".equals(propertyName) || "project.basedir".equals(propertyName)) {
+				value = mavenProject.getBasedir().getAbsolutePath();
+			} else if ("project.build.directory".equals(propertyName)) {
+				value = mavenProject.getBuild().getDirectory();
+			} else if ("project.build.finalName".equals(propertyName)) {
+				value = mavenProject.getBuild().getFinalName();
+			}
+		}
+		return value;
+	}
+
+	/**
+	 * <p>
+	 *  Proxy to call {@code updateProperty} for a {@link MojoParameter}.
+	 * </p>
+	 *
+	 * @param mavenProject
+	 * @param parameter
+	 * @return
+	 */
+	public static String updateProperty(MavenProject mavenProject, MojoParameter parameter) {
+		if (parameter == null) return null;
+
+		String property = parameter.property();
+		String defaultValue = parameter.defaultValue();
+		if (defaultValue.isEmpty() && parameter.required()) {
+			defaultValue = null;
+		}
+
+		return updateProperty(mavenProject, property, defaultValue);
+	}
+
+	/**
+	 * <p>
+	 *  Proxy to call {@code updateProperty} for a {@link GlobalParameter}.
+	 * </p>
+	 *
+	 * @param mavenProject
+	 * @param globalParameter
+	 * @return
+	 */
+	public static String updateProperty(MavenProject mavenProject, GlobalParameter globalParameter) {
+		if (globalParameter == null) return null;
+
+		String property = globalParameter.property();
+		String defaultValue = globalParameter.defaultValue();
+		if (defaultValue.isEmpty() && globalParameter.required()) {
+			defaultValue = null;
+		}
+
+		return updateProperty(mavenProject, property, defaultValue);
+	}
+
+	/**
+	 *
+	 * @param mavenProject
+	 * @param propertyName
+	 * @param defaultValue
+	 * @return
+	 */
+	public static String updateProperty(MavenProject mavenProject, String propertyName, String defaultValue) {
+		if (propertyName != null && !propertyName.isEmpty()) { // && defaultValue != null) {
+			if (!mavenProject.getProperties().containsKey(propertyName) && defaultValue != null) { // do not overwrite with default value if the property exists in model (i.e. in POM)
+				mavenProject.getProperties().put(propertyName, defaultValue);
+			} else {
+				String value = getPropertyValue(mavenProject, propertyName);
+
+				if (value != null) {
+					String oldValue = null;
+					while (mavenPropertyPattern.matcher(value).find() && (!value.equals(oldValue))) {
+						oldValue = value;
+						value = replaceProperties(value, mavenProject);
+					}
+
+					mavenProject.getProperties().put(propertyName, value);
+				}
+
+				defaultValue = value;
+			}
+		}
+
+		if ("project.build.directory".equals(propertyName)) {
+			mavenProject.getBuild().setDirectory(defaultValue);
+		}
+
+		return defaultValue;
+	}
+
+	public static String replaceProperties(String value, MavenProject mavenProject) {
+		Matcher m = mavenPropertyPattern.matcher(value);
+
+		StringBuffer sb = new StringBuffer();
+
+		while (m.find()) {
+			String propertyName = m.group(1);
+			String propertyValue = getPropertyValue(mavenProject, propertyName);
+
+			if (propertyValue != null) {
+			    m.appendReplacement(sb, Matcher.quoteReplacement(propertyValue));
+			}
+		}
+		m.appendTail(sb);
+		value = sb.toString();
+
+		return value;
+	}
+
+	/**
+	 * <p>
+	 * Inject values for fields annotated with {@link GlobalParameter} or
+	 * {@link MojoParameter} into the Maven model (as properties).
 	 * </p>
 	 *
 	 * @param mavenProject
@@ -132,46 +279,25 @@ public class PluginConfigurator {
 
 		Reflections reflections = new Reflections(new ConfigurationBuilder()
 			.setUrls(ClasspathHelper.forClass(fromClass),
-					 ClasspathHelper.forClass(_Parameter.class)) // clone of org.apache.maven.plugins.annotations.Parameter annotation (with RUNTIME retention policy)
+					 ClasspathHelper.forClass(GlobalParameter.class),
+					 ClasspathHelper.forClass(MojoParameter.class)) // clone of org.apache.maven.plugins.annotations.Parameter annotation (with RUNTIME retention policy)
 			.setScanners(new FieldAnnotationsScanner())
 		);
 
-		Set<Field> parameters = reflections.getFieldsAnnotatedWith(_Parameter.class);
+		Set<Field> parameters = reflections.getFieldsAnnotatedWith(MojoParameter.class);
 
 		for (Field field : parameters) {
-			_Parameter anno = field.getAnnotation(_Parameter.class);
-			String property = anno.property();
-			String defaultValue = anno.defaultValue();
+			MojoParameter parameter = field.getAnnotation(MojoParameter.class);
 
-			if (property != null && !property.isEmpty() && defaultValue != null) {
-				if (!mavenProject.getProperties().containsKey(property)) { // do not overwrite with default value if the property exists in model (i.e. in POM)
-					mavenProject.getProperties().put(property, defaultValue);
-				} else if ("project.build.directory".equals(property)) {
-					mavenProject.getBuild().setDirectory(mavenProject.getProperties().getProperty(property, defaultValue));
-//					mavenProject.getProperties().put(property, mavenProject.getProperties().getProperty(property, defaultValue));
-				} else {
-					String value = mavenProject.getOriginalModel().getProperties().getProperty(property);
+			updateProperty(mavenProject, parameter);
+		}
 
-					if (value != null) {
-						Pattern p = Pattern.compile("\\$\\{([^}]*)\\}");
-						Matcher m = p.matcher(value);
+		Set<Field> globalParameters = reflections.getFieldsAnnotatedWith(GlobalParameter.class);
 
-						StringBuffer sb = new StringBuffer();
+		for (Field field : globalParameters) {
+			GlobalParameter globalParameter = field.getAnnotation(GlobalParameter.class);
 
-						while (m.find()) {
-							String propertyName = m.group(1);
-							String propertyValue = mavenProject.getModel().getProperties().getProperty(propertyName);
-							if (propertyValue != null) {
-							    m.appendReplacement(sb, Matcher.quoteReplacement(propertyValue));
-							}
-						}
-						m.appendTail(sb);
-						value = sb.toString();
-
-						mavenProject.getProperties().put(property, value);
-					}
-				}
-			}
+			updateProperty(mavenProject, globalParameter);
 		}
 	}
 

@@ -14,9 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3;
+package t3.plugin.parameters;
 
-//import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
@@ -34,16 +33,15 @@ import java.lang.annotation.Target;
  * at run-time and to inject properly the default values for builtin properties
  * in the Maven model.
  * </p>
- * 
+ *
  * @author Mathieu Debove &lt;mad@t3soft.org&gt;
  *
  */
 
-//@Documented
 @Retention( RetentionPolicy.RUNTIME ) // RUNTIME retention policy
 @Target( { ElementType.FIELD } )
 @Inherited
-public @interface _Parameter
+public @interface MojoParameter
 {
     String alias() default "";
 
