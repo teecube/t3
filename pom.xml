@@ -261,6 +261,7 @@
 							<configuration>
 								<detectLinks>true</detectLinks>
 								<detectOfflineLinks>false</detectOfflineLinks>
+								<failOnError>false</failOnError>
 								<links>
 									<link>http://java.sun.com/javase/6/docs/api</link>
 									<link>http://maven.apache.org/ref/${maven.version}/maven-artifact/apidocs</link>
