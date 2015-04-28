@@ -20,19 +20,19 @@ import java.lang.reflect.Field;
 
 import org.apache.maven.project.MavenProject;
 
-import t3.GlobalParameter;
+import t3.plugin.PluginConfigurator;
 
 import com.google.inject.MembersInjector;
 import com.google.inject.TypeLiteral;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
 
-public class GlobalParametersListener<T> implements TypeListener {
+public class ParametersListener<T> implements TypeListener {
 
 	private T originalObject;
 	private MavenProject mavenProject;
 
-	public GlobalParametersListener(T originalObject, MavenProject mavenProject) {
+	public ParametersListener(T originalObject, MavenProject mavenProject) {
 		this.originalObject = originalObject;
 		this.mavenProject = mavenProject;
 	}
@@ -42,16 +42,17 @@ public class GlobalParametersListener<T> implements TypeListener {
 		Class<?> clazz = typeLiteral.getRawType();
 		while (clazz != null) {
 			for (Field field : clazz.getDeclaredFields()) {
+				String value;
 				if (field.isAnnotationPresent(GlobalParameter.class)) {
 					GlobalParameter globalParameter = field.getAnnotation(GlobalParameter.class);
-					String property = globalParameter.property();
-					String defaultValue = globalParameter.defaultValue();
-					String value = mavenProject.getModel().getProperties().getProperty(property);
-					if (value == null) {
-						value = defaultValue;
-					}
-					typeEncounter.register((MembersInjector<? super I>) new GlobalParametersMembersInjector<T>(field, value, (T) originalObject));
+					value = PluginConfigurator.updateProperty(mavenProject, globalParameter);
+				} else if (field.isAnnotationPresent(MojoParameter.class)) {
+					MojoParameter mojoParameter = field.getAnnotation(MojoParameter.class);
+					value = PluginConfigurator.updateProperty(mavenProject, mojoParameter);
+				} else {
+					continue;
 				}
+				typeEncounter.register((MembersInjector<? super I>) new ParametersMembersInjector<T>(field, value, (T) originalObject));
 			}
 			clazz = clazz.getSuperclass();
 		}

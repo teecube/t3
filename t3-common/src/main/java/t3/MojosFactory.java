@@ -16,10 +16,11 @@
  */
 package t3;
 
+import org.apache.maven.plugin.AbstractMojo;
+
 public class MojosFactory {
-	
-	// TODO: remove AbstractCommonMojo restriction ?
-	public <T extends AbstractCommonMojo> T getMojo(Class<T> type) {
+
+	public <T extends AbstractMojo> T getMojo(Class<T> type) {
 		return null;
 	}
 }

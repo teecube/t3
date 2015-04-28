@@ -21,20 +21,32 @@ import java.lang.reflect.Field;
 
 import com.google.inject.MembersInjector;
 
-public class GlobalParametersMembersInjector<T> implements MembersInjector<T> {
+public class ParametersMembersInjector<T> implements MembersInjector<T> {
 	private final Field field;
 	private final String value;
 	private T originalObject;
 
-	public GlobalParametersMembersInjector(Field field, String value) {
+	public ParametersMembersInjector(Field field, String value) {
 		this.field = field;
 		this.field.setAccessible(true);
 		this.value = value;
 	}
 
-	public GlobalParametersMembersInjector(Field field, String value, T originalObject) {
+	public ParametersMembersInjector(Field field, String value, T originalObject) {
 		this(field, value);
 		this.originalObject = originalObject;
+	}
+
+	public static Field getDeclaredField(String fieldName, Class<?> type) {
+	    Field result = null;
+		try {
+			result = type.getDeclaredField(fieldName);
+		} catch (NoSuchFieldException | SecurityException e) {
+		    if (type.getSuperclass() != null) {
+		        return getDeclaredField(fieldName, type.getSuperclass());
+		    }
+		}
+		return result;
 	}
 
 	public void injectMembers(T t) {
@@ -44,7 +56,10 @@ public class GlobalParametersMembersInjector<T> implements MembersInjector<T> {
 		case "File":
 			finalValue = new File(value);
 			break;
-
+		case "Boolean":
+		case "boolean":
+			finalValue = Boolean.parseBoolean(value);
+			break;
 		default:
 			finalValue = value;
 			break;
@@ -52,14 +67,10 @@ public class GlobalParametersMembersInjector<T> implements MembersInjector<T> {
 		try {
 			field.set(t, finalValue);
 			if (originalObject != null) {
-				try {
-					Field originalField = originalObject.getClass()
-							.getDeclaredField(field.getName());
+				Field originalField = getDeclaredField(field.getName(), originalObject.getClass());
+				if (originalField != null) {
 					originalField.setAccessible(true);
 					originalField.set(originalObject, finalValue);
-				} catch (IllegalArgumentException | NoSuchFieldException
-						| SecurityException e) {
-					// no trace
 				}
 			}
 		} catch (IllegalAccessException e) {

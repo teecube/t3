@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3.plugin.parameters;
+package t3.plugin;
 
 import java.lang.reflect.Field;
 
@@ -37,32 +37,54 @@ import org.codehaus.plexus.logging.LoggerManager;
 
 import t3.AbstractCommonMojo;
 import t3.MojosFactory;
+import t3.plugin.parameters.ParametersListener;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.matcher.Matchers;
 
+/**
+ *
+ * @author Mathieu Debove &lt;mad@t3soft.org&gt;
+ *
+ */
 @Component( role = MavenPluginManager.class )
-public class CustomPluginManager extends DefaultMavenPluginManager {
+public class PluginManager extends DefaultMavenPluginManager {
 
+	// actual Mojos factory is implemented in each Maven plugin
 	private MojosFactory mojosFactory;
 
-	private <T> void copyField(String fieldName, Class<T> fieldType, DefaultMavenPluginManager defaultMavenPluginManager) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	public static void registerCustomPluginManager(BuildPluginManager pluginManager, MojosFactory mojosFactory) {
+		try {
+			Field f = pluginManager.getClass().getDeclaredField("mavenPluginManager");
+			f.setAccessible(true);
+			DefaultMavenPluginManager oldMavenPluginManager = (DefaultMavenPluginManager) f.get(pluginManager);
+			PluginManager mavenPluginManager = new PluginManager(oldMavenPluginManager, mojosFactory);
+			f.set(pluginManager, mavenPluginManager);
+		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
+			// no trace
+		}
+	}
+
+	private <T> void copyField(String fieldName, Class<T> fieldType, DefaultMavenPluginManager defaultMavenPluginManager) throws Exception {
 		Field oldField = defaultMavenPluginManager.getClass().getDeclaredField(fieldName);
+		oldField.setAccessible(true);
+
 		Class<?> parentClass = this.getClass().getSuperclass();
 		Field newField = parentClass.getDeclaredField(fieldName);
-		oldField.setAccessible(true);
 		newField.setAccessible(true);
+
 		T fieldValue = fieldType.cast(oldField.get(defaultMavenPluginManager));
 		newField.set(this, fieldValue);
 	}
 
-	public CustomPluginManager(DefaultMavenPluginManager defaultMavenPluginManager, MojosFactory mojosFactory) {
+	public PluginManager(DefaultMavenPluginManager defaultMavenPluginManager, MojosFactory mojosFactory) {
 		if (defaultMavenPluginManager == null) return;
 
 		this.mojosFactory = mojosFactory;
 
+		// quick shallow copy of the original MavenPluginManager
 		try {
 			copyField("logger", Logger.class, defaultMavenPluginManager);
 			copyField("loggerManager", LoggerManager.class, defaultMavenPluginManager);
@@ -72,7 +94,7 @@ public class CustomPluginManager extends DefaultMavenPluginManager {
 			copyField("pluginRealmCache", PluginRealmCache.class, defaultMavenPluginManager);
 			copyField("pluginDependenciesResolver", PluginDependenciesResolver.class, defaultMavenPluginManager);
 			copyField("runtimeInformation", RuntimeInformation.class, defaultMavenPluginManager);
-		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+		} catch (Exception e) {
 			// no trace
 		}
 	}
@@ -80,39 +102,27 @@ public class CustomPluginManager extends DefaultMavenPluginManager {
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> T getConfiguredMojo(Class<T> mojoInterface, final MavenSession session, MojoExecution mojoExecution) throws PluginConfigurationException, PluginContainerException {
-		final T configuredMojo = super.getConfiguredMojo(mojoInterface, session, mojoExecution);
+		final T configuredMojo = super.getConfiguredMojo(mojoInterface, session, mojoExecution); // retrieve configuredMojo to know the actual type of the Mojo to configure
 
 		Class<? extends AbstractCommonMojo> type;
 		try {
 			type = (Class<? extends AbstractCommonMojo>) configuredMojo.getClass();
 		} catch (ClassCastException e) {
-			type = null;
+			return configuredMojo;
 		}
-		T rawMojo = (T) mojosFactory.getMojo(type);
+		T rawMojo = (T) mojosFactory.getMojo(type); // retrieve a brand new and unconfigured Mojo of the actual type (with annotations)
 
-		if (rawMojo != null) {
+		if (rawMojo != null) { // inject @MojoParameter and @GlobalParameter annotations
 	        Injector i = Guice.createInjector(new AbstractModule() {
 	            @Override
 	            protected void configure() {
-					bindListener(Matchers.any(), new GlobalParametersListener<T>(configuredMojo, session.getCurrentProject()));
+					bindListener(Matchers.any(), new ParametersListener<T>(configuredMojo, session.getCurrentProject()));
 	            }
 	        });
 
-	        i.injectMembers(rawMojo);
+	        i.injectMembers(rawMojo); // will also inject in configuredMojo
 		}
 		return configuredMojo;
-	}
-
-	public static void registerCustomPluginManager(BuildPluginManager pluginManager, MojosFactory mojosFactory) {
-		try {
-			Field f = pluginManager.getClass().getDeclaredField("mavenPluginManager");
-			f.setAccessible(true);
-			DefaultMavenPluginManager oldMavenPluginManager = (DefaultMavenPluginManager) f.get(pluginManager);
-			CustomPluginManager mavenPluginManager = new CustomPluginManager(oldMavenPluginManager, mojosFactory);
-			f.set(pluginManager, mavenPluginManager);
-		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-
-		}
 	}
 
 }

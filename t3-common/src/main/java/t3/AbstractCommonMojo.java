@@ -31,6 +31,8 @@ import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.shared.filtering.MavenResourcesFiltering;
 
+import t3.plugin.parameters.GlobalParameter;
+
 /**
  *
  * @author Mathieu Debove &lt;mad@t3soft.org&gt;
@@ -38,26 +40,22 @@ import org.apache.maven.shared.filtering.MavenResourcesFiltering;
  */
 public class AbstractCommonMojo extends AbstractMojo {
 
-	@Parameter (property = "tibco.home", required = true)
+	@GlobalParameter (property = "tibco.home", required = true)
 	protected File tibcoHOME;
 
 	@Parameter (property = "executables.extension", required = true)
 	protected String executablesExtension;
 
-	@Parameter (property = "project.build.directory", required = true, defaultValue = "${basedir}/target" ) // target
-	@_Parameter (property = "project.build.directory", required = true, defaultValue = "${basedir}/target" ) // target
+	@GlobalParameter (property = "project.build.directory", defaultValue = "${basedir}/target" ) // target
 	protected File directory;
 
-	@Parameter (property = "project.output.directory", required = true, defaultValue = "${project.build.directory}/output" ) // target/output (instead of target/classes)
-	@_Parameter (property = "project.output.directory", required = true, defaultValue = "${project.build.directory}/output" ) // target/output (instead of target/classes)
+	@GlobalParameter (property = "project.output.directory", defaultValue = "${project.build.directory}/output" ) // target/output (instead of target/classes)
 	protected File outputDirectory;
 
-	@Parameter (property = "project.test.directory", required = true, defaultValue = "${project.build.directory}/test" ) // target/test
-	@_Parameter (property = "project.test.directory", required = true, defaultValue = "${project.build.directory}/test" ) // target/test
+	@GlobalParameter (property = "project.test.directory", defaultValue = "${project.build.directory}/test" ) // target/test
 	protected File testOutputDirectory;
 
-	@Parameter (property="project.build.sourceEncoding", required=true, defaultValue = "UTF-8")
-	@_Parameter (property="project.build.sourceEncoding", required=true, defaultValue = "UTF-8")
+	@GlobalParameter (property="project.build.sourceEncoding", defaultValue = "UTF-8")
 	protected String sourceEncoding;
 
 	@Parameter (defaultValue = "${basedir}", readonly = true)
