@@ -18,6 +18,11 @@ package t3;
 
 import org.apache.maven.plugin.AbstractMojo;
 
+/**
+*
+* @author Mathieu Debove &lt;mad@t3soft.org&gt;
+*
+*/
 public class MojosFactory {
 
 	public <T extends AbstractMojo> T getMojo(Class<T> type) {

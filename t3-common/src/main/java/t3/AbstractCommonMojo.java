@@ -43,7 +43,7 @@ public class AbstractCommonMojo extends AbstractMojo {
 	@GlobalParameter (property = "tibco.home", required = true)
 	protected File tibcoHOME;
 
-	@Parameter (property = "executables.extension", required = true)
+	@GlobalParameter (property = "executables.extension", required = true)
 	protected String executablesExtension;
 
 	@GlobalParameter (property = "project.build.directory", defaultValue = "${basedir}/target" ) // target

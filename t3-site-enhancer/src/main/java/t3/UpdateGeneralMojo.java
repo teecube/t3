@@ -26,7 +26,7 @@ import org.apache.maven.project.MavenProject;
 import org.apache.tools.ant.taskdefs.optional.ReplaceRegExp;
 
 @Mojo(name = "update-general", defaultPhase = LifecyclePhase.POST_SITE)
-public class UpdateGeneralMojo extends AbstractSiteMojo {
+public class UpdateGeneralMojo extends AbstractReplaceAllMojo {
 
 	private void replaceProperty(File htmlFile, String propertyName, String modelPropertyName, boolean propertyInRootProject, boolean onlyInOriginalModel, boolean lookInSettings) {
 		ReplaceRegExp replaceRegExp = new ReplaceRegExp();

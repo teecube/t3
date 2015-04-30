@@ -60,6 +60,11 @@ public class ParametersMembersInjector<T> implements MembersInjector<T> {
 		case "boolean":
 			finalValue = Boolean.parseBoolean(value);
 			break;
+		case "Integer":
+		case "integer":
+		case "int":
+			finalValue = Integer.parseInt(value);
+			break;
 		default:
 			finalValue = value;
 			break;

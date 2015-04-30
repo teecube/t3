@@ -18,8 +18,10 @@ package t3.plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
@@ -36,6 +38,7 @@ import org.reflections.scanners.ResourcesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
+import t3.plugin.annotations.FieldsHelper;
 import t3.plugin.parameters.GlobalParameter;
 import t3.plugin.parameters.MojoParameter;
 
@@ -275,16 +278,7 @@ public class PluginConfigurator {
 	 * @param logger
 	 */
 	public static <T> void addPluginsParameterInModel(MavenProject mavenProject, Class<T> fromClass, Logger logger) {
-//		Reflections.log = NOPLogger.NOP_LOGGER;
-
-		Reflections reflections = new Reflections(new ConfigurationBuilder()
-			.setUrls(ClasspathHelper.forClass(fromClass),
-					 ClasspathHelper.forClass(GlobalParameter.class),
-					 ClasspathHelper.forClass(MojoParameter.class)) // clone of org.apache.maven.plugins.annotations.Parameter annotation (with RUNTIME retention policy)
-			.setScanners(new FieldAnnotationsScanner())
-		);
-
-		Set<Field> parameters = reflections.getFieldsAnnotatedWith(MojoParameter.class);
+		Set<Field> parameters = FieldsHelper.getFieldsAnnotatedWith(fromClass, MojoParameter.class);
 
 		for (Field field : parameters) {
 			MojoParameter parameter = field.getAnnotation(MojoParameter.class);
@@ -292,7 +286,7 @@ public class PluginConfigurator {
 			updateProperty(mavenProject, parameter);
 		}
 
-		Set<Field> globalParameters = reflections.getFieldsAnnotatedWith(GlobalParameter.class);
+		Set<Field> globalParameters = FieldsHelper.getFieldsAnnotatedWith(fromClass, GlobalParameter.class);
 
 		for (Field field : globalParameters) {
 			GlobalParameter globalParameter = field.getAnnotation(GlobalParameter.class);
