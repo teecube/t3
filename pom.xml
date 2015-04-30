@@ -128,7 +128,7 @@
 				<maven.plugin.source>2.4</maven.plugin.source>
 
 				<maven.plugin.changelog>2.3</maven.plugin.changelog>
-				<maven.plugin.javadoc>2.10.1</maven.plugin.javadoc>
+				<maven.plugin.javadoc>2.10.3</maven.plugin.javadoc>
 				<maven.plugin.jxr>2.5</maven.plugin.jxr>
 				<maven.plugin.project-info-reports>2.8</maven.plugin.project-info-reports>
 
@@ -939,6 +939,7 @@
 								<execution>
 									<id>update-site</id>
 									<goals>
+										<goal>generate-global-doc</goal>
 										<goal>update-site</goal>
 										<goal>update-brand</goal>
 										<goal>update-general</goal>

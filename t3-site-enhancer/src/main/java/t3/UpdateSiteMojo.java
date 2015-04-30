@@ -38,7 +38,7 @@ import org.rendersnake.HtmlCanvas;
 import org.rendersnake.Renderable;
 
 @Mojo(name = "update-site", defaultPhase = LifecyclePhase.POST_SITE)
-public class UpdateSiteMojo extends AbstractSiteMojo {
+public class UpdateSiteMojo extends AbstractReplaceAllMojo {
 
 	@Parameter (defaultValue = "true")
 	protected Boolean generateSubMenuFromModules;

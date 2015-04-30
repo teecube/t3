@@ -31,7 +31,7 @@ import org.rendersnake.HtmlCanvas;
 import org.rendersnake.Renderable;
 
 @Mojo(name = "update-brand", defaultPhase = LifecyclePhase.POST_SITE)
-public class UpdateBrandMojo extends AbstractSiteMojo {
+public class UpdateBrandMojo extends AbstractReplaceAllMojo {
 
 	@Override
 	public void processHTMLFile(File htmlFile) throws Exception {

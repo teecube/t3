@@ -63,9 +63,4 @@ public class PrepareGeneralMojo extends AbstractSiteMojo {
 		project.setUrl(url);
 	}
 
-	@Override
-	public void processHTMLFile(File htmlFile) throws Exception {
-
-	}
-
 }

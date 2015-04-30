@@ -89,7 +89,7 @@ public abstract class AbstractSiteMojo extends AbstractMojo {
 		return FileUtils.getFiles(directory, includes, excludes);
 	}
 
-	private List<File> getHTMLFiles() throws IOException {
+	protected List<File> getHTMLFiles() throws IOException {
 		FileSet htmlFiles = new FileSet();
 		htmlFiles.setDirectory(outputDirectory.getAbsolutePath());
 
@@ -184,36 +184,11 @@ public abstract class AbstractSiteMojo extends AbstractMojo {
 		return value;
 	}
 
-	public abstract void processHTMLFile(File htmlFile) throws Exception;
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		if (outputDirectory == null || !outputDirectory.exists() || !outputDirectory.isDirectory()) {
 			return;
-		}
-
-		if (siteProperties == null) {
-			siteProperties = new ArrayList<String>();
-		}
-		if (fromRootParentProperties == null) {
-			fromRootParentProperties = new ArrayList<String>();
-		}
-		if (inOriginalModelProperties == null) {
-			inOriginalModelProperties = new ArrayList<String>();
-		}
-		if (lookInSettingsProperties == null) {
-			lookInSettingsProperties = new ArrayList<String>();
-		}
-
-		try {
-			List<File> htmlFiles = getHTMLFiles();
-
-			for (File htmlFile : htmlFiles) {
-				getLog().debug(htmlFile.getAbsolutePath());
-				processHTMLFile(htmlFile);
-			}
-		} catch (Exception e) {
-			throw new MojoExecutionException(e.getLocalizedMessage(), e);
 		}
 	}
 }
