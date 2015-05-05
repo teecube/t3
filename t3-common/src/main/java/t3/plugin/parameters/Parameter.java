@@ -1,6 +1,6 @@
 /**
- * (C) Copyright 2014-2015 T3Soft
- * (http://t3soft.org) and others.
+ * (C) Copyright 2014-2015 teecube
+ * (http://teecube.org) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package t3.plugin.parameters;
 
 /**
 *
-* @author Mathieu Debove &lt;mad@t3soft.org&gt;
+* @author Mathieu Debove &lt;mad@teecube.org&gt;
 *
 */
 public class Parameter {
