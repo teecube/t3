@@ -48,7 +48,7 @@ import t3.plugin.annotations.ParametersHelper;
 import t3.plugin.parameters.Parameter;
 
 @Mojo(name = "generate-global-doc", defaultPhase = LifecyclePhase.POST_SITE, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
-public class GenerateGlobalParametersDoc extends AbstractNewPageMojo {
+public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
 
 	private List<GlobalParameter> globalParameters;
 
