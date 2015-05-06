@@ -47,9 +47,11 @@
 			<slogan><![CDATA[${ecosystemSlogan}]]></slogan>
 
 			<bottomNav maxSpan="9">
+				<column></column>
 				<column>Documentation</column>
-				<column>Components</column>
+				<column>${ecosystemName}</column>
 			</bottomNav>
+
 			<bottomDescription>
 		        <![CDATA[
 				${ecosystemSumUp}
