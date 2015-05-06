@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.teecube</groupId>
@@ -8,6 +9,7 @@
 	<packaging>pom</packaging>
 
 	<name>${ecosystemName}</name>
+	<description>${ecosystemSumUpRaw}</description>
 
 	<properties>
 		<releaseVersion>${project.version}</releaseVersion> <!-- default value will be overridden by release:perform command line -->
@@ -26,6 +28,12 @@
 			<a href="${siteURL2}/license.html">open-source</a> solution
 			to improve development & management of TIBCO applications.
 		]]></ecosystemSumUp>
+		<ecosystemSumUpRaw><![CDATA[
+			${ecosystemName}
+			is a modular, plugin-based, full-featured,
+			open-source solution
+			to improve development & management of TIBCO applications.
+		]]></ecosystemSumUpRaw>
 		<ecosystemGroupId>org.teecube</ecosystemGroupId>
 		<ecosystemGroupIdCommon>org.teecube.t3</ecosystemGroupIdCommon>
 		<ecosystemArtifactId>t3</ecosystemArtifactId>
@@ -47,13 +55,13 @@
 		<ticURLBase>${ticArtifactId}/${ticVersion}</ticURLBase>
 
 		<ticBW6MavenGroupId>${ticGroupId}</ticBW6MavenGroupId>
-		<ticBW6MavenArtifactId>bw6-maven</ticBW6MavenArtifactId>
+		<ticBW6MavenArtifactId>tic-bw6</ticBW6MavenArtifactId>
 		<ticBW6MavenURLBase>${ticBW6MavenArtifactId}/${ticBW6MavenVersion}</ticBW6MavenURLBase>
 		<ticBW6MavenName>BW6 Maven plugin</ticBW6MavenName>
 		<ticDisplayedBW6MavenName><![CDATA[BW<span class="color-highlight">6</span> Maven plugin]]></ticDisplayedBW6MavenName>
 
 		<ticBW5MavenGroupId>${ticGroupId}</ticBW5MavenGroupId>
-		<ticBW5MavenArtifactId>bw5-maven</ticBW5MavenArtifactId>
+		<ticBW5MavenArtifactId>tic-bw5</ticBW5MavenArtifactId>
 		<ticBW5MavenURLBase>${ticBW5MavenArtifactId}/${ticBW5MavenVersion}</ticBW5MavenURLBase>
 		<ticBW5MavenName>BW5 Maven plugin</ticBW5MavenName>
 		<ticDisplayedBW5MavenName><![CDATA[BW<span class="color-highlight">5</span> Maven plugin]]></ticDisplayedBW5MavenName>
@@ -896,7 +904,7 @@
 								</execution>
 							</executions>
 						</plugin>
- 						<plugin>
+						<plugin>
 							<groupId>org.codehaus.mojo</groupId>
 							<artifactId>build-helper-maven-plugin</artifactId>
 							<version>${codehaus.build-helper-maven-plugin}</version>
@@ -1063,12 +1071,6 @@
 						<groupId>org.jvnet.jaxb2.maven2</groupId>
 						<artifactId>maven-jaxb2-plugin</artifactId>
 					</plugin>
-					<!--
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>build-helper-maven-plugin</artifactId>
-					</plugin>
-					-->
 				</plugins>
 			</build>
 
@@ -1099,14 +1101,6 @@
 					<artifactId>maven-project</artifactId>
 					<version>3.0-alpha-2</version>
 				</dependency>
-				<!--
-				<dependency>
-					<groupId>org.apache.maven.plugin-testing</groupId>
-					<artifactId>maven-plugin-testing-harness</artifactId>
-					<version>3.1.0</version>
-					<scope>test</scope>
-				</dependency>
-				-->
 
 				<!-- logging -->
 				<dependency>
