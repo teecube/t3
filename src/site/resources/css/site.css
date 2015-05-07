@@ -3,7 +3,7 @@
 }
 
 .row#banner .span12  {
-	height: 110px;
+	height: 140px;
 }
 
 .page-header h2 {
@@ -25,6 +25,7 @@
 
 footer.well {
 	margin-top: 30px;
+	padding: 25px;
 }
 
 .span6 h5 {

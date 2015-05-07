@@ -19,14 +19,33 @@ package t3;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.tools.ant.taskdefs.optional.ReplaceRegExp;
 import org.rendersnake.HtmlCanvas;
+import org.xml.sax.SAXException;
 
 public abstract class AbstractNewPageMojo extends AbstractSiteMojo {
+
+	protected ClassLoader getClassLoader() throws MalformedURLException, DependencyResolutionRequiredException {
+		List<String> classpathElements = project.getRuntimeClasspathElements();
+
+		List<URL> projectClasspathList = new ArrayList<URL>();
+		for (String element : classpathElements) {
+			projectClasspathList.add(new File(element).toURI().toURL());
+		}
+
+		URLClassLoader loader = new URLClassLoader(projectClasspathList.toArray(new URL[0]));
+		return loader;
+	}
 
 	private File copyFromIndex() throws IOException {
 		File indexFile = new File(outputDirectory.getAbsolutePath(), "index.html");
@@ -46,7 +65,7 @@ public abstract class AbstractNewPageMojo extends AbstractSiteMojo {
 		replaceRegExp.execute();
 	}
 
-	public abstract HtmlCanvas getContent(HtmlCanvas html) throws IOException;
+	public abstract HtmlCanvas getContent(HtmlCanvas html) throws IOException, SAXException;
 
 	public abstract String getPageName();
 
@@ -59,7 +78,7 @@ public abstract class AbstractNewPageMojo extends AbstractSiteMojo {
 			htmlFile = copyFromIndex();
 			HtmlCanvas html = getContent(new HtmlCanvas());
 			saveDocumentationFile(htmlFile, html);
-		} catch (IOException e) {
+		} catch (IOException | SAXException e) {
 			throw new MojoExecutionException(e.getLocalizedMessage(), e);
 		}
 	}

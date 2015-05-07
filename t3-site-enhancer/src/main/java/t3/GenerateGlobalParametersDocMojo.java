@@ -21,12 +21,9 @@ import static org.rendersnake.HtmlAttributesFactory.class_;
 import static org.rendersnake.HtmlAttributesFactory.href;
 import static org.rendersnake.HtmlAttributesFactory.id;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -48,7 +45,7 @@ import t3.plugin.annotations.ParametersHelper;
 import t3.plugin.parameters.Parameter;
 
 @Mojo(name = "generate-global-doc", defaultPhase = LifecyclePhase.POST_SITE, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
-public class GenerateGlobalParametersDoc extends AbstractNewPageMojo {
+public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
 
 	private List<GlobalParameter> globalParameters;
 
@@ -202,18 +199,6 @@ public class GenerateGlobalParametersDoc extends AbstractNewPageMojo {
 	@Override
 	public HtmlCanvas getContent(HtmlCanvas html) throws IOException {
 		return generateGlobalParametersDocumentation(html);
-	}
-
-	private ClassLoader getClassLoader() throws MalformedURLException, DependencyResolutionRequiredException {
-		List<String> classpathElements = project.getRuntimeClasspathElements();
-
-		List<URL> projectClasspathList = new ArrayList<URL>();
-		for (String element : classpathElements) {
-			projectClasspathList.add(new File(element).toURI().toURL());
-		}
-
-		URLClassLoader loader = new URLClassLoader(projectClasspathList.toArray(new URL[0]));
-		return loader;
 	}
 
 	@Override
