@@ -14,9 +14,9 @@
 		<menu name="${ecosystemName}">
 			<item name="Current versions" href="${siteURL}/current-versions.html" />
 			<item name="" />
-			<item name="TIC" href="${siteDisplayURL}/${ticURLBase}/index.html" />
-			<item name="TAC" href="${siteDisplayURL}/${tacURLBase}/index.html" />
-			<item name="TOE" href="${siteDisplayURL}/${toeURLBase}/index.html" />
+			<item name="${ticName}" href="${siteDisplayURL}/${ticURLBase}/index.html" />
+			<item name="${tacName}" href="${siteDisplayURL}/${tacURLBase}/index.html" />
+			<item name="${toeName}" href="${siteDisplayURL}/${toeURLBase}/index.html" />
 		</menu>
 	</body>
 

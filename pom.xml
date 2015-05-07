@@ -21,10 +21,12 @@
 		<!-- Velocity-proof properties -->
 		<ecosystemName>T³</ecosystemName>
 		<ecosystemNameHighlight><![CDATA[<i>T<span class="color-highlight">³</span></i>]]></ecosystemNameHighlight>
-		<ecosystemSlogan><![CDATA[T<span class="color-highlight">³</span> = <span class="color-highlight">T</span>IC T<span class="color-highlight">A</span>C TO<span class="color-highlight">E</span>]]></ecosystemSlogan>
+		<ecosystemSlogan><![CDATA[pronounced <i>&laquo;tee-cube&raquo;</i>]]></ecosystemSlogan>
+		<ecosystemPronounced><![CDATA[(pronounced <i>&laquo;tee-cube&raquo;</i>)]]></ecosystemPronounced>
+		<ecosystemSlogan2><![CDATA[T<span class="color-highlight">³</span> = <span class="color-highlight">T</span>IC T<span class="color-highlight">A</span>C TO<span class="color-highlight">E</span>]]></ecosystemSlogan2>
 		<ecosystemSumUp><![CDATA[
 			${ecosystemNameHighlight}
-			is a modular, plugin-based, full-featured,
+			is a modular &amp; full-featured,
 			<a href="${siteURL2}/license.html">open-source</a> solution
 			to improve development & management of TIBCO applications.
 		]]></ecosystemSumUp>
@@ -77,9 +79,9 @@
 
 		<toeName>TOE</toeName>
 		<toeDisplayedName><![CDATA[TO<span class="color-highlight">E</span>]]></toeDisplayedName>
-		<toeFullName>TOpology Editor</toeFullName>
-		<toeSlogan>TOpology Editor</toeSlogan>
-		<toeAcronym><![CDATA[<abbr title="TOpology Editor">TO<span class="color-highlight">E</span></abbr>]]></toeAcronym>
+		<toeFullName>TOpology Extensions</toeFullName>
+		<toeSlogan>TOpology Extensions</toeSlogan>
+		<toeAcronym><![CDATA[<abbr title="TOpology Extensions">TO<span class="color-highlight">E</span></abbr>]]></toeAcronym>
 		<toeGroupId>org.teecube.toe</toeGroupId>
 		<toeArtifactId>toe</toeArtifactId>
 		<toeURLBase>${toeArtifactId}/${toeVersion}</toeURLBase>
