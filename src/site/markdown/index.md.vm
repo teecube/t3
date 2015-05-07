@@ -4,20 +4,19 @@
 #set($h4 = '####')
 
 ${ecosystemNameHighlight} ${ecosystemPronounced} stands for
-<i>T</i>IBCO <i>E</i>nterprise <i>E</i>xtensions and is organized in
+${ecosystemLongName} and is organized in
 <span class="color-highlight">three</span> layers:
 
-* ${ticAcronym}, for the low level tasks (compilation, packaging, deployment...) 
-* ${tacAcronym}, for the high level development tasks
-<br /> (shared libraries, project archetypes, design patterns...)
-* ${toeAcronym}, for the topology management and
-<br /> the production level tweaking, tunings and monitoring.
+* ${ticAcronym}, low level tasks (compilation, packaging, deployment...)
+* ${tacAcronym}, high level development tasks (shared libraries, project archetypes, design patterns...)
+* ${toeAcronym}, topology management (Cloud & distributed architectures)
+
+<br />
 
 ---
 
-* Full support for TIBCO BusinessWorks 5
-* Full support for TIBCO BusinessWorks 6
-* Full support for TIBCO Enterprise Administrator 2
+* Full support for [TIBCO BusinessWorks 5](${siteDisplayURL}/${ticBW5MavenURLBase}/)
+* Full support for [TIBCO BusinessWorks 6](${siteDisplayURL}/${ticBW6MavenURLBase}/)
 
 ---
 
@@ -31,12 +30,13 @@ $h1 ${tacDisplayedName}
 
 The ${tacFullName} (${tacAcronym}) accelerates development with ready-to-use
 solution for common patterns.
-<div>[Learn more »](${siteDisplayURL}/${tacURLBase}/index.html)</div>
+<div>Soon...</div>
+<!--<div>[Learn more »](${siteDisplayURL}/${tacURLBase}/index.html)</div>-->
 
 ---
 
 $h1 ${toeDisplayedName}
 
-The ${toeFullName} (${toeAcronym}) improves global management of projects by
-providing Cloud enablement features.
-<div>[Learn more »](${siteDisplayURL}/${toeURLBase}/index.html)</div>
+The ${toeFullName} (${toeAcronym}) provides Cloud enablement features.
+<div>Soon...</div>
+<!--<div>[Learn more »](${siteDisplayURL}/${toeURLBase}/index.html)</div>-->
