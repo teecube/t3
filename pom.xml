@@ -19,7 +19,7 @@
 		<!-- Velocity-proof properties -->
 		<ecosystemName>T³</ecosystemName>
 		<ecosystemNameHighlight><![CDATA[<i>T<span class="color-highlight">³</span></i>]]></ecosystemNameHighlight>
-		<ecosystemSlogan><![CDATA[T<span class="color-highlight">³</span> = <span class="color-highlight">T</span>IC T<span class="color-highlight">A</span>C TO<span class="color-highlight">E</span>]]></ecosystemSlogan>
+		<ecosystemSlogan><![CDATA[<i>pronounced &laquo;tee-cube&raquo;</i>]]></ecosystemSlogan>
 		<ecosystemSumUp><![CDATA[
 			${ecosystemNameHighlight}
 			is a modular, plugin-based, full-featured,

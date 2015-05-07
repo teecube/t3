@@ -3,8 +3,16 @@
 #set($h3 = '###')
 #set($h4 = '####')
 
-${ecosystemNameHighlight} is a three-layered stack composed of these elements:
-${ticAcronym}, ${tacAcronym} & ${toeAcronym}.
+${ecosystemNameHighlight} stands for TIBCO Enterprise Extensions and is
+organized in three layers:
+
+* ${ticAcronym}, for the low level tasks (compilation, packaging, deployment...) 
+* ${tacAcronym}, for the high level development tasks
+<br /> (shared libraries, project archetypes, design patterns...)
+* ${toeAcronym}, for the topology management and
+<br /> the production level tweaking, tunings and monitoring.
+
+<br /><br />
 
 ---
 
