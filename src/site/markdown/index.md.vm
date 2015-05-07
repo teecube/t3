@@ -3,8 +3,13 @@
 #set($h3 = '###')
 #set($h4 = '####')
 
-${ecosystemNameHighlight} is a three-layered stack composed of these elements:
-${ticAcronym}, ${tacAcronym} & ${toeAcronym}.
+${ecosystemNameHighlight} ${ecosystemPronounced} stands for
+<i>T</i>IBCO <i>E</i>nterprise <i>E</i>xtensions and is organized in
+<span class="color-highlight">three</span> layers:
+
+* ${ticAcronym}
+* ${tacAcronym} 
+* ${toeAcronym}
 
 ---
 
@@ -31,5 +36,5 @@ solution for common patterns.
 $h1 ${toeDisplayedName}
 
 The ${toeFullName} (${toeAcronym}) improves global management of projects by
-simplifying the relation between functional and technical team.
+providing Cloud enablement features.
 <div>[Learn more »](${siteDisplayURL}/${toeURLBase}/index.html)</div>
