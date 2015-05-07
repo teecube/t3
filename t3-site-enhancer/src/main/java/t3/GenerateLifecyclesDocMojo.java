@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
-import org.apache.maven.model.PluginConfiguration;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -71,26 +70,10 @@ public class GenerateLifecyclesDocMojo extends AbstractNewPageMojo {
 	}
 
 	private HtmlCanvas getLifecyclesSection(HtmlCanvas html) throws IOException {
-		html.
-		div(class_("section")).
-			h3(id("Lifecycles")).write("Lifecycles")._h3().
-			table(border("0").class_("bodyTable table table-striped table-hover")).
-				thead().
-					tr(class_("a")).
-						th().write("Phase")._th().
-						th().write("Goal")._th().
-					_tr()
-				._thead().
-				tbody();
+		for (Lifecycle lifecycle : lifecycles) {
+			html.render(lifecycle);
+		}
 
-//		for (GlobalParameter globalParameter : globalParameters) {
-//			html.render(globalParameter);
-//		}
-
-		html
-				._tbody()
-			._table()
-		._div();
 		return html;		
 	}
 
@@ -130,7 +113,6 @@ public class GenerateLifecyclesDocMojo extends AbstractNewPageMojo {
 	private List<Lifecycle> parseLifecycles(File componentsFile) throws SAXException, IOException {
 		List<Lifecycle> lifecycles = new ArrayList<GenerateLifecyclesDocMojo.Lifecycle>();
 
-		JOOX parser = new JOOX();
 		Match lifecyclesElements;
 		lifecyclesElements = JOOX.$(componentsFile).xpath("//component[implementation='org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping']");
 
@@ -149,17 +131,16 @@ public class GenerateLifecyclesDocMojo extends AbstractNewPageMojo {
 	@Override
 	public HtmlCanvas getContent(HtmlCanvas html) throws IOException, SAXException {
 		componentsFile = getComponentsFile();
-
-		this.lifecycles = parseLifecycles(componentsFile);
 		
 		if (componentsFile != null && componentsFile.exists()) {
+			this.lifecycles = parseLifecycles(componentsFile);
 			return getLifecyclesDocumentation(html);
 		} else {
 			return null;
 		}
 	}
 
-	class Lifecycle {
+	class Lifecycle implements Renderable {
 		private String packagingName;
 		private List<Phase> phases;
 
@@ -181,8 +162,34 @@ public class GenerateLifecyclesDocMojo extends AbstractNewPageMojo {
 		public void setPhases(List<Phase> phases) {
 			this.phases = phases;
 		}
+
+		@Override
+		public void renderOn(HtmlCanvas html) throws IOException {
+			html.
+			div(class_("section")).
+				h3(id("Lifecycle_"+this.packagingName)).write(this.packagingName)._h3().
+				table(border("0").class_("bodyTable table table-striped table-hover")).
+					thead().
+						tr(class_("a")).
+							th().write("Phase")._th().
+							th().write("Goal")._th().
+						_tr()
+					._thead().
+					tbody();
+
+			for (Phase phase : this.phases) {
+				phase.renderOn(html);
+			}
+
+			html
+					._tbody()
+				._table()
+			._div();
+		}
+
 	}
-	class Phase {
+
+	class Phase implements Renderable {
 		private String phaseName;
 		private List<String> goals;
 
@@ -210,30 +217,31 @@ public class GenerateLifecyclesDocMojo extends AbstractNewPageMojo {
 			this.goals = goals;
 		}
 
-	}
-	
-	public static void main(String... args) {
-		File componentsFile = new File("C:/debovema/t3/tic/tic-bw5-maven/src/main/resources/META-INF/plexus/components.xml");
-		
-		List<Phase> phases = new ArrayList<GenerateLifecyclesDocMojo.Phase>();
-		JOOX parser = new JOOX();
-		Match result;
-		try {
-			result = JOOX.$(componentsFile).xpath("//component[implementation='org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping']");
-			for (Element element : result) {
-				Match phasesElements = JOOX.$(element).xpath("configuration/phases/*");
-				for (Element phase : phasesElements) {
-					phases.add(new GenerateLifecyclesDocMojo().new Phase(phase.getNodeName(), phase.getTextContent(), new MavenProject()));
-				}
+		@Override
+		public void renderOn(HtmlCanvas html) throws IOException {
+			html.
+				tr().
+					td().
+						tt().write(this.phaseName)._tt()
+					._td().
+					td().
+						tt();
+
+			for (final String goal : this.goals) {
+				html.render(new Renderable() {
+					@Override
+					public void renderOn(HtmlCanvas html) throws IOException {
+						html.write(goal).br();
+					}
+				});
 			}
-			for (Phase phase : phases) {
-				System.out.println(phase.phaseName);
-				System.out.println(phase.goals.toString());
-			}
-		} catch (SAXException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			html
+						._tt()
+					._td()
+				._tr();
 		}
 
 	}
+
 }

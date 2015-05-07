@@ -75,9 +75,11 @@ public abstract class AbstractNewPageMojo extends AbstractSiteMojo {
 
 		File htmlFile;
 		try {
-			htmlFile = copyFromIndex();
 			HtmlCanvas html = getContent(new HtmlCanvas());
-			saveDocumentationFile(htmlFile, html);
+			if (html != null) {
+				htmlFile = copyFromIndex();
+				saveDocumentationFile(htmlFile, html);
+			}
 		} catch (IOException | SAXException e) {
 			throw new MojoExecutionException(e.getLocalizedMessage(), e);
 		}
