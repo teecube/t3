@@ -3,16 +3,15 @@
 #set($h3 = '###')
 #set($h4 = '####')
 
-${ecosystemNameHighlight} stands for TIBCO Enterprise Extensions and is
-organized in three layers:
+${ecosystemNameHighlight} ${ecosystemPronounced} stands for
+<i>T</i>IBCO <i>E</i>nterprise <i>E</i>xtensions and is organized in
+<span class="color-highlight">three</span> layers:
 
 * ${ticAcronym}, for the low level tasks (compilation, packaging, deployment...) 
 * ${tacAcronym}, for the high level development tasks
 <br /> (shared libraries, project archetypes, design patterns...)
 * ${toeAcronym}, for the topology management and
 <br /> the production level tweaking, tunings and monitoring.
-
-<br /><br />
 
 ---
 
@@ -39,5 +38,5 @@ solution for common patterns.
 $h1 ${toeDisplayedName}
 
 The ${toeFullName} (${toeAcronym}) improves global management of projects by
-simplifying the relation between functional and technical team.
+providing Cloud enablement features.
 <div>[Learn more »](${siteDisplayURL}/${toeURLBase}/index.html)</div>
