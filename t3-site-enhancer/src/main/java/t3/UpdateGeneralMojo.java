@@ -23,19 +23,12 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.project.MavenProject;
-import org.apache.tools.ant.taskdefs.optional.ReplaceRegExp;
+import org.joox.JOOX;
+import org.joox.Match;
+import org.w3c.dom.Attr;
 
 @Mojo(name = "update-general", defaultPhase = LifecyclePhase.POST_SITE)
 public class UpdateGeneralMojo extends AbstractReplaceAllMojo {
-
-	private void replaceProperty(File htmlFile, String propertyName, String modelPropertyName, boolean propertyInRootProject, boolean onlyInOriginalModel, boolean lookInSettings) {
-		ReplaceRegExp replaceRegExp = new ReplaceRegExp();
-		replaceRegExp.setFile(htmlFile);
-		replaceRegExp.setMatch("\\$\\{" + propertyName + "\\}");
-		replaceRegExp.setReplace(getPropertyValue(modelPropertyName, propertyInRootProject, onlyInOriginalModel, lookInSettings));
-		replaceRegExp.setByLine(true);
-		replaceRegExp.execute();
-	}
 
 	@Override
 	public void processHTMLFile(File htmlFile) throws Exception {
@@ -46,6 +39,30 @@ public class UpdateGeneralMojo extends AbstractReplaceAllMojo {
 			boolean lookInSettings = lookInSettingsProperties.contains(propertyToUpdate);
 			replaceProperty(htmlFile, propertyToUpdate, propertyToUpdate, propertyInRootProject, onlyInOriginalModel, lookInSettings);
 		}
+
+		fixLinks(htmlFile);
+	}
+
+	private void fixLinks(File htmlFile) {
+		addHTMLEntities(htmlFile);
+		try {
+			Match document = JOOX.$(htmlFile);
+			Match lists = document.xpath("//a");
+			for (org.w3c.dom.Element element : lists) {
+				Attr href = element.getAttributeNode("href");
+				if (href != null) {
+					String value = href.getValue();
+					if (value != null) {
+						href.setValue(value.replaceAll("(?<!(http:|https:))[//]+", "/"));
+					}
+				}
+			}
+			printDocument(document.document(), htmlFile);
+		} catch (Exception e) {
+			removeHTMLEntities(htmlFile);
+			return;
+		}
+
 	}
 
 	@Override
