@@ -27,13 +27,13 @@
 			${ecosystemNameHighlight}
 			is a modular &amp; full-featured,
 			<a href="${siteURL2}/license.html">open-source</a> solution
-			to improve development & management of TIBCO applications.
+			to improve development &amp; management of TIBCO applications.
 		]]></ecosystemSumUp>
 		<ecosystemSumUpRaw><![CDATA[
 			${ecosystemName}
 			is a modular, plugin-based, full-featured,
 			open-source solution
-			to improve development & management of TIBCO applications.
+			to improve development &amp; management of TIBCO applications.
 		]]></ecosystemSumUpRaw>
 		<ecosystemGroupId>org.teecube</ecosystemGroupId>
 		<ecosystemGroupIdCommon>org.teecube.t3</ecosystemGroupIdCommon>
@@ -49,20 +49,20 @@
 		<ticName>TIC</ticName>
 		<ticDisplayedName><![CDATA[<span class="color-highlight">T</span>IC]]></ticDisplayedName>
 		<ticFullName>TIBCO Infrastructure Core</ticFullName>
-		<ticSlogan>TIBCO Infrastructure Core</ticSlogan>
+		<ticSlogan><![CDATA[<i><span class="color-highlight">T</span>IBCO <span class="color-highlight">I</span>nfrastructure <span class="color-highlight">C</span>ore</i>]]></ticSlogan>
 		<ticAcronym><![CDATA[<abbr title="TIBCO Infrastructure Core"><span class="color-highlight">T</span>IC</abbr>]]></ticAcronym>
 		<ticGroupId>org.teecube.tic</ticGroupId>
 		<ticArtifactId>tic</ticArtifactId>
 		<ticURLBase>${ticArtifactId}/${ticVersion}</ticURLBase>
 
 		<ticBW6MavenGroupId>${ticGroupId}</ticBW6MavenGroupId>
-		<ticBW6MavenArtifactId>bw6-maven</ticBW6MavenArtifactId>
+		<ticBW6MavenArtifactId>tic-bw6</ticBW6MavenArtifactId>
 		<ticBW6MavenURLBase>${ticBW6MavenArtifactId}/${ticBW6MavenVersion}</ticBW6MavenURLBase>
 		<ticBW6MavenName>BW6 Maven plugin</ticBW6MavenName>
 		<ticDisplayedBW6MavenName><![CDATA[BW<span class="color-highlight">6</span> Maven plugin]]></ticDisplayedBW6MavenName>
 
 		<ticBW5MavenGroupId>${ticGroupId}</ticBW5MavenGroupId>
-		<ticBW5MavenArtifactId>bw5-maven</ticBW5MavenArtifactId>
+		<ticBW5MavenArtifactId>tic-bw5</ticBW5MavenArtifactId>
 		<ticBW5MavenURLBase>${ticBW5MavenArtifactId}/${ticBW5MavenVersion}</ticBW5MavenURLBase>
 		<ticBW5MavenName>BW5 Maven plugin</ticBW5MavenName>
 		<ticDisplayedBW5MavenName><![CDATA[BW<span class="color-highlight">5</span> Maven plugin]]></ticDisplayedBW5MavenName>
@@ -489,6 +489,9 @@
 							</reportSet>
 						</reportSets>
 						<configuration>
+							<excludes>
+								<exclude>com/tibco/**/*</exclude>
+							</excludes>
 							<linkJavadoc>true</linkJavadoc>
 						</configuration>
 					</plugin>
@@ -952,6 +955,7 @@
 										<goal>generate-lifecycles-doc</goal>
 										<goal>update-site</goal>
 										<goal>update-brand</goal>
+										<goal>update-doc-menu</goal>
 										<goal>update-general</goal>
 									</goals>
 									<configuration>
