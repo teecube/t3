@@ -34,6 +34,7 @@ public abstract class AbstractReplaceAllMojo extends AbstractSiteMojo {
 		replaceRegExp.setMatch("\\$\\{" + propertyName + "\\}");
 		replaceRegExp.setReplace(getPropertyValue(modelPropertyName, propertyInRootProject, onlyInOriginalModel, lookInSettings));
 		replaceRegExp.setByLine(true);
+		replaceRegExp.setFlags("gs");
 		replaceRegExp.execute();
 	}
 
