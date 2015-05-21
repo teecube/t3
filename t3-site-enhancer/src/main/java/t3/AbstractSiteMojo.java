@@ -113,6 +113,8 @@ public abstract class AbstractSiteMojo extends AbstractMojo {
 		htmlFiles.setDirectory(outputDirectory.getAbsolutePath());
 
 		htmlFiles.addInclude("**/*.html");
+		htmlFiles.addExclude("apidocs/**/*");
+		htmlFiles.addExclude("xref/**/*");
 
 		return toFileList(htmlFiles);
 	}
