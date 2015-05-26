@@ -22,20 +22,17 @@ import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.tools.ant.taskdefs.optional.ReplaceRegExp;
 
 public abstract class AbstractReplaceAllMojo extends AbstractSiteMojo {
 
 	public abstract void processHTMLFile(File htmlFile) throws Exception;
 
 	protected void replaceProperty(File htmlFile, String propertyName, String modelPropertyName, boolean propertyInRootProject, boolean onlyInOriginalModel, boolean lookInSettings) {
-		ReplaceRegExp replaceRegExp = new ReplaceRegExp();
-		replaceRegExp.setFile(htmlFile);
-		replaceRegExp.setMatch("\\$\\{" + propertyName + "\\}");
-		replaceRegExp.setReplace(getPropertyValue(modelPropertyName, propertyInRootProject, onlyInOriginalModel, lookInSettings));
-		replaceRegExp.setByLine(true);
-		replaceRegExp.setFlags("gs");
-		replaceRegExp.execute();
+		replaceByLine(htmlFile,
+					  "\\$\\{" + propertyName + "\\}",
+					  getPropertyValue(modelPropertyName, propertyInRootProject, onlyInOriginalModel, lookInSettings),
+					  true,
+					  "gs");
 	}
 
 	@Override
