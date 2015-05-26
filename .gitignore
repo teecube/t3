@@ -3,4 +3,5 @@
 .settings/
 target/
 tic/
+tic
 git*.sh

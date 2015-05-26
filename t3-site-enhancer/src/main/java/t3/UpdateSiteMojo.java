@@ -32,7 +32,6 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.apache.tools.ant.taskdefs.optional.ReplaceRegExp;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.rendersnake.HtmlCanvas;
 import org.rendersnake.Renderable;
@@ -139,23 +138,13 @@ public class UpdateSiteMojo extends AbstractReplaceAllMojo {
 			._ul()
 		._li();
 
-		ReplaceRegExp replaceRegExp = new ReplaceRegExp();
-		replaceRegExp.setFile(htmlFile);
-		replaceRegExp.setMatch("<li.*><a href=.*>" + subMenuReplacement.getOriginalMenuElement() + "</a></li>");
-		replaceRegExp.setReplace(formatHtml(html.toHtml()));
-		replaceRegExp.setByLine(true);
-		replaceRegExp.execute();
+		replaceByLine(htmlFile, "<li.*><a href=.*>" + subMenuReplacement.getOriginalMenuElement() + "</a></li>", formatHtml(html.toHtml()));
 	}
 
 	private void updateSimple(File htmlFile, SimpleReplacement simpleReplacement) {
 		if (htmlFile == null || simpleReplacement == null) return;
 
-		ReplaceRegExp replaceRegExp = new ReplaceRegExp();
-		replaceRegExp.setFile(htmlFile);
-		replaceRegExp.setMatch(simpleReplacement.getFrom());
-		replaceRegExp.setReplace(simpleReplacement.getTo());
-		replaceRegExp.setByLine(true);
-		replaceRegExp.execute();
+		replaceByLine(htmlFile, simpleReplacement.getFrom(), simpleReplacement.getTo());
 	}
 
 	protected class SubMenuElement implements Renderable {

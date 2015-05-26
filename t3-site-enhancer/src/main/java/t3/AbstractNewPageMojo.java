@@ -29,7 +29,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.tools.ant.taskdefs.optional.ReplaceRegExp;
 import org.rendersnake.HtmlCanvas;
 import org.xml.sax.SAXException;
 
@@ -56,13 +55,11 @@ public abstract class AbstractNewPageMojo extends AbstractSiteMojo {
 	}
 
 	private void saveDocumentationFile(File htmlFile, HtmlCanvas html) throws FileNotFoundException, MojoExecutionException {
-		ReplaceRegExp replaceRegExp = new ReplaceRegExp();
-		replaceRegExp.setByLine(false);
-		replaceRegExp.setFile(htmlFile);
-		replaceRegExp.setMatch("<div class=\"main-body\">.*</div>" + System.lineSeparator() + System.lineSeparator() + "\t</div><!-- /container -->");
-		replaceRegExp.setFlags("ms");
-		replaceRegExp.setReplace("<div class=\"main-body\">." + System.lineSeparator() + formatHtml(html.toHtml()) + System.lineSeparator() + "\t</div>" + System.lineSeparator() + System.lineSeparator() + "\t</div><!-- /container -->");
-		replaceRegExp.execute();
+		replaceByLine(htmlFile,
+					  "<div class=\"main-body\">.*</div>" + System.lineSeparator() + System.lineSeparator() + "\t</div><!-- /container -->",
+					  "<div class=\"main-body\">." + System.lineSeparator() + formatHtml(html.toHtml()) + System.lineSeparator() + "\t</div>" + System.lineSeparator() + System.lineSeparator() + "\t</div><!-- /container -->",
+					  false,
+					  "ms");
 	}
 
 	public abstract HtmlCanvas getContent(HtmlCanvas html) throws IOException, SAXException;

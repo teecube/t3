@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -55,24 +57,28 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.InputSource;
 
 public abstract class AbstractSiteMojo extends AbstractMojo {
 
-	@Parameter ( defaultValue = "${session}", readonly = true)
+	@Parameter (defaultValue = "${session}", readonly = true)
 	protected MavenSession session;
 
-	@Parameter ( defaultValue = "${project}", readonly = true)
+	@Parameter (defaultValue = "${project}", readonly = true)
 	protected MavenProject project;
 
-	@Parameter ( defaultValue = "${settings}", readonly = true)
+	@Parameter (defaultValue = "${settings}", readonly = true)
 	protected Settings settings;
 
-	@Parameter(defaultValue = "${localRepository}", readonly = true, required = true)
+	@Parameter (defaultValue = "${localRepository}", readonly = true, required = true)
 	protected ArtifactRepository localRepository;
 
-	@Parameter(property = "siteOutputDirectory", defaultValue = "${project.reporting.outputDirectory}")
+	@Parameter (property="project.build.sourceEncoding", defaultValue = "UTF-8")
+	protected String sourceEncoding;
+
+	@Parameter (property = "siteOutputDirectory", defaultValue = "${project.reporting.outputDirectory}")
 	protected File outputDirectory;
 
 	@Parameter
@@ -127,12 +133,18 @@ public abstract class AbstractSiteMojo extends AbstractMojo {
 
 			DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
 			DOMImplementationLS impl = (DOMImplementationLS) registry.getDOMImplementation("LS");
-			LSSerializer writer = impl.createLSSerializer();
+			LSSerializer serializer = impl.createLSSerializer();
 
-			writer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE);
-			writer.getDomConfig().setParameter("xml-declaration", keepDeclaration);
+			LSOutput lsOutput =  impl.createLSOutput();
+			lsOutput.setEncoding(sourceEncoding);
+			Writer stringWriter = new StringWriter();
+			lsOutput.setCharacterStream(stringWriter);
 
-			return writer.writeToString(document);
+			serializer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE);
+			serializer.getDomConfig().setParameter("xml-declaration", keepDeclaration);
+
+			serializer.write(document, lsOutput);
+			return stringWriter.toString();
 		} catch (Exception e) {
 			throw new MojoExecutionException(e.getMessage(), e);
 		}
@@ -213,13 +225,22 @@ public abstract class AbstractSiteMojo extends AbstractMojo {
 		replaceByLine(htmlFile, "<!DOCTYPE html.*>", "<!DOCTYPE html>");
 	}
 
-	protected void replaceByLine(File file, String match, String replace) {
+	protected void replaceByLine(File file, String match, String replace, boolean byLine, String flags) {
 		ReplaceRegExp replaceRegExp = new ReplaceRegExp();
 		replaceRegExp.setFile(file);
 		replaceRegExp.setMatch(match);
 		replaceRegExp.setReplace(replace);
-		replaceRegExp.setByLine(true);
+		replaceRegExp.setByLine(byLine);
+		replaceRegExp.setEncoding(sourceEncoding);
+		if (flags != null) {
+			replaceRegExp.setFlags(flags);
+		}
 		replaceRegExp.execute();
+
+	}
+
+	protected void replaceByLine(File file, String match, String replace) {
+		replaceByLine(file, match, replace, true, null);
 	}
 
 	public void printDocument(Document doc, File file) throws TransformerException, IOException, XPathExpressionException {
@@ -246,8 +267,9 @@ public abstract class AbstractSiteMojo extends AbstractMojo {
 		transformer.setOutputProperty(OutputKeys.MEDIA_TYPE, "application/xml+xhtml");
 		transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "-//W3C//DTD XHTML 1.0 Transitional//EN");
 		transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd");
-
-		PrintWriter writer = new PrintWriter(file);
+		transformer.setOutputProperty(OutputKeys.ENCODING, sourceEncoding);
+		
+		PrintWriter writer = new PrintWriter(file, sourceEncoding);
 		try {
 			transformer.transform(new DOMSource(doc), new StreamResult(writer));
 		} finally {

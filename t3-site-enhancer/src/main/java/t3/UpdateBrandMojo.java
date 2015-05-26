@@ -26,7 +26,6 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.project.MavenProject;
-import org.apache.tools.ant.taskdefs.optional.ReplaceRegExp;
 import org.rendersnake.HtmlCanvas;
 import org.rendersnake.Renderable;
 
@@ -44,12 +43,7 @@ public class UpdateBrandMojo extends AbstractReplaceAllMojo {
 		html
 			._div();
 
-		ReplaceRegExp replaceRegExp = new ReplaceRegExp();
-		replaceRegExp.setFile(htmlFile);
-		replaceRegExp.setMatch("<div class=\"brand\".*</div>");
-		replaceRegExp.setReplace(formatHtml(html.toHtml()));
-		replaceRegExp.setByLine(true);
-		replaceRegExp.execute();
+		replaceByLine(htmlFile, "<div class=\"brand\".*</div>", formatHtml(html.toHtml()));
 	}
 
 	@Override
