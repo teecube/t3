@@ -591,6 +591,17 @@
 				</dependencies>
 			</dependencyManagement>
 		</profile>
+		<profile>
+			<id>skip-reports</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<maven.jxr.skip>true</maven.jxr.skip>
+				<maven.javadoc.skip>true</maven.javadoc.skip>
+				<mpir.skip>true</mpir.skip>
+			</properties>
+		</profile>
 		<profile> <!-- Additional plugins & dependencies -->
 			<id>additional</id>
 			<activation>

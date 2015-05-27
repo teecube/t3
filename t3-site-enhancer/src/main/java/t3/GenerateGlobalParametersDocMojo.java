@@ -116,19 +116,28 @@ public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
 
 				@Override
 				public void renderOn(HtmlCanvas html) throws IOException {
-					html.
-						p().write(description);
+					html.p();
+					
+					if (description != null && !description.isEmpty()) {
+						html.write(replaceProperties(description), false).br();
+					}
 
 					if (name != null && !name.isEmpty()) {
-						html.br();
+						if (description != null && !description.isEmpty()) {
+							html.br();
+						}
 						html.b().write("Parameter name is")._b().write(": " + name + ".");
 					}
 					if (property != null && !property.isEmpty()) {
-						html.br();
+						if (name != null && !name.isEmpty() || description != null && !description.isEmpty()) {
+							html.br();
+						}
 						html.b().write("User property is")._b().write(": " + property + ".");
 					}
 					if (defaultValue != null && !defaultValue.isEmpty()) {
-						html.br();
+						if (property != null && !property.isEmpty() || name != null && !name.isEmpty() || description != null && !description.isEmpty()) {
+							html.br();
+						}
 						html.b().write("Default value is")._b().write(": " + defaultValue + ".");
 					}
 
@@ -218,7 +227,7 @@ public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
 		boolean firstClass = true;
 		for (Parameter parameter : globalParametersAnnotatations) {
 			firstClass = !firstClass;
-			result.add(new GlobalParameter(parameter.getField(), parameter.getType(), parameter.getProperty(), parameter.getDefaultValue(), "-", "description", firstClass));
+			result.add(new GlobalParameter(parameter.getField(), parameter.getType(), parameter.getProperty(), parameter.getDefaultValue(), "-", parameter.getDescription(), firstClass));
 		}
 		return result;
 	}

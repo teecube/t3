@@ -19,17 +19,22 @@ package t3.xml;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
 
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
@@ -55,6 +60,9 @@ public class XMLMarshall<Type, Factory> {
 
 	protected String rootElementLocalName;
 	protected List<NamespaceDeclaration> namespaceDeclarationsToRemove;
+
+	private Pattern patternElement = Pattern.compile("(\\w+)(\\[([\\w- \\*\\.\\/?]*)\\])?");
+	private HashMap<String, Object> map = new HashMap<String, Object>();
 
 	public XMLMarshall(File xmlFile) throws JAXBException {
 		this(xmlFile, Object.class);
@@ -91,7 +99,13 @@ public class XMLMarshall<Type, Factory> {
 		jaxbContext = JAXBContext.newInstance(this.classesToBound.toArray(new Class<?>[0]));
 
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-		Object o =  jaxbUnmarshaller.unmarshal(xmlFile);
+		Object o;
+		if (xmlFile == null || !xmlFile.exists()) {
+			StringBuffer xmlStr = new StringBuffer( "<?xml version=\"1.0\"?><application xmlns=\"http://www.tibco.com/xmlns/ApplicationManagement\" name=\"\"></application>");
+			o =  jaxbUnmarshaller.unmarshal(new StreamSource(new StringReader(xmlStr.toString())));
+		} else {
+			o =  jaxbUnmarshaller.unmarshal(xmlFile);			
+		}
 
 		this.object = (Type) o;
 	}
@@ -122,6 +136,37 @@ public class XMLMarshall<Type, Factory> {
 		m.marshal(object, outFilter);
 	}
 
+	protected Object createElement(String path, String elementName, String nameAttribute, String value, Object parent) {
+		return null; // to be overridden
+	}
+
+	/**
+	 * <p>
+	 * This method will create JAXB objects from Properties through recursive
+	 * calls.
+	 * Each property has a path. The last part of a path (after last /) is the
+	 * element.
+	 * </p> 
+	 */
+	public Object getElement(String path, String element, String value, Object parent) {
+		if (map.containsKey(path)) {
+			return map.get(path);
+		} else {
+			Matcher matcherElement = patternElement.matcher(element);
+			if (matcherElement.matches()) {					
+				String elementName = matcherElement.group(1);
+				String nameAttribute = matcherElement.group(3);
+
+				Object result = createElement(path, elementName, nameAttribute, value, parent);
+				if (result != null) {
+					map.put(path, result);
+				}
+				return result;
+			}
+			return parent;
+		}
+	}
+
 	public static <ParentType, ChildType extends ParentType> List<ChildType> convertList(List<JAXBElement<? extends ParentType>> listToConvert, ChildType childElement) {
 		if (childElement == null || listToConvert == null) return null;
 
@@ -140,4 +185,5 @@ public class XMLMarshall<Type, Factory> {
 		}
 		return result;
 	}
+
 }

@@ -16,9 +16,6 @@
  */
 package t3;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -27,34 +24,13 @@ import org.apache.maven.plugins.annotations.Mojo;
 @Mojo(name = "prepare-general", defaultPhase = LifecyclePhase.PRE_SITE)
 public class PrepareGeneralMojo extends AbstractSiteMojo {
 
-	private String prepareURL(String url) {
-		if (url == null) return null;
-
-		Pattern p = Pattern.compile("\\$\\{([^}]*)\\}");
-		Matcher m = p.matcher(url);
-
-		StringBuffer sb = new StringBuffer();
-
-		while (m.find()) {
-			String propertyName = m.group(1);
-			String propertyValue = getPropertyValue(propertyName);
-			if (propertyValue != null) {
-			    m.appendReplacement(sb, Matcher.quoteReplacement(propertyValue));
-			}
-		}
-		m.appendTail(sb);
-		url = sb.toString();
-		
-		return url;
-	}
-
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		String siteURL = getRootProjectProperty(project, "siteURL");
-		siteURL = prepareURL(siteURL);
+		siteURL = replaceProperties(siteURL);
 		project.getModel().getProperties().put("siteURL", siteURL);
 
-		updateSiteUrl(prepareURL(project.getUrl()), prepareURL(project.getDistributionManagement().getSite().getUrl()));
+		updateSiteUrl(replaceProperties(project.getUrl()), replaceProperties(project.getDistributionManagement().getSite().getUrl()));
 	}
 
 	private void updateSiteUrl(String url, String siteUrl) {

@@ -24,6 +24,8 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -298,6 +300,35 @@ public abstract class AbstractSiteMojo extends AbstractMojo {
 		} catch (Exception e) {
 			// nothing to do
 		}
+	}
+
+	protected void replaceProperty(File htmlFile, String propertyName, String modelPropertyName, boolean propertyInRootProject, boolean onlyInOriginalModel, boolean lookInSettings) {
+		replaceByLine(htmlFile,
+					  "\\$\\{" + propertyName + "\\}",
+					  getPropertyValue(modelPropertyName, propertyInRootProject, onlyInOriginalModel, lookInSettings),
+					  true,
+					  "gs");
+	}
+
+	protected String replaceProperties(String string) {
+		if (string == null) return null;
+
+		Pattern p = Pattern.compile("\\$\\{([^}]*)\\}");
+		Matcher m = p.matcher(string);
+
+		StringBuffer sb = new StringBuffer();
+
+		while (m.find()) {
+			String propertyName = m.group(1);
+			String propertyValue = getPropertyValue(propertyName);
+			if (propertyValue != null) {
+			    m.appendReplacement(sb, Matcher.quoteReplacement(propertyValue));
+			}
+		}
+		m.appendTail(sb);
+		string = sb.toString();
+		
+		return string;
 	}
 
 	@Override
