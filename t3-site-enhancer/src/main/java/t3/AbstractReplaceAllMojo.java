@@ -27,14 +27,6 @@ public abstract class AbstractReplaceAllMojo extends AbstractSiteMojo {
 
 	public abstract void processHTMLFile(File htmlFile) throws Exception;
 
-	protected void replaceProperty(File htmlFile, String propertyName, String modelPropertyName, boolean propertyInRootProject, boolean onlyInOriginalModel, boolean lookInSettings) {
-		replaceByLine(htmlFile,
-					  "\\$\\{" + propertyName + "\\}",
-					  getPropertyValue(modelPropertyName, propertyInRootProject, onlyInOriginalModel, lookInSettings),
-					  true,
-					  "gs");
-	}
-
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		super.execute();

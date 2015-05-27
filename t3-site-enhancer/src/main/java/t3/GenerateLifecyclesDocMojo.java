@@ -19,6 +19,7 @@ package t3;
 import static org.rendersnake.HtmlAttributesFactory.border;
 import static org.rendersnake.HtmlAttributesFactory.class_;
 import static org.rendersnake.HtmlAttributesFactory.id;
+import static org.rendersnake.HtmlAttributesFactory.href;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +29,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -129,15 +132,50 @@ public class GenerateLifecyclesDocMojo extends AbstractNewPageMojo {
 	}
 
 	@Override
-	public HtmlCanvas getContent(HtmlCanvas html) throws IOException, SAXException {
+	public HtmlCanvas getContent(HtmlCanvas html) throws IOException, SAXException, MojoExecutionException, MojoFailureException {
 		componentsFile = getComponentsFile();
 		
 		if (componentsFile != null && componentsFile.exists()) {
 			this.lifecycles = parseLifecycles(componentsFile);
+			for (Lifecycle lifecycle : lifecycles) {
+				createPackagingPage(lifecycle.packagingName);
+			}
 			return getLifecyclesDocumentation(html);
 		} else {
 			return null;
 		}
+	}
+
+	private void createPackagingPage(final String packagingName) throws MojoExecutionException, MojoFailureException {
+		AbstractNewPageMojo packagingPage = new AbstractNewPageMojo() {
+			@Override
+			public String getPageName() {
+				return "packaging-" + packagingName;
+			}
+			
+			@Override
+			public HtmlCanvas getContent(HtmlCanvas html) throws IOException, SAXException {
+				html.
+
+				div(class_("row")).
+					div(class_("span12")).
+						div(class_("body-content")).
+							div(class_("section")).
+								div(class_("page-header")).
+									h2(id(packagingName + "-packaging")).write(packagingName + " packaging")._h2().
+									p().write("This is the packaging for " + packagingName + ".")._p()
+								._div()
+							._div()
+						._div()
+					._div()
+				._div();
+
+				return html;
+			}
+		};
+
+		packagingPage.outputDirectory = this.outputDirectory;
+		packagingPage.execute();
 	}
 
 	class Lifecycle implements Renderable {
@@ -167,7 +205,7 @@ public class GenerateLifecyclesDocMojo extends AbstractNewPageMojo {
 		public void renderOn(HtmlCanvas html) throws IOException {
 			html.
 			div(class_("section")).
-				h3(id("Lifecycle_"+this.packagingName)).write(this.packagingName)._h3().
+				h3(id("Lifecycle_"+this.packagingName)).a(href("packaging-"+this.packagingName+".html")).write(this.packagingName)._a()._h3().
 				table(border("0").class_("bodyTable table table-striped table-hover")).
 					thead().
 						tr(class_("a")).
@@ -192,9 +230,11 @@ public class GenerateLifecyclesDocMojo extends AbstractNewPageMojo {
 	class Phase implements Renderable {
 		private String phaseName;
 		private List<String> goals;
-
+		private MavenProject mavenProject;
+		
 		public Phase(String phaseName, String goals, MavenProject mavenProject) {
 			this.phaseName = phaseName;
+			this.mavenProject = mavenProject;
 
 			this.goals = Arrays.asList(goals.split("\\s*,\\s*"));
 			for (ListIterator<String> iterator = this.goals.listIterator(); iterator.hasNext();) {
@@ -231,7 +271,18 @@ public class GenerateLifecyclesDocMojo extends AbstractNewPageMojo {
 				html.render(new Renderable() {
 					@Override
 					public void renderOn(HtmlCanvas html) throws IOException {
-						html.write(goal).br();
+						String goalName = null;
+						if (goal != null && mavenProject != null && goal.startsWith(mavenProject.getGroupId()+":"+mavenProject.getArtifactId())) {
+							goalName = goal.substring(goal.lastIndexOf(":") + 1, goal.length());
+						}
+						if (goalName != null) {
+							 html.a(href("./" + goalName + "-mojo.html"));
+						}
+						html.write(goal);
+						if (goalName != null) {
+							html._a();
+						}
+						html.br();
 					}
 				});
 			}

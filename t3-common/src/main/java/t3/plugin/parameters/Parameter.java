@@ -29,13 +29,15 @@ public class Parameter {
 	private String property;
 	private String defaultValue;
 	private boolean required;
+	private String description;
 
-	public Parameter(String field, String type, String property, String defaultValue, boolean required) {
+	public Parameter(String field, String type, String property, String defaultValue, boolean required, String description) {
 		this.field = field;
 		this.type = type;
 		this.property = property;
 		this.defaultValue = defaultValue;
 		this.required = required;
+		this.description = description;
 	}
 
 	public String getField() {
@@ -71,6 +73,13 @@ public class Parameter {
 	}
 	public void setRequired(boolean required) {
 		this.required = required;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }

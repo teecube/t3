@@ -62,7 +62,7 @@ public abstract class AbstractNewPageMojo extends AbstractSiteMojo {
 					  "ms");
 	}
 
-	public abstract HtmlCanvas getContent(HtmlCanvas html) throws IOException, SAXException;
+	public abstract HtmlCanvas getContent(HtmlCanvas html) throws IOException, SAXException, MojoExecutionException, MojoFailureException;
 
 	public abstract String getPageName();
 

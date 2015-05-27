@@ -40,7 +40,7 @@ import t3.plugin.parameters.GlobalParameter;
  */
 public class AbstractCommonMojo extends AbstractMojo {
 
-	@GlobalParameter (property = "tibco.home", required = true)
+	@GlobalParameter (property = "tibco.home", required = true, description = "The path of a valid TIBCO installation to use with the plugin.")
 	protected File tibcoHOME;
 
 	@GlobalParameter (property = "executables.extension", required = true)
@@ -108,7 +108,5 @@ public class AbstractCommonMojo extends AbstractMojo {
 		createOutputDirectory();
 	}
 
-//	public <T extends AbstractCommonMojo> AbstractCommonMojo(T mojo) {
-//		System.out.println("deep copy AbstractCommonMojo");
-//	}
+
 }
