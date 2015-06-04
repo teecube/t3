@@ -239,7 +239,10 @@ public class PluginConfigurator {
 		}
 
 		if ("project.build.directory".equals(propertyName)) {
-			mavenProject.getBuild().setDirectory(defaultValue);
+			String directory = mavenProject.getBuild().getDirectory();
+			if (directory != null && mavenPropertyPattern.matcher(directory).matches()) {
+				mavenProject.getBuild().setDirectory(defaultValue);
+			}
 		}
 
 		return defaultValue;

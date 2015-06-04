@@ -620,7 +620,7 @@
 
 				<junit.plugin>4.12</junit.plugin>
 
-				<mycila.plugin.license>2.6</mycila.plugin.license>
+				<mycila.plugin.license>2.11</mycila.plugin.license>
 
 				<jvnet.maven-jaxb2-plugin>0.12.3</jvnet.maven-jaxb2-plugin>
 				<codehaus.build-helper-maven-plugin>1.9.1</codehaus.build-helper-maven-plugin>
