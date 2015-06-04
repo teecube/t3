@@ -55,6 +55,18 @@ public class PluginManager extends DefaultMavenPluginManager {
 	// actual Mojos factory is implemented in each Maven plugin
 	private MojosFactory mojosFactory;
 
+	public static DefaultMavenPluginManager getDefaultMavenPluginManager(BuildPluginManager pluginManager) {
+		DefaultMavenPluginManager result = null;
+		try {
+			Field f = pluginManager.getClass().getDeclaredField("mavenPluginManager");
+			f.setAccessible(true);
+			result = (DefaultMavenPluginManager) f.get(pluginManager);
+		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
 	public static void registerCustomPluginManager(BuildPluginManager pluginManager, MojosFactory mojosFactory) {
 		try {
 			Field f = pluginManager.getClass().getDeclaredField("mavenPluginManager");
