@@ -67,6 +67,18 @@ public class PluginManager extends DefaultMavenPluginManager {
 		return result;
 	}
 
+	public static PluginManager getCustomMavenPluginManager(BuildPluginManager pluginManager) {
+		PluginManager result = null;
+		try {
+			Field f = pluginManager.getClass().getDeclaredField("mavenPluginManager");
+			f.setAccessible(true);
+			result = (PluginManager) f.get(pluginManager);
+		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
 	public static void registerCustomPluginManager(BuildPluginManager pluginManager, MojosFactory mojosFactory) {
 		try {
 			Field f = pluginManager.getClass().getDeclaredField("mavenPluginManager");

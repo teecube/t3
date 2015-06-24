@@ -53,3 +53,7 @@ div.pull-left {
 div.thumbnail {
 	min-height: 160px;
 }
+
+.guessed {
+	display: none;
+}
