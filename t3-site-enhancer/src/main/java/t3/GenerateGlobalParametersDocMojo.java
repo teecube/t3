@@ -40,14 +40,17 @@ import org.reflections.util.ClasspathHelper;
 import org.rendersnake.HtmlCanvas;
 import org.rendersnake.Renderable;
 
+import t3.plugin.annotations.CategoriesHelper;
 import t3.plugin.annotations.FieldsHelper;
 import t3.plugin.annotations.ParametersHelper;
+import t3.plugin.parameters.CategoryImpl;
 import t3.plugin.parameters.Parameter;
 
 @Mojo(name = "generate-global-doc", defaultPhase = LifecyclePhase.POST_SITE, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
 
 	private List<GlobalParameter> globalParameters;
+	private List<Category> parametersCategories;
 
 	@org.apache.maven.plugins.annotations.Parameter (property="t3.site.globalDocumentation.pageName", defaultValue="global-documentation")
 	private String pageName;
@@ -55,12 +58,77 @@ public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
 	@org.apache.maven.plugins.annotations.Parameter (property="t3.site.globalDocumentation.bootstrapClass", defaultValue="")
 	private String bootstrapClass;
 
+	private boolean hasAtLeastOneNotGuessedProperty(String category, List<GlobalParameter> globalParameters) {
+		if (category == null || globalParameters == null) {
+			return false;
+		}
+
+		for (GlobalParameter globalParameter : globalParameters) {
+			if (category.equals(globalParameter.category) && !globalParameter.valueGuessedByDefault) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private Class<?> getBootstrapClass() throws MalformedURLException, DependencyResolutionRequiredException, ClassNotFoundException {
+		ClassLoader classLoader = getClassLoader();
+		Class<?> clazz = classLoader.loadClass(bootstrapClass);
+
+		return clazz;
+	}
+
+	private List<GlobalParameter> getGlobalParameters() throws MalformedURLException, DependencyResolutionRequiredException, ClassNotFoundException {
+		List<GlobalParameter> globalParameters = new ArrayList<GlobalParameter>();
+
+		Set<Field> globalParametersAnnotatedFields = FieldsHelper.getFieldsAnnotatedWith(getBootstrapClass(), t3.plugin.parameters.GlobalParameter.class, ClasspathHelper.contextClassLoader(), getClassLoader());
+		Set<Parameter> globalParametersAnnotatations = ParametersHelper.getFieldsAnnotatedWith(globalParametersAnnotatedFields, t3.plugin.parameters.GlobalParameter.class);
+
+		boolean firstClass = true;
+		for (Parameter parameter : globalParametersAnnotatations) {
+			firstClass = !firstClass;
+			globalParameters.add(new GlobalParameter(parameter.getField(), parameter.getType(), parameter.getProperty(), parameter.getDefaultValue(), "-", parameter.getDescription(), parameter.getCategory(), parameter.isValueGuessedByDefault(), firstClass));
+		}
+		return globalParameters;
+	}
+
+	private class Category {
+		private String title;
+		private String description;
+
+		public Category(String title, String description) {
+			this.title = title;
+			this.description = description;
+		}
+	}
+
+	private List<Category> getParametersCategories() throws MalformedURLException, ClassNotFoundException, DependencyResolutionRequiredException {
+		List<Category> parametersCategories = new ArrayList<Category>();
+
+		Set<Class<?>> parametersCategoriesAnnotatedTypes = FieldsHelper.getTypesAnnotatedWith(getBootstrapClass(), t3.plugin.parameters.Categories.class, ClasspathHelper.contextClassLoader(), getClassLoader());
+		Set<CategoryImpl> parametersCategoriesAnnotatations = CategoriesHelper.getCategories(parametersCategoriesAnnotatedTypes);
+
+		for (CategoryImpl parameter : parametersCategoriesAnnotatations) {
+			parametersCategories.add(new Category(parameter.getTitle(), parameter.getDescription()));
+		}
+
+		return parametersCategories;
+	}
+
 	protected class GlobalParameterComparator implements Comparator<GlobalParameter> {
 	    @Override
 	    public int compare(GlobalParameter o1, GlobalParameter o2) {
 			if (o1 == null || o2 == null) {
 				return 0;
 			}
+
+			if (o1.category != null && o2.category != null) {
+				int i = o1.category.compareTo(o2.category);
+		        if (i != 0) {
+					return i;
+		        }
+			}
+
 	        return o1.property.compareTo(o2.property);
 	    }
 	}
@@ -73,15 +141,21 @@ public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
 		private String defaultValue;
 		private String since;
 		private String description;
+		private String category;
+		private boolean valueGuessedByDefault;
+
 		private boolean firstClass;
 
-		public GlobalParameter(String name, String type, String property, String defaultValue, String since, String description, boolean firstClass) {
+		public GlobalParameter(String name, String type, String property, String defaultValue, String since, String description, String category, boolean valueGuessedByDefault, boolean firstClass) {
 			this.name = name;
 			this.type = type;
 			this.property = property;
 			this.defaultValue = defaultValue;
 			this.since = since;
 			this.description = description;
+			this.category = category;
+			this.valueGuessedByDefault = valueGuessedByDefault;
+
 			this.firstClass = firstClass;
 		}
 
@@ -92,6 +166,11 @@ public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
 				clazz = "a";
 			} else {
 				clazz = "b";
+			}
+			if (this.valueGuessedByDefault) {
+				clazz = clazz + " guessed";
+			} else {
+				clazz = clazz + " notguessed";
 			}
 
 			html.
@@ -154,30 +233,97 @@ public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
 		html.
 		div(class_("section")).
 			h3(id("Global_Parameters")).write("Global Parameters")._h3().
-			table(border("0").class_("bodyTable table table-striped table-hover")).
-				thead().
-					tr(class_("a")).
-						th().write("Property")._th().
-//						th().write("Default value")._th().
-						th().write("Type")._th().
-						th().write("Since")._th().
-						th().write("Description")._th().
-					_tr()
-				._thead().
-				tbody();
+			p().em().write("By default, only parameters which cannot be guessed are displayed. ")._em().
+			a(href("#").id("toggleGuessed")).write("Show other parameters")._a().write(" to customize default values.")._p();
 
-		for (GlobalParameter globalParameter : globalParameters) {
-			html.render(globalParameter);
-		}
+			String category = null;
+			for (GlobalParameter globalParameter : globalParameters) {
+				boolean changingCategory = (globalParameter.category != null && !globalParameter.category.equals(category) && !globalParameter.category.isEmpty()) || (category == null);
+				if (changingCategory) {
+					if (category != null) {
+						html._tbody()._table()._div();
+					}
 
-		html
-				._tbody()
-			._table()
-		._div();
+					if (globalParameter.category != null && !globalParameter.category.isEmpty()) {
+						boolean hasAtLeastOneNotGuessedProperty = hasAtLeastOneNotGuessedProperty(globalParameter.category, globalParameters);
+						String clazz;
+						if (hasAtLeastOneNotGuessedProperty) {
+							clazz = "notguessed";
+						} else {
+							clazz = "guessed";
+						}
+
+						html.div(class_(clazz));//.p().write("TEST")._p()._div();
+						html.h4().write(globalParameter.category)._h4();
+
+						for (Category c : parametersCategories) {
+							if (c.title.equals(globalParameter.category)) {
+								html.p().write(c.description)._p();
+							}
+						}
+					} else {
+						html.h4().write("Uncategorized")._h4();
+					}
+					html.table(border("0").class_("bodyTable table table-striped table-hover")).
+						thead().
+							tr(class_("a")).
+								th().write("Property")._th().
+//								th().write("Default value")._th().
+								th().write("Type")._th().
+								th().write("Since")._th().
+								th().write("Description")._th().
+							_tr().
+						_thead().
+						tbody();
+				}
+
+				html.render(globalParameter);
+				category = globalParameter.category;
+			}
+
+		html._tbody()._table()._div()._div();
+
 		return html;
 	}
 
-	private HtmlCanvas generateGlobalParametersDocumentation(HtmlCanvas html) throws IOException {
+	private HtmlCanvas generateSampleProfile(HtmlCanvas html) throws IOException {
+		for (GlobalParameter globalParameter : globalParameters) {
+			if (!globalParameter.valueGuessedByDefault) {
+				html.write("    <" + globalParameter.property + ">[...]</" + globalParameter.property + ">\n");
+			}
+		}
+
+		return html;
+	}
+
+	private HtmlCanvas generateSampleProfileDocumentation(HtmlCanvas html) throws IOException {
+		html.
+		div(class_("section")).
+			h3(id("Sample_Profile")).write("Sample Profile")._h3().
+			p().em().write("Based on above properties, here is a sample profile to include in ").a(href("https://maven.apache.org/settings.html")).write("Maven settings.xml file")._a().write(":")._em()._p().
+
+			pre(class_("xml")).
+				write("<profile>\n").
+				write("  <id>" + project.getArtifactId() + "</id>\n").
+				write("  <properties>\n");
+
+		html.render(new Renderable() {
+			@Override
+			public void renderOn(HtmlCanvas html) throws IOException {
+				generateSampleProfile(html);
+			}
+		});
+
+		html.
+				write("  </properties>\n").
+				write("</profile>")
+			._pre()
+		._div();
+
+		return html;
+	}
+
+	private HtmlCanvas generateGlobalDocumentation(HtmlCanvas html) throws IOException {
 		html.
 
 		div(class_("row")).
@@ -186,12 +332,19 @@ public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
 					div(class_("section")).
 						div(class_("page-header")).
 							h2(id("Global_Documentation")).write("Global Documentation")._h2().
-							p().write("The global documentation describes the parameters shared by all goals called 'Global Parameters'.")._p();
+							p().write("The global documentation describes parameters which are common to a group of projects.")._p();
 
 		html.render(new Renderable() {
 			@Override
 			public void renderOn(HtmlCanvas html) throws IOException {
 				generateGlobalParametersSection(html);
+			}
+		});
+
+		html.render(new Renderable() {
+			@Override
+			public void renderOn(HtmlCanvas html) throws IOException {
+				generateSampleProfileDocumentation(html);
 			}
 		});
 
@@ -207,29 +360,12 @@ public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
 
 	@Override
 	public HtmlCanvas getContent(HtmlCanvas html) throws IOException {
-		return generateGlobalParametersDocumentation(html);
+		return generateGlobalDocumentation(html);
 	}
 
 	@Override
 	public String getPageName() {
 		return pageName;
-	}
-
-	private List<GlobalParameter> getGlobalParameters() throws MalformedURLException, DependencyResolutionRequiredException, ClassNotFoundException {
-		List<GlobalParameter> result = new ArrayList<GlobalParameter>();
-
-		ClassLoader classLoader = getClassLoader();
-		Class<?> clazz = classLoader.loadClass(bootstrapClass);
-
-		Set<Field> globalParametersAnnotatedFields = FieldsHelper.getFieldsAnnotatedWith(clazz, t3.plugin.parameters.GlobalParameter.class, ClasspathHelper.contextClassLoader(), classLoader);
-		Set<Parameter> globalParametersAnnotatations = ParametersHelper.getFieldsAnnotatedWith(globalParametersAnnotatedFields, t3.plugin.parameters.GlobalParameter.class);
-
-		boolean firstClass = true;
-		for (Parameter parameter : globalParametersAnnotatations) {
-			firstClass = !firstClass;
-			result.add(new GlobalParameter(parameter.getField(), parameter.getType(), parameter.getProperty(), parameter.getDefaultValue(), "-", parameter.getDescription(), firstClass));
-		}
-		return result;
 	}
 
 	@Override
@@ -238,6 +374,7 @@ public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
 
 		try {
 			globalParameters = getGlobalParameters();
+			parametersCategories = getParametersCategories();
 			Collections.sort(globalParameters, new GlobalParameterComparator());
 		} catch (Throwable e) {
 			throw new MojoExecutionException(e.getLocalizedMessage(), e);

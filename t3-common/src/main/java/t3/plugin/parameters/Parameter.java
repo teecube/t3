@@ -30,14 +30,18 @@ public class Parameter {
 	private String defaultValue;
 	private boolean required;
 	private String description;
+	private String category; // only for GlobalParameter
+	private boolean valueGuessedByDefault; // only for GlobalParameter
 
-	public Parameter(String field, String type, String property, String defaultValue, boolean required, String description) {
+	public Parameter(String field, String type, String property, String defaultValue, boolean required, String description, String category, boolean valueGuessedByDefault) {
 		this.field = field;
 		this.type = type;
 		this.property = property;
 		this.defaultValue = defaultValue;
 		this.required = required;
 		this.description = description;
+		this.category = category;
+		this.valueGuessedByDefault = valueGuessedByDefault;
 	}
 
 	public String getField() {
@@ -80,6 +84,20 @@ public class Parameter {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public boolean isValueGuessedByDefault() {
+		return valueGuessedByDefault;
+	}
+	public void setCategory(boolean valueGuessedByDefault) {
+		this.valueGuessedByDefault = valueGuessedByDefault;
 	}
 
 }

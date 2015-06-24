@@ -22,6 +22,8 @@ import java.util.Set;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.FieldAnnotationsScanner;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
@@ -48,6 +50,20 @@ public class FieldsHelper {
 		Set<Field> fields = reflections.getFieldsAnnotatedWith(annotationClass);
 
 		return fields;
+	}
+
+	public static <A extends Annotation> Set<Class<?>> getTypesAnnotatedWith(Class<?> fromClass, Class<A> annotationClass, ClassLoader... classLoaders) {
+//		Reflections.log = NOPLogger.NOP_LOGGER;
+
+		Reflections reflections = new Reflections(new ConfigurationBuilder()
+			.setUrls(ClasspathHelper.forClass(fromClass, classLoaders),
+					 ClasspathHelper.forClass(annotationClass, classLoaders))
+			.setScanners(new TypeAnnotationsScanner(), new SubTypesScanner()).addClassLoaders(classLoaders)
+		);
+
+		Set<Class<?>> types = reflections.getTypesAnnotatedWith(annotationClass);
+
+		return types;
 	}
 
 }

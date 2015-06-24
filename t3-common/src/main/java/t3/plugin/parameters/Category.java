@@ -14,21 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3;
+package t3.plugin.parameters;
 
-import java.io.File;
-
-import t3.plugin.parameters.CommonMojoInformation;
-import t3.plugin.parameters.GlobalParameter;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  *
  * @author Mathieu Debove &lt;mad@teecube.org&gt;
  *
  */
-public class AbstractTIBCOMojo extends AbstractCommonMojo {
-
-	@GlobalParameter (property = "tibco.home", required = true, description = "The path of a valid TIBCO installation to use with the plugin.", category = CommonMojoInformation.tibcoCategory, valueGuessedByDefault = false)
-	protected File tibcoHOME;
-
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Category {
+	String title();
+	String description() default "";
 }

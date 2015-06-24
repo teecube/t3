@@ -49,6 +49,14 @@ public class ParametersHelper {
 		return (String) getObject(annotation, "description");
 	}
 
+	private static String getCategory(Annotation annotation) {
+		return (String) getObject(annotation, "category");
+	}
+
+	private static boolean getValueGuessedByDefault(Annotation annotation) {
+		return (boolean) getObject(annotation, "valueGuessedByDefault");
+	}
+
 	private static Object getObject(Annotation annotation, String methodName) {
 		InvocationHandler handler = Proxy.getInvocationHandler(annotation);
 		Method method;
@@ -71,12 +79,16 @@ public class ParametersHelper {
 			String defaultValue = null;
 			boolean required = false;
 			String description = null;
+			String category = null;
+			boolean valueGuessedByDefault = true;
 
 			if (annotation != null) {
 				property = getProperty(annotation);
 				defaultValue = getDefaultValue(annotation);
 				required = getRequired(annotation);
 				description = getDescription(annotation);
+				category = getCategory(annotation);
+				valueGuessedByDefault = getValueGuessedByDefault(annotation);
 			} else {
 				for (Annotation a : field.getAnnotations()) {
 					if (a.annotationType().getCanonicalName().equals(parameterAnnotation.getCanonicalName())) {
@@ -84,11 +96,13 @@ public class ParametersHelper {
 						defaultValue = getDefaultValue(a);
 						required = getRequired(a);
 						description = getDescription(a);
+						category = getCategory(a);
+						valueGuessedByDefault = getValueGuessedByDefault(a);
 					}
 				}
 			}
 			if (property != null) {
-				result.add(new Parameter(field.getName(), field.getType().getCanonicalName(), property, defaultValue, required, description));
+				result.add(new Parameter(field.getName(), field.getType().getCanonicalName(), property, defaultValue, required, description, category, valueGuessedByDefault));
 			}
 		}
 

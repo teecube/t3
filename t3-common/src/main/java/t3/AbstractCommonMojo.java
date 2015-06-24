@@ -34,23 +34,24 @@ import org.apache.maven.settings.Profile;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.shared.filtering.MavenResourcesFiltering;
 
+import t3.plugin.parameters.CommonMojoInformation;
 import t3.plugin.parameters.GlobalParameter;
 
 public class AbstractCommonMojo extends AbstractMojo {
 
-	@GlobalParameter (property = "executables.extension", required = true)
+	@GlobalParameter (property = "executables.extension", required = true, category = CommonMojoInformation.systemCategory)
 	protected String executablesExtension;
 
-	@GlobalParameter (property = "project.build.directory", defaultValue = "${basedir}/target" ) // target
+	@GlobalParameter (property = "project.build.directory", defaultValue = "${basedir}/target", category = CommonMojoInformation.mavenCategory) // target
 	protected File directory;
 
-	@GlobalParameter (property = "project.output.directory", defaultValue = "${project.build.directory}/output" ) // target/output (instead of target/classes)
+	@GlobalParameter (property = "project.output.directory", defaultValue = "${project.build.directory}/output", category = CommonMojoInformation.mavenCategory) // target/output (instead of target/classes)
 	protected File outputDirectory;
 
-	@GlobalParameter (property = "project.test.directory", defaultValue = "${project.build.directory}/test" ) // target/test
+	@GlobalParameter (property = "project.test.directory", defaultValue = "${project.build.directory}/test", category = CommonMojoInformation.mavenCategory) // target/test
 	protected File testOutputDirectory;
 
-	@GlobalParameter (property="project.build.sourceEncoding", defaultValue = "UTF-8")
+	@GlobalParameter (property="project.build.sourceEncoding", defaultValue = "UTF-8", category = CommonMojoInformation.mavenCategory)
 	protected String sourceEncoding;
 
 	@Parameter (defaultValue = "${basedir}", readonly = true)
