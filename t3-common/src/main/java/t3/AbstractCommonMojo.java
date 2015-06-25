@@ -19,6 +19,8 @@ package t3;
 import java.io.File;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
@@ -34,7 +36,6 @@ import org.apache.maven.settings.Profile;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.shared.filtering.MavenResourcesFiltering;
 
-import t3.plugin.parameters.CommonMojoInformation;
 import t3.plugin.parameters.GlobalParameter;
 
 public class AbstractCommonMojo extends AbstractMojo {
@@ -72,11 +73,32 @@ public class AbstractCommonMojo extends AbstractMojo {
 	@Parameter (defaultValue = "${settings}", readonly = true)
 	private Settings settings;
 
+	public static final Pattern mavenPropertyPattern = Pattern.compile("\\$\\{([^}]*)\\}"); // ${prop} regex pattern
+
 	@Component
 	protected ProjectBuilder builder;
 
 	@Component( role=org.apache.maven.shared.filtering.MavenResourcesFiltering.class, hint="default")
 	protected MavenResourcesFiltering mavenResourcesFiltering;
+
+	/**
+	 * <p>
+	 * Instantiate a minimalistic {@link AbstractCommonMojo} to use properties
+	 * management as a standalone object.
+	 * </p>
+	 *
+	 * @param session
+	 * @param mavenProject
+	 * @return
+	 */
+	public static AbstractCommonMojo propertiesManager(MavenSession session, MavenProject mavenProject) {
+		AbstractCommonMojo mojo = new AbstractCommonMojo();
+		mojo.setProject(mavenProject);
+		mojo.setSession(session);
+		mojo.setSettings(session.getSettings());
+
+		return mojo;
+	}
 
 	/**
 	 * <p>
@@ -123,6 +145,42 @@ public class AbstractCommonMojo extends AbstractMojo {
 		return null;
 	}
 
+	private List<String> getActiveProfiles(Settings settings) {
+		if (settings == null) return null;
+
+		List<String> result = settings.getActiveProfiles();
+
+		for (Profile profile : settings.getProfiles()) {
+			if (profile.getActivation().isActiveByDefault() && !result.contains(profile.getId())) {
+				result.add(profile.getId());
+			}
+		}
+		return result;
+	}
+
+	@SuppressWarnings("unchecked") // because of Maven poor typing
+	public boolean propertyExistsInSettings(String propertyName, Settings settings) {
+		if (settings == null) {
+			return false;
+		}
+
+		List<String> activeProfiles = getActiveProfiles(settings);
+
+		for (Object _profileWithId : settings.getProfilesAsMap().entrySet()) {
+			Entry<String, Profile> profileWithId = (Entry<String, Profile>) _profileWithId;
+			if (activeProfiles.contains(profileWithId.getKey())) {
+				Profile profile = profileWithId.getValue();
+
+				boolean result = profile.getProperties().containsKey(propertyName);
+				if (result) {
+					return result;
+				}
+			}
+		}
+
+		return false;
+	}
+
 	private String getPropertyValueInCommandLine(String propertyName, MavenSession session) {
 		if (session == null) {
 			return null;
@@ -131,6 +189,29 @@ public class AbstractCommonMojo extends AbstractMojo {
 		return session.getRequest().getUserProperties().getProperty(propertyName);
 	}
 
+	public boolean propertyExists(String propertyName) {
+		return propertyExists(project, propertyName);
+	}
+
+	public boolean propertyExists(MavenProject mavenProject, String propertyName) {
+		return mavenProject.getOriginalModel().getProperties().containsKey(propertyName) ||
+			   mavenProject.getModel().getProperties().containsKey(propertyName) ||
+			   session.getRequest().getUserProperties().containsKey(propertyName) ||
+			   propertyExistsInSettings(propertyName, session.getSettings());
+	}
+
+	/**
+	 * <p>
+	 *
+	 * </p>
+	 *
+	 * @param mavenProject
+	 * @param propertyName
+	 * @param lookInSettingsProperties
+	 * @param lookInCommandLine
+	 * @param onlyInOriginalModel
+	 * @return
+	 */
 	public String getPropertyValue(MavenProject mavenProject, String propertyName, boolean lookInSettingsProperties, boolean lookInCommandLine, boolean onlyInOriginalModel) {
 		if (mavenProject == null) return null;
 
@@ -180,6 +261,26 @@ public class AbstractCommonMojo extends AbstractMojo {
 			}
 		}
 		return value;
+	}
+
+	public String replaceProperties(String string) {
+		if (string == null) return null;
+
+		Matcher m = mavenPropertyPattern.matcher(string);
+
+		StringBuffer sb = new StringBuffer();
+
+		while (m.find()) {
+			String propertyName = m.group(1);
+			String propertyValue = getPropertyValue(propertyName);
+			if (propertyValue != null) {
+			    m.appendReplacement(sb, Matcher.quoteReplacement(propertyValue));
+			}
+		}
+		m.appendTail(sb);
+		string = sb.toString();
+
+		return string;
 	}
 
 	@Override

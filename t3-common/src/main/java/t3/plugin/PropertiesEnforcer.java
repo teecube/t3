@@ -20,6 +20,7 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
 
 import java.io.File;
+import java.util.List;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.MavenExecutionException;
@@ -52,6 +53,7 @@ public class PropertiesEnforcer {
 			}
 		}
 	}
+
 	/**
 	 * <p>
 	 * 	The plugin will enforce custom rules before the actual build begins.
@@ -78,6 +80,7 @@ public class PropertiesEnforcer {
 
 			Plugin enforcerPlugin = pluginBuilder.getPlugin();
 			Xpp3Dom configuration = (Xpp3Dom) enforcerPlugin.getConfiguration();
+			List<String> tmp = session.getSettings().getActiveProfiles();
 
 			executeMojo(
 				enforcerPlugin,
@@ -88,7 +91,11 @@ public class PropertiesEnforcer {
 		} catch (MojoExecutionException e) {
 			logger.fatalError(Messages.ENFORCER_RULES_FAILURE);
 			logger.fatalError(Messages.MESSAGE_SPACE);
-			throw new MavenExecutionException(e.getLocalizedMessage(), e);
+			String message = e.getCause().getLocalizedMessage();
+			if (message != null) {
+				message = message.substring(message.indexOf("\n")+1);
+			}
+			throw new MavenExecutionException(message, new MojoExecutionException(message, new Throwable(message)));
 		}
 
 		logger.info(Messages.ENFORCED_RULES);
