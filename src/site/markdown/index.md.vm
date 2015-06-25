@@ -23,7 +23,7 @@ ${ecosystemLongName} and is organized in
 $h1 ${ticDisplayedName}
 
 The ${ticFullName} (${ticAcronym}) provides a full lifecyle management for
-application based on TIBCO products.
+applications based on TIBCO products.
 <div>[Learn more »](${siteDisplayURL}/${ticURLBase}/index.html)</div>
 
 $h1 ${tacDisplayedName}
