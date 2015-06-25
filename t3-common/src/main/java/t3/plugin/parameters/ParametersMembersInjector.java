@@ -21,6 +21,12 @@ import java.lang.reflect.Field;
 
 import com.google.inject.MembersInjector;
 
+/**
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ * @param <T>
+ */
 public class ParametersMembersInjector<T> implements MembersInjector<T> {
 	private final Field field;
 	private final String value;

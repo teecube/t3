@@ -38,7 +38,7 @@ public class UpdateBrandMojo extends AbstractReplaceAllMojo {
 		html
 			.div(class_("brand"));
 
-		updateTop(project, html, true);
+		updateTop(project, html, true, false);
 
 		html
 			._div();
@@ -51,15 +51,16 @@ public class UpdateBrandMojo extends AbstractReplaceAllMojo {
 		super.execute();
 	}
 
-	private void updateTop(MavenProject project, HtmlCanvas html, boolean last) throws IOException {
+	private void updateTop(MavenProject project, HtmlCanvas html, boolean last, boolean nextIsEmpty) throws IOException {
 		if (project == null) return;
 
-		updateTop(project.getParent(), html, false);
-
 		SiteTop siteTop = new SiteTop(project);
+
+		updateTop(project.getParent(), html, false, siteTop.caption.isEmpty());
+
 		html.render(siteTop);
 
-		if (!last) {
+		if (!last && !nextIsEmpty) {
 			html
 				.span(class_("brand")
 						)
@@ -72,15 +73,15 @@ public class UpdateBrandMojo extends AbstractReplaceAllMojo {
 	protected class SiteTop implements Renderable {
 
 		private MavenProject project;
+		private String caption;
 
 		public SiteTop(MavenProject project) {
 			this.project = project;
+			this.caption = getPropertyValue(project, "siteTopCaption", false, false, false);
 		}
 
 		@Override
 		public void renderOn(HtmlCanvas html) throws IOException {
-			String caption = getPropertyValue(project, "siteTopCaption", false, false, false);
-
 			if (caption == null || caption.trim().isEmpty()) return;
 
 			String link = project.getUrl() + "/index.html";

@@ -17,15 +17,28 @@
 package t3;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.maven.model.FileSet;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 public abstract class AbstractReplaceAllMojo extends AbstractSiteMojo {
 
 	public abstract void processHTMLFile(File htmlFile) throws Exception;
+
+	protected List<File> getHTMLFiles() throws IOException {
+		FileSet htmlFiles = new FileSet();
+		htmlFiles.setDirectory(outputDirectory.getAbsolutePath());
+
+		htmlFiles.addInclude("**/*.html");
+		htmlFiles.addExclude("apidocs/**/*");
+		htmlFiles.addExclude("xref/**/*");
+
+		return toFileList(htmlFiles);
+	}
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {

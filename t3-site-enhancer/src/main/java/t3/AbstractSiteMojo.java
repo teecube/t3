@@ -23,8 +23,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -94,22 +92,11 @@ public abstract class AbstractSiteMojo extends AbstractCommonMojo {
 		return sb.toString();
 	}
 
-	private static List<File> toFileList(FileSet fileSet) throws IOException {
+	protected static List<File> toFileList(FileSet fileSet) throws IOException {
 		File directory = new File(fileSet.getDirectory());
 		String includes = toCommaSeparatedString(fileSet.getIncludes());
 		String excludes = toCommaSeparatedString(fileSet.getExcludes());
 		return org.codehaus.plexus.util.FileUtils.getFiles(directory, includes, excludes);
-	}
-
-	protected List<File> getHTMLFiles() throws IOException {
-		FileSet htmlFiles = new FileSet();
-		htmlFiles.setDirectory(outputDirectory.getAbsolutePath());
-
-		htmlFiles.addInclude("**/*.html");
-		htmlFiles.addExclude("apidocs/**/*");
-		htmlFiles.addExclude("xref/**/*");
-
-		return toFileList(htmlFiles);
 	}
 
 	protected String formatHtml(String html) throws MojoExecutionException {
@@ -226,27 +213,6 @@ public abstract class AbstractSiteMojo extends AbstractCommonMojo {
 					  getPropertyValue(modelPropertyName, propertyInRootProject, onlyInOriginalModel, lookInSettings),
 					  true,
 					  "gs");
-	}
-
-	protected String replaceProperties(String string) {
-		if (string == null) return null;
-
-		Pattern p = Pattern.compile("\\$\\{([^}]*)\\}");
-		Matcher m = p.matcher(string);
-
-		StringBuffer sb = new StringBuffer();
-
-		while (m.find()) {
-			String propertyName = m.group(1);
-			String propertyValue = getPropertyValue(propertyName);
-			if (propertyValue != null) {
-			    m.appendReplacement(sb, Matcher.quoteReplacement(propertyValue));
-			}
-		}
-		m.appendTail(sb);
-		string = sb.toString();
-		
-		return string;
 	}
 
 	@Override

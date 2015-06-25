@@ -17,17 +17,24 @@
 package t3;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
-import t3.plugin.parameters.GlobalParameter;
+import org.apache.maven.model.FileSet;
 
-/**
- *
- * @author Mathieu Debove &lt;mad@teecube.org&gt;
- *
- */
-public class AbstractTIBCOMojo extends AbstractCommonMojo {
+public abstract class AbstractReplaceMojo extends AbstractReplaceAllMojo {
 
-	@GlobalParameter (property = CommonMojoInformation.tibcoHome, required = true, description = CommonMojoInformation.tibcoHome_description, category = CommonMojoInformation.tibcoCategory, valueGuessedByDefault = false)
-	protected File tibcoHOME;
+	protected abstract String getFileNameToReplace();
 
+	@Override
+	protected List<File> getHTMLFiles() throws IOException {
+		FileSet htmlFiles = new FileSet();
+		htmlFiles.setDirectory(outputDirectory.getAbsolutePath());
+
+		htmlFiles.addInclude(getFileNameToReplace());
+
+		return toFileList(htmlFiles);
+	}
+
+	
 }
