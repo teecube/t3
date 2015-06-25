@@ -140,7 +140,7 @@ public class PluginManager extends DefaultMavenPluginManager {
 	        Injector i = Guice.createInjector(new AbstractModule() {
 	            @Override
 	            protected void configure() {
-					bindListener(Matchers.any(), new ParametersListener<T>(configuredMojo, session.getCurrentProject()));
+					bindListener(Matchers.any(), new ParametersListener<T>(configuredMojo, session.getCurrentProject(), session)); // WARN: using getCurrentProject() ?
 	            }
 	        });
 

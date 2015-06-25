@@ -18,23 +18,33 @@ package t3.plugin.parameters;
 
 import java.lang.reflect.Field;
 
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
-
-import t3.plugin.PluginConfigurator;
 
 import com.google.inject.MembersInjector;
 import com.google.inject.TypeLiteral;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
 
+import t3.AbstractCommonMojo;
+import t3.plugin.PluginConfigurator;
+
+/**
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ * @param <T>
+ */
 public class ParametersListener<T> implements TypeListener {
 
 	private T originalObject;
 	private MavenProject mavenProject;
 
-	public ParametersListener(T originalObject, MavenProject mavenProject) {
+	public ParametersListener(T originalObject, MavenProject mavenProject, MavenSession session) {
 		this.originalObject = originalObject;
 		this.mavenProject = mavenProject;
+
+		PluginConfigurator.propertiesManager = AbstractCommonMojo.propertiesManager(session, mavenProject);
 	}
 
 	@SuppressWarnings("unchecked")
