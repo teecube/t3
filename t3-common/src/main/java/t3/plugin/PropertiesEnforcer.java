@@ -20,7 +20,6 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
 
 import java.io.File;
-import java.util.List;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.MavenExecutionException;
@@ -80,7 +79,6 @@ public class PropertiesEnforcer {
 
 			Plugin enforcerPlugin = pluginBuilder.getPlugin();
 			Xpp3Dom configuration = (Xpp3Dom) enforcerPlugin.getConfiguration();
-			List<String> tmp = session.getSettings().getActiveProfiles();
 
 			executeMojo(
 				enforcerPlugin,
