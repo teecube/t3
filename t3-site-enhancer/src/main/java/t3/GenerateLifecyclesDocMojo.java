@@ -18,8 +18,8 @@ package t3;
 
 import static org.rendersnake.HtmlAttributesFactory.border;
 import static org.rendersnake.HtmlAttributesFactory.class_;
-import static org.rendersnake.HtmlAttributesFactory.id;
 import static org.rendersnake.HtmlAttributesFactory.href;
+import static org.rendersnake.HtmlAttributesFactory.id;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,8 +44,6 @@ import org.rendersnake.HtmlCanvas;
 import org.rendersnake.Renderable;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
-
-import t3.plugin.PluginConfigurator;
 
 @Mojo(name = "generate-lifecycles-doc", defaultPhase = LifecyclePhase.POST_SITE, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class GenerateLifecyclesDocMojo extends AbstractNewPageMojo {
@@ -236,10 +234,13 @@ public class GenerateLifecyclesDocMojo extends AbstractNewPageMojo {
 			this.phaseName = phaseName;
 			this.mavenProject = mavenProject;
 
+			AbstractCommonMojo propertiesManager = AbstractCommonMojo.propertiesManager(session, mavenProject);
+
 			this.goals = Arrays.asList(goals.split("\\s*,\\s*"));
 			for (ListIterator<String> iterator = this.goals.listIterator(); iterator.hasNext();) {
 				String goal = iterator.next();
-				iterator.set(PluginConfigurator.replaceProperties(goal.trim(), mavenProject));
+
+				iterator.set(propertiesManager.replaceProperties(goal.trim()));
 			}
 				
 		}
