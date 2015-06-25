@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.maven.model.Plugin;
@@ -35,6 +34,7 @@ import org.reflections.scanners.ResourcesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
+import t3.AbstractCommonMojo;
 import t3.plugin.annotations.FieldsHelper;
 import t3.plugin.parameters.GlobalParameter;
 import t3.plugin.parameters.MojoParameter;
@@ -46,7 +46,7 @@ import t3.plugin.parameters.MojoParameter;
  */
 public class PluginConfigurator {
 
-	public static final Pattern mavenPropertyPattern = Pattern.compile("\\$\\{([^}]*)\\}");
+	public static AbstractCommonMojo propertiesManager;
 
 	/**
 	 * <p>
@@ -150,11 +150,9 @@ public class PluginConfigurator {
 	 * @return
 	 */
 	private static String getPropertyValue(MavenProject mavenProject, String propertyName) {
-		String value = mavenProject.getOriginalModel().getProperties().getProperty(propertyName);
+		assert(propertiesManager != null);
 
-		if (value == null) {
-			value = mavenProject.getModel().getProperties().getProperty(propertyName);
-		}
+		String value = propertiesManager.getPropertyValue(propertyName);
 
 		if (value == null) {
 			if ("basedir".equals(propertyName) || "project.basedir".equals(propertyName)) {
@@ -219,16 +217,20 @@ public class PluginConfigurator {
 	 */
 	public static String updateProperty(MavenProject mavenProject, String propertyName, String defaultValue) {
 		if (propertyName != null && !propertyName.isEmpty()) { // && defaultValue != null) {
-			if (!mavenProject.getProperties().containsKey(propertyName) && defaultValue != null) { // do not overwrite with default value if the property exists in model (i.e. in POM)
+			assert(propertiesManager != null);
+
+			if (!propertiesManager.propertyExists(propertyName) && defaultValue != null) { // do not overwrite with default value if the property exists in model (i.e. in POM)
 				mavenProject.getProperties().put(propertyName, defaultValue);
 			} else {
 				String value = getPropertyValue(mavenProject, propertyName);
 
 				if (value != null) {
 					String oldValue = null;
-					while (mavenPropertyPattern.matcher(value).find() && (!value.equals(oldValue))) {
+					assert(propertiesManager != null);
+
+					while (AbstractCommonMojo.mavenPropertyPattern.matcher(value).find() && (!value.equals(oldValue))) {
 						oldValue = value;
-						value = replaceProperties(value, mavenProject);
+						value = propertiesManager.replaceProperties(value);
 					}
 
 					mavenProject.getProperties().put(propertyName, value);
@@ -240,31 +242,12 @@ public class PluginConfigurator {
 
 		if ("project.build.directory".equals(propertyName)) {
 			String directory = mavenProject.getBuild().getDirectory();
-			if (directory != null && mavenPropertyPattern.matcher(directory).matches()) {
+			if (directory != null && AbstractCommonMojo.mavenPropertyPattern.matcher(directory).matches()) {
 				mavenProject.getBuild().setDirectory(defaultValue);
 			}
 		}
 
 		return defaultValue;
-	}
-
-	public static String replaceProperties(String value, MavenProject mavenProject) {
-		Matcher m = mavenPropertyPattern.matcher(value);
-
-		StringBuffer sb = new StringBuffer();
-
-		while (m.find()) {
-			String propertyName = m.group(1);
-			String propertyValue = getPropertyValue(mavenProject, propertyName);
-
-			if (propertyValue != null) {
-			    m.appendReplacement(sb, Matcher.quoteReplacement(propertyValue));
-			}
-		}
-		m.appendTail(sb);
-		value = sb.toString();
-
-		return value;
 	}
 
 	/**
