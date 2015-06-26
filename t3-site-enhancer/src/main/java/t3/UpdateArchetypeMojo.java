@@ -55,7 +55,7 @@ public class UpdateArchetypeMojo extends AbstractReplaceMojo {
 		html.
 				p().write("Command line for this archetype:")._p().
 				pre().
-					write("mvn archetype:generate -DarchetypeGroupId=" + project.getGroupId() + " -DarchetypeArtifactId=" + project.getArtifactId())
+					write("mvn archetype:generate -DarchetypeGroupId=" + project.getGroupId() + " -DarchetypeArtifactId=" + project.getArtifactId() + " -DarchetypeVersion=" + project.getVersion())
 				._pre()
 		
 			._div();
