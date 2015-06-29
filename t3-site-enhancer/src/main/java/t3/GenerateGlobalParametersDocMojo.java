@@ -177,7 +177,7 @@ public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
 			tr(class_(clazz)).
 				td().
 					b().
-						a(href("#"+name)).write(property)._a()
+						a(id(name).href("#"+name)).write(property)._a()
 					._b()
 				._td().
 //				td().
