@@ -38,5 +38,5 @@ solutions for common design patterns.
 $h1 ${toeDisplayedName}
 
 The ${toeFullName} (${toeAcronym}) provides Cloud enablement features.
-<div>Soon...</div>
-<!--<div>[Learn more »](${siteDisplayURL}/${toeURLBase}/index.html)</div>-->
+<!--<div>Soon...</div>-->
+<div>[Learn more »](${siteDisplayURL}/${toeURLBase}/index.html)</div>

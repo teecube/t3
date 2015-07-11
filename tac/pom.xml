@@ -16,11 +16,11 @@
 
 	<name>${ecosystemName} - ${tacName}</name>
 
-	<url>${parent.project.url}/${tacURLBase}</url>
+	<url>${siteDisplayURL}/${tacURLBase}</url>
 	<distributionManagement>
 		<site>
 			<id>t3.site</id>
-			<url>${settingsRepositorySiteProtocol}${siteUploadURL}/${tacURLBase}</url>
+			<url>${siteUploadProtocol}${siteUploadURL}/${tacURLBase}</url>
 		</site>
 	</distributionManagement>
 
