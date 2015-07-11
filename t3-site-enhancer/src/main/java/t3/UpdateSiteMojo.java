@@ -21,18 +21,16 @@ import static org.rendersnake.HtmlAttributesFactory.href;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
-import org.apache.maven.model.Model;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.rendersnake.HtmlCanvas;
 import org.rendersnake.Renderable;
 
@@ -41,16 +39,18 @@ public class UpdateSiteMojo extends AbstractReplaceAllMojo {
 
 	@Parameter (defaultValue = "true")
 	protected Boolean generateSubMenuFromModules;
-	private SubMenuReplacement subMenuReplacement;
-	private SubMenuReplacement subMenuReplacementParent;
+
+	@Parameter
+	private List<TopMenu> topmenus;
+
+	private List<SubMenuReplacement> subMenuReplacements;
 	private SimpleReplacement span4to5;
 	private SimpleReplacement span8to7;
 
 	@Override
 	public void processHTMLFile(File htmlFile) throws MojoExecutionException {
 		try {
-			updateMenu(htmlFile, subMenuReplacement);
-			updateMenu(htmlFile, subMenuReplacementParent);
+			updateMenu(htmlFile, subMenuReplacements);
 
 			updateSimple(htmlFile, span4to5);
 			updateSimple(htmlFile, span8to7);
@@ -61,8 +61,7 @@ public class UpdateSiteMojo extends AbstractReplaceAllMojo {
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		subMenuReplacement = new SubMenuReplacement();
-		subMenuReplacementParent = new SubMenuReplacement();
+		subMenuReplacements = new ArrayList<SubMenuReplacement>();
 
 		span4to5 = new SimpleReplacement();
 		span4to5.setFrom("<div class=\"span4\">");
@@ -73,72 +72,65 @@ public class UpdateSiteMojo extends AbstractReplaceAllMojo {
 		span8to7.setTo("<div class=\"span7\">");
 
 		if (generateSubMenuFromModules) {
-			try {
-				subMenuReplacement = generateSubMenuFromModules();
-				subMenuReplacementParent = generateSubMenuFromParent();
-			} catch (IOException | XmlPullParserException e) {
-				throw new MojoExecutionException(e.getLocalizedMessage(), e);
-			}
+			subMenuReplacements = generateSubMenu();
 		}
 
 		super.execute();
 	}
 
-	private SubMenuReplacement generateSubMenu(MavenProject project, boolean addParentToLink) throws IOException, XmlPullParserException {
-		SubMenuReplacement result = new SubMenuReplacement();
+	private List<SubMenuReplacement> generateSubMenu() {
+		List<SubMenuReplacement> result = new ArrayList<SubMenuReplacement>();
 
-		if (project != null && !project.getModules().isEmpty()) {
-			result.setOriginalMenuElement(project.getArtifactId().toUpperCase());
-			if (addParentToLink) {
-				result.setOriginalMenuElementLink("../index.html");
-			} else {
-				result.setOriginalMenuElementLink("index.html");
+		if (this.topmenus == null) {
+			this.topmenus = new ArrayList<TopMenu>();
+		}
+
+		for (TopMenu topMenu : topmenus) {
+			SubMenuReplacement subMenuReplacement = new SubMenuReplacement();
+			subMenuReplacement.setOriginalMenuElement(topMenu.name);
+
+			String url = topMenu.url;
+			if (url != null && !url.toLowerCase().endsWith("index.html") && !url.toLowerCase().endsWith("index.htm")) {
+				url = url + "/index.html";
 			}
+			subMenuReplacement.setOriginalMenuElementLink(url);
 
-			List<String> modules = project.getModel().getModules();
-			for (String module : modules) {
-				Model model = POMManager.getModelOfModule(project, module, localRepository);
-				if (model != null) {
-					if (addParentToLink) {
-						result.getSubMenuElements().put(model.getArtifactId().toUpperCase(), model.getArtifactId() + "/../index.html");
-					} else {
-						result.getSubMenuElements().put(model.getArtifactId().toUpperCase(), model.getArtifactId() + "/index.html");
-					}
+			for (SubMenu module : topMenu.submenus) {
+				url = module.url;
+				if (url != null && !url.toLowerCase().endsWith("index.html") && !url.toLowerCase().endsWith("index.htm")) {
+					url = url + "/index.html";
 				}
+				subMenuReplacement.getSubMenuElements().put(module.name, url);
 			}
+
+			result.add(subMenuReplacement);
 		}
 
 		return result;
 	}
 
-	private SubMenuReplacement generateSubMenuFromParent() throws IOException, XmlPullParserException {
-		return generateSubMenu(project.getParent(), true);
-	}
+	private void updateMenu(File htmlFile, List<SubMenuReplacement> subMenuReplacements) throws IOException, MojoExecutionException {
+		if (subMenuReplacements == null || subMenuReplacements.isEmpty()) return;
 
-	private SubMenuReplacement generateSubMenuFromModules() throws IOException, XmlPullParserException {
-		return generateSubMenu(project, false);
-	}
+		for (SubMenuReplacement subMenuReplacement : subMenuReplacements) {
+			HtmlCanvas html = new HtmlCanvas();
+			html
+				.li(class_("dropdown-submenu"))
+				.a(href(subMenuReplacement.getOriginalMenuElementLink())).write(subMenuReplacement.getOriginalMenuElement())._a()
+				.ul(class_("dropdown-menu"));
 
-	private void updateMenu(File htmlFile, SubMenuReplacement subMenuReplacement) throws IOException, MojoExecutionException {
-		if (subMenuReplacement == null || subMenuReplacement.getOriginalMenuElement() == null) return;
-
-		HtmlCanvas html = new HtmlCanvas();
-		html
-			.li(class_("dropdown-submenu"))
-			.a(href(subMenuReplacement.getOriginalMenuElementLink())).write(subMenuReplacement.getOriginalMenuElement())._a()
-			.ul(class_("dropdown-menu"));
-
-		if (subMenuReplacement.getSubMenuElements() != null) {
-			for (String subMenuElement : subMenuReplacement.getSubMenuElements().keySet()) {
-				html.render(new SubMenuElement(subMenuElement, subMenuReplacement.getSubMenuElements().get(subMenuElement)));
+			if (subMenuReplacement.getSubMenuElements() != null) {
+				for (String subMenuElement : subMenuReplacement.getSubMenuElements().keySet()) {
+					html.render(new SubMenuElement(subMenuElement, subMenuReplacement.getSubMenuElements().get(subMenuElement)));
+				}
 			}
+
+			html
+				._ul()
+			._li();
+
+			replaceByLine(htmlFile, "<li.*><a href=.*>" + subMenuReplacement.getOriginalMenuElement() + "</a></li>", formatHtml(html.toHtml()));
 		}
-
-		html
-			._ul()
-		._li();
-
-		replaceByLine(htmlFile, "<li.*><a href=.*>" + subMenuReplacement.getOriginalMenuElement() + "</a></li>", formatHtml(html.toHtml()));
 	}
 
 	private void updateSimple(File htmlFile, SimpleReplacement simpleReplacement) {
@@ -197,7 +189,7 @@ public class UpdateSiteMojo extends AbstractReplaceAllMojo {
 
 		public Map<String, String> getSubMenuElements() {
 			if (subMenuElements == null) {
-				subMenuElements = new HashMap<String, String>();
+				subMenuElements = new TreeMap<String, String>();
 			}
 			return subMenuElements;
 		}

@@ -46,45 +46,6 @@
 
 		<siteTopCaption><![CDATA[T<span class="color-highlight">³</span>]]></siteTopCaption>
 
-		<ticName>TIC</ticName>
-		<ticDisplayedName><![CDATA[<span class="color-highlight">T</span>IC]]></ticDisplayedName>
-		<ticFullName>TIBCO Infrastructure Core</ticFullName>
-		<ticSlogan><![CDATA[<i><span class="color-highlight">T</span>IBCO <span class="color-highlight">I</span>nfrastructure <span class="color-highlight">C</span>ore</i>]]></ticSlogan>
-		<ticAcronym><![CDATA[<abbr title="TIBCO Infrastructure Core"><span class="color-highlight">T</span>IC</abbr>]]></ticAcronym>
-		<ticGroupId>org.teecube.tic</ticGroupId>
-		<ticArtifactId>tic</ticArtifactId>
-		<ticURLBase>${ticArtifactId}/${ticVersion}</ticURLBase>
-
-		<ticBW6MavenGroupId>${ticGroupId}</ticBW6MavenGroupId>
-		<ticBW6MavenArtifactId>tic-bw6</ticBW6MavenArtifactId>
-		<ticBW6MavenURLBase>${ticBW6MavenArtifactId}/${ticBW6MavenVersion}</ticBW6MavenURLBase>
-		<ticBW6MavenName>BW6 Maven plugin</ticBW6MavenName>
-		<ticDisplayedBW6MavenName><![CDATA[BW<span class="color-highlight">6</span> Maven plugin]]></ticDisplayedBW6MavenName>
-
-		<ticBW5MavenGroupId>${ticGroupId}</ticBW5MavenGroupId>
-		<ticBW5MavenArtifactId>tic-bw5</ticBW5MavenArtifactId>
-		<ticBW5MavenURLBase>${ticBW5MavenArtifactId}/${ticBW5MavenVersion}</ticBW5MavenURLBase>
-		<ticBW5MavenName>BW5 Maven plugin</ticBW5MavenName>
-		<ticDisplayedBW5MavenName><![CDATA[BW<span class="color-highlight">5</span> Maven plugin]]></ticDisplayedBW5MavenName>
-
-		<tacName>TAC</tacName>
-		<tacDisplayedName><![CDATA[T<span class="color-highlight">A</span>C]]></tacDisplayedName>
-		<tacFullName>TIBCO Advanced Components</tacFullName>
-		<tacSlogan>TIBCO Advanced Components</tacSlogan>
-		<tacAcronym><![CDATA[<abbr title="TIBCO Advanced Components">T<span class="color-highlight">A</span>C</abbr>]]></tacAcronym>
-		<tacGroupId>org.teecube.tac</tacGroupId>
-		<tacArtifactId>tac</tacArtifactId>
-		<tacURLBase>${tacArtifactId}/${tacVersion}</tacURLBase>
-
-		<toeName>TOE</toeName>
-		<toeDisplayedName><![CDATA[TO<span class="color-highlight">E</span>]]></toeDisplayedName>
-		<toeFullName>TOpology Extensions</toeFullName>
-		<toeSlogan>TOpology Extensions</toeSlogan>
-		<toeAcronym><![CDATA[<abbr title="TOpology Extensions">TO<span class="color-highlight">E</span></abbr>]]></toeAcronym>
-		<toeGroupId>org.teecube.toe</toeGroupId>
-		<toeArtifactId>toe</toeArtifactId>
-		<toeURLBase>${toeArtifactId}/${toeVersion}</toeURLBase>
-
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -313,6 +274,329 @@
 							<version>${maven.plugin.enforcer}</version>
 							<executions>
 								<execution>
+									<id>enforce-common-properties</id>
+									<goals>
+										<goal>enforce</goal>
+									</goals>
+									<phase>pre-site</phase>
+									<configuration>
+										<rules>
+											<requireProperty>
+												<property>ticName</property>
+												<message>
+													<![CDATA[ticName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticDisplayedName</property>
+												<message>
+												<![CDATA[ticDisplayedName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticDisplayedName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticFullName</property>
+												<message>
+												<![CDATA[ticFullName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticFullName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticSlogan</property>
+												<message>
+												<![CDATA[ticSlogan is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticSlogan</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticAcronym</property>
+												<message>
+												<![CDATA[ticAcronym is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticAcronym</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticGroupId</property>
+												<message>
+												<![CDATA[ticGroupId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticGroupId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticArtifactId</property>
+												<message>
+												<![CDATA[ticArtifactId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticArtifactId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticURLBase</property>
+												<message>
+												<![CDATA[ticURLBase is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticURLBase</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticBW6MavenGroupId</property>
+												<message>
+												<![CDATA[ticBW6MavenGroupId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticBW6MavenGroupId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticBW6MavenArtifactId</property>
+												<message>
+												<![CDATA[ticBW6MavenArtifactId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticBW6MavenArtifactId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticBW6MavenURLBase</property>
+												<message>
+												<![CDATA[ticBW6MavenURLBase is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticBW6MavenURLBase</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticBW6MavenName</property>
+												<message>
+												<![CDATA[ticBW6MavenName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticBW6MavenName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticDisplayedBW6MavenName</property>
+												<message>
+												<![CDATA[ticDisplayedBW6MavenName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticDisplayedBW6MavenName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticBW5MavenGroupId</property>
+												<message>
+												<![CDATA[ticBW5MavenGroupId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticBW5MavenGroupId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticBW5MavenArtifactId</property>
+												<message>
+												<![CDATA[ticBW5MavenArtifactId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticBW5MavenArtifactId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticBW5MavenURLBase</property>
+												<message>
+												<![CDATA[ticBW5MavenURLBase is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticBW5MavenURLBase</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticBW5MavenName</property>
+												<message>
+												<![CDATA[ticBW5MavenName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticBW5MavenName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticDisplayedBW5MavenName</property>
+												<message>
+												<![CDATA[ticDisplayedBW5MavenName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticDisplayedBW5MavenName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>tacName</property>
+												<message>
+												<![CDATA[tacName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>tacName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>tacDisplayedName</property>
+												<message>
+												<![CDATA[tacDisplayedName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>tacDisplayedName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>tacFullName</property>
+												<message>
+												<![CDATA[tacFullName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>tacFullName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>tacSlogan</property>
+												<message>
+												<![CDATA[tacSlogan is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>tacSlogan</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>tacAcronym</property>
+												<message>
+												<![CDATA[tacAcronym is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>tacAcronym</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>tacGroupId</property>
+												<message>
+												<![CDATA[tacGroupId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>tacGroupId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>tacArtifactId</property>
+												<message>
+												<![CDATA[tacArtifactId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>tacArtifactId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>tacURLBase</property>
+												<message>
+												<![CDATA[tacURLBase is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>tacURLBase</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeName</property>
+												<message>
+												<![CDATA[toeName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeDisplayedName</property>
+												<message>
+												<![CDATA[toeDisplayedName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeDisplayedName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeFullName</property>
+												<message>
+												<![CDATA[toeFullName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeFullName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeSlogan</property>
+												<message>
+												<![CDATA[toeSlogan is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeSlogan</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeAcronym</property>
+												<message>
+												<![CDATA[toeAcronym is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeAcronym</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeGroupId</property>
+												<message>
+												<![CDATA[toeGroupId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeGroupId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeArtifactId</property>
+												<message>
+												<![CDATA[toeArtifactId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeArtifactId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeURLBase</property>
+												<message>
+												<![CDATA[toeURLBase is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeURLBase</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeInstallerGroupId</property>
+												<message>
+												<![CDATA[toeInstallerGroupId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeInstallerGroupId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeInstallerArtifactId</property>
+												<message>
+												<![CDATA[toeInstallerArtifactId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeInstallerArtifactId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeInstallerURLBase</property>
+												<message>
+												<![CDATA[toeInstallerURLBase is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeInstallerURLBase</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeInstallerName</property>
+												<message>
+												<![CDATA[toeInstallerName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeInstallerName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeDisplayedInstallerName</property>
+												<message>
+												<![CDATA[toeDisplayedInstallerName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeDisplayedInstallerName</regexMessage>
+											</requireProperty>
+										</rules>
+									</configuration>
+								</execution>
+								<execution>
 									<id>enforce-site</id>
 									<goals>
 										<goal>enforce</goal>
@@ -337,22 +621,6 @@
 												<message><![CDATA[siteUploadProtocol]]></message>
 												<regex>.*</regex>
 												<regexMessage>siteUploadProtocol</regexMessage>
-											</requireProperty>
-										</rules>
-									</configuration>
-								</execution>
-								<execution>
-									<id>enforce-property</id>
-									<goals>
-										<goal>enforce</goal>
-									</goals>
-									<configuration>
-										<rules>
-											<requireProperty>
-												<property>tibco.home</property>
-												<message><![CDATA[You must have a tibco.home property. Check your settings.xml!]]></message>
-												<regex>.*</regex>
-												<regexMessage>tibco.home may not be undefined nor empty.</regexMessage>
 											</requireProperty>
 										</rules>
 									</configuration>
@@ -416,7 +684,12 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
 					</plugin>
-				</plugins>
+<!-- 					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<inherited>false</inherited>
+					</plugin>
+ -->				</plugins>
 			</build>
 			<reporting>
 				<excludeDefaults>true</excludeDefaults>
@@ -790,6 +1063,7 @@
 										setCurrentVersion((project.properties["ticBW6MavenGroupId"] + "." + project.properties["ticBW6MavenArtifactId"]).replaceAll("\\.", "/"), "ticBW6MavenVersion")
 										setCurrentVersion((project.properties["tacGroupId"] + "." + project.properties["tacArtifactId"]).replaceAll("\\.", "/"), "tacVersion")
 										setCurrentVersion((project.properties["toeGroupId"] + "." + project.properties["toeArtifactId"]).replaceAll("\\.", "/"), "toeVersion")
+										setCurrentVersion((project.properties["toeInstallerGroupId"] + "." + project.properties["toeInstallerArtifactId"]).replaceAll("\\.", "/"), "toeInstallerVersion")
 									]]></source>
 								</configuration>
 							</execution>
@@ -849,6 +1123,7 @@
 										setCurrentVersion((project.properties["ticBW6MavenGroupId"] + "." + project.properties["ticBW6MavenArtifactId"]).replaceAll("\\.", "/"), "ticBW6MavenVersion")
 										setCurrentVersion((project.properties["tacGroupId"] + "." + project.properties["tacArtifactId"]).replaceAll("\\.", "/"), "tacVersion")
 										setCurrentVersion((project.properties["toeGroupId"] + "." + project.properties["toeArtifactId"]).replaceAll("\\.", "/"), "toeVersion")
+										setCurrentVersion((project.properties["toeInstallerGroupId"] + "." + project.properties["toeInstallerArtifactId"]).replaceAll("\\.", "/"), "toeInstallerVersion")
 									]]></source>
 								</configuration>
 							</execution>
@@ -965,10 +1240,59 @@
 			<build>
 				<pluginManagement>
 					<plugins>
+						<!-- 
+						<plugin>
+							<groupId>org.kuali.maven.plugins</groupId>
+							<artifactId>properties-maven-plugin</artifactId>
+							<version>1.1.9</version>
+							<executions>
+								<execution>
+									<id>inject-common-properties</id>
+									<goals>
+										<goal>read-project-properties</goal>
+									</goals>
+									<phase>pre-site</phase>
+									<configuration>
+										<locations>
+											<location>classpath:branding.properties</location>
+										</locations>
+									</configuration>
+								</execution>
+							</executions>
+						</plugin>
+						-->
 						<plugin>
 							<groupId>${ecosystemGroupIdCommon}</groupId>
 							<artifactId>t3-site-enhancer</artifactId>
 							<version>0.0.1-SNAPSHOT</version>
+							<configuration>
+								<topmenus>
+									<topmenu>
+										<name>TIC</name>
+										<url>${siteDisplayURL}/${ticURLBase}</url>
+										<submenus>
+											<submenu>
+												<name>${ticBW5MavenName}</name>
+												<url>${siteDisplayURL}/${ticBW5MavenURLBase}/index.html</url>
+											</submenu>
+											<submenu>
+												<name>${ticBW6MavenName}</name>
+												<url>${siteDisplayURL}/${ticBW6MavenURLBase}/index.html</url>
+											</submenu>
+										</submenus>
+									</topmenu>
+									<topmenu>
+										<name>TOE</name>
+										<url>${siteDisplayURL}/${toeURLBase}</url>
+										<submenus>
+											<submenu>
+												<name>${toeInstallerName}</name>
+												<url>${siteDisplayURL}/${toeInstallerURLBase}/index.html</url>
+											</submenu>
+										</submenus>
+									</topmenu>
+								</topmenus>
+							</configuration>
 							<executions>
 								<execution>
 									<id>prepare-site</id>
@@ -994,6 +1318,7 @@
 											<siteProperty>ticBW6MavenVersion</siteProperty>
 											<siteProperty>tacVersion</siteProperty>
 											<siteProperty>toeVersion</siteProperty>
+											<siteProperty>toeInstallerVersion</siteProperty>
 
 											<siteProperty>siteDisplayURL</siteProperty>
 											<siteProperty>ecosystemURLBase</siteProperty>
@@ -1018,10 +1343,15 @@
 					</plugins>
 				</pluginManagement>
 				<plugins>
+<!-- 					<plugin>
+						<groupId>org.kuali.maven.plugins</groupId>
+						<artifactId>properties-maven-plugin</artifactId>
+					</plugin>
+ -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-enforcer-plugin</artifactId>
-						<inherited>false</inherited>
+						<!-- <inherited>false</inherited> -->
 					</plugin>
 					<plugin>
 						<groupId>${ecosystemGroupIdCommon}</groupId>
