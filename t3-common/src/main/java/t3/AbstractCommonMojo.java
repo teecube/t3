@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -78,8 +79,11 @@ public class AbstractCommonMojo extends AbstractMojo {
 	@Component
 	protected ProjectBuilder builder;
 
-	@Component( role=org.apache.maven.shared.filtering.MavenResourcesFiltering.class, hint="default")
+	@Component (role=org.apache.maven.shared.filtering.MavenResourcesFiltering.class, hint="default")
 	protected MavenResourcesFiltering mavenResourcesFiltering;
+
+	@Component (role = BuildPluginManager.class)
+	protected BuildPluginManager pluginManager;
 
 	/**
 	 * <p>
