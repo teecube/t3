@@ -29,6 +29,7 @@ import org.apache.maven.plugin.PluginDescriptorCache;
 import org.apache.maven.plugin.PluginRealmCache;
 import org.apache.maven.plugin.internal.DefaultMavenPluginManager;
 import org.apache.maven.plugin.internal.PluginDependenciesResolver;
+import org.apache.maven.project.MavenProject;
 import org.apache.maven.rtinfo.RuntimeInformation;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.annotations.Component;
@@ -43,6 +44,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.matcher.Matchers;
+import com.google.inject.spi.TypeListener;
 
 /**
  *
@@ -53,7 +55,7 @@ import com.google.inject.matcher.Matchers;
 public class PluginManager extends DefaultMavenPluginManager {
 
 	// actual Mojos factory is implemented in each Maven plugin
-	private MojosFactory mojosFactory;
+	protected MojosFactory mojosFactory;
 
 	public static DefaultMavenPluginManager getDefaultMavenPluginManager(BuildPluginManager pluginManager) {
 		DefaultMavenPluginManager result = null;
@@ -91,16 +93,20 @@ public class PluginManager extends DefaultMavenPluginManager {
 		}
 	}
 
-	private <T> void copyField(String fieldName, Class<T> fieldType, DefaultMavenPluginManager defaultMavenPluginManager) throws Exception {
+	protected <T> void copyField(String fieldName, Class<T> fieldType, DefaultMavenPluginManager defaultMavenPluginManager) throws Exception {
 		Field oldField = defaultMavenPluginManager.getClass().getDeclaredField(fieldName);
 		oldField.setAccessible(true);
 
-		Class<?> parentClass = this.getClass().getSuperclass();
+		Class<?> parentClass = DefaultMavenPluginManager.class;
+
 		Field newField = parentClass.getDeclaredField(fieldName);
 		newField.setAccessible(true);
 
 		T fieldValue = fieldType.cast(oldField.get(defaultMavenPluginManager));
 		newField.set(this, fieldValue);
+	}
+
+	protected PluginManager() {
 	}
 
 	public PluginManager(DefaultMavenPluginManager defaultMavenPluginManager, MojosFactory mojosFactory) {
@@ -123,6 +129,10 @@ public class PluginManager extends DefaultMavenPluginManager {
 		}
 	}
 
+	protected <T> TypeListener getListener(T configuredMojo, MavenProject currentProject, MavenSession session) {
+		return new ParametersListener<T>(configuredMojo, session.getCurrentProject(), session);
+	}
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> T getConfiguredMojo(Class<T> mojoInterface, final MavenSession session, MojoExecution mojoExecution) throws PluginConfigurationException, PluginContainerException {
@@ -140,7 +150,7 @@ public class PluginManager extends DefaultMavenPluginManager {
 	        Injector i = Guice.createInjector(new AbstractModule() {
 	            @Override
 	            protected void configure() {
-					bindListener(Matchers.any(), new ParametersListener<T>(configuredMojo, session.getCurrentProject(), session)); // WARN: using getCurrentProject() ?
+					bindListener(Matchers.any(), getListener(configuredMojo, session.getCurrentProject(), session)); // WARN: using getCurrentProject() ?
 	            }
 	        });
 
