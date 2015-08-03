@@ -208,21 +208,8 @@ public class AbstractCommonMojo extends AbstractMojo {
 			   propertyExistsInSettings(propertyName, session.getSettings());
 	}
 
-	/**
-	 * <p>
-	 *
-	 * </p>
-	 *
-	 * @param mavenProject
-	 * @param propertyName
-	 * @param lookInSettingsProperties
-	 * @param lookInCommandLine
-	 * @param onlyInOriginalModel
-	 * @return
-	 */
 	public String getPropertyValue(MavenProject mavenProject, String propertyName, boolean lookInSettingsProperties, boolean lookInCommandLine, boolean onlyInOriginalModel) {
 		if (mavenProject == null) return null;
-
 		String result = null;
 
 		if (onlyInOriginalModel) {
@@ -235,6 +222,12 @@ public class AbstractCommonMojo extends AbstractMojo {
 		}
 		if (lookInSettingsProperties && (result == null || result.isEmpty())) {
 			result = getPropertyValueInSettings(propertyName, settings);
+		}
+
+		if (result == null && ("basedir".equals(propertyName) || "project.basedir".equals(propertyName))) {
+			if (mavenProject.getFile() != null && mavenProject.getFile().getParentFile() != null && mavenProject.getFile().getParentFile().isDirectory()) {
+				result = mavenProject.getFile().getParentFile().getAbsolutePath();
+			}
 		}
 
 		return result;
@@ -290,6 +283,7 @@ public class AbstractCommonMojo extends AbstractMojo {
 
 		return string;
 	}
+	//
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException  {
