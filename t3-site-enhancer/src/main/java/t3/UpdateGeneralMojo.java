@@ -33,6 +33,7 @@ public class UpdateGeneralMojo extends AbstractReplaceAllMojo {
 	@Override
 	public void processHTMLFile(File htmlFile) throws Exception {
 		replaceProperty(htmlFile, "siteURL2", "siteURL", true, true, false); // TODO: externalize in configuration ?
+
 		for (String propertyToUpdate : siteProperties) {
 			boolean propertyInRootProject = fromRootParentProperties.contains(propertyToUpdate);
 			boolean onlyInOriginalModel = inOriginalModelProperties.contains(propertyToUpdate);
