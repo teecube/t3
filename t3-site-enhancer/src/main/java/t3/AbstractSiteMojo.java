@@ -133,6 +133,8 @@ public abstract class AbstractSiteMojo extends AbstractCommonMojo {
 	}
 
 	protected void replaceByLine(File file, String match, String replace, boolean byLine, String flags) {
+		if (file == null || match == null || replace == null) return;
+
 		ReplaceRegExp replaceRegExp = new ReplaceRegExp();
 		replaceRegExp.setFile(file);
 		replaceRegExp.setMatch(match);

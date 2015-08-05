@@ -28,9 +28,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.model.Activation;
+import org.apache.maven.model.Profile;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -297,28 +300,47 @@ public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
 	}
 
 	private HtmlCanvas generateSampleProfileDocumentation(HtmlCanvas html) throws IOException {
-		html.
-		div(class_("section")).
-			h3(id("Sample_Profile")).write("Sample Profile")._h3().
-			p().em().write("Based on above properties, here is a sample profile to include in ").a(href("https://maven.apache.org/settings.html")).write("Maven settings.xml file")._a().write(":")._em()._p().
-
+		HtmlCanvas sampleProfile = new HtmlCanvas();
+		sampleProfile.
 			pre(class_("xml")).
 				write("<profile>\n").
 				write("  <id>" + project.getArtifactId() + "</id>\n").
 				write("  <properties>\n");
 
-		html.render(new Renderable() {
+		sampleProfile.render(new Renderable() {
 			@Override
 			public void renderOn(HtmlCanvas html) throws IOException {
 				generateSampleProfile(html);
 			}
 		});
 
-		html.
+		sampleProfile.
 				write("  </properties>\n").
 				write("</profile>")
-			._pre()
+			._pre();
+
+		html.
+		div(class_("section")).
+			h3(id("Sample_Profile")).write("Sample Profile")._h3().
+			p().em().write("Based on above properties, here is a sample profile to include in ").a(href("https://maven.apache.org/settings.html")).write("Maven settings.xml file")._a().write(":")._em()._p().
+			write(sampleProfile.toHtml(), false)
 		._div();
+
+		getLog().debug(sampleProfile.toHtml());
+
+		Properties properties = new Properties();
+		properties.put("sampleProfile", sampleProfile.toHtml());
+
+		Profile profile = new Profile();
+		Activation activation = new Activation();
+		activation.setActiveByDefault(true);
+		profile.setActivation(activation);
+		profile.setId("_tmp-site");
+		profile.setProperties(properties);
+		List<Profile> profiles = this.session.getRequest().getProfiles();
+		profiles.add(profile);
+		this.session.getRequest().addActiveProfile(profile.getId());
+		this.session.getRequest().setProfiles(profiles);
 
 		return html;
 	}

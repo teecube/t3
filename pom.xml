@@ -1327,6 +1327,8 @@
 											<siteProperty>ecosystemURLBase</siteProperty>
 											<siteProperty>ecosystemArtifactId</siteProperty>
 											<siteProperty>ecosystemVersion</siteProperty>
+
+											<siteProperty>sampleProfile</siteProperty>
 										</siteProperties>
 										<fromRootParentProperties>
 											<fromRootParentProperty>ecosystemURLBase</fromRootParentProperty>
@@ -1337,6 +1339,7 @@
 										</inOriginalModelProperties>
 										<lookInSettingsProperties>
 											<lookInSettingsProperty>ecosystemURLBase</lookInSettingsProperty>
+											<lookInSettingsProperty>sampleProfile</lookInSettingsProperty>
 										</lookInSettingsProperties>
 									</configuration>
 									<phase>post-site</phase>
