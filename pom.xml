@@ -1266,8 +1266,8 @@
 							<artifactId>t3-site-enhancer</artifactId>
 							<version>0.0.1-SNAPSHOT</version>
 							<configuration>
-								<topmenus>
-									<topmenu>
+								<topMenus>
+									<topMenu>
 										<name>TIC</name>
 										<url>${siteDisplayURL}/${ticURLBase}</url>
 										<submenus>
@@ -1280,8 +1280,8 @@
 												<url>${siteDisplayURL}/${ticBW6MavenURLBase}/index.html</url>
 											</submenu>
 										</submenus>
-									</topmenu>
-									<topmenu>
+									</topMenu>
+									<topMenu>
 										<name>TOE</name>
 										<url>${siteDisplayURL}/${toeURLBase}</url>
 										<submenus>
@@ -1290,8 +1290,11 @@
 												<url>${siteDisplayURL}/${toeInstallerURLBase}/index.html</url>
 											</submenu>
 										</submenus>
-									</topmenu>
-								</topmenus>
+									</topMenu>
+								</topMenus>
+								<extendedSidebars>
+									<extendedSidebar>index.html</extendedSidebar>
+								</extendedSidebars>
 							</configuration>
 							<executions>
 								<execution>

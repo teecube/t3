@@ -70,7 +70,7 @@ public class UpdateArchetypeMojo extends AbstractReplaceMojo {
 
 			Match document = JOOX.$(htmlFile);
 			try {
-				document.xpath("//div[@class='main-body']/div[@class='row']/div[@class='span7']").attr("class", "span12");
+				document.xpath("//div[@class='main-body']/div[@class='row']/div[@class='span8']").attr("class", "span12");
 			} catch (Exception e) {
 				removeHTMLEntities(htmlFile);
 				return;

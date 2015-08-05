@@ -41,7 +41,10 @@ public class UpdateSiteMojo extends AbstractReplaceAllMojo {
 	protected Boolean generateSubMenuFromModules;
 
 	@Parameter
-	private List<TopMenu> topmenus;
+	private List<TopMenu> topMenus;
+
+	@Parameter
+	private List<String> extendedSidebars;
 
 	private List<SubMenuReplacement> subMenuReplacements;
 	private SimpleReplacement span4to5;
@@ -52,8 +55,10 @@ public class UpdateSiteMojo extends AbstractReplaceAllMojo {
 		try {
 			updateMenu(htmlFile, subMenuReplacements);
 
-			updateSimple(htmlFile, span4to5);
-			updateSimple(htmlFile, span8to7);
+			if (extendedSidebars.contains(htmlFile.getName())) {
+				updateSimple(htmlFile, span4to5);
+				updateSimple(htmlFile, span8to7);
+			}
 		} catch (MojoExecutionException | IOException e) {
 			throw new MojoExecutionException(e.getLocalizedMessage(), e);
 		}
@@ -61,6 +66,10 @@ public class UpdateSiteMojo extends AbstractReplaceAllMojo {
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
+		if (extendedSidebars == null) {
+			extendedSidebars = new ArrayList<String>();
+		}
+
 		subMenuReplacements = new ArrayList<SubMenuReplacement>();
 
 		span4to5 = new SimpleReplacement();
@@ -81,11 +90,11 @@ public class UpdateSiteMojo extends AbstractReplaceAllMojo {
 	private List<SubMenuReplacement> generateSubMenu() {
 		List<SubMenuReplacement> result = new ArrayList<SubMenuReplacement>();
 
-		if (this.topmenus == null) {
-			this.topmenus = new ArrayList<TopMenu>();
+		if (this.topMenus == null) {
+			this.topMenus = new ArrayList<TopMenu>();
 		}
 
-		for (TopMenu topMenu : topmenus) {
+		for (TopMenu topMenu : topMenus) {
 			SubMenuReplacement subMenuReplacement = new SubMenuReplacement();
 			subMenuReplacement.setOriginalMenuElement(topMenu.name);
 

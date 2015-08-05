@@ -201,7 +201,7 @@ public class PluginConfigurator {
 
 		String property = globalParameter.property();
 		String defaultValue = globalParameter.defaultValue();
-		if (defaultValue.isEmpty() && globalParameter.required()) {
+		if (defaultValue.isEmpty() && (globalParameter.required() || !globalParameter.valueGuessedByDefault())) {
 			defaultValue = null;
 		}
 
