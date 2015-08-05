@@ -17,6 +17,7 @@
 package t3;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
@@ -153,12 +154,20 @@ public class AbstractCommonMojo extends AbstractMojo {
 		if (settings == null) return null;
 
 		List<String> result = settings.getActiveProfiles();
+		if (result == null) {
+			result = new ArrayList<String>();
+		}
 
-		for (Profile profile : settings.getProfiles()) {
-			if (profile.getActivation().isActiveByDefault() && !result.contains(profile.getId())) {
-				result.add(profile.getId());
+		if (settings.getProfiles() != null) {
+			for (Profile profile : settings.getProfiles()) {
+				if (!result.contains(profile.getId())) {
+					if (profile.getActivation() != null && profile.getActivation().isActiveByDefault()) {
+						result.add(profile.getId());
+					}
+				}
 			}
 		}
+
 		return result;
 	}
 
