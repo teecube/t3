@@ -44,6 +44,8 @@
 		<inceptionYear>2014</inceptionYear>
 		<notaBene><![CDATA[<b>NB:</b>]]></notaBene>
 
+		<commandLineStart><![CDATA[<p class="command-line"><span style="margin-right:10px;" class="fa-stack fa-lg"><span class="fa fa-square fa-stack-2x"></span><span class="fa fa-terminal fa-stack-1x fa-inverse"></span></span><tt>]]></commandLineStart>
+		<commandLineEnd><![CDATA[</tt></p>]]></commandLineEnd>
 		<siteTopCaption><![CDATA[T<span class="color-highlight">³</span>]]></siteTopCaption>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -1238,29 +1240,18 @@
 				</site>
 			</distributionManagement>
 			<build>
+				<resources>
+					<resource>
+						<directory>src/site/resources/css</directory>
+						<filtering>true</filtering>
+						<includes>
+							<include>font-awesome.css</include>
+						</includes>
+						<targetPath>${project.build.directory}/site/css</targetPath>
+					</resource>
+				</resources>
 				<pluginManagement>
 					<plugins>
-						<!-- 
-						<plugin>
-							<groupId>org.kuali.maven.plugins</groupId>
-							<artifactId>properties-maven-plugin</artifactId>
-							<version>1.1.9</version>
-							<executions>
-								<execution>
-									<id>inject-common-properties</id>
-									<goals>
-										<goal>read-project-properties</goal>
-									</goals>
-									<phase>pre-site</phase>
-									<configuration>
-										<locations>
-											<location>classpath:branding.properties</location>
-										</locations>
-									</configuration>
-								</execution>
-							</executions>
-						</plugin>
-						-->
 						<plugin>
 							<groupId>${ecosystemGroupIdCommon}</groupId>
 							<artifactId>t3-site-enhancer</artifactId>
@@ -1327,8 +1318,6 @@
 											<siteProperty>ecosystemURLBase</siteProperty>
 											<siteProperty>ecosystemArtifactId</siteProperty>
 											<siteProperty>ecosystemVersion</siteProperty>
-
-											<siteProperty>sampleProfile</siteProperty>
 										</siteProperties>
 										<fromRootParentProperties>
 											<fromRootParentProperty>ecosystemURLBase</fromRootParentProperty>
@@ -1339,7 +1328,6 @@
 										</inOriginalModelProperties>
 										<lookInSettingsProperties>
 											<lookInSettingsProperty>ecosystemURLBase</lookInSettingsProperty>
-											<lookInSettingsProperty>sampleProfile</lookInSettingsProperty>
 										</lookInSettingsProperties>
 									</configuration>
 									<phase>post-site</phase>
@@ -1349,15 +1337,23 @@
 					</plugins>
 				</pluginManagement>
 				<plugins>
-<!-- 					<plugin>
-						<groupId>org.kuali.maven.plugins</groupId>
-						<artifactId>properties-maven-plugin</artifactId>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<inherited>false</inherited>
+						<executions>
+							<execution>
+								<id>copy-font-awesome-css</id>
+								<goals>
+									<goal>resources</goal>
+								</goals>
+								<phase>post-site</phase>
+							</execution>
+						</executions>
 					</plugin>
- -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-enforcer-plugin</artifactId>
-						<!-- <inherited>false</inherited> -->
 					</plugin>
 					<plugin>
 						<groupId>${ecosystemGroupIdCommon}</groupId>
