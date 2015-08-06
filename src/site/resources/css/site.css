@@ -34,6 +34,8 @@ footer.well {
 	margin-top: -25px;
 }
 
+/* addons */
+
 .navbar div.brand {
 	padding: 0px 20px;
 }
@@ -70,4 +72,13 @@ span.separator {
 	display: block;
 	margin-top: 20px;
 	margin-bottom: 20px;
+}
+
+h1[id]:before,
+h2[id]:before,
+h3[id]:before,
+h4[id]:before,
+h5[id]:before,
+h6[id]:before {
+	display: inline;
 }
