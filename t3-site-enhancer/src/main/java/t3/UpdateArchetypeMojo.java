@@ -23,6 +23,7 @@ import static org.rendersnake.HtmlAttributesFactory.name;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.maven.model.Dependency;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.joox.JOOX;
@@ -52,12 +53,13 @@ public class UpdateArchetypeMojo extends AbstractReplaceMojo {
 			html.write(additionalHTML, false);
 		}
 
-		html.
-				p().write("Command line for this archetype:")._p().
-				pre().
-					write("mvn archetype:generate -DarchetypeGroupId=" + project.getGroupId() + " -DarchetypeArtifactId=" + project.getArtifactId() + " -DarchetypeVersion=" + project.getVersion())
-				._pre()
-		
+		Dependency dependency = new Dependency();
+		dependency.setGroupId(project.getGroupId());
+		dependency.setArtifactId(project.getArtifactId());
+		dependency.setVersion(project.getVersion());
+		HtmlCanvas commandLine = createArchetypesCommandLines(dependency);
+
+		html.write(commandLine.toHtml(), false)
 			._div();
 
 		return html;
@@ -75,8 +77,8 @@ public class UpdateArchetypeMojo extends AbstractReplaceMojo {
 				removeHTMLEntities(htmlFile);
 				return;
 			}
-			getLog().info(project.getPackaging());
-			getLog().info(htmlFile.getAbsolutePath());
+			getLog().debug(project.getPackaging());
+			getLog().debug(htmlFile.getAbsolutePath());
 
 			printDocument(document.document(), htmlFile);
 

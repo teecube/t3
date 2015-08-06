@@ -22,7 +22,9 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -37,7 +39,10 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.model.Activation;
+import org.apache.maven.model.Dependency;
 import org.apache.maven.model.FileSet;
+import org.apache.maven.model.Profile;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -46,6 +51,7 @@ import org.joox.Context;
 import org.joox.Filter;
 import org.joox.JOOX;
 import org.joox.Match;
+import org.rendersnake.HtmlCanvas;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -69,6 +75,8 @@ public abstract class AbstractSiteMojo extends AbstractCommonMojo {
 	@Parameter
 	protected List<String> siteProperties;
 
+	protected static List<String> staticSiteProperties;
+
 	@Parameter
 	protected List<String> fromRootParentProperties;
 
@@ -77,6 +85,8 @@ public abstract class AbstractSiteMojo extends AbstractCommonMojo {
 
 	@Parameter
 	protected List<String> lookInSettingsProperties;
+
+	protected static List<String> staticLookInSettingsProperties;
 
 	@Parameter (property="t3.site.autoclosingElements", defaultValue="//a|//b|//i|//span|//script")
 	private String autoclosingElements;
@@ -215,6 +225,71 @@ public abstract class AbstractSiteMojo extends AbstractCommonMojo {
 					  getPropertyValue(modelPropertyName, propertyInRootProject, onlyInOriginalModel, lookInSettings),
 					  true,
 					  "gs");
+	}
+
+	protected HtmlCanvas createArchetypesCommandLines(Dependency dependency) throws IOException {
+		HtmlCanvas commandLine = new HtmlCanvas();
+
+		commandLine.
+			write(replaceProperties("${commandLineStart}"), false).
+			write("mvn archetype:generate -DarchetypeGroupId=" + dependency.getGroupId() + " -DarchetypeArtifactId=" + dependency.getArtifactId() + " -DarchetypeVersion=" + dependency.getVersion())
+			.write(replaceProperties("${commandLineEnd}"), false);
+
+		addPropertyInSessionRequest(dependency.getArtifactId() + "_ArchetypeCommandLine", commandLine.toHtml());
+
+		HtmlCanvas result = new HtmlCanvas();
+
+		result.
+			p().write("Command line for this archetype:")._p().
+			write(commandLine.toHtml(), false);
+
+		return result;
+	}
+
+	protected void addPropertyInSessionRequest(String propertyName, String content) {
+		getLog().debug("Adding property to session request : " + propertyName);
+		getLog().debug(content);
+
+		List<Profile> profiles = this.session.getRequest().getProfiles();
+
+		Profile profile = null;
+
+		for (Profile p : profiles) {
+			if ("_tmp-site".equals(p.getId())) {
+				profile = p;
+			}
+		}
+
+		if (profile == null) {
+			Activation activation = new Activation();
+			activation.setActiveByDefault(true);
+
+			profile = new Profile();
+			profile.setActivation(activation);
+			profile.setId("_tmp-site");
+
+			profiles.add(profile);
+			this.session.getRequest().setProfiles(profiles);
+			this.session.getRequest().addActiveProfile(profile.getId());
+		}
+
+		Properties properties = profile.getProperties();
+		if (properties == null) {
+			properties = new Properties();
+		}
+		properties.put(propertyName, content);
+
+		profile.setProperties(properties);
+
+		if (staticSiteProperties == null) {
+			staticSiteProperties = new ArrayList<String>();
+		}
+		if (staticLookInSettingsProperties == null) {
+			staticLookInSettingsProperties = new ArrayList<String>();
+		}
+
+		staticSiteProperties.add(propertyName);
+		staticLookInSettingsProperties.add(propertyName);
 	}
 
 	@Override

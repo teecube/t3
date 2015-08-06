@@ -57,3 +57,17 @@ div.thumbnail {
 .guessed {
 	display: none;
 }
+
+p.command-line {
+	background-color: #f5f5f5;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+}
+
+span.separator {
+	border-style: dashed none none none;
+	border-color: lightsteelblue;
+	display: block;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}

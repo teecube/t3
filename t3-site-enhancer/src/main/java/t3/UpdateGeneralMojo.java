@@ -17,11 +17,16 @@
 package t3;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.joox.JOOX;
 import org.joox.Match;
@@ -29,6 +34,9 @@ import org.w3c.dom.Attr;
 
 @Mojo(name = "update-general", defaultPhase = LifecyclePhase.POST_SITE)
 public class UpdateGeneralMojo extends AbstractReplaceAllMojo {
+
+	@Parameter
+	List<Dependency> archetypes;
 
 	@Override
 	public void processHTMLFile(File htmlFile) throws Exception {
@@ -68,9 +76,22 @@ public class UpdateGeneralMojo extends AbstractReplaceAllMojo {
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
+		if (archetypes == null) {
+			archetypes = new ArrayList<Dependency>();
+		}
+		for (Dependency dependency : archetypes) {
+			try {
+				createArchetypesCommandLines(dependency);
+			} catch (IOException e) {
+				throw new MojoExecutionException(e.getLocalizedMessage(), e);
+			}
+		}
+
 		super.execute();
 
 		removeParent(project); // avoid Doxia SiteTool to mess up with parent loading
+
+		this.session.getRequest().getActiveProfiles().remove("_tmp-site");
 	}
 
 	private void removeParent(MavenProject project) {

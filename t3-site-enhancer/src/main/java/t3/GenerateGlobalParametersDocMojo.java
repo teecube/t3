@@ -28,12 +28,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
-import org.apache.maven.model.Activation;
-import org.apache.maven.model.Profile;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -290,34 +287,29 @@ public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
 	}
 
 	private HtmlCanvas generateSampleProfile(HtmlCanvas html) throws IOException {
+		html.
+			pre(class_("xml")).
+				write("<profile>\n").
+				write("  <id>" + project.getArtifactId() + "</id>\n").
+				write("  <properties>\n");
+
 		for (GlobalParameter globalParameter : globalParameters) {
 			if (!globalParameter.valueGuessedByDefault) {
 				html.write("    <" + globalParameter.property + ">[...]</" + globalParameter.property + ">\n");
 			}
 		}
 
+		html.
+				write("  </properties>\n").
+				write("</profile>")
+			._pre();
+
 		return html;
 	}
 
 	private HtmlCanvas generateSampleProfileDocumentation(HtmlCanvas html) throws IOException {
 		HtmlCanvas sampleProfile = new HtmlCanvas();
-		sampleProfile.
-			pre(class_("xml")).
-				write("<profile>\n").
-				write("  <id>" + project.getArtifactId() + "</id>\n").
-				write("  <properties>\n");
-
-		sampleProfile.render(new Renderable() {
-			@Override
-			public void renderOn(HtmlCanvas html) throws IOException {
-				generateSampleProfile(html);
-			}
-		});
-
-		sampleProfile.
-				write("  </properties>\n").
-				write("</profile>")
-			._pre();
+		sampleProfile = generateSampleProfile(sampleProfile);
 
 		html.
 		div(class_("section")).
@@ -326,21 +318,7 @@ public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
 			write(sampleProfile.toHtml(), false)
 		._div();
 
-		getLog().debug(sampleProfile.toHtml());
-
-		Properties properties = new Properties();
-		properties.put("sampleProfile", sampleProfile.toHtml());
-
-		Profile profile = new Profile();
-		Activation activation = new Activation();
-		activation.setActiveByDefault(true);
-		profile.setActivation(activation);
-		profile.setId("_tmp-site");
-		profile.setProperties(properties);
-		List<Profile> profiles = this.session.getRequest().getProfiles();
-		profiles.add(profile);
-		this.session.getRequest().addActiveProfile(profile.getId());
-		this.session.getRequest().setProfiles(profiles);
+		addPropertyInSessionRequest("sampleProfile", sampleProfile.toHtml());
 
 		return html;
 	}

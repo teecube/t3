@@ -57,6 +57,16 @@ public abstract class AbstractReplaceAllMojo extends AbstractSiteMojo {
 			lookInSettingsProperties = new ArrayList<String>();
 		}
 
+		if (staticSiteProperties == null) {
+			staticSiteProperties = new ArrayList<String>();
+		}
+		if (staticLookInSettingsProperties == null) {
+			staticLookInSettingsProperties = new ArrayList<String>();
+		}
+
+		lookInSettingsProperties.addAll(staticLookInSettingsProperties);
+		siteProperties.addAll(staticSiteProperties);
+
 		try {
 			List<File> htmlFiles = getHTMLFiles();
 
