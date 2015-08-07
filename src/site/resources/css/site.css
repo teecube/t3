@@ -64,6 +64,7 @@ p.command-line {
 	background-color: #f5f5f5;
 	border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 4px;
+    margin-top: 10px;
 }
 
 span.separator {
@@ -81,4 +82,8 @@ h4[id]:before,
 h5[id]:before,
 h6[id]:before {
 	display: inline;
+}
+
+ul.ul-main {
+	margin-left: 0;
 }

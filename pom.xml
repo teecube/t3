@@ -749,6 +749,7 @@
 							</docletArtifact>
 							<additionalparam>-views</additionalparam>
 							<useStandardDocletOptions>false</useStandardDocletOptions>
+							<skip>${maven.javadoc.skip}</skip>
 						</configuration>
 					</plugin>
 					<plugin>
@@ -768,6 +769,7 @@
 								<exclude>com/tibco/**/*</exclude>
 							</excludes>
 							<linkJavadoc>true</linkJavadoc>
+							<skip>${maven.jxr.skip}</skip>
 						</configuration>
 					</plugin>
 					<plugin>
@@ -777,11 +779,12 @@
 						<configuration>
 							<dependencyDetailsEnabled>true</dependencyDetailsEnabled>
 							<dependencyLocationsEnabled>true</dependencyLocationsEnabled>
+							<skip>${mpir.skip}</skip>
 						</configuration>
-						<inherited>false</inherited>
+						<!-- <inherited>false</inherited> -->
 						<reportSets>
 							<reportSet>
-								<!-- <id>non-aggregate</id> -->
+								<id>non-aggregate</id>
 								<inherited>false</inherited>
 								<reports>
 									<report>cim</report>
