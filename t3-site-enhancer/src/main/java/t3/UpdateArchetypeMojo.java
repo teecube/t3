@@ -67,7 +67,7 @@ public class UpdateArchetypeMojo extends AbstractReplaceMojo {
 
 	@Override
 	public void processHTMLFile(File htmlFile) throws Exception {
-		if ("maven-archetype".equals(project.getPackaging())) {
+		if ("maven-archetype".equals(project.getPackaging()) || "pom".equals(project.getPackaging())) {
 			addHTMLEntities(htmlFile);
 
 			Match document = JOOX.$(htmlFile);
@@ -82,11 +82,13 @@ public class UpdateArchetypeMojo extends AbstractReplaceMojo {
 
 			printDocument(document.document(), htmlFile);
 
-			HtmlCanvas html = getArchetypeSection();
-			replaceByLine(htmlFile,
-				"<div class=\"body-content\">.*</p></div>",
-				"<div class=\"body-content\">" + html.toHtml() + "</div>");
-			
+			if ("maven-archetype".equals(project.getPackaging())) {
+				HtmlCanvas html = getArchetypeSection();
+				replaceByLine(htmlFile,
+					"<div class=\"body-content\">.*</p></div>",
+					"<div class=\"body-content\">" + html.toHtml() + "</div>");
+			}
+
 			removeHTMLEntities(htmlFile);
 		}
 	}
