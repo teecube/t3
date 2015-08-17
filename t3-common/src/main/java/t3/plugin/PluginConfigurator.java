@@ -35,9 +35,9 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 import t3.AbstractCommonMojo;
-import t3.plugin.annotations.FieldsHelper;
+import t3.plugin.annotations.AnnotationsHelper;
 import t3.plugin.parameters.GlobalParameter;
-import t3.plugin.parameters.MojoParameter;
+import t3.plugin.parameters.ParameterRuntime;
 
 /**
  *
@@ -168,14 +168,14 @@ public class PluginConfigurator {
 
 	/**
 	 * <p>
-	 *  Proxy to call {@code updateProperty} for a {@link MojoParameter}.
+	 *  Proxy to call {@code updateProperty} for a {@link ParameterRuntime}.
 	 * </p>
 	 *
 	 * @param mavenProject
 	 * @param parameter
 	 * @return
 	 */
-	public static String updateProperty(MavenProject mavenProject, MojoParameter parameter) {
+	public static String updateProperty(MavenProject mavenProject, ParameterRuntime parameter) {
 		if (parameter == null) return null;
 
 		String property = parameter.property();
@@ -253,7 +253,7 @@ public class PluginConfigurator {
 	/**
 	 * <p>
 	 * Inject values for fields annotated with {@link GlobalParameter} or
-	 * {@link MojoParameter} into the Maven model (as properties).
+	 * {@link ParameterRuntime} into the Maven model (as properties).
 	 * </p>
 	 *
 	 * @param mavenProject
@@ -261,15 +261,15 @@ public class PluginConfigurator {
 	 * @param logger
 	 */
 	public static <T> void addPluginsParameterInModel(MavenProject mavenProject, Class<T> fromClass, Logger logger) {
-		Set<Field> parameters = FieldsHelper.getFieldsAnnotatedWith(fromClass, MojoParameter.class);
+		Set<Field> parameters = AnnotationsHelper.getFieldsAnnotatedWith(fromClass, ParameterRuntime.class);
 
 		for (Field field : parameters) {
-			MojoParameter parameter = field.getAnnotation(MojoParameter.class);
+			ParameterRuntime parameter = field.getAnnotation(ParameterRuntime.class);
 
 			updateProperty(mavenProject, parameter);
 		}
 
-		Set<Field> globalParameters = FieldsHelper.getFieldsAnnotatedWith(fromClass, GlobalParameter.class);
+		Set<Field> globalParameters = AnnotationsHelper.getFieldsAnnotatedWith(fromClass, GlobalParameter.class);
 
 		for (Field field : globalParameters) {
 			GlobalParameter globalParameter = field.getAnnotation(GlobalParameter.class);

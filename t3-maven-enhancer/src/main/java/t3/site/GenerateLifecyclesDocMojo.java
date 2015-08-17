@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3;
+package t3.site;
 
 import static org.rendersnake.HtmlAttributesFactory.border;
 import static org.rendersnake.HtmlAttributesFactory.class_;
@@ -44,6 +44,8 @@ import org.rendersnake.HtmlCanvas;
 import org.rendersnake.Renderable;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
+
+import t3.AbstractCommonMojo;
 
 @Mojo(name = "generate-lifecycles-doc", defaultPhase = LifecyclePhase.POST_SITE, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class GenerateLifecyclesDocMojo extends AbstractNewPageMojo {

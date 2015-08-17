@@ -38,7 +38,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
  */
 public class PluginBuilder {
 
-	private Plugin plugin;
+	protected Plugin plugin;
 
 	public PluginBuilder(Plugin plugin) {
 		this.plugin = plugin;
@@ -82,7 +82,8 @@ public class PluginBuilder {
 
 				Xpp3Dom configuration = pluginConfiguration.getChild("configuration");
 				if (configuration != null) {
-					this.plugin.setConfiguration(Xpp3Dom.mergeXpp3Dom((Xpp3Dom) this.plugin.getConfiguration(), configuration));
+//					this.plugin.setConfiguration(Xpp3Dom.mergeXpp3Dom((Xpp3Dom) this.plugin.getConfiguration(), configuration));
+					addConfiguration(configuration);
 				}
 
 				Xpp3Dom executions = pluginConfiguration.getChild("executions");
@@ -161,6 +162,10 @@ public class PluginBuilder {
 							}
 						}
 					}
+				}
+
+				if (this.plugin.getConfiguration() == null && !this.plugin.getExecutions().isEmpty()) {
+					addConfiguration(new Xpp3Dom(""));
 				}
 			}
 		} catch (IOException | XmlPullParserException e) {

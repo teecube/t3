@@ -14,27 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3;
+package t3.source;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import org.apache.maven.plugin.AbstractMojo;
 
-import org.apache.maven.model.FileSet;
+public abstract class AbstractAnnotationReplacer<T> extends AbstractMojo {
 
-public abstract class AbstractReplaceMojo extends AbstractReplaceAllMojo {
-
-	protected abstract String getFileNameToReplace();
-
-	@Override
-	protected List<File> getHTMLFiles() throws IOException {
-		FileSet htmlFiles = new FileSet();
-		htmlFiles.setDirectory(outputDirectory.getAbsolutePath());
-
-		htmlFiles.addInclude(getFileNameToReplace());
-
-		return toFileList(htmlFiles);
-	}
-
-	
 }

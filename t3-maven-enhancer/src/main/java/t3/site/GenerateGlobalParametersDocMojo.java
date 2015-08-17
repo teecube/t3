@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3;
+package t3.site;
 
 import static org.rendersnake.HtmlAttributesFactory.border;
 import static org.rendersnake.HtmlAttributesFactory.class_;
@@ -41,7 +41,7 @@ import org.rendersnake.HtmlCanvas;
 import org.rendersnake.Renderable;
 
 import t3.plugin.annotations.CategoriesHelper;
-import t3.plugin.annotations.FieldsHelper;
+import t3.plugin.annotations.AnnotationsHelper;
 import t3.plugin.annotations.ParametersHelper;
 import t3.plugin.parameters.CategoryImpl;
 import t3.plugin.parameters.Parameter;
@@ -81,7 +81,7 @@ public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
 	private List<GlobalParameter> getGlobalParameters() throws MalformedURLException, DependencyResolutionRequiredException, ClassNotFoundException {
 		List<GlobalParameter> globalParameters = new ArrayList<GlobalParameter>();
 
-		Set<Field> globalParametersAnnotatedFields = FieldsHelper.getFieldsAnnotatedWith(getBootstrapClass(), t3.plugin.parameters.GlobalParameter.class, ClasspathHelper.contextClassLoader(), getClassLoader());
+		Set<Field> globalParametersAnnotatedFields = AnnotationsHelper.getFieldsAnnotatedWith(getBootstrapClass(), t3.plugin.parameters.GlobalParameter.class, ClasspathHelper.contextClassLoader(), getClassLoader());
 		Set<Parameter> globalParametersAnnotatations = ParametersHelper.getFieldsAnnotatedWith(globalParametersAnnotatedFields, t3.plugin.parameters.GlobalParameter.class);
 
 		boolean firstClass = true;
@@ -105,7 +105,7 @@ public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
 	private List<Category> getParametersCategories() throws MalformedURLException, ClassNotFoundException, DependencyResolutionRequiredException {
 		List<Category> parametersCategories = new ArrayList<Category>();
 
-		Set<Class<?>> parametersCategoriesAnnotatedTypes = FieldsHelper.getTypesAnnotatedWith(getBootstrapClass(), t3.plugin.parameters.Categories.class, ClasspathHelper.contextClassLoader(), getClassLoader());
+		Set<Class<?>> parametersCategoriesAnnotatedTypes = AnnotationsHelper.getTypesAnnotatedWith(getBootstrapClass(), t3.plugin.parameters.Categories.class, ClasspathHelper.contextClassLoader(), getClassLoader());
 		Set<CategoryImpl> parametersCategoriesAnnotatations = CategoriesHelper.getCategories(parametersCategoriesAnnotatedTypes);
 
 		for (CategoryImpl parameter : parametersCategoriesAnnotatations) {
