@@ -60,7 +60,7 @@
 
 	<modules>
 		<module>t3-common</module>
-		<module>t3-site-enhancer</module>
+		<module>t3-maven-enhancer</module>
 	</modules>
 
 	<build>
@@ -1257,7 +1257,7 @@
 					<plugins>
 						<plugin>
 							<groupId>${ecosystemGroupIdCommon}</groupId>
-							<artifactId>t3-site-enhancer</artifactId>
+							<artifactId>t3-maven-enhancer</artifactId>
 							<version>0.0.1-SNAPSHOT</version>
 							<configuration>
 								<topMenus>
@@ -1360,7 +1360,7 @@
 					</plugin>
 					<plugin>
 						<groupId>${ecosystemGroupIdCommon}</groupId>
-						<artifactId>t3-site-enhancer</artifactId>
+						<artifactId>t3-maven-enhancer</artifactId>
 						<inherited>false</inherited>
 					</plugin>
 				</plugins>
@@ -1408,6 +1408,26 @@
 						</includes>
 					</resource>
 				</resources>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>${ecosystemGroupIdCommon}</groupId>
+							<artifactId>t3-maven-enhancer</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<configuration>
+								<executions>
+									<execution>
+										<id>duplicate-annotations</id>
+										<goals>
+											<goal>duplicate-annotations</goal>
+										</goals>
+										<phase>process-sources</phase>
+									</execution>
+								</executions>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>

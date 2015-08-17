@@ -50,11 +50,13 @@ public class ParametersHelper {
 	}
 
 	private static String getCategory(Annotation annotation) {
-		return (String) getObject(annotation, "category");
+		Object o = getObject(annotation, "category");
+		return o != null ? (String) o : null;
 	}
 
 	private static boolean getValueGuessedByDefault(Annotation annotation) {
-		return (boolean) getObject(annotation, "valueGuessedByDefault");
+		Object o = getObject(annotation, "valueGuessedByDefault");
+		return o != null ? (Boolean) o : true;
 	}
 
 	private static Object getObject(Annotation annotation, String methodName) {

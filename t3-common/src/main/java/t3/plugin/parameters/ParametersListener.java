@@ -56,8 +56,8 @@ public class ParametersListener<T> implements TypeListener {
 				if (field.isAnnotationPresent(GlobalParameter.class)) {
 					GlobalParameter globalParameter = field.getAnnotation(GlobalParameter.class);
 					value = PluginConfigurator.updateProperty(mavenProject, globalParameter);
-				} else if (field.isAnnotationPresent(MojoParameter.class)) {
-					MojoParameter mojoParameter = field.getAnnotation(MojoParameter.class);
+				} else if (field.isAnnotationPresent(ParameterRuntime.class)) {
+					ParameterRuntime mojoParameter = field.getAnnotation(ParameterRuntime.class);
 					value = PluginConfigurator.updateProperty(mavenProject, mojoParameter);
 				} else {
 					continue;

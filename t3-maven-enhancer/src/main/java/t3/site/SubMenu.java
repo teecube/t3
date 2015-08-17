@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3;
+package t3.site;
 
 public class SubMenu {
 	public String name;

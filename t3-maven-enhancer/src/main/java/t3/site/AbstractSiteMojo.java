@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3;
+package t3.site;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,6 +60,8 @@ import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.InputSource;
+
+import t3.AbstractCommonMojo;
 
 public abstract class AbstractSiteMojo extends AbstractCommonMojo {
 

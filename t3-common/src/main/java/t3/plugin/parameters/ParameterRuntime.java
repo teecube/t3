@@ -37,11 +37,10 @@ import java.lang.annotation.Target;
  * @author Mathieu Debove &lt;mad@teecube.org&gt;
  *
  */
-
 @Retention( RetentionPolicy.RUNTIME ) // RUNTIME retention policy
 @Target( { ElementType.FIELD } )
 @Inherited
-public @interface MojoParameter
+public @interface ParameterRuntime
 {
     String alias() default "";
 
