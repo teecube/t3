@@ -70,25 +70,27 @@ public class PropertiesEnforcer {
 
 		setExecutablesExtension(session);
 
-//		PluginBuilder pluginBuilder = new PluginBuilder(ENFORCER_GROUPID, ENFORCER_ARTIFACTID);
-		EnforcerPluginBuilder pluginBuilder = new EnforcerPluginBuilder();
-		enforceGlobalProperties(session, pluginManager, logger, pluginBuilder);
+		logger.info(Messages.ENFORCING_GLOBAL_RULES);
+		enforceGlobalProperties(session, pluginManager, logger);
+		logger.info(Messages.ENFORCED_GLOBAL_RULES);
+		logger.info(Messages.MESSAGE_SPACE);
 
+		logger.info(Messages.ENFORCING_PER_PROJECT_RULES);
 		for (MavenProject mavenProject : session.getProjects()) {
 			if (projectPackagings.contains(mavenProject.getPackaging())) {
 				// enforce
-//				pluginBuilder = new PluginBuilder(ENFORCER_GROUPID, ENFORCER_ARTIFACTID); // reset
-				pluginBuilder = new EnforcerPluginBuilder(); // reset
-				enforceProjectProperties(session, pluginManager, mavenProject, logger, pluginBuilder, fromClass);
+				enforceProjectProperties(session, pluginManager, mavenProject, logger, fromClass);
 			}
 		}
+		logger.info(Messages.ENFORCED_PER_PROJECT_RULES);
 
-		logger.info(Messages.ENFORCED_RULES);
 		logger.info(Messages.MESSAGE_SPACE);
 		
 	}
 	
-	private static void enforceGlobalProperties(MavenSession session, BuildPluginManager pluginManager, Logger logger, EnforcerPluginBuilder pluginBuilder) throws MavenExecutionException {
+	private static void enforceGlobalProperties(MavenSession session, BuildPluginManager pluginManager, Logger logger) throws MavenExecutionException {
+		EnforcerPluginBuilder pluginBuilder = new EnforcerPluginBuilder();
+
 		try {
 			if (pluginBuilder.addConfigurationFromClasspath()) {
 				Plugin enforcerPlugin = pluginBuilder.getPlugin();
@@ -104,40 +106,40 @@ public class PropertiesEnforcer {
 				}
 			}
 		} catch (MojoExecutionException e) {
-			logger.fatalError(Messages.ENFORCER_RULES_FAILURE);
-			logger.fatalError(Messages.MESSAGE_SPACE);
-			String message = e.getCause().getLocalizedMessage();
-			if (message != null) {
-				message = message.substring(message.indexOf("\n")+1);
-			}
-			throw new MavenExecutionException(message, new MojoExecutionException(message, new Throwable(message)));
+			enforceFailure(e, logger);
 		}
 	}
 
-	private static <T> void enforceProjectProperties(MavenSession session, BuildPluginManager pluginManager, MavenProject mavenProject, Logger logger, EnforcerPluginBuilder pluginBuilder, Class<T> fromClass) throws MavenExecutionException {
-		try {
-			if (pluginBuilder.addConfigurationFromClasspathForPackaging(session, mavenProject, fromClass)) {
-				Plugin enforcerPlugin = pluginBuilder.getPlugin();
-				Xpp3Dom configuration = (Xpp3Dom) enforcerPlugin.getConfiguration();
+	private static <T> void enforceProjectProperties(MavenSession session, BuildPluginManager pluginManager, MavenProject mavenProject, Logger logger, Class<T> fromClass) throws MavenExecutionException {
+		EnforcerPluginBuilder pluginBuilder = new EnforcerPluginBuilder();
 
-				if (configuration != null) {
-					executeMojo(
-						enforcerPlugin,
-						"enforce",
-						configuration,
-						executionEnvironment(mavenProject, session, pluginManager)
-					);
-				}
+		try {
+			Xpp3Dom configuration = pluginBuilder.addConfigurationFromClasspathForPackaging(session, mavenProject, fromClass);
+			if (configuration != null) {
+				Plugin enforcerPlugin = pluginBuilder.getPlugin();
+
+				executeMojo(
+					enforcerPlugin,
+					"enforce",
+					configuration,
+					executionEnvironment(mavenProject, session, pluginManager)
+				);
 			}
 		} catch (MojoExecutionException e) {
-			logger.fatalError(Messages.ENFORCER_RULES_FAILURE);
-			logger.fatalError(Messages.MESSAGE_SPACE);
-			String message = e.getCause().getLocalizedMessage();
-			if (message != null) {
-				message = message.substring(message.indexOf("\n")+1);
-			}
-			throw new MavenExecutionException(message, new MojoExecutionException(message, new Throwable(message)));
+			logger.error(Messages.MESSAGE_SPACE);
+			logger.error(mavenProject.getGroupId() + ":" + mavenProject.getArtifactId() + " failed.");
+			enforceFailure(e, logger);
 		}
 	}
 
+	private static void enforceFailure(Exception e, Logger logger) throws MavenExecutionException {
+		logger.fatalError(Messages.MESSAGE_SPACE);
+		logger.fatalError(Messages.ENFORCER_RULES_FAILURE);
+		logger.fatalError(Messages.MESSAGE_SPACE);
+		String message = e.getCause().getLocalizedMessage();
+		if (message != null) {
+			message = message.substring(message.indexOf("\n")+1);
+		}
+		throw new MavenExecutionException(message, new MojoExecutionException(message, new Throwable(message)));
+	}
 }

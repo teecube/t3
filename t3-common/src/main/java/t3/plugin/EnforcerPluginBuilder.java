@@ -49,24 +49,23 @@ public class EnforcerPluginBuilder extends PluginBuilder {
 
 	public Xpp3Dom getDefaultEnforcerConfiguration() {
 		Xpp3Dom configuration = new Xpp3Dom("configuration");
-		Xpp3Dom fail = new Xpp3Dom("fail");
-		fail.setValue("false");
+//		Xpp3Dom fail = new Xpp3Dom("fail");
+//		fail.setValue("false");
 		Xpp3Dom rules = new Xpp3Dom("rules");
-		Xpp3Dom skip = new Xpp3Dom("skip");
-		skip.setValue("true");
-//		Xpp3Dom rules = new Xpp3Dom("rules");
-//		Xpp3Dom alwaysPass = new Xpp3Dom("AlwaysPass");
-//		rules.addChild(alwaysPass);
-//		configuration.addChild(rules);
-		configuration.addChild(fail);
+//		Xpp3Dom skip = new Xpp3Dom("skip");
+//		skip.setValue("true");
+//		configuration.addChild(fail);
 		configuration.addChild(rules);
-		configuration.addChild(skip);
+//		configuration.addChild(skip);
 
 		return configuration;
 	}
 
-	public boolean addConfigurationFromClasspathForPackaging(MavenSession session, MavenProject mavenProject, Class<?> fromClass) {
-		if (mavenProject == null) return false;
+	public Xpp3Dom addConfigurationFromClasspathForPackaging(MavenSession session, MavenProject mavenProject, Class<?> fromClass) {
+		boolean enabled = false;
+		if (mavenProject == null) return null;
+
+		Xpp3Dom configuration = getDefaultEnforcerConfiguration();
 
 		Set<Class<?>> mojos = AnnotationsHelper.getTypesAnnotatedWith(fromClass, MojoRuntime.class);
 		for (Class<?> clazz : mojos) {			
@@ -75,18 +74,38 @@ public class EnforcerPluginBuilder extends PluginBuilder {
 
 			for (Parameter parameter : parametersAnnotatations) {
 				if (parameter.isRequired()) {
-					System.out.println(parameter.getField());
-					System.out.println(parameter.getProperty());
+					Xpp3Dom rule = new Xpp3Dom("requireProperty");
+					Xpp3Dom property = new Xpp3Dom("property");
+					property.setValue(parameter.getProperty());
+					Xpp3Dom message = new Xpp3Dom("message");
+					message.setValue(parameter.getDescription());
+					Xpp3Dom regex = new Xpp3Dom("regex");
+					regex.setValue(".*");
+					Xpp3Dom regexMessage = new Xpp3Dom("regexMessage");
+					regexMessage.setValue(parameter.getDescription());
+					rule.addChild(property);
+					rule.addChild(message);
+					rule.addChild(regex);
+					rule.addChild(regexMessage);
+					configuration.getChild("rules").addChild(rule);
+					enabled = true;
 				}
 //				System.out.println(field.getName());
 			}
 		}
+		
+		if (enabled) {
+			addEnforcerPluginExecution(mavenProject, configuration);
+			return configuration;
+		}
+		else {
+			return null;
+		}
+	}
 
+	private void addEnforcerPluginExecution(MavenProject mavenProject, Xpp3Dom configuration) {
 		List<String> goals = new ArrayList<String>();
 		goals.add("enforce");
-
-//		Xpp3Dom configuration = getDefaultEnforcerConfiguration();
-		Xpp3Dom configuration = new Xpp3Dom("");
 
 		PluginExecution pe = new PluginExecution();
 		pe.setId("enforce-" + mavenProject.getPackaging());
@@ -95,12 +114,7 @@ public class EnforcerPluginBuilder extends PluginBuilder {
 
 		if (pe != null) {
 			this.plugin.getExecutions().add(pe);
-//			this.plugin.setConfiguration(Xpp3Dom.mergeXpp3Dom((Xpp3Dom) this.plugin.getConfiguration(), configuration));
-			addConfiguration(configuration);
-			this.plugin.setVersion("1.3.1");
-		}
-
-		return false;
+		}		
 	}
 
 }
