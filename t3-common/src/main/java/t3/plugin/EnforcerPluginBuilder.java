@@ -26,7 +26,7 @@ import org.apache.maven.model.PluginExecution;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
-import t3.plugin.annotations.MojoRuntime;
+import t3.plugin.annotations.Mojo;
 import t3.plugin.annotations.Parameter;
 import t3.plugin.annotations.helpers.AnnotationsHelper;
 import t3.plugin.annotations.helpers.ParametersHelper;
@@ -67,7 +67,7 @@ public class EnforcerPluginBuilder extends PluginBuilder {
 
 		Xpp3Dom configuration = getDefaultEnforcerConfiguration();
 
-		Set<Class<?>> mojos = AnnotationsHelper.getTypesAnnotatedWith(fromClass, MojoRuntime.class);
+		Set<Class<?>> mojos = AnnotationsHelper.getTypesAnnotatedWith(fromClass, Mojo.class);
 		for (Class<?> clazz : mojos) {			
 			Set<Field> parametersAnnotatedFields = AnnotationsHelper.getFieldsAnnotatedWith(clazz, Parameter.class);
 			Set<ParameterImpl> parametersAnnotatations = ParametersHelper.getFieldsAnnotatedWith(parametersAnnotatedFields, Parameter.class);

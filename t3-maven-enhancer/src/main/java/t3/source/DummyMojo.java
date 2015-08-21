@@ -16,10 +16,10 @@
  */
 package t3.source;
 
-import t3.plugin.annotations.MojoRuntime;
+import t3.plugin.annotations.Mojo;
 import t3.plugin.annotations.Parameter;
 
-@MojoRuntime(name = "dummy")
+@Mojo(name = "dummy")
 public class DummyMojo {
 
 //	@Getter @Setter private int age = 10;
