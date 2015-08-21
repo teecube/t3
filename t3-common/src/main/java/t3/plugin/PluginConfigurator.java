@@ -261,6 +261,7 @@ public class PluginConfigurator {
 	 * @param logger
 	 */
 	public static <T> void addPluginsParameterInModel(MavenProject mavenProject, Class<T> fromClass, Logger logger) {
+		PluginConfigurator.propertiesManager.setProject(mavenProject);
 		Set<Field> parameters = AnnotationsHelper.getFieldsAnnotatedWith(fromClass, Parameter.class);
 
 		for (Field field : parameters) {

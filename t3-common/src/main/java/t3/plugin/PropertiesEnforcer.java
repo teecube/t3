@@ -118,12 +118,18 @@ public class PropertiesEnforcer {
 			if (configuration != null) {
 				Plugin enforcerPlugin = pluginBuilder.getPlugin();
 
-				executeMojo(
-					enforcerPlugin,
-					"enforce",
-					configuration,
-					executionEnvironment(mavenProject, session, pluginManager)
-				);
+				MavenProject oldCurrentProject = session.getCurrentProject();
+				try {
+					session.setCurrentProject(mavenProject);
+					executeMojo(
+						enforcerPlugin,
+						"enforce",
+						configuration,
+						executionEnvironment(mavenProject, session, pluginManager)
+					);
+				} finally {
+					session.setCurrentProject(oldCurrentProject);
+				}
 			}
 		} catch (MojoExecutionException e) {
 			logger.error(Messages.MESSAGE_SPACE);
