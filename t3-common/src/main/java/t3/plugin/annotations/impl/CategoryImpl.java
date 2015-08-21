@@ -14,18 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3.plugin.parameters;
+package t3.plugin.annotations.impl;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 
 /**
- *
- * @author Mathieu Debove &lt;mad@teecube.org&gt;
- *
- */
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Category {
-	String title();
-	String description() default "";
+*
+* @author Mathieu Debove &lt;mad@teecube.org&gt;
+*
+*/
+public class CategoryImpl {
+
+	private String title;
+	private String description;
+
+	public CategoryImpl(String title, String description) {
+		this.title = title;
+		this.description = description;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 }

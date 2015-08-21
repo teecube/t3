@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3.plugin.parameters;
+package t3.plugin.annotations.impl;
 
 
 /**
@@ -22,7 +22,7 @@ package t3.plugin.parameters;
 * @author Mathieu Debove &lt;mad@teecube.org&gt;
 *
 */
-public class Parameter {
+public class ParameterImpl {
 
 	private String field;
 	private String type;
@@ -33,7 +33,7 @@ public class Parameter {
 	private String category; // only for GlobalParameter
 	private boolean valueGuessedByDefault; // only for GlobalParameter
 
-	public Parameter(String field, String type, String property, String defaultValue, boolean required, String description, String category, boolean valueGuessedByDefault) {
+	public ParameterImpl(String field, String type, String property, String defaultValue, boolean required, String description, String category, boolean valueGuessedByDefault) {
 		this.field = field;
 		this.type = type;
 		this.property = property;

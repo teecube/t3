@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3.plugin.annotations;
+package t3.plugin.annotations.helpers;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -24,7 +24,7 @@ import java.lang.reflect.Proxy;
 import java.util.HashSet;
 import java.util.Set;
 
-import t3.plugin.parameters.Parameter;
+import t3.plugin.annotations.impl.ParameterImpl;
 
 /**
 *
@@ -70,8 +70,8 @@ public class ParametersHelper {
 		}
 	}
 
-	public static <A extends Annotation> Set<Parameter> getFieldsAnnotatedWith(Set<Field> fields, Class<A> parameterAnnotation) {
-		Set<Parameter> result = new HashSet<Parameter>();
+	public static <A extends Annotation> Set<ParameterImpl> getFieldsAnnotatedWith(Set<Field> fields, Class<A> parameterAnnotation) {
+		Set<ParameterImpl> result = new HashSet<ParameterImpl>();
 
 		for (Field field : fields) {
 			field.setAccessible(true);
@@ -104,7 +104,7 @@ public class ParametersHelper {
 				}
 			}
 			if (property != null) {
-				result.add(new Parameter(field.getName(), field.getType().getCanonicalName(), property, defaultValue, required, description, category, valueGuessedByDefault));
+				result.add(new ParameterImpl(field.getName(), field.getType().getCanonicalName(), property, defaultValue, required, description, category, valueGuessedByDefault));
 			}
 		}
 

@@ -26,11 +26,11 @@ import org.apache.maven.model.PluginExecution;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
-import t3.plugin.annotations.AnnotationsHelper;
-import t3.plugin.annotations.ParametersHelper;
-import t3.plugin.parameters.MojoRuntime;
-import t3.plugin.parameters.Parameter;
-import t3.plugin.parameters.ParameterRuntime;
+import t3.plugin.annotations.MojoRuntime;
+import t3.plugin.annotations.Parameter;
+import t3.plugin.annotations.helpers.AnnotationsHelper;
+import t3.plugin.annotations.helpers.ParametersHelper;
+import t3.plugin.annotations.impl.ParameterImpl;
 
 /**
  *
@@ -69,10 +69,10 @@ public class EnforcerPluginBuilder extends PluginBuilder {
 
 		Set<Class<?>> mojos = AnnotationsHelper.getTypesAnnotatedWith(fromClass, MojoRuntime.class);
 		for (Class<?> clazz : mojos) {			
-			Set<Field> parametersAnnotatedFields = AnnotationsHelper.getFieldsAnnotatedWith(clazz, ParameterRuntime.class);
-			Set<Parameter> parametersAnnotatations = ParametersHelper.getFieldsAnnotatedWith(parametersAnnotatedFields, ParameterRuntime.class);
+			Set<Field> parametersAnnotatedFields = AnnotationsHelper.getFieldsAnnotatedWith(clazz, Parameter.class);
+			Set<ParameterImpl> parametersAnnotatations = ParametersHelper.getFieldsAnnotatedWith(parametersAnnotatedFields, Parameter.class);
 
-			for (Parameter parameter : parametersAnnotatations) {
+			for (ParameterImpl parameter : parametersAnnotatations) {
 				if (parameter.isRequired()) {
 					Xpp3Dom rule = new Xpp3Dom("requireProperty");
 					Xpp3Dom property = new Xpp3Dom("property");

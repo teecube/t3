@@ -16,8 +16,8 @@
  */
 package t3;
 
-import t3.plugin.parameters.Categories;
-import t3.plugin.parameters.Category;
+import t3.plugin.annotations.Categories;
+import t3.plugin.annotations.Category;
 
 /**
  *

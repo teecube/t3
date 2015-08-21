@@ -35,9 +35,9 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 import t3.AbstractCommonMojo;
-import t3.plugin.annotations.AnnotationsHelper;
-import t3.plugin.parameters.GlobalParameter;
-import t3.plugin.parameters.ParameterRuntime;
+import t3.plugin.annotations.GlobalParameter;
+import t3.plugin.annotations.Parameter;
+import t3.plugin.annotations.helpers.AnnotationsHelper;
 
 /**
  *
@@ -168,14 +168,14 @@ public class PluginConfigurator {
 
 	/**
 	 * <p>
-	 *  Proxy to call {@code updateProperty} for a {@link ParameterRuntime}.
+	 *  Proxy to call {@code updateProperty} for a {@link Parameter}.
 	 * </p>
 	 *
 	 * @param mavenProject
 	 * @param parameter
 	 * @return
 	 */
-	public static String updateProperty(MavenProject mavenProject, ParameterRuntime parameter) {
+	public static String updateProperty(MavenProject mavenProject, Parameter parameter) {
 		if (parameter == null) return null;
 
 		String property = parameter.property();
@@ -253,7 +253,7 @@ public class PluginConfigurator {
 	/**
 	 * <p>
 	 * Inject values for fields annotated with {@link GlobalParameter} or
-	 * {@link ParameterRuntime} into the Maven model (as properties).
+	 * {@link Parameter} into the Maven model (as properties).
 	 * </p>
 	 *
 	 * @param mavenProject
@@ -261,10 +261,10 @@ public class PluginConfigurator {
 	 * @param logger
 	 */
 	public static <T> void addPluginsParameterInModel(MavenProject mavenProject, Class<T> fromClass, Logger logger) {
-		Set<Field> parameters = AnnotationsHelper.getFieldsAnnotatedWith(fromClass, ParameterRuntime.class);
+		Set<Field> parameters = AnnotationsHelper.getFieldsAnnotatedWith(fromClass, Parameter.class);
 
 		for (Field field : parameters) {
-			ParameterRuntime parameter = field.getAnnotation(ParameterRuntime.class);
+			Parameter parameter = field.getAnnotation(Parameter.class);
 
 			updateProperty(mavenProject, parameter);
 		}
