@@ -18,40 +18,54 @@ package t3.plugin.annotations.replacement;
 
 import static lombok.javac.handlers.JavacHandlerUtil.chainDots;
 
-import org.kohsuke.MetaInfServices;
+import java.lang.annotation.Annotation;
 
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
+import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.ListBuffer;
 
 import lombok.core.AnnotationValues;
-import lombok.core.HandlerPriority;
-import lombok.javac.JavacAnnotationHandler;
 import lombok.javac.JavacNode;
 import lombok.javac.JavacTreeMaker;
-import t3.plugin.annotations.Parameter;
 
-@MetaInfServices(JavacAnnotationHandler.class)
-@HandlerPriority(1024)
-public class HandleParameterRuntime extends JavacAnnotationHandler<Parameter> {
+/**
+*
+* @author Mathieu Debove &lt;mad@teecube.org&gt;
+*
+*/
+public class AnnotationReplacementHelper {
 
-	@Override
-	public void handle(final AnnotationValues<Parameter> annotation, final JCAnnotation ast, final JavacNode annotationNode) {
+	public static <T extends Annotation> void handle(final AnnotationValues<T> annotation, final JCAnnotation ast, final JavacNode annotationNode, String annotationCanonicalName, java.util.List<String> replacementClassElements) {
 		JavacTreeMaker treeMaker = annotationNode.getTreeMaker();
 		JavacNode owner = annotationNode.up(); // the field where the @Annotation applies
-		JCVariableDecl fieldDecl = (JCVariableDecl) owner.get();
+		List<JCAnnotation> annotations = null;
+		switch (owner.get().getClass().getSimpleName()) {
+		case "JCClassDecl":
+			JCClassDecl classDecl = (JCClassDecl) owner.get();
+			annotations = classDecl.mods.annotations;
+			break;
+		case "JCVariableDecl":
+			JCVariableDecl fieldDecl = (JCVariableDecl) owner.get();
+			annotations = fieldDecl.mods.annotations;
+			break;
+
+		default:
+			break;
+		}
 		JCAnnotation parameterRuntime = null;
-		for (JCAnnotation a : fieldDecl.mods.annotations) {
-			if (a.annotationType.type.tsym.getQualifiedName().toString().equals(Parameter.class.getCanonicalName())) {
+		for (JCAnnotation a : annotations) {
+			if (a.annotationType.type.tsym.getQualifiedName().toString().equals(annotationCanonicalName)) {
 				parameterRuntime = a;
 			}
 		}
 
 		if (parameterRuntime != null) {
-			JCExpression mavenParameterAnnotationType = chainDots(owner, "org", "apache", "maven", "plugins", "annotations", "Parameter");
+			JCExpression mavenParameterAnnotationType = chainDots(owner, replacementClassElements.toArray(new String[0]));
 
 			ListBuffer<JCExpression> mavenParameterFields = new ListBuffer<JCExpression>();
 			for (JCExpression arg : parameterRuntime.args) {
@@ -61,11 +75,22 @@ public class HandleParameterRuntime extends JavacAnnotationHandler<Parameter> {
 				mavenParameterFields.add(treeMaker.Assign(treeMaker.Ident(annotationNode.toName(ident.name.toString())), argument.rhs));
 			}
 
-			// @Parameter
-			JCAnnotation mavenParameterAnnotation = treeMaker.Annotation(mavenParameterAnnotationType, mavenParameterFields.toList());
+			JCAnnotation addedAnnotation = treeMaker.Annotation(mavenParameterAnnotationType, mavenParameterFields.toList());
 
-			fieldDecl.mods.annotations = fieldDecl.mods.annotations.append(mavenParameterAnnotation);
-			
+			switch (owner.get().getClass().getSimpleName()) {
+			case "JCClassDecl":
+				JCClassDecl classDecl = (JCClassDecl) owner.get();
+				classDecl.mods.annotations = classDecl.mods.annotations.append(addedAnnotation);;
+				break;
+			case "JCVariableDecl":
+				JCVariableDecl fieldDecl = (JCVariableDecl) owner.get();
+				fieldDecl.mods.annotations = fieldDecl.mods.annotations.append(addedAnnotation);;
+				break;
+
+			default:
+				break;
+			}
+
 			owner.getAst().setChanged();
 		}
 	}

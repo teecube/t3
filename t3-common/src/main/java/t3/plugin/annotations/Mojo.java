@@ -44,7 +44,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 @Retention( RetentionPolicy.RUNTIME )
 @Target( ElementType.TYPE )
 @Inherited
-public @interface MojoRuntime
+public @interface Mojo
 {
     /**
      * goal name (required).
