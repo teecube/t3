@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3.plugin.parameters;
+package t3.plugin.annotations.injection;
 
 import java.lang.reflect.Field;
 
@@ -28,6 +28,8 @@ import com.google.inject.spi.TypeListener;
 
 import t3.AbstractCommonMojo;
 import t3.plugin.PluginConfigurator;
+import t3.plugin.annotations.GlobalParameter;
+import t3.plugin.annotations.Parameter;
 
 /**
  *
@@ -56,8 +58,8 @@ public class ParametersListener<T> implements TypeListener {
 				if (field.isAnnotationPresent(GlobalParameter.class)) {
 					GlobalParameter globalParameter = field.getAnnotation(GlobalParameter.class);
 					value = PluginConfigurator.updateProperty(mavenProject, globalParameter);
-				} else if (field.isAnnotationPresent(ParameterRuntime.class)) {
-					ParameterRuntime mojoParameter = field.getAnnotation(ParameterRuntime.class);
+				} else if (field.isAnnotationPresent(Parameter.class)) {
+					Parameter mojoParameter = field.getAnnotation(Parameter.class);
 					value = PluginConfigurator.updateProperty(mavenProject, mojoParameter);
 				} else {
 					continue;

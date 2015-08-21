@@ -14,20 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3;
+package t3.source;
 
-import java.io.File;
+import t3.plugin.annotations.MojoRuntime;
+import t3.plugin.annotations.Parameter;
 
-import t3.plugin.annotations.GlobalParameter;
+@MojoRuntime(name = "dummy")
+public class DummyMojo {
 
-/**
- *
- * @author Mathieu Debove &lt;mad@teecube.org&gt;
- *
- */
-public class AbstractTIBCOMojo extends AbstractCommonMojo {
+//	@Getter @Setter private int age = 10;
 
-	@GlobalParameter (property = CommonMojoInformation.tibcoHome, required = true, description = CommonMojoInformation.tibcoHome_description, category = CommonMojoInformation.tibcoCategory, valueGuessedByDefault = false)
-	protected File tibcoHOME;
-
+	@Parameter (property = "dummy.property", defaultValue = "")
+	private String parameter;
 }

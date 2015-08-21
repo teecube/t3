@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3.plugin.parameters;
+package t3.plugin.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -24,21 +24,31 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * This annotation is used to add a global parameter to one or several Mojos.
+ * This annotation is a clone of the
+ * {@link org.apache.maven.plugins.annotations.Parameter} annotation but with
+ * a <b>RUNTIME retention policy</b>.
+ * </p>
+ * <p>
+ * The <b>RUNTIME retention policy</b> allows to read the annotation parameters
+ * at run-time and to inject properly the default values for builtin properties
+ * in the Maven model.
  * </p>
  *
  * @author Mathieu Debove &lt;mad@teecube.org&gt;
  *
  */
-
-@Retention(RetentionPolicy.RUNTIME)
+@Retention( RetentionPolicy.RUNTIME ) // RUNTIME retention policy
 @Target( { ElementType.FIELD } )
 @Inherited
-public @interface GlobalParameter {
-	String property();
-	String defaultValue() default "";
-	boolean required() default false;
-	String description() default "";
-	String category() default "";
-	boolean valueGuessedByDefault() default true;
+public @interface Parameter
+{
+    String alias() default "";
+
+    String property();
+
+    String defaultValue();
+
+    boolean required() default false;
+
+    boolean readonly() default false;
 }

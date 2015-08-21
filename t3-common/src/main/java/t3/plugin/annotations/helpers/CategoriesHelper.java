@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3.plugin.annotations;
+package t3.plugin.annotations.helpers;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
@@ -23,9 +23,9 @@ import java.lang.reflect.Proxy;
 import java.util.HashSet;
 import java.util.Set;
 
-import t3.plugin.parameters.Categories;
-import t3.plugin.parameters.Category;
-import t3.plugin.parameters.CategoryImpl;
+import t3.plugin.annotations.Categories;
+import t3.plugin.annotations.Category;
+import t3.plugin.annotations.impl.CategoryImpl;
 
 /**
 *

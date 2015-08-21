@@ -40,11 +40,11 @@ import org.reflections.util.ClasspathHelper;
 import org.rendersnake.HtmlCanvas;
 import org.rendersnake.Renderable;
 
-import t3.plugin.annotations.CategoriesHelper;
-import t3.plugin.annotations.AnnotationsHelper;
-import t3.plugin.annotations.ParametersHelper;
-import t3.plugin.parameters.CategoryImpl;
-import t3.plugin.parameters.Parameter;
+import t3.plugin.annotations.helpers.AnnotationsHelper;
+import t3.plugin.annotations.helpers.CategoriesHelper;
+import t3.plugin.annotations.helpers.ParametersHelper;
+import t3.plugin.annotations.impl.CategoryImpl;
+import t3.plugin.annotations.impl.ParameterImpl;
 
 @Mojo(name = "generate-global-doc", defaultPhase = LifecyclePhase.POST_SITE, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
@@ -81,11 +81,11 @@ public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
 	private List<GlobalParameter> getGlobalParameters() throws MalformedURLException, DependencyResolutionRequiredException, ClassNotFoundException {
 		List<GlobalParameter> globalParameters = new ArrayList<GlobalParameter>();
 
-		Set<Field> globalParametersAnnotatedFields = AnnotationsHelper.getFieldsAnnotatedWith(getBootstrapClass(), t3.plugin.parameters.GlobalParameter.class, ClasspathHelper.contextClassLoader(), getClassLoader());
-		Set<Parameter> globalParametersAnnotatations = ParametersHelper.getFieldsAnnotatedWith(globalParametersAnnotatedFields, t3.plugin.parameters.GlobalParameter.class);
+		Set<Field> globalParametersAnnotatedFields = AnnotationsHelper.getFieldsAnnotatedWith(getBootstrapClass(), t3.plugin.annotations.GlobalParameter.class, ClasspathHelper.contextClassLoader(), getClassLoader());
+		Set<ParameterImpl> globalParametersAnnotatations = ParametersHelper.getFieldsAnnotatedWith(globalParametersAnnotatedFields, t3.plugin.annotations.GlobalParameter.class);
 
 		boolean firstClass = true;
-		for (Parameter parameter : globalParametersAnnotatations) {
+		for (ParameterImpl parameter : globalParametersAnnotatations) {
 			firstClass = !firstClass;
 			globalParameters.add(new GlobalParameter(parameter.getField(), parameter.getType(), parameter.getProperty(), parameter.getDefaultValue(), "-", parameter.getDescription(), parameter.getCategory(), parameter.isValueGuessedByDefault(), firstClass));
 		}
@@ -105,7 +105,7 @@ public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
 	private List<Category> getParametersCategories() throws MalformedURLException, ClassNotFoundException, DependencyResolutionRequiredException {
 		List<Category> parametersCategories = new ArrayList<Category>();
 
-		Set<Class<?>> parametersCategoriesAnnotatedTypes = AnnotationsHelper.getTypesAnnotatedWith(getBootstrapClass(), t3.plugin.parameters.Categories.class, ClasspathHelper.contextClassLoader(), getClassLoader());
+		Set<Class<?>> parametersCategoriesAnnotatedTypes = AnnotationsHelper.getTypesAnnotatedWith(getBootstrapClass(), t3.plugin.annotations.Categories.class, ClasspathHelper.contextClassLoader(), getClassLoader());
 		Set<CategoryImpl> parametersCategoriesAnnotatations = CategoriesHelper.getCategories(parametersCategoriesAnnotatedTypes);
 
 		for (CategoryImpl parameter : parametersCategoriesAnnotatations) {

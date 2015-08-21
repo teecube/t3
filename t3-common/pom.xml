@@ -100,6 +100,30 @@
 			<artifactId>joox</artifactId>
 			<version>1.3.0</version>
 		</dependency>
+
+		<!-- Maven @Annotation (such as @Parameter and @Mojo) replacement -->
+		<dependency>
+			<groupId>com.sun</groupId>
+			<artifactId>tools</artifactId>
+			<version>1.4.2</version>
+			<scope>system</scope>
+			<systemPath>${java.home}/../lib/tools.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.14.8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok-utils</artifactId>
+			<version>1.14.8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.kohsuke.metainf-services</groupId>
+			<artifactId>metainf-services</artifactId>
+			<version>1.6</version>
+		</dependency>
 	</dependencies>
 
 </project>

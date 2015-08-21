@@ -38,7 +38,7 @@ import org.codehaus.plexus.logging.LoggerManager;
 
 import t3.AbstractCommonMojo;
 import t3.MojosFactory;
-import t3.plugin.parameters.ParametersListener;
+import t3.plugin.annotations.injection.ParametersListener;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;

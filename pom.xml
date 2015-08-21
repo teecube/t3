@@ -1408,25 +1408,11 @@
 						</includes>
 					</resource>
 				</resources>
-				<pluginManagement>
-					<plugins>
-						<plugin>
-							<groupId>${ecosystemGroupIdCommon}</groupId>
-							<artifactId>t3-maven-enhancer</artifactId>
-							<version>0.0.1-SNAPSHOT</version>
-							<executions>
-								<execution>
-									<id>duplicate-annotations</id>
-									<goals>
-										<goal>duplicate-annotations</goal>
-									</goals>
-									<phase>process-sources</phase>
-								</execution>
-							</executions>
-						</plugin>
-					</plugins>
-				</pluginManagement>
 				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-plugin-plugin</artifactId>

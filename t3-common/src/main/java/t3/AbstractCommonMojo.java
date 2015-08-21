@@ -38,7 +38,7 @@ import org.apache.maven.settings.Profile;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.shared.filtering.MavenResourcesFiltering;
 
-import t3.plugin.parameters.GlobalParameter;
+import t3.plugin.annotations.GlobalParameter;
 
 public class AbstractCommonMojo extends AbstractMojo {
 
