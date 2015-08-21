@@ -104,7 +104,7 @@ public class XMLMarshall<Type, Factory> {
 			StringBuffer xmlStr = new StringBuffer( "<?xml version=\"1.0\"?><application xmlns=\"http://www.tibco.com/xmlns/ApplicationManagement\" name=\"\"></application>");
 			o =  jaxbUnmarshaller.unmarshal(new StreamSource(new StringReader(xmlStr.toString())));
 		} else {
-			o =  jaxbUnmarshaller.unmarshal(xmlFile);			
+			o =  jaxbUnmarshaller.unmarshal(xmlFile);
 		}
 
 		this.object = (Type) o;
@@ -135,6 +135,13 @@ public class XMLMarshall<Type, Factory> {
 
 		m.marshal(object, outFilter);
 	}
+
+	public void saveWithoutFilter() throws JAXBException, UnsupportedEncodingException, FileNotFoundException {
+		Marshaller m = jaxbContext.createMarshaller();
+		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		m.marshal(object, xmlFile);
+	}
+
 
 	protected Object createElement(String path, String elementName, String nameAttribute, String value, Object parent) {
 		return null; // to be overridden
