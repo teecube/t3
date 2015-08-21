@@ -30,7 +30,10 @@ public abstract class Messages {
 	public static final String SKIPPING = "Skipping.";
 
 	public static final String ENFORCING_RULES = MESSAGE_PREFIX + "Enforcing rules...";
-	public static final String ENFORCED_RULES = MESSAGE_EMPTY_PREFIX + "Global Rules are validated.";
+	public static final String ENFORCING_GLOBAL_RULES = MESSAGE_EMPTY_PREFIX + "Global Rules...";
+	public static final String ENFORCED_GLOBAL_RULES = MESSAGE_EMPTY_PREFIX + "Global Rules are validated.";
+	public static final String ENFORCING_PER_PROJECT_RULES = MESSAGE_EMPTY_PREFIX + "Project Rules...";
+	public static final String ENFORCED_PER_PROJECT_RULES = MESSAGE_EMPTY_PREFIX + "Projects Rules are validated.";
 	public static final String ENFORCER_RULES_FAILURE = MESSAGE_EMPTY_PREFIX + "The required rules are invalid.";
 
 	public static final String ARTIFACT_NOT_FOUND = "The artifact was not found."; // improve this message
