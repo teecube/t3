@@ -64,12 +64,24 @@ public class PluginBuilder {
 
 	public boolean addConfigurationFromClasspath() throws MojoExecutionException {
 		String filename = "/plugins-configuration/" +
-						  this.plugin.getGroupId() + "/" +
-						  this.plugin.getArtifactId()  + ".xml";
+				this.plugin.getGroupId() + "/" +
+				this.plugin.getArtifactId()  + ".xml";
 
 		InputStream configStream = PluginBuilder.class.getResourceAsStream(filename);
 		if (configStream == null) return false;
 
+		return addConfigurationFromClasspath(configStream);
+	}
+
+	public boolean addConfigurationFromClasspath(String configPath) throws MojoExecutionException {
+		configPath = "/" + configPath.replace("\\", "/");
+		InputStream configStream = PluginBuilder.class.getResourceAsStream(configPath);
+		if (configStream == null) return false;
+
+		return addConfigurationFromClasspath(configStream);
+	}
+
+	public boolean addConfigurationFromClasspath(InputStream configStream) throws MojoExecutionException {
 		try {
 			String configString = IOUtils.toString(configStream);
 			Xpp3Dom pluginConfiguration = Xpp3DomBuilder.build(new ByteArrayInputStream(configString.getBytes()), "UTF-8"); // FIXME: encoding
