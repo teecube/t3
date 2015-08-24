@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
@@ -58,7 +59,7 @@ public class PluginConfigurator {
 	 * @param fromClass
 	 * @return
 	 */
-	public static <T> List<File> getPluginsConfigurationFromClasspath(Logger logger, Class<T> fromClass) {
+	public static <T> List<File> getPluginsConfigurationFromClasspath(MavenProject mavenProject, Logger logger, Class<T> fromClass) {
 		List<File> result = new ArrayList<File>();
 
 		Reflections reflections = new Reflections(new ConfigurationBuilder()
@@ -71,7 +72,7 @@ public class PluginConfigurator {
 
 		for (ListIterator<String> it = files.listIterator(); it.hasNext();) {
 			String file = (String) it.next();
-			if (!file.startsWith("plugins-configuration/")) {
+			if (!file.startsWith("plugins-configuration/default") && !file.startsWith("plugins-configuration/packaging/" + mavenProject.getPackaging().trim())) {
 				it.remove();
 			}
 		}
@@ -79,6 +80,8 @@ public class PluginConfigurator {
 		for (String file : files) {
 			result.add(new File(file));
 		}
+
+		Collections.sort(result);
 
 		logger.debug("Adding plugins from classpath: " + result.toString());
 
@@ -108,7 +111,7 @@ public class PluginConfigurator {
 				it.set(plugin);
 			}
 		} else {
-			List<File> pluginsConfiguration = PluginConfigurator.getPluginsConfigurationFromClasspath(logger, fromClass);
+			List<File> pluginsConfiguration = PluginConfigurator.getPluginsConfigurationFromClasspath(mavenProject, logger, fromClass);
 			for (File file : pluginsConfiguration) {
 				String artifactId = file.getName().replace(".xml", "");
 				String groupId = file.getParentFile().getName();
@@ -123,7 +126,7 @@ public class PluginConfigurator {
 				} else {
 					pluginBuilder = new PluginBuilder(plugin);
 				}
-				pluginBuilder.addConfigurationFromClasspath();
+				pluginBuilder.addConfigurationFromClasspath(file.getPath());
 			}
 		}
 	}
