@@ -34,10 +34,10 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 import t3.Messages;
 
 /**
-*
-* @author Mathieu Debove &lt;mad@teecube.org&gt;
-*
-*/
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 public class PropertiesEnforcer {
 	private static void setExecutablesExtension(MavenSession session) {
 		String executablesExtension = "";

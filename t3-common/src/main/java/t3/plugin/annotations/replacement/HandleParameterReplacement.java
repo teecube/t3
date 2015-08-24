@@ -30,20 +30,20 @@ import lombok.javac.JavacNode;
 import t3.plugin.annotations.Parameter;
 
 /**
-* <p>
-* This class will add a {@link org.apache.maven.plugins.annotations.Parameter}
-* annotation wherever a {@link t3.plugin.annotations.Parameter} is found.<br />
-* <br />
-* The annotation created is a duplicate.<br />
-* <br />
-* It allows to have both annotations: one is the standard Maven one (used by
-* Maven core and to generate Maven site for instance), the other is a copy with
-* a <b>RUNTIME retention policy</b>.
-* </p>
-*
-* @author Mathieu Debove &lt;mad@teecube.org&gt;
-*
-*/
+ * <p>
+ * This class will add a {@link org.apache.maven.plugins.annotations.Parameter}
+ * annotation wherever a {@link t3.plugin.annotations.Parameter} is found.<br />
+ * <br />
+ * The annotation created is a duplicate.<br />
+ * <br />
+ * It allows to have both annotations: one is the standard Maven one (used by
+ * Maven core and to generate Maven site for instance), the other is a copy with
+ * a <b>RUNTIME retention policy</b>.
+ * </p>
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 @MetaInfServices(JavacAnnotationHandler.class)
 @HandlerPriority(1024)
 public class HandleParameterReplacement extends JavacAnnotationHandler<Parameter> {

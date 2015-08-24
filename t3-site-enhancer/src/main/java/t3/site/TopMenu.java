@@ -18,6 +18,11 @@ package t3.site;
 
 import java.util.List;
 
+/**
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 public class TopMenu {
 	public String name;
 	public String url;

@@ -23,6 +23,11 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.joox.JOOX;
 import org.joox.Match;
 
+/**
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 @Mojo(name = "update-doc-menu", defaultPhase = LifecyclePhase.POST_SITE)
 public class UpdateDocumentationMenuMojo extends AbstractReplaceAllMojo {
 

@@ -29,6 +29,11 @@ import org.apache.maven.project.MavenProject;
 import org.rendersnake.HtmlCanvas;
 import org.rendersnake.Renderable;
 
+/**
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 @Mojo(name = "update-brand", defaultPhase = LifecyclePhase.POST_SITE)
 public class UpdateBrandMojo extends AbstractReplaceAllMojo {
 

@@ -32,6 +32,11 @@ import org.joox.JOOX;
 import org.joox.Match;
 import org.w3c.dom.Attr;
 
+/**
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 @Mojo(name = "update-general", defaultPhase = LifecyclePhase.POST_SITE)
 public class UpdateGeneralMojo extends AbstractReplaceAllMojo {
 

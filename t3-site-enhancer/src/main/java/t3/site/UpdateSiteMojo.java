@@ -34,6 +34,11 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.rendersnake.HtmlCanvas;
 import org.rendersnake.Renderable;
 
+/**
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 @Mojo(name = "update-site", defaultPhase = LifecyclePhase.POST_SITE)
 public class UpdateSiteMojo extends AbstractReplaceAllMojo {
 

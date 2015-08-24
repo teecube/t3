@@ -18,10 +18,10 @@ package t3.plugin.annotations.impl;
 
 
 /**
-*
-* @author Mathieu Debove &lt;mad@teecube.org&gt;
-*
-*/
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 public class CategoryImpl {
 
 	private String title;

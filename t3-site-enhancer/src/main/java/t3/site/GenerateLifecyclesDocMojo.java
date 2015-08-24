@@ -47,6 +47,11 @@ import org.xml.sax.SAXException;
 
 import t3.AbstractCommonMojo;
 
+/**
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 @Mojo(name = "generate-lifecycles-doc", defaultPhase = LifecyclePhase.POST_SITE, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class GenerateLifecyclesDocMojo extends AbstractNewPageMojo {
 

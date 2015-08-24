@@ -63,6 +63,11 @@ import org.xml.sax.InputSource;
 
 import t3.AbstractCommonMojo;
 
+/**
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 public abstract class AbstractSiteMojo extends AbstractCommonMojo {
 
 	@Parameter (defaultValue = "${localRepository}", readonly = true, required = true)

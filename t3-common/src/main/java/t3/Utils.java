@@ -24,10 +24,10 @@ import org.apache.maven.model.FileSet;
 import org.codehaus.plexus.util.FileUtils;
 
 /**
-*
-* @author Mathieu Debove &lt;mad@teecube.org&gt;
-*
-*/
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 public class Utils {
 
     private static String toCommaSeparatedString(List<String> strings) {

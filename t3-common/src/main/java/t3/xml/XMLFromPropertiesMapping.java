@@ -16,6 +16,11 @@
  */
 package t3.xml;
 
+/**
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 public interface XMLFromPropertiesMapping {
 
 	public Object addParameter(String key, String value);

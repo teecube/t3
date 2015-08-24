@@ -21,6 +21,11 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
+/**
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 @Mojo(name = "prepare-general", defaultPhase = LifecyclePhase.PRE_SITE)
 public class PrepareGeneralMojo extends AbstractSiteMojo {
 

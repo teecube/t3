@@ -25,6 +25,11 @@ import org.apache.maven.model.FileSet;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
+/**
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 public abstract class AbstractReplaceAllMojo extends AbstractSiteMojo {
 
 	public abstract void processHTMLFile(File htmlFile) throws Exception;

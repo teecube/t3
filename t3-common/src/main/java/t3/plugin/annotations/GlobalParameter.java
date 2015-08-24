@@ -30,7 +30,6 @@ import java.lang.annotation.Target;
  * @author Mathieu Debove &lt;mad@teecube.org&gt;
  *
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target( { ElementType.FIELD } )
 @Inherited
