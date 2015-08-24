@@ -60,7 +60,7 @@
 
 	<modules>
 		<module>t3-common</module>
-		<module>t3-maven-enhancer</module>
+		<module>t3-site-enhancer</module>
 	</modules>
 
 	<build>
@@ -1257,7 +1257,7 @@
 					<plugins>
 						<plugin>
 							<groupId>${ecosystemGroupIdCommon}</groupId>
-							<artifactId>t3-maven-enhancer</artifactId>
+							<artifactId>t3-site-enhancer</artifactId>
 							<version>0.0.1-SNAPSHOT</version>
 							<configuration>
 								<topMenus>
@@ -1360,7 +1360,7 @@
 					</plugin>
 					<plugin>
 						<groupId>${ecosystemGroupIdCommon}</groupId>
-						<artifactId>t3-maven-enhancer</artifactId>
+						<artifactId>t3-site-enhancer</artifactId>
 						<inherited>false</inherited>
 					</plugin>
 				</plugins>
