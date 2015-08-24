@@ -40,6 +40,11 @@ import org.apache.maven.shared.filtering.MavenResourcesFiltering;
 
 import t3.plugin.annotations.GlobalParameter;
 
+/**
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 public class AbstractCommonMojo extends AbstractMojo {
 
 	@GlobalParameter (property = "executables.extension", required = true, category = CommonMojoInformation.systemCategory)
@@ -237,6 +242,12 @@ public class AbstractCommonMojo extends AbstractMojo {
 			if (mavenProject.getFile() != null && mavenProject.getFile().getParentFile() != null && mavenProject.getFile().getParentFile().isDirectory()) {
 				result = mavenProject.getFile().getParentFile().getAbsolutePath();
 			}
+		} else if (result == null && ("project.groupId".equals(propertyName))) {
+			result = mavenProject.getGroupId();
+		} else if (result == null && ("project.artifactId".equals(propertyName))) {
+			result = mavenProject.getArtifactId();
+		} else if (result == null && ("project.version".equals(propertyName))) {
+			result = mavenProject.getVersion();
 		}
 
 		return result;
@@ -281,11 +292,27 @@ public class AbstractCommonMojo extends AbstractMojo {
 		StringBuffer sb = new StringBuffer();
 
 		while (m.find()) {
-			String propertyName = m.group(1);
-			String propertyValue = getPropertyValue(propertyName);
+			String propertyKey = m.group(1);
+			String propertyValue = getPropertyValue(propertyKey);
 			if (propertyValue != null) {
 			    m.appendReplacement(sb, Matcher.quoteReplacement(propertyValue));
 			}
+		}
+		m.appendTail(sb);
+		string = sb.toString();
+
+		return string;
+	}
+
+	public String replaceProperty(String string, String propertyKey, String propertyValue) {
+		if (string == null || propertyKey == null || propertyValue == null) return null;
+
+		Matcher m = Pattern.compile("\\$\\{" + propertyKey + "\\}").matcher(string);
+
+		StringBuffer sb = new StringBuffer();
+
+		while (m.find()) {
+			m.appendReplacement(sb, Matcher.quoteReplacement(propertyValue));
 		}
 		m.appendTail(sb);
 		string = sb.toString();

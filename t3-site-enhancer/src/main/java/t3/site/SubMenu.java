@@ -16,6 +16,11 @@
  */
 package t3.site;
 
+/**
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 public class SubMenu {
 	public String name;
 	public String url;

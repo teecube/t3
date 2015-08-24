@@ -34,10 +34,10 @@ import lombok.javac.JavacNode;
 import lombok.javac.JavacTreeMaker;
 
 /**
-*
-* @author Mathieu Debove &lt;mad@teecube.org&gt;
-*
-*/
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 public class AnnotationReplacementHelper {
 
 	public static <T extends Annotation> void handle(final AnnotationValues<T> annotation, final JCAnnotation ast, final JavacNode annotationNode, String annotationCanonicalName, java.util.List<String> replacementClassElements) {

@@ -32,6 +32,11 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.rendersnake.HtmlCanvas;
 import org.xml.sax.SAXException;
 
+/**
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 public abstract class AbstractNewPageMojo extends AbstractSiteMojo {
 
 	protected ClassLoader getClassLoader() throws MalformedURLException, DependencyResolutionRequiredException {

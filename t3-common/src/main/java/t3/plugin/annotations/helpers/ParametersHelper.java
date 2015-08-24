@@ -27,10 +27,10 @@ import java.util.Set;
 import t3.plugin.annotations.impl.ParameterImpl;
 
 /**
-*
-* @author Mathieu Debove &lt;mad@teecube.org&gt;
-*
-*/
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 public class ParametersHelper {
 
 	private static String getProperty(Annotation annotation) {

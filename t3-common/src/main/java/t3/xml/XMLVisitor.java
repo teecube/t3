@@ -16,6 +16,11 @@
  */
 package t3.xml;
 
+/**
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 public abstract class XMLVisitor<T> implements XMLFromPropertiesMapping {
 
 	private T visited = null;

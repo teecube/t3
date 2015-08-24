@@ -17,10 +17,10 @@
 package t3;
 
 /**
-*
-* @author Mathieu Debove &lt;mad@teecube.org&gt;
-*
-*/
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 public abstract class Messages {
 
 	public static final String MESSAGE_EMPTY_PREFIX = "         ";

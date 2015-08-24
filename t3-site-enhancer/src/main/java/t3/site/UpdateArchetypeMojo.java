@@ -30,6 +30,11 @@ import org.joox.JOOX;
 import org.joox.Match;
 import org.rendersnake.HtmlCanvas;
 
+/**
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 @Mojo(name = "update-archetype", defaultPhase = LifecyclePhase.POST_SITE)
 public class UpdateArchetypeMojo extends AbstractReplaceMojo {
 

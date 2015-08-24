@@ -22,6 +22,11 @@ import java.util.List;
 
 import org.apache.maven.model.FileSet;
 
+/**
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 public abstract class AbstractReplaceMojo extends AbstractReplaceAllMojo {
 
 	protected abstract String getFileNameToReplace();

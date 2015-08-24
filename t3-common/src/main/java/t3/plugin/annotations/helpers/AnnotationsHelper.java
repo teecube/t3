@@ -28,10 +28,10 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 /**
-*
-* @author Mathieu Debove &lt;mad@teecube.org&gt;
-*
-*/
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 public class AnnotationsHelper {
 
 	public static <A extends Annotation> Set<Field> getFieldsAnnotatedWith(Class<?> fromClass, Class<A> annotationClass) {

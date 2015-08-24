@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -46,6 +47,8 @@ import t3.plugin.annotations.helpers.AnnotationsHelper;
  *
  */
 public class PluginConfigurator {
+
+	public static final String projectActualBasedir = "project.actual.basedir";
 
 	public static AbstractCommonMojo propertiesManager;
 
@@ -265,6 +268,9 @@ public class PluginConfigurator {
 	 */
 	public static <T> void addPluginsParameterInModel(MavenProject mavenProject, Class<T> fromClass, Logger logger) {
 		PluginConfigurator.propertiesManager.setProject(mavenProject);
+
+		setProjectActualBasedir(mavenProject);
+
 		Set<Field> parameters = AnnotationsHelper.getFieldsAnnotatedWith(fromClass, Parameter.class);
 
 		for (Field field : parameters) {
@@ -279,6 +285,23 @@ public class PluginConfigurator {
 			GlobalParameter globalParameter = field.getAnnotation(GlobalParameter.class);
 
 			updateProperty(mavenProject, globalParameter);
+		}
+	}
+
+	private static void setProjectActualBasedir(MavenProject mavenProject) {
+		MavenProject currentProject = mavenProject;
+		while (currentProject != null) {
+			Properties props = currentProject.getOriginalModel().getProperties();
+			for (Object k : props.keySet()) {
+				String key = (String) k;
+				String value = props.getProperty(key);
+				if (value != null && value.contains(projectActualBasedir)) {
+					value = PluginConfigurator.propertiesManager.replaceProperty(value, projectActualBasedir, currentProject.getFile().getParentFile().getAbsolutePath());
+					value = PluginConfigurator.propertiesManager.replaceProperties(value);
+					mavenProject.getModel().getProperties().setProperty(key, value);
+				}
+			}
+			currentProject = currentProject.getParent();
 		}
 	}
 

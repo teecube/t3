@@ -28,10 +28,10 @@ import t3.plugin.annotations.Category;
 import t3.plugin.annotations.impl.CategoryImpl;
 
 /**
-*
-* @author Mathieu Debove &lt;mad@teecube.org&gt;
-*
-*/
+ *
+ * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ *
+ */
 public class CategoriesHelper {
 
 	private static String getTitle(Annotation annotation) {
