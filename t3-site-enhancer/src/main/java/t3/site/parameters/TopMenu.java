@@ -14,22 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3.site;
+package t3.site.parameters;
+
+import java.util.List;
 
 /**
  *
  * @author Mathieu Debove &lt;mad@teecube.org&gt;
  *
  */
-public class SubMenu {
+public class TopMenu {
 	public String name;
 	public String url;
+	public List<SubMenu> submenus;
 
-	public SubMenu() {
+	public TopMenu() {
 
 	}
 
-	public SubMenu(String name, String url) {
+	public TopMenu(String name, String url) {
 		this.name = name;
 		this.url = url;
 	}

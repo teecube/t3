@@ -234,13 +234,16 @@ public abstract class AbstractSiteMojo extends AbstractCommonMojo {
 					  "gs");
 	}
 
-	protected HtmlCanvas createArchetypesCommandLines(Dependency dependency) throws IOException {
+	protected HtmlCanvas createArchetypesCommandLines(Dependency dependency, String archetypeAdditionalArguments) throws IOException {
 		HtmlCanvas commandLine = new HtmlCanvas();
 
-		commandLine.
-			write(replaceProperties("${commandLineStart}"), false).
-			write("mvn archetype:generate -DarchetypeGroupId=" + dependency.getGroupId() + " -DarchetypeArtifactId=" + dependency.getArtifactId() + " -DarchetypeVersion=" + dependency.getVersion())
-			.write(replaceProperties("${commandLineEnd}"), false);
+		commandLine.write(replaceProperties("${commandLineStart}"), false);
+		if (archetypeAdditionalArguments != null) {
+			commandLine.write("mvn archetype:generate -DarchetypeGroupId=" + dependency.getGroupId() + " -DarchetypeArtifactId=" + dependency.getArtifactId() + " -DarchetypeVersion=" + dependency.getVersion() + " " + archetypeAdditionalArguments);
+		} else {
+			commandLine.write("mvn archetype:generate -DarchetypeGroupId=" + dependency.getGroupId() + " -DarchetypeArtifactId=" + dependency.getArtifactId() + " -DarchetypeVersion=" + dependency.getVersion());
+		}
+		commandLine.write(replaceProperties("${commandLineEnd}"), false);
 
 		addPropertyInSessionRequest(dependency.getArtifactId() + "_ArchetypeCommandLine", commandLine.toHtml());
 

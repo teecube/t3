@@ -34,6 +34,9 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.rendersnake.HtmlCanvas;
 import org.rendersnake.Renderable;
 
+import t3.site.parameters.SubMenu;
+import t3.site.parameters.TopMenu;
+
 /**
  *
  * @author Mathieu Debove &lt;mad@teecube.org&gt;

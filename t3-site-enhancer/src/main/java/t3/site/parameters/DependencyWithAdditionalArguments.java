@@ -14,26 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3.site;
+package t3.site.parameters;
 
-import java.util.List;
+import org.apache.maven.model.Dependency;
 
-/**
- *
- * @author Mathieu Debove &lt;mad@teecube.org&gt;
- *
- */
-public class TopMenu {
-	public String name;
-	public String url;
-	public List<SubMenu> submenus;
+public class DependencyWithAdditionalArguments extends Dependency {
+	private static final long serialVersionUID = -2314389014736859116L;
 
-	public TopMenu() {
+	private String archetypeAdditionalArguments;
 
+	public String getArchetypeAdditionalArguments() {
+		return archetypeAdditionalArguments;
 	}
 
-	public TopMenu(String name, String url) {
-		this.name = name;
-		this.url = url;
+	public void setArchetypeAdditionalArguments(String archetypeAdditionalArguments) {
+		this.archetypeAdditionalArguments = archetypeAdditionalArguments;
 	}
 }
