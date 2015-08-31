@@ -37,19 +37,23 @@ public class UpdateDocumentationMenuMojo extends AbstractReplaceAllMojo {
 
 		Match document;
 		Match reportsMenu;
+		Match infosMenu;
 
 		try {
 			document = JOOX.$(htmlFile);
 			reportsMenu = document.xpath("//div[@id='top-nav-collapse']/ul/li/ul/li[a/@title='Project Reports']");
+			infosMenu = document.xpath("//div[@id='top-nav-collapse']/ul/li/ul/li[a/@title='Project Information']");
 		} catch (Exception e) {
 			removeHTMLEntities(htmlFile);
 			return;
 		}
 
 		replaceByLine(htmlFile, "<li class=\"disabled\"><a title=\"#reports\">#reports</a></li>", reportsMenu.content());
+		replaceByLine(htmlFile, "<li class=\"disabled\"><a title=\"#infos\">#infos</a></li>", infosMenu.content());
 
 		document = JOOX.$(htmlFile);
 		document.xpath("//div[@id='top-nav-collapse']/ul/li[ul/li[a/@title='Project Reports']][2]").remove();
+		document.xpath("//footer/div/div/div/ul/li[a/@title='#infos']").remove();
 		document.xpath("//footer/div/div/div/ul/li[a/@title='#reports']").remove();
 		printDocument(document.document(), htmlFile);
 

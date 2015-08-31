@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -32,6 +31,8 @@ import org.joox.JOOX;
 import org.joox.Match;
 import org.w3c.dom.Attr;
 
+import t3.site.parameters.DependencyWithAdditionalArguments;
+
 /**
  *
  * @author Mathieu Debove &lt;mad@teecube.org&gt;
@@ -41,7 +42,7 @@ import org.w3c.dom.Attr;
 public class UpdateGeneralMojo extends AbstractReplaceAllMojo {
 
 	@Parameter
-	List<Dependency> archetypes;
+	List<DependencyWithAdditionalArguments> archetypes;
 
 	@Override
 	public void processHTMLFile(File htmlFile) throws Exception {
@@ -82,11 +83,11 @@ public class UpdateGeneralMojo extends AbstractReplaceAllMojo {
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		if (archetypes == null) {
-			archetypes = new ArrayList<Dependency>();
+			archetypes = new ArrayList<DependencyWithAdditionalArguments>();
 		}
-		for (Dependency dependency : archetypes) {
+		for (DependencyWithAdditionalArguments dependency : archetypes) {
 			try {
-				createArchetypesCommandLines(dependency);
+				createArchetypesCommandLines(dependency, dependency.getArchetypeAdditionalArguments());
 			} catch (IOException e) {
 				throw new MojoExecutionException(e.getLocalizedMessage(), e);
 			}

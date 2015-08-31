@@ -56,6 +56,8 @@ public abstract class AbstractNewPageMojo extends AbstractSiteMojo {
 		File htmlFile = new File(outputDirectory.getAbsolutePath(), getPageName() + ".html");
 		FileUtils.copyFile(indexFile, htmlFile);
 
+		replaceByLine(htmlFile, "<a href=\"\" id=\"bannerLeft\">", "<a id=\"bannerLeft\" href=\"./index.html\">", false, "ms");
+
 		return htmlFile;
 	}
 

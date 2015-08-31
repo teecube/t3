@@ -62,7 +62,8 @@ public class UpdateArchetypeMojo extends AbstractReplaceMojo {
 		dependency.setGroupId(project.getGroupId());
 		dependency.setArtifactId(project.getArtifactId());
 		dependency.setVersion(project.getVersion());
-		HtmlCanvas commandLine = createArchetypesCommandLines(dependency);
+		String archetypeAdditionalArguments = replaceProperties(project.getProperties().getProperty("archetypeAdditionalArguments"));
+		HtmlCanvas commandLine = createArchetypesCommandLines(dependency, archetypeAdditionalArguments);
 
 		html.write(commandLine.toHtml(), false)
 			._div();
