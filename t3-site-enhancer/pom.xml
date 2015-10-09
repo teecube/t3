@@ -13,8 +13,8 @@
 
 	<packaging>maven-plugin</packaging>
 
-	<name>T³ - Maven plugin enhancer</name>
-	<description>Enhances Maven mojos and sites.</description>
+	<name>T³ - Site enhancer</name>
+	<description>Enhances Maven sites.</description>
 
 	<properties>
 		<maven.site.skip>true</maven.site.skip>
