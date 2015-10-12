@@ -87,3 +87,7 @@ h6[id]:before {
 ul.ul-main {
 	margin-left: 0;
 }
+
+.dropdown-backdrop {
+    position: static;
+}
