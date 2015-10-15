@@ -1,5 +1,24 @@
 .color-highlight {
-	color: #225E9B;
+	/*color: #225E9B;*/
+	color: #318DDE;
+}
+
+.navbar-inner {
+    background-color: #fff;
+    background-image: linear-gradient(to bottom, #fff, #fff);
+    background-repeat: repeat-x;
+}
+.navbar-fixed-top .navbar-inner, .navbar-static-top .navbar-inner  {
+	/*border-bottom: solid 1px #00CCFF;*/
+}
+
+footer.well {
+	/*border-top: solid 2px #00CCFF;*/
+	/*border-bottom: solid 2px #00CCFF;*/
+}
+
+.well blockquote {
+	border-color: #00CCFF;
 }
 
 .row#banner .span12  {
