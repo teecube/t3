@@ -34,7 +34,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>${ecosystemGroupIdCommon}</groupId>
+			<groupId>org.teecube.t3</groupId>
 			<artifactId>t3-common</artifactId>
 		</dependency>
 

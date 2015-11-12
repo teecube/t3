@@ -63,7 +63,7 @@ public class PluginBuilder {
 	}
 
 	public boolean addConfigurationFromClasspath() throws MojoExecutionException {
-		String filename = "/plugins-configuration/" +
+		String filename = "/plugins-configuration/default/" +
 				this.plugin.getGroupId() + "/" +
 				this.plugin.getArtifactId()  + ".xml";
 

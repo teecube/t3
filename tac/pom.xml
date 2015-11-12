@@ -31,7 +31,7 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>${ecosystemGroupIdCommon}</groupId>
+				<groupId>org.teecube.t3</groupId>
 				<artifactId>t3-site-enhancer</artifactId>
 			</plugin>
 		</plugins>

@@ -7,55 +7,21 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>${ecosystemName}</name>
+	<name>T³</name>
 
 	<properties>
 		<releaseVersion>${project.version}</releaseVersion> <!-- default value will be overridden by release:perform command line -->
 
-		<siteURL>${siteDisplayURL}/${ecosystemURLBase}</siteURL>
-		<siteUploadURL>http://localhost</siteUploadURL>
-
-		<ecosystemURLBase>${ecosystemArtifactId}/${ecosystemVersion}</ecosystemURLBase>
-		<!-- Velocity-proof properties -->
-		<ecosystemName>T³</ecosystemName>
-		<ecosystemLongName><![CDATA[<span class="color-highlight">T</span>IBCO <span class="color-highlight">E</span>nterprise <span class="color-highlight">E</span>xtensions]]></ecosystemLongName>
-		<ecosystemNameHighlight><![CDATA[<i>T<span class="color-highlight">³</span></i>]]></ecosystemNameHighlight>
-		<ecosystemSlogan><![CDATA[<i>&laquo;tee<span class="color-highlight">cube</span>&raquo;</i>, ${ecosystemLongName}]]></ecosystemSlogan>
-		<ecosystemSlogan2><![CDATA[T<span class="color-highlight">³</span> = <span class="color-highlight">T</span>IC T<span class="color-highlight">A</span>C TO<span class="color-highlight">E</span>]]></ecosystemSlogan2>
-		<ecosystemPronounced><![CDATA[(pronounced <i>&laquo;tee-cube&raquo;</i>)]]></ecosystemPronounced>
-		<ecosystemSumUp><![CDATA[
-			${ecosystemNameHighlight}
-			is a modular &amp; full-featured,
-			<a href="${siteURL2}/license.html">open-source</a> solution
-			to improve development &amp; management of TIBCO applications.
-		]]></ecosystemSumUp>
-		<ecosystemSumUpRaw><![CDATA[
-			${ecosystemName}
-			is a modular, plugin-based, full-featured,
-			open-source solution
-			to improve development &amp; management of TIBCO applications.
-		]]></ecosystemSumUpRaw>
+		<siteTopCaption>${ecosystemNameHighlight2}</siteTopCaption>
 		<ecosystemGroupId>org.teecube</ecosystemGroupId>
 		<ecosystemGroupIdCommon>org.teecube.t3</ecosystemGroupIdCommon>
 		<ecosystemArtifactId>t3</ecosystemArtifactId>
 		<ecosystemVersion>${releaseVersion}</ecosystemVersion>
-		<ecosystemCompany>teecube</ecosystemCompany>
-		<ecosystemCompanyURL>http://teecube.org</ecosystemCompanyURL>
-		<inceptionYear>2014</inceptionYear>
-		<notaBene><![CDATA[<b>NB:</b>]]></notaBene>
-
-		<commandLineStart><![CDATA[<p class="command-line"><span style="margin-right:10px;" class="fa-stack fa-lg"><span class="fa fa-square fa-stack-2x"></span><span class="fa fa-terminal fa-stack-1x fa-inverse"></span></span><tt>]]></commandLineStart>
-		<commandLineEnd><![CDATA[</tt></p>]]></commandLineEnd>
-		<siteTopCaption><![CDATA[T<span class="color-highlight">³</span>]]></siteTopCaption>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<maven.wagon.webdav-jackrabbit>2.8</maven.wagon.webdav-jackrabbit>
-		<siteUploadProtocol />
-
-		<repositoryReleaseURL>${settingsRepositoryReleaseURL}</repositoryReleaseURL>
-		<repositorySnapshotURL>${settingsRepositorySnapshotURL}</repositorySnapshotURL>
+		<inceptionYear>2014</inceptionYear>
 	</properties>
 
 	<modules>
@@ -68,12 +34,44 @@
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-webdav-jackrabbit</artifactId>
-				<version>${maven.wagon.webdav-jackrabbit}</version>
+				<version>2.10</version>
 			</extension>
 		</extensions>
 	</build>
 
 	<profiles>
+		<profile>
+			<id>branding</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<file>
+					<exists>pom.xml</exists>
+				</file>
+			</activation>
+			<properties>
+				<ecosystemName>T³</ecosystemName>
+				<ecosystemLongName><![CDATA[<span class="color-highlight">T</span>IBCO <span class="color-highlight">E</span>nterprise <span class="color-highlight">E</span>xtensions]]></ecosystemLongName>
+				<ecosystemNameHighlight><![CDATA[<i>T<span class="color-highlight">³</span></i>]]></ecosystemNameHighlight>
+				<ecosystemNameHighlight2><![CDATA[T<span class="color-highlight">³</span>]]></ecosystemNameHighlight2>
+				<ecosystemSlogan><![CDATA[<i>&laquo;tee<span class="color-highlight">cube</span>&raquo;</i>, ${ecosystemLongName}]]></ecosystemSlogan>
+				<ecosystemSlogan2><![CDATA[T<span class="color-highlight">³</span> = <span class="color-highlight">T</span>IC T<span class="color-highlight">A</span>C TO<span class="color-highlight">E</span>]]></ecosystemSlogan2>
+				<ecosystemPronounced><![CDATA[(pronounced <i>&laquo;tee-cube&raquo;</i>)]]></ecosystemPronounced>
+				<ecosystemSumUp><![CDATA[
+					${ecosystemNameHighlight}
+					is a modular &amp; full-featured,
+					<a href="${siteURL2}/license.html">open-source</a> solution
+					to improve development &amp; management of TIBCO applications.
+				]]></ecosystemSumUp>
+				<ecosystemSumUpRaw><![CDATA[
+					${ecosystemName}
+					is a modular, plugin-based, full-featured,
+					open-source solution
+					to improve development &amp; management of TIBCO applications.
+				]]></ecosystemSumUpRaw>
+				<ecosystemCompany>teecube</ecosystemCompany>
+				<ecosystemCompanyURL>http://teecube.org</ecosystemCompanyURL>
+			</properties>
+		</profile>
 		<profile> <!-- Maven plugins & dependencies -->
 			<id>maven</id> <!-- Maven plugins and dependencies -->
 			<activation>
@@ -108,7 +106,7 @@
 				<maven.plugin.archetype>2.2</maven.plugin.archetype>
 				<maven.plugin.assembly>2.5.2</maven.plugin.assembly>
 				<maven.plugin.dependency>2.9</maven.plugin.dependency>
-				<maven.plugin.enforcer>1.3.1</maven.plugin.enforcer>
+				<maven.plugin.enforcer>1.4.1</maven.plugin.enforcer>
 				<maven.plugin.help>2.2</maven.plugin.help>
 				<maven.plugin.invoker>1.9</maven.plugin.invoker>
 				<maven.plugin.plugin>3.4</maven.plugin.plugin>
@@ -174,13 +172,13 @@
 								<dependency> <!-- add support for ssh/scp -->
 									<groupId>org.apache.maven.wagon</groupId>
 									<artifactId>wagon-ssh</artifactId>
-									<version>2.8</version>
+									<version>2.10</version>
 								</dependency>
 								<!-- add support for WebDAV -->
 								<dependency>
 									<groupId>org.apache.maven.wagon</groupId>
 									<artifactId>wagon-webdav-jackrabbit</artifactId>
-									<version>${maven.wagon.webdav-jackrabbit}</version>
+									<version>2.10</version>
 								</dependency>
 								<!-- force slf4j 1.6.x or it fails due to missing class StaticLoggerBinder -->
 								<dependency>
@@ -283,6 +281,124 @@
 									<phase>pre-site</phase>
 									<configuration>
 										<rules>
+											<!-- T³ -->
+											<requireProperty>
+												<property>ecosystemName</property>
+												<message>
+													<![CDATA[ecosystemName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemLongName</property>
+												<message>
+													<![CDATA[ecosystemLongName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemLongName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemNameHighlight</property>
+												<message>
+													<![CDATA[ecosystemNameHighlight is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemNameHighlight</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemNameHighlight2</property>
+												<message>
+													<![CDATA[ecosystemNameHighlight2 is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemNameHighlight2</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemSlogan</property>
+												<message>
+													<![CDATA[ecosystemSlogan is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemSlogan</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemSlogan2</property>
+												<message>
+													<![CDATA[ecosystemSlogan2 is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemSlogan2</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemPronounced</property>
+												<message>
+													<![CDATA[ecosystemPronounced is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemPronounced</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemSumUp</property>
+												<message>
+													<![CDATA[ecosystemSumUp is required]]>
+												</message>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemSumUpRaw</property>
+												<message>
+													<![CDATA[ecosystemSumUpRaw is required]]>
+												</message>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemGroupId</property>
+												<message>
+													<![CDATA[ecosystemGroupId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemGroupId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemGroupIdCommon</property>
+												<message>
+													<![CDATA[ecosystemGroupIdCommon is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemGroupIdCommon</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemArtifactId</property>
+												<message>
+													<![CDATA[ecosystemArtifactId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemArtifactId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemVersion</property>
+												<message>
+													<![CDATA[ecosystemVersion is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemVersion</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemCompany</property>
+												<message>
+													<![CDATA[ecosystemCompany is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemCompany</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemCompanyURL</property>
+												<message>
+													<![CDATA[ecosystemCompanyURL is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemCompanyURL</regexMessage>
+											</requireProperty>
+											<!-- TIC -->
 											<requireProperty>
 												<property>ticName</property>
 												<message>
@@ -347,6 +463,7 @@
 												<regex>.*</regex>
 												<regexMessage>ticURLBase</regexMessage>
 											</requireProperty>
+											<!-- TIC BW6 -->
 											<requireProperty>
 												<property>ticBW6MavenGroupId</property>
 												<message>
@@ -387,6 +504,7 @@
 												<regex>.*</regex>
 												<regexMessage>ticDisplayedBW6MavenName</regexMessage>
 											</requireProperty>
+											<!-- TIC BW5 -->
 											<requireProperty>
 												<property>ticBW5MavenGroupId</property>
 												<message>
@@ -427,6 +545,7 @@
 												<regex>.*</regex>
 												<regexMessage>ticDisplayedBW5MavenName</regexMessage>
 											</requireProperty>
+											<!-- TAC -->
 											<requireProperty>
 												<property>tacName</property>
 												<message>
@@ -491,6 +610,7 @@
 												<regex>.*</regex>
 												<regexMessage>tacURLBase</regexMessage>
 											</requireProperty>
+											<!-- TOE -->
 											<requireProperty>
 												<property>toeName</property>
 												<message>
@@ -555,6 +675,7 @@
 												<regex>.*</regex>
 												<regexMessage>toeURLBase</regexMessage>
 											</requireProperty>
+											<!-- TOE Installer -->
 											<requireProperty>
 												<property>toeInstallerGroupId</property>
 												<message>
@@ -906,7 +1027,7 @@
 			<dependencyManagement>
 				<dependencies>
 					<dependency>
-						<groupId>${ecosystemGroupIdCommon}</groupId>
+						<groupId>org.teecube.t3</groupId>
 						<artifactId>t3-common</artifactId>
 						<version>0.0.1-SNAPSHOT</version>
 					</dependency>
@@ -1286,6 +1407,16 @@
 				</file>
 			</activation>
 			<properties>
+				<siteURL>${siteDisplayURL}/${ecosystemURLBase}</siteURL>
+				<siteUploadURL>http://localhost</siteUploadURL>
+				<siteUploadProtocol />
+				<ecosystemURLBase>${ecosystemArtifactId}/${ecosystemVersion}</ecosystemURLBase>
+
+				<!-- Velocity-proof properties -->
+				<commandLineStart><![CDATA[<p class="command-line"><span style="margin-right:10px;" class="fa-stack fa-lg"><span class="fa fa-square fa-stack-2x"></span><span class="fa fa-terminal fa-stack-1x fa-inverse"></span></span><tt>]]></commandLineStart>
+				<commandLineEnd><![CDATA[</tt></p>]]></commandLineEnd>
+				<notaBene><![CDATA[<b>NB:</b>]]></notaBene>
+
 				<includeSource>true</includeSource>
 			</properties>
 			<distributionManagement>
@@ -1308,7 +1439,7 @@
 				<pluginManagement>
 					<plugins>
 						<plugin>
-							<groupId>${ecosystemGroupIdCommon}</groupId>
+							<groupId>org.teecube.t3</groupId>
 							<artifactId>t3-site-enhancer</artifactId>
 							<version>0.0.1-SNAPSHOT</version>
 							<configuration>
@@ -1373,6 +1504,7 @@
 											<siteProperty>ecosystemURLBase</siteProperty>
 											<siteProperty>ecosystemArtifactId</siteProperty>
 											<siteProperty>ecosystemVersion</siteProperty>
+											<siteProperty>ecosystemSumUp</siteProperty>
 										</siteProperties>
 										<fromRootParentProperties>
 											<fromRootParentProperty>ecosystemURLBase</fromRootParentProperty>
@@ -1383,6 +1515,7 @@
 										</inOriginalModelProperties>
 										<lookInSettingsProperties>
 											<lookInSettingsProperty>ecosystemURLBase</lookInSettingsProperty>
+											<lookInSettingsProperty>ecosystemSumUp</lookInSettingsProperty>
 										</lookInSettingsProperties>
 									</configuration>
 									<phase>post-site</phase>
@@ -1411,7 +1544,7 @@
 						<artifactId>maven-enforcer-plugin</artifactId>
 					</plugin>
 					<plugin>
-						<groupId>${ecosystemGroupIdCommon}</groupId>
+						<groupId>org.teecube.t3</groupId>
 						<artifactId>t3-site-enhancer</artifactId>
 						<inherited>false</inherited>
 					</plugin>

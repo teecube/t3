@@ -31,6 +31,7 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
+import t3.AbstractCommonMojo;
 import t3.Messages;
 
 /**
@@ -96,6 +97,8 @@ public class PropertiesEnforcer {
 				Plugin enforcerPlugin = pluginBuilder.getPlugin();
 				Xpp3Dom configuration = (Xpp3Dom) enforcerPlugin.getConfiguration();
 
+				checkForSkippedRules(session, configuration);
+
 				if (configuration != null) {
 					executeMojo(
 						enforcerPlugin,
@@ -107,6 +110,33 @@ public class PropertiesEnforcer {
 			}
 		} catch (MojoExecutionException e) {
 			enforceFailure(e, logger);
+		}
+	}
+
+	private static void checkForSkippedRules(MavenSession session, Xpp3Dom configuration) {
+		AbstractCommonMojo propertiesManager = AbstractCommonMojo.propertiesManager(session, session.getCurrentProject());
+
+		Integer i = 0;
+		Xpp3Dom rules = configuration.getChildren("rules")[0];
+		for (Xpp3Dom rule : rules.getChildren()) {
+			if (rule.getChild("skip") != null) {
+				String value = rule.getChild("skip").getValue();
+				Integer j = 0;
+				for (Xpp3Dom c : rule.getChildren()) {
+					if ("skip".equals(c.getName())) {
+						rule.removeChild(j);
+					}
+					j++;
+				}
+				if (value != null) {
+					value = propertiesManager.replaceProperties(value);
+					if ("true".equals(value)) { // TODO : parse boolean value
+						rules.removeChild(i);
+						i--;
+					}
+				}
+			}
+			i++;
 		}
 	}
 
@@ -145,6 +175,7 @@ public class PropertiesEnforcer {
 		String message = e.getCause().getLocalizedMessage();
 		if (message != null) {
 			message = message.substring(message.indexOf("\n")+1);
+			message += "\n";
 		}
 		throw new MavenExecutionException(message, new MojoExecutionException(message, new Throwable(message)));
 	}
