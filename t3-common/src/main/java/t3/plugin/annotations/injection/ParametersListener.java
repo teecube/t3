@@ -21,6 +21,7 @@ import java.lang.reflect.Field;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.MembersInjector;
 import com.google.inject.TypeLiteral;
 import com.google.inject.spi.TypeEncounter;
@@ -47,6 +48,11 @@ public class ParametersListener<T> implements TypeListener {
 		this.mavenProject = mavenProject;
 
 		PluginConfigurator.propertiesManager = AbstractCommonMojo.propertiesManager(session, mavenProject);
+	}
+
+	@SuppressWarnings("unchecked")
+	public ParametersListener(AbstractModule originalObject, MavenProject mavenProject, MavenSession session) {
+		this((T) originalObject, mavenProject, session);
 	}
 
 	@SuppressWarnings("unchecked")

@@ -16,13 +16,26 @@
  */
 package t3;
 
+import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecuteResultHandler;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteException;
+import org.apache.commons.exec.ExecuteWatchdog;
+import org.apache.commons.exec.PumpStreamHandler;
+import org.apache.commons.exec.ShutdownHookProcessDestroyer;
+import org.apache.commons.exec.launcher.CommandLauncher;
+import org.apache.commons.exec.launcher.CommandLauncherFactory;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.BuildPluginManager;
@@ -37,6 +50,7 @@ import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.settings.Profile;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.shared.filtering.MavenResourcesFiltering;
+import org.twdata.maven.mojoexecutor.MojoExecutor.ExecutionEnvironment;
 
 import t3.plugin.annotations.GlobalParameter;
 
@@ -83,7 +97,7 @@ public class AbstractCommonMojo extends AbstractMojo {
 	public static final Pattern mavenPropertyPattern = Pattern.compile("\\$\\{([^}]*)\\}"); // ${prop} regex pattern
 
 	@Component
-	protected ProjectBuilder builder;
+	protected ProjectBuilder projectBuilder;
 
 	@Component (role=org.apache.maven.shared.filtering.MavenResourcesFiltering.class, hint="default")
 	protected MavenResourcesFiltering mavenResourcesFiltering;
@@ -318,6 +332,86 @@ public class AbstractCommonMojo extends AbstractMojo {
 		string = sb.toString();
 
 		return string;
+	}
+	//
+
+	private static ExecutionEnvironment environment = null;
+
+	protected ExecutionEnvironment getEnvironment() {
+		return getEnvironment(pluginManager);
+	}
+
+	protected ExecutionEnvironment getEnvironment(BuildPluginManager pluginManager) {
+		if (environment == null) {
+			environment = executionEnvironment(project, session, pluginManager);
+		}
+
+		return environment;
+	}
+
+	// execution of binaries
+	protected int getTimeOut() {
+		// to be overridden in child classes
+		return 180; // 3 minutes
+	}
+
+	protected int executeBinary(File binary, ArrayList<String> arguments, File workingDir, String errorMsg, boolean fork, boolean synchronous) throws IOException, MojoExecutionException {
+		Integer result = 0;
+
+		CommandLine cmdLine = new CommandLine(binary);
+
+		for (String argument : arguments) {
+			cmdLine.addArgument(argument);
+		}
+		getLog().debug("command line : " + cmdLine.toString());
+		getLog().debug("working directory : " + workingDir);
+
+		DefaultExecutor executor = new DefaultExecutor();
+		executor.setWorkingDirectory(workingDir);
+
+		if (getTimeOut() > 0) {
+			ExecuteWatchdog watchdog = new ExecuteWatchdog(getTimeOut() * 1000);
+			executor.setWatchdog(watchdog);
+		}
+
+		executor.setProcessDestroyer(new ShutdownHookProcessDestroyer());
+
+		ByteArrayOutputStream stdOutAndErr = new ByteArrayOutputStream();
+		executor.setStreamHandler(new PumpStreamHandler(stdOutAndErr));
+
+		getLog().info(Messages.MESSAGE_EMPTY_PREFIX + cmdLine.toString());
+
+		if (fork) {
+			CommandLauncher commandLauncher = CommandLauncherFactory.createVMLauncher();
+			commandLauncher.exec(cmdLine, null, workingDir);
+		} else {
+			try {
+				if (synchronous) {
+					result = executor.execute(cmdLine);
+				} else {
+					executor.execute(cmdLine, new DefaultExecuteResultHandler());
+				}
+			} catch (ExecuteException e) {
+				// TODO manage default errors
+				getLog().info(cmdLine.toString());
+				getLog().info(stdOutAndErr.toString());
+				getLog().info(result.toString());
+				throw new MojoExecutionException(errorMsg, e);
+			} catch (IOException e) {
+				throw new MojoExecutionException(e.getMessage(), e);
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * <p>
+	 * Default behaviour is synchronous and no fork.
+	 * </p>
+	 */
+	protected int executeBinary(File binary, ArrayList<String> arguments, File workingDirectory, String errorMsg) throws IOException, MojoExecutionException {
+		return executeBinary(binary, arguments, workingDirectory, errorMsg, false, true);
 	}
 	//
 

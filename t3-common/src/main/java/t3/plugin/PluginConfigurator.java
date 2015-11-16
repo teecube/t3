@@ -248,7 +248,7 @@ public class PluginConfigurator {
 
 		if ("project.build.directory".equals(propertyName)) {
 			String directory = mavenProject.getBuild().getDirectory();
-			if (directory != null && AbstractCommonMojo.mavenPropertyPattern.matcher(directory).matches()) {
+			if (directory != null && AbstractCommonMojo.mavenPropertyPattern.matcher(directory).find()) {
 				mavenProject.getBuild().setDirectory(defaultValue);
 			}
 		}

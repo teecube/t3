@@ -100,12 +100,20 @@
 		</dependency>
 
 		<!-- Maven @Annotation (such as @Parameter and @Mojo) replacement -->
+		<!--
 		<dependency>
 			<groupId>com.sun</groupId>
 			<artifactId>tools</artifactId>
 			<version>${java.version}</version>
 			<scope>system</scope>
 			<systemPath>${java.home}/../lib/tools.jar</systemPath>
+		</dependency>
+		-->
+		<!-- this dependency allows not to depend on tools.jar at runtime -->
+		<dependency>
+			<groupId>com.google.errorprone</groupId>
+			<artifactId>javac</artifactId>
+			<version>1.8.0-u20</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
