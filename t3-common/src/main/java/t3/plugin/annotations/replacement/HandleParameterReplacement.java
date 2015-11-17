@@ -66,7 +66,7 @@ public class HandleParameterReplacement extends JavacAnnotationHandler<Parameter
 	@Override
 	public void handle(final AnnotationValues<Parameter> annotation, final JCAnnotation ast, final JavacNode annotationNode) {
 		// no inheritance possible
-		AnnotationReplacementHelper.handle(annotation, ast, annotationNode, getAnnotationCanonicalName(), getReplacementClassElements());
+		AnnotationReplacementHelper.duplicateAnnotationWithAnother(annotation, ast, annotationNode, getAnnotationCanonicalName(), getReplacementClassElements());
 	}
 
 }

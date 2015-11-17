@@ -52,7 +52,13 @@ import org.apache.maven.settings.Settings;
 import org.apache.maven.shared.filtering.MavenResourcesFiltering;
 import org.twdata.maven.mojoexecutor.MojoExecutor.ExecutionEnvironment;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.matcher.Matchers;
+
 import t3.plugin.annotations.GlobalParameter;
+import t3.plugin.annotations.injection.ParametersListener;
 
 /**
  *
@@ -105,6 +111,7 @@ public class AbstractCommonMojo extends AbstractMojo {
 	@Component (role = BuildPluginManager.class)
 	protected BuildPluginManager pluginManager;
 
+	private static AbstractCommonMojo propertiesManager = null;
 	/**
 	 * <p>
 	 * Instantiate a minimalistic {@link AbstractCommonMojo} to use properties
@@ -116,12 +123,15 @@ public class AbstractCommonMojo extends AbstractMojo {
 	 * @return
 	 */
 	public static AbstractCommonMojo propertiesManager(MavenSession session, MavenProject mavenProject) {
-		AbstractCommonMojo mojo = new AbstractCommonMojo();
-		mojo.setProject(mavenProject);
-		mojo.setSession(session);
-		mojo.setSettings(session.getSettings());
+		if (propertiesManager != null) {
+			return propertiesManager;
+		}
+		propertiesManager = new AbstractCommonMojo();
+		propertiesManager.setProject(mavenProject);
+		propertiesManager.setSession(session);
+		propertiesManager.setSettings(session.getSettings());
 
-		return mojo;
+		return propertiesManager;
 	}
 
 	/**
@@ -245,7 +255,7 @@ public class AbstractCommonMojo extends AbstractMojo {
 		} else {
 			result = mavenProject.getModel().getProperties().getProperty(propertyName);
 		}
-		if (lookInCommandLine && (result == null || result.isEmpty())) {			
+		if (lookInCommandLine && (result == null || result.isEmpty())) {
 			result = getPropertyValueInCommandLine(propertyName, session);
 		}
 		if (lookInSettingsProperties && (result == null || result.isEmpty())) {
@@ -414,6 +424,29 @@ public class AbstractCommonMojo extends AbstractMojo {
 		return executeBinary(binary, arguments, workingDirectory, errorMsg, false, true);
 	}
 	//
+
+	private static boolean standalonePOMInitialized = false;
+
+	protected <T> void initStandalonePOM() throws MojoExecutionException {
+		if (project != null && "standalone-pom".equals(project.getArtifactId()) && !standalonePOMInitialized) {
+			callLifecycleParticipant();
+
+			Injector i = Guice.createInjector(new AbstractModule() {
+				@Override
+				protected void configure() {
+					bindListener(Matchers.any(), new ParametersListener<T>(this, session.getCurrentProject(), session)); // WARN: using getCurrentProject() ?
+				}
+			});
+
+			i.injectMembers(this); // will also inject in configuredMojo
+
+			standalonePOMInitialized = true;
+		}
+	}
+
+	protected void callLifecycleParticipant() throws MojoExecutionException {
+		// to be overridden in children classes
+	}
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException  {

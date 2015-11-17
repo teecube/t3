@@ -20,11 +20,15 @@ import static lombok.javac.handlers.JavacHandlerUtil.chainDots;
 
 import java.lang.annotation.Annotation;
 
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.JCTree.JCExpressionStatement;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
+import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
+import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.ListBuffer;
@@ -32,6 +36,7 @@ import com.sun.tools.javac.util.ListBuffer;
 import lombok.core.AnnotationValues;
 import lombok.javac.JavacNode;
 import lombok.javac.JavacTreeMaker;
+import lombok.javac.handlers.JavacHandlerUtil;
 
 /**
  *
@@ -40,7 +45,40 @@ import lombok.javac.JavacTreeMaker;
  */
 public class AnnotationReplacementHelper {
 
-	public static <T extends Annotation> void handle(final AnnotationValues<T> annotation, final JCAnnotation ast, final JavacNode annotationNode, String annotationCanonicalName, java.util.List<String> replacementClassElements) {
+	private static final List<JCExpression> NIL_EXPRESSION = List.<JCExpression>nil();
+
+	public static <T extends Annotation> void addMethodCallInMethodBody(AnnotationValues<T> annotation, JCAnnotation ast, JavacNode annotationNode, String methodWhereToAddName, java.util.List<String> methodToAddName, boolean addInFirstPosition) {
+		JavacTreeMaker treeMaker = annotationNode.getTreeMaker();
+		JavacNode owner = annotationNode.up(); // the field where the @Annotation applies
+		switch (owner.get().getClass().getSimpleName()) {
+		case "JCClassDecl":
+			JCClassDecl classDecl = (JCClassDecl) owner.get();
+			for (JCTree e : classDecl.defs) {
+				if ("METHOD".equals(e.getKind().toString())) {
+					JCMethodDecl md = (JCMethodDecl) e;
+					if (methodWhereToAddName.equals(md.name.toString())) {
+						JCExpression callIt=JavacHandlerUtil.chainDots(owner, methodToAddName.toArray(new String[0]));
+						JCMethodInvocation factoryMethodCall=treeMaker.Apply(NIL_EXPRESSION, callIt, NIL_EXPRESSION);
+
+						JCExpressionStatement exec = treeMaker.Exec(factoryMethodCall);
+						if (addInFirstPosition) {
+							md.body.stats = md.body.stats.prepend(exec);
+						} else {
+							md.body.stats = md.body.stats.append(exec);
+						}
+					}
+				}
+			}
+			break;
+
+		default:
+			break;
+		}
+
+		owner.getAst().setChanged();
+	}
+
+	public static <T extends Annotation> void duplicateAnnotationWithAnother(final AnnotationValues<T> annotation, final JCAnnotation ast, final JavacNode annotationNode, String annotationToDuplicateCanonicalName, java.util.List<String> annotationToAdd) {
 		JavacTreeMaker treeMaker = annotationNode.getTreeMaker();
 		JavacNode owner = annotationNode.up(); // the field where the @Annotation applies
 		List<JCAnnotation> annotations = null;
@@ -59,13 +97,13 @@ public class AnnotationReplacementHelper {
 		}
 		JCAnnotation parameterRuntime = null;
 		for (JCAnnotation a : annotations) {
-			if (a.annotationType.type.tsym.getQualifiedName().toString().equals(annotationCanonicalName)) {
+			if (a.annotationType.type.tsym.getQualifiedName().toString().equals(annotationToDuplicateCanonicalName)) {
 				parameterRuntime = a;
 			}
 		}
 
 		if (parameterRuntime != null) {
-			JCExpression mavenParameterAnnotationType = chainDots(owner, replacementClassElements.toArray(new String[0]));
+			JCExpression mavenParameterAnnotationType = chainDots(owner, annotationToAdd.toArray(new String[0]));
 
 			ListBuffer<JCExpression> mavenParameterFields = new ListBuffer<JCExpression>();
 			for (JCExpression arg : parameterRuntime.args) {

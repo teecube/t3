@@ -86,7 +86,6 @@ public class PropertiesEnforcer {
 		logger.info(Messages.ENFORCED_PER_PROJECT_RULES);
 
 		logger.info(Messages.MESSAGE_SPACE);
-		
 	}
 	
 	private static void enforceGlobalProperties(MavenSession session, BuildPluginManager pluginManager, Logger logger) throws MavenExecutionException {

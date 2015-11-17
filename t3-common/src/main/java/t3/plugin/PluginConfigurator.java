@@ -225,7 +225,7 @@ public class PluginConfigurator {
 		if (propertyName != null && !propertyName.isEmpty()) { // && defaultValue != null) {
 			assert(propertiesManager != null);
 
-			if (!propertiesManager.propertyExists(propertyName) && defaultValue != null) { // do not overwrite with default value if the property exists in model (i.e. in POM)
+			if (!propertiesManager.propertyExists(propertyName) && defaultValue != null) { // do not overwrite with default value if the property exists in model (i.e. in POM, command-line or settings.xml)
 				mavenProject.getProperties().put(propertyName, defaultValue);
 			} else {
 				String value = getPropertyValue(mavenProject, propertyName);

@@ -41,6 +41,11 @@ import t3.plugin.annotations.Mojo;
  * a <b>RUNTIME retention policy</b>.
  * </p>
  *
+ * <p>
+ * This class will also add a call to "super.initStandalonePOM()" method at the
+ * beginning of "execute()" method of the Mojo.
+ * </p>
+ *
  * @author Mathieu Debove &lt;mad@teecube.org&gt;
  *
  */
@@ -66,7 +71,16 @@ public class HandleMojoReplacement extends JavacAnnotationHandler<Mojo> {
 	@Override
 	public void handle(final AnnotationValues<Mojo> annotation, final JCAnnotation ast, final JavacNode annotationNode) {
 		// no inheritance possible
-		AnnotationReplacementHelper.handle(annotation, ast, annotationNode, getAnnotationCanonicalName(), getReplacementClassElements());
+
+		// add "t3.plugin.annotations.Mojo" where "org.apache.maven.plugins.annotations.Mojo" is found
+		AnnotationReplacementHelper.duplicateAnnotationWithAnother(annotation, ast, annotationNode, getAnnotationCanonicalName(), getReplacementClassElements());
+
+		// let's add a call to "super.initStandalonePOM" at the beginning of
+		// "execute()" method of the Mojo
+		List<String> methodToAddName = new ArrayList<String>();
+		methodToAddName.add("super");
+		methodToAddName.add("initStandalonePOM");
+		AnnotationReplacementHelper.addMethodCallInMethodBody(annotation, ast, annotationNode, "execute", methodToAddName, true);
 	}
 
 }
