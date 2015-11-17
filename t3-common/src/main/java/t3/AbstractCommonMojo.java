@@ -36,6 +36,8 @@ import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.exec.ShutdownHookProcessDestroyer;
 import org.apache.commons.exec.launcher.CommandLauncher;
 import org.apache.commons.exec.launcher.CommandLauncherFactory;
+import org.apache.maven.MavenExecutionException;
+import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.BuildPluginManager;
@@ -50,6 +52,8 @@ import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.settings.Profile;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.shared.filtering.MavenResourcesFiltering;
+import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.logging.Logger;
 import org.twdata.maven.mojoexecutor.MojoExecutor.ExecutionEnvironment;
 
 import com.google.inject.AbstractModule;
@@ -110,6 +114,15 @@ public class AbstractCommonMojo extends AbstractMojo {
 
 	@Component (role = BuildPluginManager.class)
 	protected BuildPluginManager pluginManager;
+
+	@Component
+	protected PlexusContainer plexus;
+
+	@Component
+	protected Logger logger;
+
+	@Component
+	protected ArtifactRepositoryFactory artifactRepositoryFactory;
 
 	private static AbstractCommonMojo propertiesManager = null;
 	/**
@@ -425,11 +438,23 @@ public class AbstractCommonMojo extends AbstractMojo {
 	}
 	//
 
+	// initialization of standalone POMs (ie no POM) because they are not included in a lifecycle
 	private static boolean standalonePOMInitialized = false;
 
 	protected <T> void initStandalonePOM() throws MojoExecutionException {
 		if (project != null && "standalone-pom".equals(project.getArtifactId()) && !standalonePOMInitialized) {
-			callLifecycleParticipant();
+			AdvancedMavenLifecycleParticipant lifecycleParticipant = getLifecycleParticipant();
+			lifecycleParticipant.setPlexus(plexus);
+			lifecycleParticipant.setLogger(logger);
+			lifecycleParticipant.setArtifactRepositoryFactory(artifactRepositoryFactory);
+			lifecycleParticipant.setPluginManager(pluginManager);
+			lifecycleParticipant.setProjectBuilder(projectBuilder);
+			lifecycleParticipant.setPluginDescriptor(pluginDescriptor);
+			try {
+				lifecycleParticipant.afterProjectsRead(session);
+			} catch (MavenExecutionException e) {
+				throw new MojoExecutionException(e.getLocalizedMessage(), e);
+			}
 
 			Injector i = Guice.createInjector(new AbstractModule() {
 				@Override
@@ -444,9 +469,10 @@ public class AbstractCommonMojo extends AbstractMojo {
 		}
 	}
 
-	protected void callLifecycleParticipant() throws MojoExecutionException {
-		// to be overridden in children classes
+	protected AdvancedMavenLifecycleParticipant getLifecycleParticipant() throws MojoExecutionException {
+		return null; // to be overridden in children classes
 	}
+	//
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException  {
