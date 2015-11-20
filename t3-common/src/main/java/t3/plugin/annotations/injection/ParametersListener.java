@@ -1,6 +1,6 @@
 /**
  * (C) Copyright 2014-2015 teecube
- * (http://teecube.org) and others.
+ * (http://teecu.be) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import t3.plugin.annotations.Parameter;
 
 /**
  *
- * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ * @author Mathieu Debove &lt;mad@teecu.be&gt;
  *
  * @param <T>
  */

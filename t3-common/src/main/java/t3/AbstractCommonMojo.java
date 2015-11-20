@@ -1,6 +1,6 @@
 /**
  * (C) Copyright 2014-2015 teecube
- * (http://teecube.org) and others.
+ * (http://teecu.be) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ import org.apache.commons.exec.launcher.CommandLauncherFactory;
 import org.apache.maven.MavenExecutionException;
 import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
 import org.apache.maven.execution.MavenSession;
+import org.apache.maven.model.Model;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecution;
@@ -66,7 +67,7 @@ import t3.plugin.annotations.injection.ParametersListener;
 
 /**
  *
- * @author Mathieu Debove &lt;mad@teecube.org&gt;
+ * @author Mathieu Debove &lt;mad@teecu.be&gt;
  *
  */
 public class AbstractCommonMojo extends AbstractMojo {
@@ -259,12 +260,28 @@ public class AbstractCommonMojo extends AbstractMojo {
 			   propertyExistsInSettings(propertyName, session.getSettings());
 	}
 
+	private String getPropertyValueInOriginalModel(Model originalModel, String propertyName, List<org.apache.maven.model.Profile> activeProfiles) {
+		if (originalModel == null || propertyName == null) return null;
+
+		String result = originalModel.getProperties().getProperty(propertyName);
+
+		if (result == null && activeProfiles != null) {
+			for (org.apache.maven.model.Profile profile : originalModel.getProfiles()) {
+				if (activeProfiles.contains(profile)) {
+					result = profile.getProperties().getProperty(propertyName);
+				}
+			}
+		}
+
+		return result;
+	}
 	public String getPropertyValue(MavenProject mavenProject, String propertyName, boolean lookInSettingsProperties, boolean lookInCommandLine, boolean onlyInOriginalModel) {
 		if (mavenProject == null) return null;
 		String result = null;
 
 		if (onlyInOriginalModel) {
-			result = mavenProject.getOriginalModel().getProperties().getProperty(propertyName);
+//			result = mavenProject.getOriginalModel().getProperties().getProperty(propertyName);
+			result = getPropertyValueInOriginalModel(mavenProject.getOriginalModel(), propertyName, mavenProject.getActiveProfiles());
 		} else {
 			result = mavenProject.getModel().getProperties().getProperty(propertyName);
 		}
