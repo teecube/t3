@@ -418,7 +418,9 @@ public class AbstractCommonMojo extends AbstractMojo {
 				// TODO manage default errors
 				getLog().info(cmdLine.toString());
 				getLog().info(stdOutAndErr.toString());
-				getLog().info(result.toString());
+				if (!"0".equals(result.toString())) {
+					getLog().info("Result code was: " + result.toString());
+				}
 				throw new MojoExecutionException(errorMsg, e);
 			} catch (IOException e) {
 				throw new MojoExecutionException(e.getMessage(), e);

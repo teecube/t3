@@ -69,7 +69,7 @@
 					to improve development &amp; management of TIBCO applications.
 				]]></ecosystemSumUpRaw>
 				<ecosystemCompany>teecube</ecosystemCompany>
-				<ecosystemCompanyURL>http://teecube.org</ecosystemCompanyURL>
+				<ecosystemCompanyURL>http://teecu.be</ecosystemCompanyURL>
 			</properties>
 		</profile>
 		<profile> <!-- Maven plugins & dependencies -->
@@ -1724,9 +1724,9 @@
 	</prerequisites>
 
 	<scm>
-		<connection>scm:git:http://git.t3soft.org/teecube/t3.git</connection>
-		<developerConnection>scm:git:http://git.t3soft.org/teecube/t3.git</developerConnection>
-		<url>http://git.t3soft.org/teecube/t3</url>
+		<connection>scm:git:http://git.teecu.be/teecube/t3.git</connection>
+		<developerConnection>scm:git:http://git.teecu.be/teecube/t3.git</developerConnection>
+		<url>http://git.teecu.be/teecube/t3</url>
 		<tag>HEAD</tag>
 	</scm>
 
