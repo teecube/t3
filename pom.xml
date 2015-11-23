@@ -1506,8 +1506,6 @@
 			</activation>
 			<properties>
 				<siteURL>${siteDisplayURL}/${ecosystemURLBase}</siteURL>
-				<siteUploadURL>http://localhost</siteUploadURL>
-				<siteUploadProtocol />
 				<ecosystemURLBase>${ecosystemArtifactId}/${ecosystemVersion}</ecosystemURLBase>
 				<ticURLBase>tic</ticURLBase>
 				<ticBW5MavenURLBase>tic/tic-bw5</ticBW5MavenURLBase>
