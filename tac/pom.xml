@@ -3,12 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.teecube</groupId>
+		<groupId>io.teecube</groupId>
 		<artifactId>t3</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	
-	<groupId>org.teecube.tac</groupId>
+	<groupId>io.teecube.tac</groupId>
 	<artifactId>tac</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
@@ -31,7 +31,7 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.teecube.t3</groupId>
+				<groupId>io.teecube.t3</groupId>
 				<artifactId>t3-site-enhancer</artifactId>
 			</plugin>
 		</plugins>
