@@ -47,8 +47,11 @@
 		<profile>
 			<id>release-profile</id>
 			<activation>
-				<activeByDefault>false</activeByDefault>
 				<!-- activation is triggered by maven-release-plugin -->
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
 			</activation>
 			<build>
 				<plugins>
