@@ -45,6 +45,52 @@
 
 	<profiles>
 		<profile>
+			<id>release-profile</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<!-- activation is triggered by maven-release-plugin -->
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<version>${maven.plugin.enforcer}</version>
+						<executions>
+							<execution>
+								<id>enforce-release-properties</id>
+								<goals>
+									<goal>enforce</goal>
+								</goals>
+								<phase>validate</phase>
+								<configuration>
+									<rules>
+										<!-- repositories -->
+										<requireProperty>
+											<property>repositoryReleaseURL</property>
+											<message>
+												<![CDATA[repositoryReleaseURL is required]]>
+											</message>
+											<regex>.*</regex>
+											<regexMessage>repositoryReleaseURL</regexMessage>
+										</requireProperty>
+										<requireProperty>
+											<property>repositorySnapshotURL</property>
+											<message>
+												<![CDATA[repositorySnapshotURL is required]]>
+											</message>
+											<regex>.*</regex>
+											<regexMessage>repositorySnapshotURL</regexMessage>
+										</requireProperty>
+									</rules>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
 			<id>branding</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
@@ -841,7 +887,7 @@
 							<configuration>
 								<tagNameFormat>@{project.artifactId}/@{project.version}</tagNameFormat>
 								<autoVersionSubmodules>true</autoVersionSubmodules>
-								<useReleaseProfile>false</useReleaseProfile>
+								<useReleaseProfile>true</useReleaseProfile>
 							</configuration>
 						</plugin>
 						<plugin>
