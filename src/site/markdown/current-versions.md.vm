@@ -8,8 +8,8 @@ $h1 Current versions of elements
 | Name                                                                                                    | | Version             | Maven coordinates                                                    |
 |---------------------------------------------------------------------------------------------------------|-|---------------------|----------------------------------------------------------------------|
 | [${ecosystemName}](./index.html)                                                                        | | ${ecosystemVersion} | ${ecosystemGroupId}:${ecosystemArtifactId}:${ecosystemVersion}       |
-| [${ticDisplayedName}](${siteDisplayURL}/${ticURLBase}/index.html)                                       | | ${ticVersion}       | ${ticGroupId}:${ticArtifactId}:${ticVersion}                         |
-| | [${ticDisplayedName} - ${ticDisplayedBW5MavenName}](${siteDisplayURL}/${ticBW5MavenURLBase}/index.html) | ${ticBW5MavenVersion}       | ${ticGroupId}:${ticBW5MavenArtifactId}:${ticBW5MavenVersion} |
-| | [${ticDisplayedName} - ${ticDisplayedBW6MavenName}](${siteDisplayURL}/${ticBW6MavenURLBase}/index.html) | ${ticBW6MavenVersion}       | ${ticGroupId}:${ticBW6MavenArtifactId}:${ticBW6MavenVersion} |
-| [${tacDisplayedName}](${siteDisplayURL}/${tacArtifactId}/index.html)                                    | | ${tacVersion}       | ${tacGroupId}:${tacArtifactId}:${tacVersion}                         |
-| [${toeDisplayedName}](${siteDisplayURL}/${toeArtifactId}/index.html)                                    | | ${toeVersion}       | ${toeGroupId}:${toeArtifactId}:${toeVersion}                         |
+| [${ticDisplayedName}](${siteURL}/${ticURLBase}/index.html)                                       | | ${ticVersion}       | ${ticGroupId}:${ticArtifactId}:${ticVersion}                         |
+| | [${ticDisplayedName} - ${ticDisplayedBW5MavenName}](${siteURL}/${ticBW5MavenURLBase}/index.html) | ${ticBW5MavenVersion}       | ${ticGroupId}:${ticBW5MavenArtifactId}:${ticBW5MavenVersion} |
+| | [${ticDisplayedName} - ${ticDisplayedBW6MavenName}](${siteURL}/${ticBW6MavenURLBase}/index.html) | ${ticBW6MavenVersion}       | ${ticGroupId}:${ticBW6MavenArtifactId}:${ticBW6MavenVersion} |
+| [${tacDisplayedName}](${siteURL}/${tacArtifactId}/index.html)                                    | | ${tacVersion}       | ${tacGroupId}:${tacArtifactId}:${tacVersion}                         |
+| [${toeDisplayedName}](${siteURL}/${toeArtifactId}/index.html)                                    | | ${toeVersion}       | ${toeGroupId}:${toeArtifactId}:${toeVersion}                         |
