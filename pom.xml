@@ -8,6 +8,7 @@
 	<packaging>pom</packaging>
 
 	<name>T³</name>
+	<description>T³ (teecube) stands for TIBCO Enterprise Extensions, it provides Maven plugins for Application Lifecycle Management (TIC), advanced components (TAC) and cloud-enabler features (TOE) for of TIBCO products and projects.</description>
 
 	<properties>
 		<releaseVersion>${project.version}</releaseVersion> <!-- default value will be overridden by release:perform command line -->
@@ -86,6 +87,24 @@
 											<regexMessage>repositorySnapshotURL</regexMessage>
 										</requireProperty>
 									</rules>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- sign artifacts with GnuPG -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+								<configuration>
+									<passphraseServerId>t3.gpg</passphraseServerId>
 								</configuration>
 							</execution>
 						</executions>
@@ -1800,6 +1819,15 @@
 	</profiles>
 
 	<!-- Project management -->
+	<developers>
+		<developer>
+			<email>mad@teecu.be</email>
+			<name>Mathieu Debove</name>
+			<url>https://github.com/debovema</url>
+			<id>debovema</id>
+		</developer>
+	</developers>
+
 	<distributionManagement>
 		<repository>
 			<id>t3.repo</id>
