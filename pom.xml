@@ -73,6 +73,22 @@
 										<token>&lt;url&gt;\$\{siteURL\}&lt;/url&gt;</token>
 										<value>&lt;url&gt;${siteURL}&lt;/url&gt;</value>
 									</replacement>
+									<replacement>
+										<token>&lt;url&gt;\$\{repositoryReleaseURL\}&lt;/url&gt;</token>
+										<value>&lt;url&gt;${repositoryReleaseURL}&lt;/url&gt;</value>
+									</replacement>
+									<replacement>
+										<token>&lt;url&gt;\$\{repositorySnapshotURL\}&lt;/url&gt;</token>
+										<value>&lt;url&gt;${repositorySnapshotURL}&lt;/url&gt;</value>
+									</replacement>
+									<replacement>
+										<token>&lt;name&gt;\$\{ecosystemCompany\}&lt;/name&gt;</token>
+										<value>&lt;name&gt;${ecosystemCompany}&lt;/name&gt;</value>
+									</replacement>
+									<replacement>
+										<token>&lt;url&gt;\$\{ecosystemCompanyURL\}&lt;/url&gt;</token>
+										<value>&lt;url&gt;${ecosystemCompanyURL}&lt;/url&gt;</value>
+									</replacement>
 								</replacements>
 							</configuration>
 							<executions>
