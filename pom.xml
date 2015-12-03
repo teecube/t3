@@ -104,7 +104,7 @@
 									<goal>sign</goal>
 								</goals>
 								<configuration>
-									<keyname>AECFBABF</keyname>
+									<keyname>19781536</keyname>
 									<passphraseServerId>t3.gpg</passphraseServerId>
 								</configuration>
 							</execution>
