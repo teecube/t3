@@ -4,7 +4,7 @@
 
 	<groupId>io.teecube</groupId>
 	<artifactId>t3</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>T³</name>
@@ -55,7 +55,59 @@
 				</property>
 			</activation>
 			<build>
+				<pluginManagement>
+					<plugins>
+						<!--
+						replace parameters in Maven site URL <url>
+						(for mvnrepository.com for instance) and release version
+						-->
+						<plugin>
+							<groupId>com.google.code.maven-replacer-plugin</groupId>
+							<artifactId>replacer</artifactId>
+							<version>1.5.3</version>
+							<configuration>
+								<file>${project.basedir}/pom.xml</file>
+								<outputFile>${project.basedir}/pom.xml</outputFile>
+								<replacements>
+									<replacement>
+										<token>&lt;url&gt;\$\{siteURL\}&lt;/url&gt;</token>
+										<value>&lt;url&gt;${siteURL}&lt;/url&gt;</value>
+									</replacement>
+								</replacements>
+							</configuration>
+							<executions>
+								<execution>
+									<phase>verify</phase>
+									<goals>
+										<goal>replace</goal>
+									</goals>
+								</execution>
+								<execution>
+									<id>update-versions</id>
+									<phase>verify</phase>
+									<inherited>false</inherited>
+									<goals>
+										<goal>replace</goal>
+									</goals>
+									<configuration>
+										<replacements>
+											<replacement>
+												<token>&lt;releaseVersion&gt;\$\{project.version\}&lt;/releaseVersion&gt;</token>
+												<value>&lt;releaseVersion&gt;${project.version}&lt;/releaseVersion&gt;</value>
+											</replacement>
+										</replacements>
+									</configuration>
+								</execution>
+							</executions>
+						</plugin>
+					</plugins>
+				</pluginManagement>
 				<plugins>
+					<plugin>
+						<groupId>com.google.code.maven-replacer-plugin</groupId>
+						<artifactId>replacer</artifactId>
+						<inherited>false</inherited>
+					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-enforcer-plugin</artifactId>
@@ -1147,7 +1199,7 @@
 					<dependency>
 						<groupId>io.teecube.t3</groupId>
 						<artifactId>t3-common</artifactId>
-						<version>0.0.2-SNAPSHOT</version>
+						<version>0.0.1-SNAPSHOT</version>
 					</dependency>
 
 					<dependency>
@@ -1563,7 +1615,7 @@
 						<plugin>
 							<groupId>io.teecube.t3</groupId>
 							<artifactId>t3-site-enhancer</artifactId>
-							<version>0.0.2-SNAPSHOT</version>
+							<version>0.0.1-SNAPSHOT</version>
 							<configuration>
 								<topMenus>
 									<topMenu>
