@@ -1,4 +1,4 @@
-image: maven:3.2.5-jdk-7
+image: jamesdbloom/docker-java7-maven
 
 default:
     script: "mvn clean test"
