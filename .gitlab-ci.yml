@@ -1,4 +1,7 @@
 image: jamesdbloom/docker-java7-maven
 
-default:
-    script: "mvn clean test"
+package:
+    script: "mvn clean package"
+
+site:
+    script: "mvn clean site-deploy"
