@@ -1,2 +1,2 @@
 default:
-    script: "mvn clean test"
+    script: "/home/jenkins/tools/hudson.tasks.Maven_MavenInstallation/Maven3.1.1/bin/mvn clean test"
