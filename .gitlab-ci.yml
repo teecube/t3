@@ -1,2 +1,4 @@
+image: maven:3.3.3-jdk-8
+
 default:
-    script: "/home/jenkins/tools/hudson.tasks.Maven_MavenInstallation/Maven3.1.1/bin/mvn clean test"
+    script: "mvn clean test"
