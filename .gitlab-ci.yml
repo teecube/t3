@@ -19,6 +19,6 @@ release:
         - mvn -gs /home/gitlab_ci_multi_runner/data/m2/settings.xml -P t3-release release:clean release:prepare release:perform
     only:
         - release
-    except
+    except:
         - branches
         - tags
