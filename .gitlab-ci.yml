@@ -4,18 +4,18 @@ before_script:
     - alias maven="mvn -gs /home/gitlab_ci_multi_runner/data/m2/settings.xml"
 
 test:
-    script: "maven clean install"
+    script: "mvn -gs /home/gitlab_ci_multi_runner/data/m2/settings.xml clean install"
     except:
         - release
 
 site:
-    script: "maven clean site-deploy -P t3-snapshot"
+    script: "mvn -gs /home/gitlab_ci_multi_runner/data/m2/settings.xml clean site-deploy -P t3-snapshot"
     except:
         - release
 
 release:
     stage: build
     script:
-        - maven -P t3-release release:clean release:prepare release:perform
+        - mvn -gs /home/gitlab_ci_multi_runner/data/m2/settings.xml -P t3-release release:clean release:prepare release:perform
     only:
         - release
