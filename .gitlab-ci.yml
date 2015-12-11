@@ -4,5 +4,5 @@ test:
     script: "mvn -gs /home/gitlab_ci_multi_runner/data/m2/settings.xml clean install"
 
 site:
-    script: "mvn -gs /home/gitlab_ci_multi_runner/data/m2/settings.xml clean site-deploy"
+    script: "mvn -gs /home/gitlab_ci_multi_runner/data/m2/settings.xml clean site-deploy -P t3-snapshot"
 
