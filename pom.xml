@@ -45,17 +45,6 @@
 		</extensions>
 	</build>
 
-	<profiles>
-	    <profile>
-			<id>t3-release</id>
-			<activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <developmentVersion>0.0.2-SNPASHOT</developmentVersion>
-                <releaseVersion>0.0.1-beta2</releaseVersion>
-            </properties>
-        </profile>
     	<profile>
 			<id>release-profile</id>
 			<activation>
