@@ -45,7 +45,8 @@
 		</extensions>
 	</build>
 
-    	<profile>
+	<profiles>
+	    	<profile>
 			<id>release-profile</id>
 			<activation>
 				<!-- activation is triggered by maven-release-plugin -->
