@@ -3,8 +3,6 @@ image: jamesdbloom/docker-java7-maven
 #package:
 #    script: "mvn clean package"
 
-#site:
-#    script: "mvn -gs /home/gitlab_ci_multi_runner/data/settings.xml clean site-deploy"
+site:
+    script: "mvn -gs /home/gitlab_ci_multi_runner/data/m2/settings.xml clean site-deploy"
 
-ll:
-    script: "cd /home/gitlab_ci_multi_runner && pwd && ls -la && cd /home/gitlab_ci_multi_runner/data && pwd && ls -la"
