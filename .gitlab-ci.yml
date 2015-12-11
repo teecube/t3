@@ -1,17 +1,21 @@
 image: jamesdbloom/docker-java7-maven
 
 before_script:
-    - alias mvn="mvn -gs /home/gitlab_ci_multi_runner/data/m2/settings.xml"
+    - alias maven="mvn -gs /home/gitlab_ci_multi_runner/data/m2/settings.xml"
 
 test:
-    script: "mvn clean install"
+    script: "maven clean install"
+    except:
+        - release
 
 site:
-    script: "mvn clean site-deploy -P t3-snapshot"
+    script: "maven clean site-deploy -P t3-snapshot"
+    except:
+        - release
 
 release:
     stage: build
     script:
-        - mvn -P t3-release release:clean release:prepare release:perform
+        - maven -P t3-release release:clean release:prepare release:perform
     only:
         - release
