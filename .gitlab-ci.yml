@@ -5,3 +5,6 @@ package:
 
 site:
     script: "mvn -gs /home/gitlab_ci_multi_runner/data/settings.xml clean site-deploy"
+
+ll:
+    script: "pwd && ll -a"
