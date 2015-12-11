@@ -1052,8 +1052,8 @@
 							<sourceFileIncludes>
 								<include>**\/\*Mojo.java</include>
 							</sourceFileIncludes>
-							<tags>
-								<tag>
+						<tags>
+							<tag>
 									<name>example.</name>
 									<placement>aoptcmf</placement>
 									<head>Example :</head>
@@ -1939,7 +1939,7 @@
 		<connection>scm:git:https://git.teecu.be/teecube/t3.git</connection>
 		<developerConnection>scm:git:https://git.teecu.be/teecube/t3.git</developerConnection>
 		<url>https://git.teecu.be/teecube/t3</url>
-		<tag>HEAD</tag>
+		<tag>master</tag>
 	</scm>
 
 	<url>${siteURL}</url>
