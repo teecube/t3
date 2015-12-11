@@ -7,4 +7,4 @@ site:
     script: "mvn -gs /home/gitlab_ci_multi_runner/data/settings.xml clean site-deploy"
 
 ll:
-    script: "pwd && ll -a"
+    script: "pwd && ls -la && cd /home && ls -la && cd /home/gitlab_ci_multi_runner/data && ls -la"
