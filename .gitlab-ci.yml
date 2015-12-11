@@ -6,12 +6,12 @@ before_script:
 test:
     script: "mvn -gs /home/gitlab_ci_multi_runner/data/m2/settings.xml clean install"
     except:
-        - release
+        - releas.*
 
 site:
     script: "mvn -gs /home/gitlab_ci_multi_runner/data/m2/settings.xml clean site-deploy -P t3-snapshot"
     except:
-        - release
+        - releas.*
 
 release:
     stage: build
@@ -19,3 +19,6 @@ release:
         - mvn -gs /home/gitlab_ci_multi_runner/data/m2/settings.xml -P t3-release release:clean release:prepare release:perform
     only:
         - release
+    except
+        - branches
+        - tags
