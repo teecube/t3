@@ -1,7 +1,7 @@
 image: jamesdbloom/docker-java7-maven
 
-#package:
-#    script: "mvn clean package"
+test:
+    script: "mvn -gs /home/gitlab_ci_multi_runner/data/m2/settings.xml clean package"
 
 site:
     script: "mvn -gs /home/gitlab_ci_multi_runner/data/m2/settings.xml clean site-deploy"
