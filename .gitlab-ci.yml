@@ -6,10 +6,14 @@ before_script:
 test:
     script: "mvn -gs /home/gitlab_ci_multi_runner/data/m2/settings.xml clean install"
     except:
-        - releas.*
         - tags
 
 site:
     script: "mvn -gs /home/gitlab_ci_multi_runner/data/m2/settings.xml clean site-deploy -P t3-snapshot"
     except:
-        - releas.*
+        - tags
+
+site-redeploy:
+    script: "mvn -gs /home/gitlab_ci_multi_runner/data/m2/settings.xml clean site-deploy -P t3-archive"
+    only:
+        - tags
