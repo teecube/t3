@@ -4,7 +4,7 @@
 
 	<groupId>io.teecube</groupId>
 	<artifactId>t3</artifactId>
-	<version>0.0.1-beta4</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>T³</name>
@@ -1216,7 +1216,7 @@
 					<dependency>
 						<groupId>io.teecube.t3</groupId>
 						<artifactId>t3-common</artifactId>
-						<version>0.0.1-beta4</version>
+						<version>0.0.1-SNAPSHOT</version>
 					</dependency>
 
 					<dependency>
@@ -1632,7 +1632,7 @@
 						<plugin>
 							<groupId>io.teecube.t3</groupId>
 							<artifactId>t3-site-enhancer</artifactId>
-							<version>0.0.1-beta4</version>
+							<version>0.0.1-SNAPSHOT</version>
 							<configuration>
 								<topMenus>
 									<topMenu>
@@ -1929,7 +1929,7 @@
 		<connection>scm:git:https://git.teecu.be/teecube/t3.git</connection>
 		<developerConnection>scm:git:https://git.teecu.be/teecube/t3.git</developerConnection>
 		<url>https://git.teecu.be/teecube/t3</url>
-		<tag>t3/0.0.1-beta4</tag>
+		<tag>refs/origin/master</tag>
 	</scm>
 
 	<url>${siteURL}</url>
