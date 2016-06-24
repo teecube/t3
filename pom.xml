@@ -1359,11 +1359,7 @@
                     <dependency>
                         <groupId>io.teecube.t3</groupId>
                         <artifactId>t3-common</artifactId>
-<<<<<<< HEAD
-                        <version>0.0.3-SNAPSHOT</version>
-=======
                         <version>0.0.2-SNAPSHOT</version>
->>>>>>> 7d7f5df07f976f48a6a472b9a931f2335ba455ca
                     </dependency>
  
 					<dependency>
@@ -1870,20 +1866,12 @@
 						<plugin>
 							<groupId>io.teecube.t3</groupId>
 							<artifactId>t3-site-enhancer</artifactId>
-<<<<<<< HEAD
-							<version>0.0.3-SNAPSHOT</version>
-=======
 							<version>0.0.2-SNAPSHOT</version>
->>>>>>> 7d7f5df07f976f48a6a472b9a931f2335ba455ca
 							<dependencies>
 			                    <dependency>
 			                        <groupId>io.teecube.t3</groupId>
 			                        <artifactId>t3-common</artifactId>
-<<<<<<< HEAD
-			                        <version>0.0.3-SNAPSHOT</version>
-=======
 			                        <version>0.0.2-SNAPSHOT</version>
->>>>>>> 7d7f5df07f976f48a6a472b9a931f2335ba455ca
 			                    </dependency>
 								<dependency>
 									<groupId>org.rendersnake</groupId>
