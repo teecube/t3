@@ -1685,6 +1685,10 @@
 									<configuration>
 										<replacements>
 											<replacement>
+												<token>&lt;name&gt;\$\{ecosystemName\}&lt;/name&gt;</token>
+												<value>&lt;name&gt;${ecosystemName}&lt;/name&gt;</value>
+											</replacement>
+											<replacement>
 												<token>&lt;url&gt;\$\{siteURL\}&lt;/url&gt;</token>
 												<value>&lt;url&gt;${siteURL}&lt;/url&gt;</value>
 											</replacement>
