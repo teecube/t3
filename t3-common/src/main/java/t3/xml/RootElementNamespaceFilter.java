@@ -86,19 +86,29 @@ public class RootElementNamespaceFilter extends XMLFilterImpl {
 
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-
 		if (localName.equals(rootElementLocalName)) {
 			AttributesImpl result = new AttributesImpl();
 
-			for (int i = 0; i < atts.getLength(); i++) {
-				String _uri = atts.getURI(i);
-				String _localName = atts.getLocalName(i);
-				String _qName = atts.getQName(i);
-				String _type = atts.getType(i);
-				String _value = atts.getValue(i);
+			String prefix = qName.substring(0, qName.lastIndexOf(":" + localName));
 
-				if (!namespaceDeclarationsToRemove.contains(new NamespaceDeclaration(_qName, _value))) {
-					result.addAttribute(_uri, _localName, _qName, _type, _value);
+			if (atts.getLength() > 0) {
+				for (int i = 0; i < atts.getLength(); i++) {
+					String _uri = atts.getURI(i);
+					String _localName = atts.getLocalName(i);
+					String _qName = atts.getQName(i);
+					String _type = atts.getType(i);
+					String _value = atts.getValue(i);
+
+					if (!namespaceDeclarationsToRemove.contains(new NamespaceDeclaration(_qName, _value))) {
+						result.addAttribute(_uri, _localName, _qName, _type, _value);
+					}
+				}
+			}
+
+			for (NamespaceDeclaration namespaceDeclaration : namespaceDeclarationsToRemove) {
+				if (namespaceDeclaration.prefix.contains(":"+prefix)) {
+					qName = localName;
+					break;
 				}
 			}
 
@@ -109,8 +119,31 @@ public class RootElementNamespaceFilter extends XMLFilterImpl {
 	}
 
 	@Override
-	public void startPrefixMapping(String prefix, String url) throws SAXException {
+	public void endElement(String uri, String localName, String qName) throws SAXException {
+		if (localName.equals(rootElementLocalName)) {
+			String prefix = qName.substring(0, qName.lastIndexOf(":" + localName));
 
+			for (NamespaceDeclaration namespaceDeclaration : namespaceDeclarationsToRemove) {
+				if (namespaceDeclaration.prefix.contains(":"+prefix)) {
+					qName = localName;
+					break;
+				}
+			}
+		}
+
+		super.endElement(uri, localName, qName);
+	}
+
+	@Override
+	public void startPrefixMapping(String prefix, String url) throws SAXException {
+		for (NamespaceDeclaration namespaceDeclaration : namespaceDeclarationsToRemove) {
+			if (namespaceDeclaration.prefix.contains(":"+prefix)) {
+				prefix = "";
+				break;
+			}
+		}
+
+		super.startPrefixMapping(prefix, url);
 	}
 
 }
