@@ -87,6 +87,10 @@ public class XMLMarshall<Type, Factory> {
 		load();
 	}
 
+	public File getXMLFile() {
+		return this.xmlFile;
+	}
+
 	/**
 	 * <p>
 	 * This will unmarshall the object from an XML file.

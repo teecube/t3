@@ -89,8 +89,6 @@ public class RootElementNamespaceFilter extends XMLFilterImpl {
 		if (localName.equals(rootElementLocalName)) {
 			AttributesImpl result = new AttributesImpl();
 
-			String prefix = qName.substring(0, qName.lastIndexOf(":" + localName));
-
 			if (atts.getLength() > 0) {
 				for (int i = 0; i < atts.getLength(); i++) {
 					String _uri = atts.getURI(i);
@@ -105,45 +103,10 @@ public class RootElementNamespaceFilter extends XMLFilterImpl {
 				}
 			}
 
-			for (NamespaceDeclaration namespaceDeclaration : namespaceDeclarationsToRemove) {
-				if (namespaceDeclaration.prefix.contains(":"+prefix)) {
-					qName = localName;
-					break;
-				}
-			}
-
 			super.startElement(uri, localName, qName, result);
 		} else {
 			super.startElement(uri, localName, qName, atts);
 		}
-	}
-
-	@Override
-	public void endElement(String uri, String localName, String qName) throws SAXException {
-		if (localName.equals(rootElementLocalName)) {
-			String prefix = qName.substring(0, qName.lastIndexOf(":" + localName));
-
-			for (NamespaceDeclaration namespaceDeclaration : namespaceDeclarationsToRemove) {
-				if (namespaceDeclaration.prefix.contains(":"+prefix)) {
-					qName = localName;
-					break;
-				}
-			}
-		}
-
-		super.endElement(uri, localName, qName);
-	}
-
-	@Override
-	public void startPrefixMapping(String prefix, String url) throws SAXException {
-		for (NamespaceDeclaration namespaceDeclaration : namespaceDeclarationsToRemove) {
-			if (namespaceDeclaration.prefix.contains(":"+prefix)) {
-				prefix = "";
-				break;
-			}
-		}
-
-		super.startPrefixMapping(prefix, url);
 	}
 
 }
