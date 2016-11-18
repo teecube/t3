@@ -1,0 +1,20 @@
+#set($h1 = '#')
+#set($h2 = '##')
+#set($h3 = '###')
+#set($h4 = '####')
+
+$h1 Default versions of plugins
+
+This list contains all ${ecosystemNameHighlight} plugins with default versions
+as of ${ecosystemNameHighlight}&nbsp;__${ecosystemVersion}__.
+
+| Name                                                                                                       | | Version                | Maven coordinates                                              |
+|------------------------------------------------------------------------------------------------------------|-|------------------------|----------------------------------------------------------------|
+| [${ecosystemName}](./index.html)                                                                           | | ${ecosystemVersion}    | ${ecosystemGroupId}:${ecosystemArtifactId}:${ecosystemVersion} |
+| [${ticDisplayedName}](${siteDisplayURL}/${ticURLBase}/index.html)                                          | | ${ticVersion}          | ${ticGroupId}:${ticArtifactId}:${ticVersion}                   |
+| | [${ticDisplayedName} - ${ticDisplayedBW5MavenName}](${siteDisplayURL}/${ticBW5MavenURLBase}/index.html)    | ${ticBW5MavenVersion}  | ${ticGroupId}:${ticBW5MavenArtifactId}:${ticBW5MavenVersion}   |
+| | [${ticDisplayedName} - ${ticDisplayedBW6MavenName}](${siteDisplayURL}/${ticBW6MavenURLBase}/index.html)    | ${ticBW6MavenVersion}  | ${ticGroupId}:${ticBW6MavenArtifactId}:${ticBW6MavenVersion}   |
+| [${tacDisplayedName}](${siteDisplayURL}/${tacArtifactId}/index.html)                                       | | ${tacVersion}          | ${tacGroupId}:${tacArtifactId}:${tacVersion}                   |
+| [${toeDisplayedName}](${siteDisplayURL}/${toeArtifactId}/index.html)                                       | | ${toeVersion}          | ${toeGroupId}:${toeArtifactId}:${toeVersion}                   |
+| | [${toeDisplayedName} - ${toeDisplayedInstallerName}](${siteDisplayURL}/${toeInstallerURLBase}/index.html)  | ${toeInstallerVersion} | ${ticGroupId}:${toeInstallerArtifactId}:${toeInstallerVersion} |
+| | [${toeDisplayedName} - ${toeDisplayedDomainsName}](${siteDisplayURL}/${toeDomainsURLBase}/index.html)      | ${toeDomainsVersion}   | ${ticGroupId}:${toeDomainsArtifactId}:${toeDomainsVersion}     |
