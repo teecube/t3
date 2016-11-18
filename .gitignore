@@ -1,0 +1,11 @@
+.classpath
+.project
+.settings/
+target/
+tic/
+tic
+tac/
+tac
+toe/
+toe
+git*.sh

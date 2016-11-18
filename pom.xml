@@ -1,0 +1,2283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>io.teecube</groupId>
+	<artifactId>t3</artifactId>
+	<version>0.0.2-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>${ecosystemName}</name>
+	<description>${ecosystemName} (${ecosystemPhoneticName}) stands for ${ecosystemFullName}, it provides Maven plugins for Application Lifecycle Management (${ticName}), advanced components (${tacName}) and cloud-enabler features (${toeName}) for TIBCO products and projects.</description>
+
+	<properties>
+		<releaseVersion>${project.version}</releaseVersion> <!-- default value will be overridden by release:perform command line -->
+		<project.scm.id>t3.git</project.scm.id>
+
+		<siteTopCaption>${ecosystemNameHighlight2}</siteTopCaption>
+		<siteTopLink>${siteURL}</siteTopLink>
+
+		<ecosystemGroupId>io.teecube</ecosystemGroupId>
+		<ecosystemGroupIdCommon>io.teecube.t3</ecosystemGroupIdCommon>
+		<ecosystemArtifactId>t3</ecosystemArtifactId>
+		<ecosystemVersion>${releaseVersion}</ecosystemVersion>
+
+		<!-- default value not really used -->
+		<siteUploadURL>http://localhost</siteUploadURL>
+		<siteUploadProtocol />
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<inceptionYear>2016</inceptionYear>
+	</properties>
+
+	<modules>
+		<module>t3-common</module>
+		<module>t3-site-enhancer</module>
+	</modules>
+
+	<build>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-webdav-jackrabbit</artifactId>
+				<version>2.10</version>
+			</extension>
+		</extensions>
+	</build>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>io.teecube.t3</groupId>
+				<artifactId>t3-common</artifactId>
+				<version>0.0.2-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>io.teecube.t3</groupId>
+				<artifactId>t3-site-enhancer</artifactId>
+				<version>0.0.2-SNAPSHOT</version>
+			</dependency>
+
+			<!-- Maven dependencies -->
+			<dependency>
+				<groupId>org.apache.maven</groupId>
+				<artifactId>maven-core</artifactId>
+				<version>3.3.3</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.maven</groupId>
+				<artifactId>maven-model</artifactId>
+				<version>3.3.3</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.maven</groupId>
+				<artifactId>maven-project</artifactId>
+				<version>3.0-alpha-2</version>
+				<exclusions>
+					<exclusion>
+						<groupId>com.google.code.google-collections</groupId>
+						<artifactId>google-collect</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.maven</groupId>
+				<artifactId>maven-plugin-api</artifactId>
+				<version>3.3.3</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.7</version>
+			</dependency>
+				<dependency>
+					<groupId>org.apache.maven.plugin-tools</groupId>
+					<artifactId>maven-plugin-annotations</artifactId>
+					<version>3.2</version>
+				</dependency>
+
+			<!-- Apache commons -->
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>2.4</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>3.3.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-collections4</artifactId>
+				<version>4.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-exec</artifactId>
+				<version>1.3</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.ant</groupId>
+				<artifactId>ant</artifactId>
+				<version>1.9.4</version>
+			</dependency>
+
+			<!-- others -->
+			<dependency>
+				<groupId>org.reflections</groupId>
+				<artifactId>reflections</artifactId>
+				<version>0.9.9</version>
+			</dependency>
+			<dependency>
+				<groupId>org.twdata.maven</groupId>
+				<artifactId>mojo-executor</artifactId>
+				<version>2.1.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>14.0.1</version>
+			</dependency>
+			<dependency>
+				<groupId>dom4j</groupId>
+				<artifactId>dom4j</artifactId>
+				<version>1.6.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jooq</groupId>
+				<artifactId>joox</artifactId>
+				<version>1.3.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.rendersnake</groupId>
+				<artifactId>rendersnake</artifactId>
+				<version>1.8</version>
+			</dependency>
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>1.14.8</version>
+			</dependency>
+			<dependency>
+				<groupId>org.kohsuke.metainf-services</groupId>
+				<artifactId>metainf-services</artifactId>
+				<version>1.6</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<profiles>
+	    <profile>
+			<id>release-profile</id>
+			<activation>
+				<!-- activation is triggered by maven-release-plugin -->
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+            </activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.google.code.maven-replacer-plugin</groupId>
+						<artifactId>replacer</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<version>${maven.plugin.enforcer}</version>
+						<executions>
+							<execution>
+								<id>enforce-release-properties</id>
+								<goals>
+									<goal>enforce</goal>
+								</goals>
+								<phase>validate</phase>
+								<configuration>
+									<rules>
+										<!-- repositories -->
+										<requireProperty>
+											<property>repositoryReleaseURL</property>
+											<message>
+												<![CDATA[repositoryReleaseURL is required]]>
+											</message>
+											<regex>.*</regex>
+											<regexMessage>repositoryReleaseURL</regexMessage>
+										</requireProperty>
+										<requireProperty>
+											<property>repositorySnapshotURL</property>
+											<message>
+												<![CDATA[repositorySnapshotURL is required]]>
+											</message>
+											<regex>.*</regex>
+											<regexMessage>repositorySnapshotURL</regexMessage>
+										</requireProperty>
+									</rules>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- sign artifacts with GnuPG -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+								<configuration>
+									<keyname>19781536</keyname>
+									<passphraseServerId>t3.gpg</passphraseServerId>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>branding</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<file>
+					<missing>ignore.branding</missing>
+				</file>
+			</activation>
+			<properties>
+				<ecosystemName>T³</ecosystemName>
+				<ecosystemFullName>TIBCO Enterprise Extensions</ecosystemFullName>
+				<ecosystemPhoneticName>teecube</ecosystemPhoneticName>
+				<ecosystemLongName><![CDATA[<span class="color-highlight">T</span>IBCO <span class="color-highlight">E</span>nterprise <span class="color-highlight">E</span>xtensions]]></ecosystemLongName>
+				<ecosystemNameHighlight><![CDATA[<i>T<span class="color-highlight">³</span></i>]]></ecosystemNameHighlight>
+				<ecosystemNameHighlight2><![CDATA[T<span class="color-highlight">³</span>]]></ecosystemNameHighlight2>
+				<ecosystemSlogan><![CDATA[<i>&laquo;tee<span class="color-highlight">cube</span>&raquo;</i>, ${ecosystemLongName}]]></ecosystemSlogan>
+				<ecosystemSlogan2><![CDATA[T<span class="color-highlight">³</span> = <span class="color-highlight">T</span>IC T<span class="color-highlight">A</span>C TO<span class="color-highlight">E</span>]]></ecosystemSlogan2>
+				<ecosystemPronounced><![CDATA[(pronounced <i>&laquo;tee-cube&raquo;</i>)]]></ecosystemPronounced>
+				<ecosystemSumUp><![CDATA[
+					${ecosystemNameHighlight}
+					is a modular &amp; full-featured,
+					<a href="${siteRootURL}/license.html">open-source</a> solution
+					to improve development &amp; management of TIBCO applications.
+				]]></ecosystemSumUp>
+				<ecosystemSumUpRaw><![CDATA[
+					${ecosystemName}
+					is a modular, plugin-based, full-featured,
+					open-source solution
+					to improve development &amp; management of TIBCO applications.
+				]]></ecosystemSumUpRaw>
+				<ecosystemCompany>teecube</ecosystemCompany>
+				<ecosystemCompanyURL>http://teecu.be</ecosystemCompanyURL>
+
+				<!-- TIC -->
+				<ticName>TIC</ticName>
+				<ticDisplayedName><![CDATA[TI<span class="color-highlight">C</span>]]></ticDisplayedName>
+				<ticFullName>TIBCO Infrastructure Core</ticFullName>
+				<ticSlogan><![CDATA[<i><span class="color-highlight">T</span>IBCO <span class="color-highlight">I</span>nfrastructure <span class="color-highlight">C</span>ore</i>]]></ticSlogan>
+				<ticAcronym><![CDATA[<abbr title="TIBCO Infrastructure Core">TI<span class="color-highlight">C</span></abbr>]]></ticAcronym>
+				<ticGroupId>io.teecube.tic</ticGroupId>
+				<ticArtifactId>tic</ticArtifactId>
+
+				<!-- TIC BW5 -->
+				<ticBW5MavenGroupId>${ticGroupId}</ticBW5MavenGroupId>
+				<ticBW5MavenArtifactId>tic-bw5</ticBW5MavenArtifactId>
+				<ticBW5MavenName>BW5 Maven plugin</ticBW5MavenName>
+				<ticDisplayedBW5MavenName><![CDATA[BW<span class="color-highlight">5</span> Maven plugin]]></ticDisplayedBW5MavenName>
+
+				<!-- TIC BW6 -->
+				<ticBW6MavenGroupId>${ticGroupId}</ticBW6MavenGroupId>
+				<ticBW6MavenArtifactId>tic-bw6</ticBW6MavenArtifactId>
+				<ticBW6MavenName>BW6 Maven plugin</ticBW6MavenName>
+				<ticDisplayedBW6MavenName><![CDATA[BW<span class="color-highlight">6</span> Maven plugin]]></ticDisplayedBW6MavenName>
+
+				<!-- TAC -->
+				<tacName>TAC</tacName>
+				<tacDisplayedName><![CDATA[T<span class="color-highlight">A</span>C]]></tacDisplayedName>
+				<tacFullName>TIBCO Advanced Components</tacFullName>
+				<tacSlogan><![CDATA[<i><span class="color-highlight">T</span>IBCO <span class="color-highlight">A</span>dvanced <span class="color-highlight">C</span>omponents</i>]]></tacSlogan>
+				<tacAcronym><![CDATA[<abbr title="TIBCO Advanced Components">T<span class="color-highlight">A</span>C</abbr>]]></tacAcronym>
+				<tacGroupId>io.teecube.tac</tacGroupId>
+				<tacArtifactId>tac</tacArtifactId>
+
+				<!-- TOE -->
+				<toeName>TOE</toeName>
+				<toeDisplayedName><![CDATA[<span class="color-highlight">T</span>OE]]></toeDisplayedName>
+				<toeFullName>Topology and Orchestration Extensions</toeFullName>
+				<toeSlogan><![CDATA[<span class="color-highlight">T</span>opology and <span class="color-highlight">O</span>rchestration <span class="color-highlight">E</span>xtensions]]></toeSlogan>
+				<toeAcronym><![CDATA[<abbr title="Topology and Orchestration Extensions"><span class="color-highlight">T</span>OE</abbr>]]></toeAcronym>
+				<toeGroupId>io.teecube.toe</toeGroupId>
+				<toeArtifactId>toe</toeArtifactId>
+
+				<!-- TOE Installer -->
+				<toeInstallerGroupId>${toeGroupId}</toeInstallerGroupId>
+				<toeInstallerArtifactId>toe-installer-plugin</toeInstallerArtifactId>
+				<toeInstallerName>Products Installer</toeInstallerName>
+				<toeDisplayedInstallerName><![CDATA[<span class="color-highlight">P</span>roducts <span class="color-highlight">I</span>nstaller]]></toeDisplayedInstallerName>
+
+				<!-- TOE Domains -->
+				<toeDomainsGroupId>${toeGroupId}</toeDomainsGroupId>
+				<toeDomainsArtifactId>toe-domains-plugin</toeDomainsArtifactId>
+				<toeDomainsName>Domains Manager</toeDomainsName>
+				<toeDisplayedDomainsName><![CDATA[<span class="color-highlight">D</span>omains <span class="color-highlight">M</span>anager]]></toeDisplayedDomainsName>
+			</properties>
+		</profile>
+		<profile> <!-- Maven plugins & dependencies -->
+			<id>maven</id> <!-- Maven plugins and dependencies -->
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<file>
+					<missing>ignore.maven.dependencies</missing>
+				</file>
+			</activation>
+			<properties>
+				<java.source.version>1.7</java.source.version>
+				<java.target.version>1.7</java.target.version>
+
+				<!-- default Maven artifacts versions -->
+				<maven.version>3.3.3</maven.version>
+				<maven.project>3.0-alpha-2</maven.project>
+				<maven.archiver>3.0.0</maven.archiver>
+
+				<maven.plugin.annotations>3.2</maven.plugin.annotations>
+				<maven.plugin.clean>2.6.1</maven.plugin.clean>
+				<maven.plugin.compiler>3.3</maven.plugin.compiler>
+				<maven.plugin.deploy>2.8.2</maven.plugin.deploy>
+				<maven.plugin.install>2.5.2</maven.plugin.install>
+				<maven.plugin.resources>2.7</maven.plugin.resources>
+				<maven.plugin.site>3.4</maven.plugin.site>
+				<maven.plugin.tools-api>3.2</maven.plugin.tools-api>
+
+				<maven.plugin.jar>2.5</maven.plugin.jar>
+				<maven.plugin.source>2.4</maven.plugin.source>
+
+				<maven.plugin.changelog>2.3</maven.plugin.changelog>
+				<maven.plugin.javadoc>2.10.3</maven.plugin.javadoc>
+				<maven.plugin.jxr>2.5</maven.plugin.jxr>
+				<maven.plugin.project-info-reports>2.8</maven.plugin.project-info-reports>
+
+				<maven.plugin.antrun>1.7</maven.plugin.antrun>
+				<maven.plugin.archetype>2.2</maven.plugin.archetype>
+				<maven.plugin.assembly>2.5.2</maven.plugin.assembly>
+				<maven.plugin.dependency>2.10</maven.plugin.dependency>
+				<maven.plugin.enforcer>1.4.1</maven.plugin.enforcer>
+				<maven.plugin.help>2.2</maven.plugin.help>
+				<maven.plugin.invoker>1.9</maven.plugin.invoker>
+				<maven.plugin.plugin>3.4</maven.plugin.plugin>
+				<maven.plugin.release>2.5.3</maven.plugin.release>
+
+				<plexus.component.metadata>1.6</plexus.component.metadata>
+			</properties>
+
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-clean-plugin</artifactId>
+							<version>${maven.plugin.clean}</version>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-compiler-plugin</artifactId>
+							<version>${maven.plugin.compiler}</version>
+							<configuration>
+								<source>${java.source.version}</source>
+								<target>${java.target.version}</target>
+							</configuration>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-deploy-plugin</artifactId>
+							<version>${maven.plugin.deploy}</version>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-install-plugin</artifactId>
+							<version>${maven.plugin.install}</version>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-resources-plugin</artifactId>
+							<version>${maven.plugin.resources}</version>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-site-plugin</artifactId>
+							<version>${maven.plugin.site}</version>
+							<inherited>true</inherited>
+							<dependencies>
+								<dependency>
+									<groupId>org.apache.maven.doxia</groupId>
+									<artifactId>doxia-module-markdown</artifactId>
+									<version>1.6</version>
+								</dependency>
+								<dependency>
+									<groupId>lt.velykis.maven.skins</groupId>
+									<artifactId>reflow-velocity-tools</artifactId>
+									<version>1.1.1</version>
+								</dependency>
+								<!-- Reflow skin requires Velocity >= 1.7 -->
+								<dependency>
+									<groupId>org.apache.velocity</groupId>
+									<artifactId>velocity</artifactId>
+									<version>1.7</version>
+								</dependency>
+								<dependency> <!-- add support for ssh/scp -->
+									<groupId>org.apache.maven.wagon</groupId>
+									<artifactId>wagon-ssh</artifactId>
+									<version>2.10</version>
+								</dependency>
+								<!-- add support for WebDAV -->
+								<dependency>
+									<groupId>org.apache.maven.wagon</groupId>
+									<artifactId>wagon-webdav-jackrabbit</artifactId>
+									<version>2.10</version>
+								</dependency>
+								<!-- force slf4j 1.6.x or it fails due to missing class StaticLoggerBinder -->
+								<dependency>
+									<groupId>org.slf4j</groupId>
+									<artifactId>slf4j-api</artifactId>
+									<version>1.6.1</version>
+								</dependency>
+								<!-- for UmlGraph inside Javadoc -->
+								<dependency>
+									<groupId>org.umlgraph</groupId>
+									<artifactId>umlgraph</artifactId>
+									<version>5.6.6</version>
+								</dependency>
+							</dependencies>
+							<executions>
+								<execution>
+									<id>attach-descriptor</id>
+									<goals>
+										<goal>attach-descriptor</goal>
+									</goals>
+								</execution>
+							</executions>
+							<configuration>
+								<chmod>false</chmod>
+							</configuration>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-jar-plugin</artifactId>
+							<version>${maven.plugin.jar}</version>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-source-plugin</artifactId>
+							<version>${maven.plugin.source}</version>
+							<executions>
+								<execution>
+									<id>attach-sources</id>
+									<goals>
+										<goal>jar</goal>
+									</goals>
+								</execution>
+							</executions>
+						</plugin>
+
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-javadoc-plugin</artifactId>
+							<version>${maven.plugin.javadoc}</version>
+							<configuration>
+								<detectLinks>true</detectLinks>
+								<detectOfflineLinks>false</detectOfflineLinks>
+								<failOnError>false</failOnError>
+								<links>
+									<link>http://java.sun.com/javase/6/docs/api</link>
+									<link>http://maven.apache.org/ref/${maven.version}/maven-artifact/apidocs</link>
+									<link>http://maven.apache.org/shared/maven-reporting-api/apidocs</link>
+									<link>http://maven.apache.org/ref/${maven.version}/maven-plugin-api/apidocs</link>
+									<link>http://maven.apache.org/ref/${maven.version}/maven-model/apidocs</link>
+									<link>http://maven.apache.org/ref/${maven.version}/maven-core/apidocs</link>
+									<link>http://maven.apache.org/ref/${maven.version}/maven-settings/apidocs</link>
+								</links>
+								<linksource>true</linksource>
+								<sourceFileIncludes>
+									<include>**\/\*.java</include>
+								</sourceFileIncludes>
+							</configuration>
+						</plugin>
+
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-antrun-plugin</artifactId>
+							<version>${maven.plugin.antrun}</version>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-archetype-plugin</artifactId>
+							<version>${maven.plugin.archetype}</version>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-assembly-plugin</artifactId>
+							<version>${maven.plugin.assembly}</version>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-dependency-plugin</artifactId>
+							<version>${maven.plugin.dependency}</version>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-enforcer-plugin</artifactId>
+							<version>${maven.plugin.enforcer}</version>
+							<executions>
+								<execution>
+									<id>enforce-common-properties</id>
+									<goals>
+										<goal>enforce</goal>
+									</goals>
+									<phase>pre-site</phase>
+									<configuration>
+										<rules>
+											<!-- T³ -->
+											<requireProperty>
+												<property>ecosystemName</property>
+												<message>
+													<![CDATA[ecosystemName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemFullName</property>
+												<message>
+													<![CDATA[ecosystemFullName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemFullName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemPhoneticName</property>
+												<message>
+													<![CDATA[ecosystemPhoneticName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemPhoneticName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemLongName</property>
+												<message>
+													<![CDATA[ecosystemLongName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemLongName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemNameHighlight</property>
+												<message>
+													<![CDATA[ecosystemNameHighlight is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemNameHighlight</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemNameHighlight2</property>
+												<message>
+													<![CDATA[ecosystemNameHighlight2 is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemNameHighlight2</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemSlogan</property>
+												<message>
+													<![CDATA[ecosystemSlogan is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemSlogan</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemSlogan2</property>
+												<message>
+													<![CDATA[ecosystemSlogan2 is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemSlogan2</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemPronounced</property>
+												<message>
+													<![CDATA[ecosystemPronounced is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemPronounced</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemSumUp</property>
+												<message>
+													<![CDATA[ecosystemSumUp is required]]>
+												</message>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemSumUpRaw</property>
+												<message>
+													<![CDATA[ecosystemSumUpRaw is required]]>
+												</message>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemGroupId</property>
+												<message>
+													<![CDATA[ecosystemGroupId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemGroupId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemGroupIdCommon</property>
+												<message>
+													<![CDATA[ecosystemGroupIdCommon is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemGroupIdCommon</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemArtifactId</property>
+												<message>
+													<![CDATA[ecosystemArtifactId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemArtifactId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemVersion</property>
+												<message>
+													<![CDATA[ecosystemVersion is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemVersion</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemCompany</property>
+												<message>
+													<![CDATA[ecosystemCompany is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemCompany</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ecosystemCompanyURL</property>
+												<message>
+													<![CDATA[ecosystemCompanyURL is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ecosystemCompanyURL</regexMessage>
+											</requireProperty>
+											<!-- TIC -->
+											<requireProperty>
+												<property>ticName</property>
+												<message>
+													<![CDATA[ticName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticDisplayedName</property>
+												<message>
+												<![CDATA[ticDisplayedName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticDisplayedName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticFullName</property>
+												<message>
+												<![CDATA[ticFullName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticFullName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticSlogan</property>
+												<message>
+												<![CDATA[ticSlogan is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticSlogan</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticAcronym</property>
+												<message>
+												<![CDATA[ticAcronym is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticAcronym</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticGroupId</property>
+												<message>
+												<![CDATA[ticGroupId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticGroupId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticArtifactId</property>
+												<message>
+												<![CDATA[ticArtifactId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticArtifactId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticURLBase</property>
+												<message>
+												<![CDATA[ticURLBase is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticURLBase</regexMessage>
+											</requireProperty>
+											<!-- TIC BW6 -->
+											<requireProperty>
+												<property>ticBW6MavenGroupId</property>
+												<message>
+												<![CDATA[ticBW6MavenGroupId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticBW6MavenGroupId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticBW6MavenArtifactId</property>
+												<message>
+												<![CDATA[ticBW6MavenArtifactId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticBW6MavenArtifactId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticBW6MavenURLBase</property>
+												<message>
+												<![CDATA[ticBW6MavenURLBase is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticBW6MavenURLBase</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticBW6MavenName</property>
+												<message>
+												<![CDATA[ticBW6MavenName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticBW6MavenName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticDisplayedBW6MavenName</property>
+												<message>
+												<![CDATA[ticDisplayedBW6MavenName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticDisplayedBW6MavenName</regexMessage>
+											</requireProperty>
+											<!-- TIC BW5 -->
+											<requireProperty>
+												<property>ticBW5MavenGroupId</property>
+												<message>
+												<![CDATA[ticBW5MavenGroupId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticBW5MavenGroupId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticBW5MavenArtifactId</property>
+												<message>
+												<![CDATA[ticBW5MavenArtifactId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticBW5MavenArtifactId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticBW5MavenURLBase</property>
+												<message>
+												<![CDATA[ticBW5MavenURLBase is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticBW5MavenURLBase</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticBW5MavenName</property>
+												<message>
+												<![CDATA[ticBW5MavenName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticBW5MavenName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>ticDisplayedBW5MavenName</property>
+												<message>
+												<![CDATA[ticDisplayedBW5MavenName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>ticDisplayedBW5MavenName</regexMessage>
+											</requireProperty>
+											<!-- TAC -->
+											<requireProperty>
+												<property>tacName</property>
+												<message>
+												<![CDATA[tacName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>tacName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>tacDisplayedName</property>
+												<message>
+												<![CDATA[tacDisplayedName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>tacDisplayedName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>tacFullName</property>
+												<message>
+												<![CDATA[tacFullName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>tacFullName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>tacSlogan</property>
+												<message>
+												<![CDATA[tacSlogan is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>tacSlogan</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>tacAcronym</property>
+												<message>
+												<![CDATA[tacAcronym is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>tacAcronym</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>tacGroupId</property>
+												<message>
+												<![CDATA[tacGroupId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>tacGroupId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>tacArtifactId</property>
+												<message>
+												<![CDATA[tacArtifactId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>tacArtifactId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>tacURLBase</property>
+												<message>
+												<![CDATA[tacURLBase is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>tacURLBase</regexMessage>
+											</requireProperty>
+											<!-- TOE -->
+											<requireProperty>
+												<property>toeName</property>
+												<message>
+												<![CDATA[toeName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeDisplayedName</property>
+												<message>
+												<![CDATA[toeDisplayedName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeDisplayedName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeFullName</property>
+												<message>
+												<![CDATA[toeFullName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeFullName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeSlogan</property>
+												<message>
+												<![CDATA[toeSlogan is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeSlogan</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeAcronym</property>
+												<message>
+												<![CDATA[toeAcronym is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeAcronym</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeGroupId</property>
+												<message>
+												<![CDATA[toeGroupId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeGroupId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeArtifactId</property>
+												<message>
+												<![CDATA[toeArtifactId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeArtifactId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeURLBase</property>
+												<message>
+												<![CDATA[toeURLBase is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeURLBase</regexMessage>
+											</requireProperty>
+											<!-- TOE Installer -->
+											<requireProperty>
+												<property>toeInstallerGroupId</property>
+												<message>
+												<![CDATA[toeInstallerGroupId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeInstallerGroupId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeInstallerArtifactId</property>
+												<message>
+												<![CDATA[toeInstallerArtifactId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeInstallerArtifactId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeInstallerURLBase</property>
+												<message>
+												<![CDATA[toeInstallerURLBase is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeInstallerURLBase</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeInstallerName</property>
+												<message>
+												<![CDATA[toeInstallerName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeInstallerName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeDisplayedInstallerName</property>
+												<message>
+												<![CDATA[toeDisplayedInstallerName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeDisplayedInstallerName</regexMessage>
+											</requireProperty>
+											<!-- TOE Domains -->
+											<requireProperty>
+												<property>toeDomainsGroupId</property>
+												<message>
+												<![CDATA[toeDomainsGroupId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeDomainsGroupId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeDomainsArtifactId</property>
+												<message>
+												<![CDATA[toeDomainsArtifactId is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeDomainsArtifactId</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeDomainsURLBase</property>
+												<message>
+												<![CDATA[toeDomainsURLBase is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeDomainsURLBase</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeDomainsName</property>
+												<message>
+												<![CDATA[toeDomainsName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeDomainsName</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>toeDisplayedDomainsName</property>
+												<message>
+												<![CDATA[toeDisplayedDomainsName is required]]>
+												</message>
+												<regex>.*</regex>
+												<regexMessage>toeDisplayedDomainsName</regexMessage>
+											</requireProperty>
+										</rules>
+									</configuration>
+								</execution>
+								<execution>
+									<id>enforce-site</id>
+									<goals>
+										<goal>enforce</goal>
+									</goals>
+									<phase>pre-site</phase>
+									<configuration>
+										<rules>
+											<requireProperty>
+												<property>siteDisplayURL</property>
+												<message><![CDATA[siteDisplayURL]]></message>
+												<regex>.*</regex>
+												<regexMessage>siteDisplayURL</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>siteUploadURL</property>
+												<message><![CDATA[siteUploadURL]]></message>
+												<regex>.*</regex>
+												<regexMessage>siteUploadURL</regexMessage>
+											</requireProperty>
+											<requireProperty>
+												<property>siteUploadProtocol</property>
+												<message><![CDATA[siteUploadProtocol]]></message>
+												<regex>.*</regex>
+												<regexMessage>siteUploadProtocol</regexMessage>
+											</requireProperty>
+										</rules>
+									</configuration>
+								</execution>
+							</executions>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-help-plugin</artifactId>
+							<version>${maven.plugin.help}</version>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-invoker-plugin</artifactId>
+							<version>${maven.plugin.invoker}</version>
+						</plugin>
+						<plugin>
+							<!-- plugin configuration and executions to properly use Java5 annotations, 
+								see http://jira.codehaus.org/browse/MNG-5346 -->
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-plugin-plugin</artifactId>
+							<version>${maven.plugin.plugin}</version>
+							<configuration>
+								<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+								<extractors>
+									<extractor>java-annotations</extractor>
+									<!-- <extractor>java</extractor> -->
+								</extractors>
+							</configuration>
+							<executions>
+								<execution>
+									<id>default-descriptor</id>
+									<goals>
+										<goal>descriptor</goal>
+									</goals>
+									<phase>process-classes</phase>
+								</execution>
+								<!-- <execution> <id>help-descriptor</id> <goals> <goal>helpmojo</goal> 
+									</goals> <phase>process-classes</phase> </execution> -->
+							</executions>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-release-plugin</artifactId>
+							<version>${maven.plugin.release}</version>
+							<configuration>
+								<tagNameFormat>@{project.artifactId}/@{project.version}</tagNameFormat>
+								<autoVersionSubmodules>true</autoVersionSubmodules>
+								<useReleaseProfile>true</useReleaseProfile>
+							</configuration>
+						</plugin>
+						<plugin>
+							<groupId>org.codehaus.plexus</groupId>
+							<artifactId>plexus-component-metadata</artifactId>
+							<version>${plexus.component.metadata}</version>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+			<reporting>
+				<excludeDefaults>true</excludeDefaults>
+				<outputDirectory>${project.build.directory}/site</outputDirectory>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-changelog-plugin</artifactId>
+						<version>${maven.plugin.changelog}</version>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>${maven.plugin.javadoc}</version>
+						<reportSets>
+							<reportSet>
+								<id>non-aggregate</id>
+								<reports>
+									<report>javadoc</report>
+								</reports>
+							</reportSet>
+						</reportSets>
+						<configuration>
+							<aggregate>false</aggregate>
+							<detectLinks>true</detectLinks>
+							<detectOfflineLinks>false</detectOfflineLinks>
+							<links>
+								<link>http://java.sun.com/javase/6/docs/api</link>
+								<link>http://maven.apache.org/ref/${maven.version}/maven-artifact/apidocs</link>
+								<link>http://maven.apache.org/shared/maven-reporting-api/apidocs</link>
+								<link>http://maven.apache.org/ref/${maven.version}/maven-plugin-api/apidocs</link>
+								<link>http://maven.apache.org/ref/${maven.version}/maven-model/apidocs</link>
+								<link>http://maven.apache.org/ref/${maven.version}/maven-core/apidocs</link>
+								<link>http://maven.apache.org/ref/${maven.version}/maven-settings/apidocs</link>
+							</links>
+							<linksource>true</linksource>
+							<sourceFileIncludes>
+								<include>**\/\*Mojo.java</include>
+							</sourceFileIncludes>
+						<tags>
+							<tag>
+									<name>example.</name>
+									<placement>aoptcmf</placement>
+									<head>Example :</head>
+								</tag>
+							</tags>
+							<doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+							<docletArtifact>
+								<groupId>org.umlgraph</groupId>
+								<artifactId>umlgraph</artifactId>
+								<version>5.6.6</version>
+							</docletArtifact>
+							<additionalparam>-views</additionalparam>
+							<useStandardDocletOptions>false</useStandardDocletOptions>
+							<skip>${maven.javadoc.skip}</skip>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jxr-plugin</artifactId>
+						<version>${maven.plugin.jxr}</version>
+						<reportSets>
+							<reportSet>
+								<id>non-aggregate</id>
+								<reports>
+									<report>jxr</report>
+								</reports>
+							</reportSet>
+						</reportSets>
+						<configuration>
+							<excludes>
+								<exclude>com/tibco/**/*</exclude>
+							</excludes>
+							<linkJavadoc>true</linkJavadoc>
+							<skip>${maven.jxr.skip}</skip>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-project-info-reports-plugin</artifactId>
+						<version>${maven.plugin.project-info-reports}</version>
+						<configuration>
+							<dependencyDetailsEnabled>true</dependencyDetailsEnabled>
+							<dependencyLocationsEnabled>true</dependencyLocationsEnabled>
+							<skip>${mpir.skip}</skip>
+						</configuration>
+						<!-- <inherited>false</inherited> -->
+						<reportSets>
+							<reportSet>
+								<id>non-aggregate</id>
+								<inherited>false</inherited>
+								<reports>
+									<report>cim</report>
+									<report>dependencies</report>
+									<!-- <report>dependency-convergence</report> -->
+									<report>dependency-info</report>
+									<report>dependency-management</report>
+									<!-- <report>distribution-management</report> -->
+									<!-- <report>help</report> -->
+									<!-- <report>index</report> -->
+									<!-- <report>issue-tracking</report> -->
+									<report>license</report>
+									<!-- <report>mailing-list</report> -->
+									<!-- <report>modules</report> -->
+									<report>plugin-management</report>
+									<report>plugins</report>
+									<!-- <report>project-team</report> -->
+									<report>scm</report>
+									<report>summary</report>
+								</reports>
+							</reportSet>
+						</reportSets>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-plugin-plugin</artifactId>
+						<version>${maven.plugin.plugin}</version>
+					</plugin>
+				</plugins>
+			</reporting>
+			<dependencyManagement>
+				<dependencies>
+					<!-- Maven dependencies -->
+					<dependency>
+						<groupId>org.apache.maven</groupId>
+						<artifactId>maven-project</artifactId>
+						<version>${maven.project}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.maven</groupId>
+						<artifactId>maven-core</artifactId>
+						<version>${maven.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.maven</groupId>
+						<artifactId>maven-model</artifactId>
+						<version>${maven.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.maven</groupId>
+						<artifactId>maven-plugin-api</artifactId>
+						<version>${maven.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.maven.plugin-tools</groupId>
+						<artifactId>maven-plugin-tools-api</artifactId>
+						<version>${maven.plugin.tools-api}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.maven</groupId>
+						<artifactId>maven-archiver</artifactId>
+						<version>${maven.archiver}</version>
+					</dependency>
+
+					<dependency>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<version>${maven.plugin.dependency}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>${maven.plugin.resources}</version>
+					</dependency>
+
+					<!-- dependencies to annotations -->
+					<dependency>
+						<groupId>org.apache.maven.plugin-tools</groupId>
+						<artifactId>maven-plugin-annotations</artifactId>
+						<version>${maven.plugin.annotations}</version>
+					</dependency>
+				</dependencies>
+			</dependencyManagement>
+		</profile>
+		<profile>
+			<id>skip-reports</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<maven.jxr.skip>true</maven.jxr.skip>
+				<maven.javadoc.skip>true</maven.javadoc.skip>
+				<mpir.skip>true</mpir.skip>
+			</properties>
+		</profile>
+		<profile> <!-- Additional plugins & dependencies -->
+			<id>additional</id>
+			<activation>
+                <activeByDefault>true</activeByDefault>
+				<file>
+					<missing>ignore.additional.dependencies</missing>
+				</file>
+			</activation>
+			<properties>
+				<apache.plugin.commons-collections>4.1</apache.plugin.commons-collections>
+				<apache.plugin.commons-configuration>1.10</apache.plugin.commons-configuration>
+				<apache.plugin.commons-exec>1.3</apache.plugin.commons-exec>
+				<apache.plugin.commons-io>2.4</apache.plugin.commons-io>
+				<apache.plugin.commons-lang3>3.3.2</apache.plugin.commons-lang3>
+				<apache.plugin.ant>1.9.4</apache.plugin.ant>
+
+				<junit.plugin>4.12</junit.plugin>
+
+				<mycila.plugin.license>2.11</mycila.plugin.license>
+
+				<jvnet.maven-jaxb2-plugin>0.13.1</jvnet.maven-jaxb2-plugin>
+				<codehaus.build-helper-maven-plugin>1.9.1</codehaus.build-helper-maven-plugin>
+				
+				<org.reflections.version>0.9.9</org.reflections.version>
+				<mojo-executor.version>2.1.0</mojo-executor.version>
+				<guava.version>14.0.1</guava.version>
+				<dom4j.version>1.6.1</dom4j.version>
+				<joox.version>1.3.0</joox.version>
+				
+				<plexus-utils.version>3.0.21</plexus-utils.version>
+				<icu4j.version>52.1</icu4j.version>
+				
+				<rendersnake-version>1.8</rendersnake-version>
+				<moxy-version>2.6.4</moxy-version>
+				<javax.mail-api>1.5.2</javax.mail-api>
+				<truezip-version>1.2</truezip-version>
+				<jdom-version>2.0.5</jdom-version>
+				<jaxen-version>1.1.3</jaxen-version>
+				<logback-version>1.1.3</logback-version>
+				<lombok-version>1.14.8</lombok-version>
+				<metainf-services-version>1.6</metainf-services-version>						
+			</properties>
+            <dependencyManagement>
+                <dependencies>
+                    <dependency>
+                        <groupId>io.teecube.t3</groupId>
+                        <artifactId>t3-common</artifactId>
+                        <version>0.0.2-SNAPSHOT</version>
+                    </dependency>
+ 
+					<dependency>
+						<groupId>org.apache.commons</groupId>
+						<artifactId>commons-collections4</artifactId>
+						<version>${apache.plugin.commons-collections}</version>
+					</dependency>
+					<dependency>
+						<groupId>commons-configuration</groupId>
+						<artifactId>commons-configuration</artifactId>
+						<version>${apache.plugin.commons-configuration}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.commons</groupId>
+						<artifactId>commons-exec</artifactId>
+						<version>${apache.plugin.commons-exec}</version>
+					</dependency>
+					<dependency>
+						<groupId>commons-io</groupId>
+						<artifactId>commons-io</artifactId>
+						<version>${apache.plugin.commons-io}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.commons</groupId>
+						<artifactId>commons-lang3</artifactId>
+						<version>${apache.plugin.commons-lang3}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.ant</groupId>
+						<artifactId>ant</artifactId>
+						<version>${apache.plugin.ant}</version>
+					</dependency>
+
+					<dependency>
+						<groupId>junit</groupId>
+						<artifactId>junit</artifactId>
+						<version>${junit.plugin}</version>
+					</dependency>
+
+					<!-- generated help mojo has a dependency to plexus-utils -->
+					<dependency>
+						<groupId>org.codehaus.plexus</groupId>
+						<artifactId>plexus-utils</artifactId>
+						<version>${plexus-utils.version}</version>
+					</dependency>
+
+					<!-- force version of this transitive dependencies to avoid this bug: 
+						https://bugs.eclipse.org/bugs/show_bug.cgi?id=418583 -->
+					<dependency>
+						<groupId>com.ibm.icu</groupId>
+						<artifactId>icu4j</artifactId>
+						<version>${icu4j.version}</version>
+					</dependency>
+
+					<dependency>
+						<groupId>org.reflections</groupId>
+						<artifactId>reflections</artifactId>
+						<version>${org.reflections.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.twdata.maven</groupId>
+						<artifactId>mojo-executor</artifactId>
+						<version>${mojo-executor.version}</version>
+					</dependency>
+
+					<dependency>
+						<groupId>com.google.guava</groupId>
+						<artifactId>guava</artifactId>
+						<version>${guava.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>dom4j</groupId>
+						<artifactId>dom4j</artifactId>
+						<version>${dom4j.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.jooq</groupId>
+						<artifactId>joox</artifactId>
+						<version>${joox.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.rendersnake</groupId>
+						<artifactId>rendersnake</artifactId>
+						<version>${rendersnake-version}</version>
+					</dependency>
+
+					<!-- We use MOXy to have proper namespace prefixes handling -->
+					<dependency>
+						<groupId>org.eclipse.persistence</groupId>
+						<artifactId>org.eclipse.persistence.moxy</artifactId>
+						<version>${moxy-version}</version>
+					</dependency>
+
+					<dependency>
+						<groupId>javax.mail</groupId>
+						<artifactId>javax.mail-api</artifactId>
+						<version>${javax.mail-api}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>truezip-utils</artifactId>
+						<version>${truezip-version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>truezip-maven-plugin</artifactId>
+						<version>${truezip-version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.jdom</groupId>
+						<artifactId>jdom2</artifactId>
+						<version>${jdom-version}</version>
+					</dependency>
+					<dependency>
+						<groupId>jaxen</groupId>
+						<artifactId>jaxen</artifactId>
+						<version>${jaxen-version}</version>
+					</dependency>
+
+					<dependency>
+						<groupId>org.projectlombok</groupId>
+						<artifactId>lombok</artifactId>
+						<version>${lombok-version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.kohsuke.metainf-services</groupId>
+						<artifactId>metainf-services</artifactId>
+						<version>${metainf-services-version}</version>
+					</dependency>
+				</dependencies>
+			</dependencyManagement>
+			<build>
+				<plugins>
+					<!-- Creating current year element -->
+					<plugin>
+						<groupId>org.codehaus.groovy.maven</groupId>
+						<artifactId>gmaven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>set-current-year</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>execute</goal>
+								</goals>
+								<configuration>
+									<source>
+										import java.util.Date
+										import java.text.MessageFormat
+										def
+										vartimestamp = MessageFormat.format("{0,date,yyyy}", new
+										Date())
+										project.properties['currentYear'] = vartimestamp
+									</source>
+								</configuration>
+							</execution>
+							<execution>
+								<id>set-current-versions</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>execute</goal>
+								</goals>
+								<configuration>
+									<source><![CDATA[
+										import java.io.File
+										import java.util.Scanner
+										import javax.xml.xpath.*
+										import org.xml.sax.InputSource
+
+										def setCurrentVersion(String coordinates, String propertyName) {
+											def result = null
+
+											def path = "$settings.localRepository/$coordinates/maven-metadata-local.xml"
+											def f = new File(path)
+											if (f != null && f.exists()) {
+												def fis = new FileInputStream(f)
+
+												def xpath = XPathFactory.newInstance().newXPath()
+
+												def nodes = xpath.evaluate('/metadata/versioning/release', new InputSource(fis), XPathConstants.NODESET)
+												nodes.each {
+													result = xpath.evaluate('text()', it)
+												}
+												if (result == null) {
+													fis = new FileInputStream(f)
+													nodes = xpath.evaluate('/metadata/versioning/latest', new InputSource(fis), XPathConstants.NODESET)
+													nodes.each {
+														result = xpath.evaluate('text()', it)
+													}
+												}
+												if (result == null) {
+													fis = new FileInputStream(f)
+													nodes = xpath.evaluate('/metadata/versioning/versions/version', new InputSource(fis), XPathConstants.NODESET)
+													nodes.each {
+														result = xpath.evaluate('text()', it)
+													}
+												}
+											}
+
+											def pName = "$propertyName"
+											if (result != null) {
+												//println "Setting $propertyName to $result"
+												project.properties["$propertyName"] = result
+											} else {
+												project.properties["$propertyName"] = "unknown"												
+											}
+										}
+										setCurrentVersion((project.properties["ticGroupId"] + "." + project.properties["ticArtifactId"]).replaceAll("\\.", "/"), "ticVersion")
+										setCurrentVersion((project.properties["ticBW5MavenGroupId"] + "." + project.properties["ticBW5MavenArtifactId"]).replaceAll("\\.", "/"), "ticBW5MavenVersion")
+										setCurrentVersion((project.properties["ticBW6MavenGroupId"] + "." + project.properties["ticBW6MavenArtifactId"]).replaceAll("\\.", "/"), "ticBW6MavenVersion")
+										setCurrentVersion((project.properties["tacGroupId"] + "." + project.properties["tacArtifactId"]).replaceAll("\\.", "/"), "tacVersion")
+										setCurrentVersion((project.properties["toeGroupId"] + "." + project.properties["toeArtifactId"]).replaceAll("\\.", "/"), "toeVersion")
+										setCurrentVersion((project.properties["toeInstallerGroupId"] + "." + project.properties["toeInstallerArtifactId"]).replaceAll("\\.", "/"), "toeInstallerVersion")
+										setCurrentVersion((project.properties["toeDomainsGroupId"] + "." + project.properties["toeDomainsArtifactId"]).replaceAll("\\.", "/"), "toeDomainsVersion")
+									]]></source>
+								</configuration>
+							</execution>
+							<execution>
+								<id>set-current-versions-site</id>
+								<phase>pre-site</phase>
+								<goals>
+									<goal>execute</goal>
+								</goals>
+								<configuration>
+									<source><![CDATA[
+										import java.io.File
+										import java.util.Scanner
+										import javax.xml.xpath.*
+										import org.xml.sax.InputSource
+
+										def setCurrentVersion(String coordinates, String propertyName) {
+											def result = null
+
+											def path = "$settings.localRepository/$coordinates/maven-metadata-local.xml"
+											def f = new File(path)
+											if (f != null && f.exists()) {
+												def fis = new FileInputStream(f)
+
+												def xpath = XPathFactory.newInstance().newXPath()
+
+												def nodes = xpath.evaluate('/metadata/versioning/release', new InputSource(fis), XPathConstants.NODESET)
+												nodes.each {
+													result = xpath.evaluate('text()', it)
+												}
+												if (result == null) {
+													fis = new FileInputStream(f)
+													nodes = xpath.evaluate('/metadata/versioning/latest', new InputSource(fis), XPathConstants.NODESET)
+													nodes.each {
+														result = xpath.evaluate('text()', it)
+													}
+												}
+												if (result == null) {
+													fis = new FileInputStream(f)
+													nodes = xpath.evaluate('/metadata/versioning/versions/version', new InputSource(fis), XPathConstants.NODESET)
+													nodes.each {
+														result = xpath.evaluate('text()', it)
+													}
+												}
+											}
+
+											def pName = "$propertyName"
+											if (result != null) {
+												//println "Setting $propertyName to $result"
+												project.properties["$propertyName"] = result
+											} else {
+												project.properties["$propertyName"] = "unknown"												
+											}
+										}
+										setCurrentVersion((project.properties["ticGroupId"] + "." + project.properties["ticArtifactId"]).replaceAll("\\.", "/"), "ticVersion")
+										setCurrentVersion((project.properties["ticBW5MavenGroupId"] + "." + project.properties["ticBW5MavenArtifactId"]).replaceAll("\\.", "/"), "ticBW5MavenVersion")
+										setCurrentVersion((project.properties["ticBW6MavenGroupId"] + "." + project.properties["ticBW6MavenArtifactId"]).replaceAll("\\.", "/"), "ticBW6MavenVersion")
+										setCurrentVersion((project.properties["tacGroupId"] + "." + project.properties["tacArtifactId"]).replaceAll("\\.", "/"), "tacVersion")
+										setCurrentVersion((project.properties["toeGroupId"] + "." + project.properties["toeArtifactId"]).replaceAll("\\.", "/"), "toeVersion")
+										setCurrentVersion((project.properties["toeInstallerGroupId"] + "." + project.properties["toeInstallerArtifactId"]).replaceAll("\\.", "/"), "toeInstallerVersion")
+										setCurrentVersion((project.properties["toeDomainsGroupId"] + "." + project.properties["toeDomainsArtifactId"]).replaceAll("\\.", "/"), "toeDomainsVersion")
+									]]></source>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>com.mycila</groupId>
+						<artifactId>license-maven-plugin</artifactId>
+					</plugin>
+				</plugins>
+				<pluginManagement>
+					<plugins>
+						<!--
+						replace parameters in Maven site URL <url>
+						(for mvnrepository.com for instance) and release version
+						-->
+						<plugin>
+							<groupId>com.google.code.maven-replacer-plugin</groupId>
+							<artifactId>replacer</artifactId>
+							<version>1.5.3</version>
+							<configuration>
+								<file>${project.basedir}/pom.xml</file>
+								<outputFile>${project.basedir}/pom.xml</outputFile>
+								<replacements>
+									<replacement>
+										<token>&lt;name&gt;.* - .*&lt;/name&gt;</token>
+										<value>&lt;name&gt;${project.name}&lt;/name&gt;</value>
+									</replacement>
+									<replacement>
+										<token>&lt;description&gt;.*&lt;/description&gt;</token>
+										<value>&lt;description&gt;${project.description}&lt;/description&gt;</value>
+									</replacement>
+								</replacements>
+							</configuration>
+							<executions>
+								<execution>
+									<phase>verify</phase>
+									<goals>
+										<goal>replace</goal>
+									</goals>
+								</execution>
+								<execution>
+									<id>update-root</id>
+									<phase>verify</phase>
+									<inherited>false</inherited>
+									<goals>
+										<goal>replace</goal>
+									</goals>
+									<configuration>
+										<replacements>
+											<replacement>
+												<token>&lt;name&gt;\$\{ecosystemName\}&lt;/name&gt;</token>
+												<value>&lt;name&gt;${ecosystemName}&lt;/name&gt;</value>
+											</replacement>
+											<replacement>
+												<token>&lt;url&gt;\$\{siteURL\}&lt;/url&gt;</token>
+												<value>&lt;url&gt;${siteURL}&lt;/url&gt;</value>
+											</replacement>
+											<replacement>
+												<token>&lt;url&gt;\$\{repositoryReleaseURL\}&lt;/url&gt;</token>
+												<value>&lt;url&gt;${repositoryReleaseURL}&lt;/url&gt;</value>
+											</replacement>
+											<replacement>
+												<token>&lt;url&gt;\$\{repositorySnapshotURL\}&lt;/url&gt;</token>
+												<value>&lt;url&gt;${repositorySnapshotURL}&lt;/url&gt;</value>
+											</replacement>
+											<replacement>
+												<token>&lt;name&gt;\$\{ecosystemCompany\}&lt;/name&gt;</token>
+												<value>&lt;name&gt;${ecosystemCompany}&lt;/name&gt;</value>
+											</replacement>
+											<replacement>
+												<token>&lt;url&gt;\$\{ecosystemCompanyURL\}&lt;/url&gt;</token>
+												<value>&lt;url&gt;${ecosystemCompanyURL}&lt;/url&gt;</value>
+											</replacement>
+										</replacements>
+									</configuration>
+								</execution>
+								<execution>
+									<id>update-versions</id>
+									<phase>verify</phase>
+									<inherited>false</inherited>
+									<goals>
+										<goal>replace</goal>
+									</goals>
+									<configuration>
+										<replacements>
+											<replacement>
+												<token>&lt;releaseVersion&gt;\$\{project.version\}&lt;/releaseVersion&gt;</token>
+												<value>&lt;releaseVersion&gt;${project.version}&lt;/releaseVersion&gt;</value>
+											</replacement>
+										</replacements>
+									</configuration>
+								</execution>
+							</executions>
+						</plugin>
+						<plugin>
+							<groupId>org.codehaus.groovy.maven</groupId>
+							<artifactId>gmaven-plugin</artifactId>
+							<version>1.0</version>
+						</plugin>
+						<plugin>
+							<groupId>com.mycila</groupId>
+							<artifactId>license-maven-plugin</artifactId>
+							<version>${mycila.plugin.license}</version>
+							<configuration>
+								<aggregate>true</aggregate>
+								<basedir>${basedir}</basedir>
+								<encoding>${project.build.sourceEncoding}</encoding>
+								<includes>
+									<include>src/main/java/**</include>
+									<include>src/main/resources/**</include>
+								</includes>
+								<header>src/main/resources/apache2_header.txt</header>
+								<properties>
+									<h_inceptionYear>${inceptionYear}</h_inceptionYear>
+									<h_currentYear>${currentYear}</h_currentYear>
+									<h_ecosystemCompany>${ecosystemCompany}</h_ecosystemCompany>
+									<h_ecosystemCompanyURL>${ecosystemCompanyURL}</h_ecosystemCompanyURL>
+								</properties>
+								<strictCheck>true</strictCheck>
+							</configuration>
+							<executions>
+								<execution>
+									<id>force-headers</id>
+									<phase>process-sources</phase>
+									<goals>
+										<goal>format</goal>
+									</goals>
+								</execution>
+							</executions>
+						</plugin>
+						<plugin>
+							<groupId>org.jvnet.jaxb2.maven2</groupId>
+							<artifactId>maven-jaxb2-plugin</artifactId>
+							<version>${jvnet.maven-jaxb2-plugin}</version>
+							<dependencies>
+								<dependency>
+									<groupId>com.sun.xml.bind</groupId>
+									<artifactId>jaxb-core</artifactId>
+									<version>2.2.11</version>
+								</dependency>
+								<dependency>
+									<groupId>com.sun.xml.bind</groupId>
+									<artifactId>jaxb-impl</artifactId>
+									<version>2.2.11</version>
+								</dependency>
+								<dependency>
+									<groupId>com.sun.xml.bind</groupId>
+									<artifactId>jaxb-xjc</artifactId>
+									<version>2.2.11</version>
+								</dependency>
+							</dependencies>
+							<executions>
+								<execution>
+									<id>xjc</id>
+									<goals>
+										<goal>generate</goal>
+									</goals>
+									<configuration>
+										<schemaDirectory>src/main/resources/xsd</schemaDirectory>
+										<schemaIncludes>
+											<include>**/*.xsd</include>
+										</schemaIncludes>
+										<locale>en_US</locale>
+										<generateDirectory>${project.basedir}/src/main/jaxb</generateDirectory>
+										<cleanPackageDirectories>false</cleanPackageDirectories>
+									</configuration>
+								</execution>
+							</executions>
+						</plugin>
+ 						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>build-helper-maven-plugin</artifactId>
+							<version>${codehaus.build-helper-maven-plugin}</version>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+		<profile> <!-- Site -->
+			<id>site</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<file>
+					<missing>ignore.site.enhancement</missing>
+				</file>
+			</activation>
+			<properties>
+				<siteURL>${siteDisplayURL}/${ecosystemURLBase}</siteURL>
+				<siteRootURL>${siteURL}</siteRootURL>
+				<ecosystemURLBase>${ecosystemArtifactId}/${ecosystemVersion}</ecosystemURLBase>
+				<ticURLBase>tic</ticURLBase>
+				<ticBW5MavenURLBase>tic/tic-bw5</ticBW5MavenURLBase>
+				<ticBW6MavenURLBase>tic/tic-bw6</ticBW6MavenURLBase>
+				<tacURLBase>tac</tacURLBase>
+				<toeURLBase>toe</toeURLBase>
+				<toeInstallerURLBase>toe/installer</toeInstallerURLBase>
+				<toeDomainsURLBase>toe/domains</toeDomainsURLBase>
+
+				<nonEndorsement><![CDATA[<i class="fa fa-code color-highlight"><!-- Made --></i> with <i class="fa fa-heart color-highlight"><!-- love --></i> as an open source initiative, not endorsed by TIBCO.]]></nonEndorsement>
+				<socialLinks><![CDATA[<li><a href="https://git.teecu.be/teecube#projects" class="fa"><i class="fa fa-git-square fa-2x"></i></a></li><li><a href="https://twitter.com/t33cube" class="fa"><i class="fa fa-twitter fa-2x"></i></a></li>]]></socialLinks>
+				<!-- Velocity-proof properties -->
+				<commandLineStart><![CDATA[<div class="window"><div class="title"><div class="circle-red">&#160;</div><div class="circle-yellow">&#160;</div><div class="circle-green">&#160;</div><p>${command-title}</p></div><div class="command"><span class="command"><span class="fa-stack fa-lg"><span class="fa fa-square fa-stack-2x"><!--preserve auto-closing elements--></span><span class="fa fa-terminal fa-stack-1x fa-inverse"><!--preserve auto-closing elements--></span></span></span><pre class="command">]]></commandLineStart>
+				<commandLineEnd><![CDATA[</pre><span class="command"><span class="fa-stack fa-lg"><span class="fa fa-square fa-stack-2x"><!--preserve auto-closing elements--></span><span class="fa fa-copy fa-stack-1x fa-inverse data-btn-command-line" data-clipboard-text="${data-clipboard-text}"><!--preserve auto-closing elements--></span></span></span></div></div>]]></commandLineEnd>
+				<configTextStart><![CDATA[<div class="window"><div class="title"><div class="circle-red">&#160;</div><div class="circle-yellow">&#160;</div><div class="circle-green">&#160;</div><p>${config-title}</p></div><div class="config"><span class="config"><span class="fa-stack fa-lg"><span class="fa fa-square fa-stack-2x"><!--preserve auto-closing elements--></span><span class="fa fa-file-text-o fa-stack-1x fa-inverse"><!--preserve auto-closing elements--></span></span></span><pre class="config">]]></configTextStart>
+				<configTextEnd><![CDATA[</pre><span class="command"><span class="fa-stack fa-lg"><span class="fa fa-square fa-stack-2x"><!--preserve auto-closing elements--></span><span class="fa fa-copy fa-stack-1x fa-inverse data-btn-text" data-clipboard-text="${data-clipboard-text}"><!--preserve auto-closing elements--></span></span></span></div></div>]]></configTextEnd>
+				<notaBene><![CDATA[<b>NB:</b>]]></notaBene>
+
+				<includeSource>true</includeSource>
+			</properties>
+			<distributionManagement>
+				<site>
+					<id>t3.site</id>
+					<url>${siteUploadProtocol}${siteUploadURL}/${ecosystemURLBase}</url>
+				</site>
+			</distributionManagement>
+			<build>
+				<resources>
+					<resource>
+						<directory>src/site/resources/css</directory>
+						<filtering>true</filtering>
+						<includes>
+							<include>font-awesome.css</include>
+						</includes>
+						<targetPath>${project.build.directory}/site/css</targetPath>
+					</resource>
+				</resources>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>io.teecube.t3</groupId>
+							<artifactId>t3-site-enhancer</artifactId>
+							<version>0.0.2-SNAPSHOT</version>
+							<dependencies>
+			                    <dependency>
+			                        <groupId>io.teecube.t3</groupId>
+			                        <artifactId>t3-common</artifactId>
+			                        <version>0.0.2-SNAPSHOT</version>
+			                    </dependency>
+								<dependency>
+									<groupId>org.rendersnake</groupId>
+									<artifactId>rendersnake</artifactId>
+									<version>${rendersnake-version}</version>
+								</dependency>
+
+								<!-- Maven dependencies -->
+								<dependency>
+									<groupId>org.apache.maven</groupId>
+									<artifactId>maven-core</artifactId>
+									<version>${maven.version}</version>
+								</dependency>
+								<dependency>
+									<groupId>org.apache.maven</groupId>
+									<artifactId>maven-model</artifactId>
+									<version>${maven.version}</version>
+								</dependency>
+								<dependency>
+									<groupId>org.apache.maven</groupId>
+									<artifactId>maven-project</artifactId>
+									<version>${maven.project}</version>
+									<exclusions>
+										<exclusion>
+											<groupId>com.google.code.google-collections</groupId>
+											<artifactId>google-collect</artifactId>
+										</exclusion>
+									</exclusions>
+								</dependency>
+								<dependency>
+									<groupId>org.apache.maven</groupId>
+									<artifactId>maven-plugin-api</artifactId>
+									<version>${maven.version}</version>
+								</dependency>
+								<dependency>
+									<groupId>org.apache.maven.plugins</groupId>
+									<artifactId>maven-resources-plugin</artifactId>
+									<version>${maven.plugin.resources}</version>
+								</dependency>
+						
+								<!-- Apache commons -->
+								<dependency>
+									<groupId>commons-io</groupId>
+									<artifactId>commons-io</artifactId>
+									<version>${apache.plugin.commons-io}</version>
+								</dependency>
+								<dependency>
+									<groupId>org.apache.commons</groupId>
+									<artifactId>commons-lang3</artifactId>
+									<version>${apache.plugin.commons-lang3}</version>
+								</dependency>
+								<dependency>
+									<groupId>org.apache.commons</groupId>
+									<artifactId>commons-collections4</artifactId>
+									<version>${apache.plugin.commons-collections}</version>
+								</dependency>
+								<dependency>
+									<groupId>org.apache.commons</groupId>
+									<artifactId>commons-exec</artifactId>
+									<version>${apache.plugin.commons-exec}</version>
+								</dependency>
+								<dependency>
+									<groupId>org.apache.ant</groupId>
+									<artifactId>ant</artifactId>
+									<version>${apache.plugin.ant}</version>
+								</dependency>
+						
+								<!-- others -->
+								<dependency>
+									<groupId>org.reflections</groupId>
+									<artifactId>reflections</artifactId>
+									<version>${org.reflections.version}</version>
+								</dependency>
+								<dependency>
+									<groupId>org.twdata.maven</groupId>
+									<artifactId>mojo-executor</artifactId>
+									<version>${mojo-executor.version}</version>
+								</dependency>
+								<dependency>
+									<groupId>com.google.guava</groupId>
+									<artifactId>guava</artifactId>
+									<version>${guava.version}</version>
+								</dependency>
+								<dependency>
+									<groupId>dom4j</groupId>
+									<artifactId>dom4j</artifactId>
+									<version>${dom4j.version}</version>
+								</dependency>
+								<dependency>
+									<groupId>org.jooq</groupId>
+									<artifactId>joox</artifactId>
+									<version>${joox.version}</version>
+								</dependency>
+							</dependencies>
+							<configuration>
+								<topMenus>
+									<topMenu>
+										<name>TIC</name>
+										<url>${siteDisplayURL}/${ticURLBase}</url>
+										<submenus>
+											<submenu>
+												<name>${ticBW5MavenName}</name>
+												<url>${siteDisplayURL}/${ticBW5MavenURLBase}/index.html</url>
+											</submenu>
+											<submenu>
+												<name>${ticBW6MavenName}</name>
+												<url>${siteDisplayURL}/${ticBW6MavenURLBase}/index.html</url>
+											</submenu>
+										</submenus>
+									</topMenu>
+									<topMenu>
+										<name>TOE</name>
+										<url>${siteDisplayURL}/${toeURLBase}</url>
+										<submenus>
+											<submenu>
+												<name>${toeInstallerName}</name>
+												<url>${siteDisplayURL}/${toeInstallerURLBase}/index.html</url>
+											</submenu>
+											<submenu>
+												<name>${toeDomainsName}</name>
+												<url>${siteDisplayURL}/${toeDomainsURLBase}/index.html</url>
+											</submenu>
+										</submenus>
+									</topMenu>
+								</topMenus>
+								<extendedSidebars>
+									<extendedSidebar>index.html</extendedSidebar>
+								</extendedSidebars>
+							</configuration>
+							<executions>
+								<execution>
+									<id>prepare-site</id>
+									<goals>
+										<goal>prepare-general</goal>
+									</goals>
+									<phase>pre-site</phase>
+								</execution>
+								<execution>
+									<id>update-site</id>
+									<goals>
+										<goal>generate-global-doc</goal>
+										<goal>generate-lifecycles-doc</goal>
+										<goal>update-site</goal>
+										<goal>update-brand</goal>
+										<goal>update-doc-menu</goal>
+										<goal>update-general</goal>
+									</goals>
+									<configuration>
+										<siteProperties>
+											<siteProperty>ticVersion</siteProperty>
+											<siteProperty>ticBW5MavenVersion</siteProperty>
+											<siteProperty>ticBW6MavenVersion</siteProperty>
+											<siteProperty>tacVersion</siteProperty>
+											<siteProperty>toeVersion</siteProperty>
+											<siteProperty>toeInstallerVersion</siteProperty>
+
+											<siteProperty>siteURL</siteProperty>
+											<siteProperty>siteRootURL</siteProperty>
+											<siteProperty>siteDisplayURL</siteProperty>
+											<siteProperty>ecosystemName</siteProperty>
+											<siteProperty>ecosystemURLBase</siteProperty>
+											<siteProperty>ecosystemArtifactId</siteProperty>
+											<siteProperty>ecosystemVersion</siteProperty>
+											<siteProperty>ecosystemSumUp</siteProperty>
+											<siteProperty>ecosystemNameHighlight</siteProperty>
+											<siteProperty>ecosystemNameHighlight2</siteProperty>
+
+											<siteProperty>ticDisplayedName</siteProperty>
+											<siteProperty>tacDisplayedName</siteProperty>
+											<siteProperty>toeDisplayedName</siteProperty>
+										</siteProperties>
+										<fromRootParentProperties>
+											<fromRootParentProperty>ecosystemURLBase</fromRootParentProperty>
+											<fromRootParentProperty>ecosystemVersion</fromRootParentProperty>
+											<fromRootParentProperty>siteRootURL</fromRootParentProperty>
+											<fromRootParentProperty>ecosystemSumUp</fromRootParentProperty>
+										</fromRootParentProperties>
+										<inOriginalModelProperties>
+											<inOriginalModelProperty>ecosystemURLBase</inOriginalModelProperty>
+											<inOriginalModelProperty>ecosystemVersion</inOriginalModelProperty>
+											<inOriginalModelProperty>ecosystemSumUp</inOriginalModelProperty>
+
+											<inOriginalModelProperty>siteRootURL</inOriginalModelProperty>
+										</inOriginalModelProperties>
+										<lookInSettingsProperties>
+											<lookInSettingsProperty>siteURL</lookInSettingsProperty>
+											<lookInSettingsProperty>siteRootURL</lookInSettingsProperty>
+
+											<lookInSettingsProperty>ecosystemName</lookInSettingsProperty>
+											<lookInSettingsProperty>ecosystemURLBase</lookInSettingsProperty>
+											<lookInSettingsProperty>ecosystemSumUp</lookInSettingsProperty>
+										</lookInSettingsProperties>
+									</configuration>
+									<phase>post-site</phase>
+								</execution>
+							</executions>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<inherited>false</inherited>
+						<executions>
+							<execution>
+								<id>copy-font-awesome-css</id>
+								<goals>
+									<goal>resources</goal>
+								</goals>
+								<phase>post-site</phase>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-enforcer-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>io.teecube.t3</groupId>
+						<artifactId>t3-site-enhancer</artifactId>
+						<inherited>false</inherited>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile> <!-- Maven plugin configuration (to be activated by a 'maven.plugin.enabled' file) -->
+			<id>maven-plugin</id>
+			<activation>
+				<file>
+					<exists>maven.plugin.enabled</exists>
+				</file>
+			</activation>
+			<build>
+				<resources>
+					<resource>
+						<directory>src/main/resources</directory>
+						<filtering>true</filtering>
+						<includes>
+							<include>META-INF/**/*</include>
+						</includes>
+						<targetPath>filtered</targetPath>
+					</resource>
+					<resource>
+						<directory>src/main/resources</directory>
+						<filtering>true</filtering>
+						<includes>
+							<include>**/*</include>
+						</includes>
+						<excludes>
+							<exclude>plugins-configuration/**/*</exclude>
+						</excludes>
+					</resource>
+					<resource>
+						<directory>src/main/resources</directory>
+						<filtering>false</filtering>
+						<includes>
+							<include>plugins-configuration/**/*</include>
+						</includes>
+					</resource>
+					<resource>
+						<directory>src/main/java</directory>
+						<filtering>false</filtering>
+						<includes>
+							<include>**/*.properties</include>
+						</includes>
+					</resource>
+				</resources>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-plugin-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<configuration>
+							<excludes>
+								<exclude>filtered/</exclude>
+							</excludes>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.plexus</groupId>
+						<artifactId>plexus-component-metadata</artifactId>
+						<executions>
+							<execution>
+								<phase>process-classes</phase>
+								<goals>
+									<goal>generate-metadata</goal>
+								</goals>
+								<configuration>
+									<staticMetadataDirectory>${project.build.outputDirectory}/filtered/META-INF/plexus</staticMetadataDirectory>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.jvnet.jaxb2.maven2</groupId>
+						<artifactId>maven-jaxb2-plugin</artifactId>
+					</plugin>
+					<!--
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+					</plugin>
+					-->
+				</plugins>
+			</build>
+
+			<dependencies>
+				<!-- Maven dependencies -->
+				<dependency>
+					<groupId>org.apache.maven.plugin-tools</groupId>
+					<artifactId>maven-plugin-annotations</artifactId>
+					<version>${maven.plugin.annotations}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.maven</groupId>
+					<artifactId>maven-plugin-api</artifactId>
+					<version>${maven.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.maven</groupId>
+					<artifactId>maven-model</artifactId>
+					<version>${maven.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.maven</groupId>
+					<artifactId>maven-artifact</artifactId>
+					<version>${maven.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.maven</groupId>
+					<artifactId>maven-project</artifactId>
+					<version>${maven.project}</version>
+				</dependency>
+
+				<!-- logging -->
+				<dependency>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+					<version>${logback-version}</version>
+				</dependency>
+				<dependency>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-core</artifactId>
+					<version>${logback-version}</version>
+				</dependency>
+
+				<dependency>
+					<groupId>org.eclipse.persistence</groupId>
+					<artifactId>org.eclipse.persistence.moxy</artifactId>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
+
+	<!-- Project management -->
+	<developers>
+		<developer>
+			<email>mad@teecu.be</email>
+			<name>Mathieu Debove</name>
+			<url>https://github.com/debovema</url>
+			<id>debovema</id>
+		</developer>
+	</developers>
+
+	<distributionManagement>
+		<repository>
+			<id>t3.repo</id>
+			<url>${repositoryReleaseURL}</url>
+		</repository>
+		<snapshotRepository>
+			<id>t3.repo.snapshot</id>
+			<url>${repositorySnapshotURL}</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<organization>
+		<name>${ecosystemCompany}</name>
+		<url>${ecosystemCompanyURL}</url>
+	</organization>
+
+	<prerequisites>
+		<maven>3.1</maven>
+	</prerequisites>
+
+	<scm>
+		<connection>scm:git:https://git.teecu.be/teecube/t3.git</connection>
+		<developerConnection>scm:git:https://git.teecu.be/teecube/t3.git</developerConnection>
+		<url>https://git.teecu.be/teecube/t3</url>
+		<tag>t3/0.0.1</tag>
+	</scm>
+
+	<url>${siteURL}</url>
+
+</project>
