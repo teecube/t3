@@ -103,7 +103,7 @@ public class XMLMarshall<Type, Factory> {
 		jaxbContext = JAXBContext.newInstance(this.classesToBound.toArray(new Class<?>[0]));
 
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-		Object o;
+		Object o = null;
 		if (xmlFile == null || !xmlFile.exists()) {
 			StringBuffer xmlStr = new StringBuffer( "<?xml version=\"1.0\"?><root/>");
 			o =  jaxbUnmarshaller.unmarshal(new StreamSource(new StringReader(xmlStr.toString())));

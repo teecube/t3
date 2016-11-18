@@ -1332,7 +1332,7 @@
 
 				<mycila.plugin.license>2.11</mycila.plugin.license>
 
-				<jvnet.maven-jaxb2-plugin>0.12.3</jvnet.maven-jaxb2-plugin>
+				<jvnet.maven-jaxb2-plugin>0.13.1</jvnet.maven-jaxb2-plugin>
 				<codehaus.build-helper-maven-plugin>1.9.1</codehaus.build-helper-maven-plugin>
 				
 				<org.reflections.version>0.9.9</org.reflections.version>
@@ -1345,7 +1345,7 @@
 				<icu4j.version>52.1</icu4j.version>
 				
 				<rendersnake-version>1.8</rendersnake-version>
-				<moxy-version>2.6.0</moxy-version>
+				<moxy-version>2.6.4</moxy-version>
 				<javax.mail-api>1.5.2</javax.mail-api>
 				<truezip-version>1.2</truezip-version>
 				<jdom-version>2.0.5</jdom-version>

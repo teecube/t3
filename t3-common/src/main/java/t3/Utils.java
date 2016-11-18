@@ -16,9 +16,13 @@
  */
 package t3;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
@@ -182,4 +186,49 @@ public class Utils {
         return(s.toString());
     }
 
+    public static Integer countMatchesInFile(File file, String pattern) throws IOException {
+		Integer result = 0;
+		if (file == null || !file.exists()) {
+			return result;
+		}
+
+		Pattern p = Pattern.compile(pattern);
+
+		String string = null;
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+
+		while ((string = reader.readLine()) != null) {
+		    Matcher matcher = p.matcher(string);
+
+		    while (matcher.find()) {
+		        result++;
+		    }
+		}
+		reader.close();
+
+		return result;
+    }
+
+    public static List<String> getMatchesFromFile(File file, String pattern) throws IOException {
+		List<String> result = new ArrayList<String>();
+		if (file == null || !file.exists()) {
+			return result;
+		}
+
+		Pattern p = Pattern.compile(pattern);
+
+		String string = null;
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+
+		while ((string = reader.readLine()) != null) {
+			Matcher matcher = p.matcher(string);
+
+			while (matcher.find()) {
+				result.add(matcher.group());
+			}
+		}
+		reader.close();
+
+		return result;
+    }
 }
