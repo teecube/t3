@@ -1,20 +1,34 @@
 # T³
 
-**T³** (pronounced *"tee-cube"*) stands for **T**IBCO **E**nterprise **E**xtensions.
+## Release trigger branch
 
-[![build status](https://git.teecu.be/teecube/t3/badges/master/build.svg)](https://git.teecu.be/teecube/t3/commits/master)
+This branch is a release trigger. It means that **whenever a commit is pushed on this branch**, a release job will be launched, based on properties set in *release.properties* file.
 
-It is organized in three layers with their different elements:
+## How to trigger a release ?
 
-* <abbr title="TIBCO Infrastructure Core">TIC</abbr> [git](https://git.teecu.be/teecube/tic)
- * TIC BW5 Maven plugin [git](https://git.teecu.be/teecube/tic-bw5)
- * TIC BW6 Maven plugin [git](https://git.teecu.be/teecube/tic-bw6)
-  * TIC BW6 Studio Proxy Eclipse plugin [git](https://git.teecu.be/teecube/tic-bw6-studio)
+To trigger a new release of T³, follow these steps:
 
-* <abbr title="TIBCO Advanced Components">TAC</abbr> [git](https://git.teecu.be/teecube/tac)
+* checkout this branch (after cloning the repository):
+```shell
+git checkout release
+```
 
-* <abbr title="TOpology Extensions">TOE</abbr> [git](https://git.teecu.be/teecube/toe)
- * TOE Domains Manager [git](https://git.teecu.be/teecube/toe-domains)
- * TOE Products Installer [git](https://git.teecu.be/teecube/toe-installer)
+* edit Release Version:
+```shell
+RELEASE_VERSION=0.0.1 && sed -i "s/\(RELEASE_VERSION=\).*\$/\1${RELEASE_VERSION}/" release.properties
+```
 
+* edit Development Version:
+```shell
+DEV_VERSION=0.0.2-SNAPSHOT && sed -i "s/\(DEV_VERSION=\).*\$/\1${DEV_VERSION}/" release.properties
+```
 
+* commit the release information:
+```shell
+git add release.properties && git commit -m "Triggering release"
+```
+
+* trigger the release by pushing to the release branch:
+```shell
+git push origin release
+```
