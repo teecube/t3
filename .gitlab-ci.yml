@@ -1,28 +1,13 @@
 image: jamesdbloom/docker-java7-maven
 
-test:
-    script: 
-        - mvn -gs /home/m2/settings.xml clean install
-    except:
-        - tags
+before_script:
+    - chmod u+x release.sh
+    - . ./release.sh
 
-site:
-    script: 
-        - mvn -gs /home/m2/settings.xml clean site-deploy -P t3-snapshot
-    except:
-        - tags
-
-site-redeploy:
-    script: 
-        - mvn -gs /home/m2/settings.xml clean site-deploy -P t3-archive
-        - mvn -gs /home/m2/settings.xml clean site-deploy -P t3-release
-    only:
-        - tags
-
-mirror:
+release:
     script:
-        - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-        # SSH private key must be in '/root/.ssh/teecube_github'
-        - eval $(ssh-agent -s) && ssh-add /root/.ssh/teecube_github && ssh-keyscan github.com | sort -u - ~/.ssh/known_hosts -o ~/.ssh/known_hosts
-        # git clone --mirror && git push --mirror
-        - GIT_REPO_URL=`git config --get remote.origin.url` && GIT_REPO_NAME=`basename $GIT_REPO_URL .git` && rm -rf tmp_mirror.git && git clone --mirror $GIT_REPO_URL tmp_mirror.git && cd tmp_mirror.git && git push --mirror git@github.com:teecube/$GIT_REPO_NAME.git
+        - mvn -gs /home/m2/settings.xml -DdevelopmentVersion=$DEV_VERSION -DreleaseVersion=$RELEASE_VERSION -DpreparationGoals="clean install" -DscmCommentPrefix="[maven-release-plugin] [ci skip] " -P t3-archive release:clean release:prepare release:perform
+        - "curl -X POST -F token=$REBUILD_TOKEN -F ref=master https://git.teecu.be/api/v3/projects/$CI_PROJECT_ID/trigger/builds"
+        - "curl -X POST -F token=$REBUILD_TOKEN -F ref=t3/$RELEASE_VERSION https://git.teecu.be/api/v3/projects/$CI_PROJECT_ID/trigger/builds"
+    only:
+        - release
