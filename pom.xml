@@ -4,7 +4,7 @@
 
 	<groupId>io.teecube</groupId>
 	<artifactId>t3</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>${ecosystemName}</name>
@@ -52,12 +52,12 @@
 			<dependency>
 				<groupId>io.teecube.t3</groupId>
 				<artifactId>t3-common</artifactId>
-				<version>0.0.1</version>
+				<version>0.0.2-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>io.teecube.t3</groupId>
 				<artifactId>t3-site-enhancer</artifactId>
-				<version>0.0.1</version>
+				<version>0.0.2-SNAPSHOT</version>
 			</dependency>
 
 			<!-- Maven dependencies -->
@@ -1359,7 +1359,7 @@
                     <dependency>
                         <groupId>io.teecube.t3</groupId>
                         <artifactId>t3-common</artifactId>
-                        <version>0.0.1</version>
+                        <version>0.0.2-SNAPSHOT</version>
                     </dependency>
  
 					<dependency>
@@ -1866,12 +1866,12 @@
 						<plugin>
 							<groupId>io.teecube.t3</groupId>
 							<artifactId>t3-site-enhancer</artifactId>
-							<version>0.0.1</version>
+							<version>0.0.2-SNAPSHOT</version>
 							<dependencies>
 			                    <dependency>
 			                        <groupId>io.teecube.t3</groupId>
 			                        <artifactId>t3-common</artifactId>
-			                        <version>0.0.1</version>
+			                        <version>0.0.2-SNAPSHOT</version>
 			                    </dependency>
 								<dependency>
 									<groupId>org.rendersnake</groupId>
