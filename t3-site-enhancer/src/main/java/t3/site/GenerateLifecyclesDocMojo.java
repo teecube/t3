@@ -1,5 +1,5 @@
 /**
- * (C) Copyright 2016-2016 teecube
+ * (C) Copyright 2016-2017 teecube
  * (http://teecu.be) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,11 +24,10 @@ import static org.rendersnake.HtmlAttributesFactory.id;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.ListIterator;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
@@ -45,7 +44,7 @@ import org.rendersnake.Renderable;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import t3.CommonMojo;
+import t3.LifecyclesUtils;
 
 /**
  *
@@ -120,19 +119,16 @@ public class GenerateLifecyclesDocMojo extends AbstractNewPageMojo {
 
 	private List<Lifecycle> parseLifecycles(File componentsFile) throws SAXException, IOException {
 		List<Lifecycle> lifecycles = new ArrayList<GenerateLifecyclesDocMojo.Lifecycle>();
-
 		Match lifecyclesElements;
 		lifecyclesElements = JOOX.$(componentsFile).xpath("//component[implementation='org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping']");
-
 		for (Element element : lifecyclesElements) {
 			List<Phase> phases = new ArrayList<GenerateLifecyclesDocMojo.Phase>();
 			Match phasesElements = JOOX.$(element).xpath("configuration/phases/*");
 			for (Element phase : phasesElements) {
-				phases.add(new Phase(phase.getNodeName(), phase.getTextContent(), project));
+				phases.add(new Phase(phase.getNodeName(), phase.getTextContent(), project, session));
 			}
 			lifecycles.add(new Lifecycle(JOOX.$(element).xpath("role-hint").text(), phases));
 		}
-
 		return lifecycles;
 	}
 
@@ -143,7 +139,7 @@ public class GenerateLifecyclesDocMojo extends AbstractNewPageMojo {
 		if (componentsFile != null && componentsFile.exists()) {
 			this.lifecycles = parseLifecycles(componentsFile);
 			for (Lifecycle lifecycle : lifecycles) {
-				createPackagingPage(lifecycle.packagingName);
+				createPackagingPage(lifecycle.getPackagingName());
 			}
 			return getLifecyclesDocumentation(html);
 		} else {
@@ -183,34 +179,17 @@ public class GenerateLifecyclesDocMojo extends AbstractNewPageMojo {
 		packagingPage.execute();
 	}
 
-	class Lifecycle implements Renderable {
-		private String packagingName;
-		private List<Phase> phases;
+	class Lifecycle extends LifecyclesUtils.Lifecycle<Phase> implements Renderable {
 
 		public Lifecycle(String packagingName, List<Phase> phases) {
-			this.packagingName = packagingName;
-			this.phases = phases;
-		}
-
-		public String getPackagingName() {
-			return packagingName;
-		}
-		public void setPackagingName(String packagingName) {
-			this.packagingName = packagingName;
-		}
-
-		public List<Phase> getPhases() {
-			return phases;
-		}
-		public void setPhases(List<Phase> phases) {
-			this.phases = phases;
+			super(packagingName, phases);
 		}
 
 		@Override
 		public void renderOn(HtmlCanvas html) throws IOException {
 			html.
 			div(class_("section")).
-				h3(id("Lifecycle_"+this.packagingName)).a(href("packaging-"+this.packagingName+".html")).write(this.packagingName)._a()._h3().
+				h3(id("Lifecycle_"+this.getPackagingName())).a(href("packaging-"+this.getPackagingName()+".html")).write(this.getPackagingName())._a()._h3().
 				table(border("0").class_("bodyTable table table-striped table-hover")).
 					thead().
 						tr(class_("a")).
@@ -220,8 +199,8 @@ public class GenerateLifecyclesDocMojo extends AbstractNewPageMojo {
 					._thead().
 					tbody();
 
-			for (Phase phase : this.phases) {
-				phase.renderOn(html);
+			for (t3.LifecyclesUtils.Phase phase : this.getPhases()) {
+				((Phase) phase).renderOn(html);
 			}
 
 			html
@@ -232,37 +211,10 @@ public class GenerateLifecyclesDocMojo extends AbstractNewPageMojo {
 
 	}
 
-	class Phase implements Renderable {
-		private String phaseName;
-		private List<String> goals;
-		private MavenProject mavenProject;
-		
-		public Phase(String phaseName, String goals, MavenProject mavenProject) {
-			this.phaseName = phaseName;
-			this.mavenProject = mavenProject;
+	class Phase extends LifecyclesUtils.Phase implements Renderable {
 
-			CommonMojo propertiesManager = CommonMojo.propertiesManager(session, mavenProject);
-
-			this.goals = Arrays.asList(goals.split("\\s*,\\s*"));
-			for (ListIterator<String> iterator = this.goals.listIterator(); iterator.hasNext();) {
-				String goal = iterator.next();
-
-				iterator.set(propertiesManager.replaceProperties(goal.trim()));
-			}
-				
-		}
-
-		public String getPhaseName() {
-			return phaseName;
-		}
-		public void setPhaseName(String phaseName) {
-			this.phaseName = phaseName;
-		}
-		public List<String> getGoals() {
-			return goals;
-		}
-		public void setGoals(List<String> goals) {
-			this.goals = goals;
+		public Phase(String phaseName, String goals, MavenProject mavenProject, MavenSession session) {
+			super(phaseName, goals, mavenProject, session);
 		}
 
 		@Override
@@ -270,17 +222,17 @@ public class GenerateLifecyclesDocMojo extends AbstractNewPageMojo {
 			html.
 				tr().
 					td().
-						tt().write(this.phaseName)._tt()
+						tt().write(this.getPhaseName())._tt()
 					._td().
 					td().
 						tt();
 
-			for (final String goal : this.goals) {
+			for (final String goal : this.getGoals()) {
 				html.render(new Renderable() {
 					@Override
 					public void renderOn(HtmlCanvas html) throws IOException {
 						String goalName = null;
-						if (goal != null && mavenProject != null && goal.startsWith(mavenProject.getGroupId()+":"+mavenProject.getArtifactId())) {
+						if (goal != null && getMavenProject() != null && goal.startsWith(getMavenProject().getGroupId() + ":" + getMavenProject().getArtifactId())) {
 							goalName = goal.substring(goal.lastIndexOf(":") + 1, goal.length());
 						}
 						if (goalName != null) {

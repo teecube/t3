@@ -1,5 +1,5 @@
 /**
- * (C) Copyright 2016-2016 teecube
+ * (C) Copyright 2016-2017 teecube
  * (http://teecu.be) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -83,14 +83,14 @@ public class PropertiesEnforcer {
 	 * @param pluginDescriptor 
 	 * @throws MavenExecutionException
 	 */
-	public static <T> void enforceProperties(MavenSession session, BuildPluginManager pluginManager, Logger logger, List<String> projectPackagings, Class<T> fromClass) throws MavenExecutionException {
+	public static <T> void enforceProperties(MavenSession session, BuildPluginManager pluginManager, Logger logger, List<String> projectPackagings, Class<T> fromClass, String pluginKey) throws MavenExecutionException {
 		logger.info(Messages.MESSAGE_SPACE);
 		logger.info(Messages.ENFORCING_RULES);
 
 		setExecutablesExtension(session);
 
 		logger.info(Messages.ENFORCING_GLOBAL_RULES);
-		enforceGlobalProperties(session, pluginManager, logger, fromClass);
+		enforceGlobalProperties(session, pluginManager, logger, fromClass, pluginKey);
 		logger.info(Messages.ENFORCED_GLOBAL_RULES);
 		logger.info(Messages.MESSAGE_SPACE);
 
@@ -112,12 +112,12 @@ public class PropertiesEnforcer {
 			logger.info(Messages.MESSAGE_SPACE);
 		}
 	}
-	
-	private static <T> void enforceGlobalProperties(MavenSession session, BuildPluginManager pluginManager, Logger logger, Class<T> fromClass) throws MavenExecutionException {
+
+	private static <T> void enforceGlobalProperties(MavenSession session, BuildPluginManager pluginManager, Logger logger, Class<T> fromClass, String pluginKey) throws MavenExecutionException {
 		EnforcerPluginBuilder pluginBuilder = new EnforcerPluginBuilder();
 
 		try {
-			List<File> pluginsConfiguration = PluginConfigurator.getPluginsConfigurationFromClasspath(session, logger, fromClass);
+			List<File> pluginsConfiguration = PluginConfigurator.getPluginsConfigurationFromClasspath(session, logger, fromClass, pluginKey);
 
 			if (pluginBuilder.addConfigurationFromClasspath()) {
 				for (File file : pluginsConfiguration) {
@@ -146,7 +146,10 @@ public class PropertiesEnforcer {
 	}
 
 	private static void checkForSkippedRules(MavenSession session, Xpp3Dom configuration) {
-		CommonMojo propertiesManager = CommonMojo.propertiesManager(session, session.getCurrentProject());
+		CommonMojo propertiesManager = PluginConfigurator.propertiesManager;
+		if (propertiesManager == null) {
+			propertiesManager = CommonMojo.propertiesManager(session, session.getCurrentProject());
+		}
 
 		Integer i = 0;
 		Xpp3Dom rules = configuration.getChildren("rules")[0];

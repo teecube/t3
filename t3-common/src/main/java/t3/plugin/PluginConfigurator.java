@@ -1,5 +1,5 @@
 /**
- * (C) Copyright 2016-2016 teecube
+ * (C) Copyright 2016-2017 teecube
  * (http://teecu.be) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,7 +29,9 @@ import java.util.regex.Pattern;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Plugin;
+import org.apache.maven.model.PluginExecution;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.logging.Logger;
 import org.reflections.Reflections;
@@ -53,20 +55,62 @@ public class PluginConfigurator {
 
 	public static CommonMojo propertiesManager;
 
-	private static boolean hasGoal(MavenSession session, String file) {
+	private static boolean hasGoal(MavenSession session, String file, Class<?> fromClass, String pluginKey) {
+		if (!file.startsWith("plugins-configuration/goals/")) return false;
+
 		for (String goal : session.getRequest().getGoals()) {
-			goal = goal.replace(":", "_");
-			if (file.startsWith("plugins-configuration/goals/" + goal)) {
-				return true;
-			}
-			String dir = file.substring(0, file.lastIndexOf("/"));
-			if (dir.endsWith("-")) {
-				if (("plugins-configuration/goals/" + goal).startsWith(dir)) {
+			if (!goal.contains(":")) { // the goal is a phase (like "clean" "package" "install"...)
+				goal = goal.trim().toUpperCase();
+				LifecyclePhase lifecyclePhase = LifecyclePhase.valueOf(goal);
+				if (lifecyclePhase.ordinal() >= LifecyclePhase.PRE_CLEAN.ordinal()) { // ignore phase which are not from default lifecycle
+					continue;
+				}
+//				List<String> goals = MojosFactory.getMojosGoalsForLifecyclePhase(fromClass, lifecyclePhase, true);
+				List<String> goalsToBeCalled = getGoalsToBeCalled(session, pluginKey, lifecyclePhase);
+				for (String goalToBeCalled : goalsToBeCalled) {
+					String dir = file.substring(0, file.lastIndexOf("/"));
+					if (file.startsWith("plugins-configuration/goals/") && dir.endsWith(goalToBeCalled)) {
+						return true;
+					}
+				}
+			} else {
+				goal = goal.replace(":", "_");
+				if (file.startsWith("plugins-configuration/goals/" + goal)) {
 					return true;
+				}
+				String dir = file.substring(0, file.lastIndexOf("/"));
+				if (dir.endsWith("-")) {
+					if (("plugins-configuration/goals/" + goal).startsWith(dir)) {
+						return true;
+					}
 				}
 			}
 		}
 		return false;
+	}
+
+	private static List<String> getGoalsToBeCalled(MavenSession session, String pluginKey, LifecyclePhase lifecyclePhase) {
+		List<String> goals = new ArrayList<String>();
+		for (MavenProject mavenProject : session.getProjects()) {
+			Plugin plugin = mavenProject.getPlugin(pluginKey);
+			for (PluginExecution execution : plugin.getExecutions()) {
+				for (String goal : execution.getGoals()) {
+					if (!goals.contains(goal)) {
+						String phase = execution.getPhase();
+						LifecyclePhase goalLifecylePhase = LifecyclePhase.NONE;
+						if (phase != null) {
+							phase = phase.trim().replace("-", "_").toUpperCase();
+							goalLifecylePhase = LifecyclePhase.valueOf(phase);
+						}
+						if (goalLifecylePhase != LifecyclePhase.NONE && goalLifecylePhase.ordinal() <= lifecyclePhase.ordinal()) {
+							goals.add(goal);
+						}
+					}
+				}
+			}
+		}
+
+		return goals;
 	}
 
 	/**
@@ -79,7 +123,7 @@ public class PluginConfigurator {
 	 * @param fromClass
 	 * @return
 	 */
-	public static <T> List<File> getPluginsConfigurationFromClasspath(MavenSession session, Logger logger, Class<T> fromClass) {
+	public static <T> List<File> getPluginsConfigurationFromClasspath(MavenSession session, Logger logger, Class<T> fromClass, String pluginKey) {
 		MavenProject mavenProject = session.getCurrentProject();
 
 		List<File> result = new ArrayList<File>();
@@ -96,7 +140,7 @@ public class PluginConfigurator {
 			String file = (String) it.next();
 			if (!file.startsWith("plugins-configuration/default") &&
 				!file.startsWith("plugins-configuration/packaging/" + mavenProject.getPackaging().trim()) &&
-				!hasGoal(session, file)
+				!hasGoal(session, file, fromClass, pluginKey)
 			   ) {
 				it.remove();
 			}
@@ -133,7 +177,7 @@ public class PluginConfigurator {
 	 * @throws MojoExecutionException
 	 * @throws IOException
 	 */
-	public static <T> void updatePluginsConfiguration(MavenProject mavenProject, MavenSession session, boolean createIfNotExists, Class<T> fromClass, Logger logger) throws MojoExecutionException, IOException {
+	public static <T> void updatePluginsConfiguration(MavenProject mavenProject, MavenSession session, boolean createIfNotExists, Class<T> fromClass, Logger logger, String pluginKey) throws MojoExecutionException, IOException {
 		if (session == null) return;
 		if (mavenProject == null) return;
 
@@ -149,13 +193,13 @@ public class PluginConfigurator {
 				it.set(plugin);
 			}
 		} else {
-			List<File> pluginsConfiguration = PluginConfigurator.getPluginsConfigurationFromClasspath(session, logger, fromClass);
+			List<File> pluginsConfiguration = PluginConfigurator.getPluginsConfigurationFromClasspath(session, logger, fromClass, pluginKey);
 			for (File file : pluginsConfiguration) {
 				String artifactId = file.getName().replace(".xml", "");
 				String groupId = file.getParentFile().getName();
-				String pluginKey = groupId+":"+artifactId;
+				String currentPluginKey = groupId + ":" + artifactId;
 
-				Plugin plugin = getPluginFromMavenProject(mavenProject, pluginKey);
+				Plugin plugin = getPluginFromMavenProject(mavenProject, currentPluginKey);
 
 				PluginBuilder pluginBuilder;
 				if (plugin == null) {
