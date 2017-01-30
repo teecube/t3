@@ -1108,11 +1108,15 @@
 							<version>${maven.plugin.invoker}</version>
 						</plugin>
 						<plugin>
-							<!-- plugin configuration and executions to properly use Java5 annotations, 
-								see http://jira.codehaus.org/browse/MNG-5346 -->
 							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-plugin-plugin</artifactId>
 							<version>${maven.plugin.plugin}</version>
+							<configuration>
+								<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+								<extractors>
+									<extractor>java-annotations</extractor>
+								</extractors>
+							</configuration>
 						</plugin>
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
