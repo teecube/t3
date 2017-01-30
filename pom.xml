@@ -399,7 +399,7 @@
 				<maven.plugin.enforcer>1.4.1</maven.plugin.enforcer>
 				<maven.plugin.help>2.2</maven.plugin.help>
 				<maven.plugin.invoker>1.9</maven.plugin.invoker>
-				<maven.plugin.plugin>3.4</maven.plugin.plugin>
+				<maven.plugin.plugin>3.5</maven.plugin.plugin>
 				<maven.plugin.release>2.5.3</maven.plugin.release>
 
 				<plexus.component.metadata>1.6</plexus.component.metadata>
@@ -1113,24 +1113,6 @@
 							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-plugin-plugin</artifactId>
 							<version>${maven.plugin.plugin}</version>
-							<configuration>
-								<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-								<extractors>
-									<extractor>java-annotations</extractor>
-									<!-- <extractor>java</extractor> -->
-								</extractors>
-							</configuration>
-							<executions>
-								<execution>
-									<id>default-descriptor</id>
-									<goals>
-										<goal>descriptor</goal>
-									</goals>
-									<phase>process-classes</phase>
-								</execution>
-								<!-- <execution> <id>help-descriptor</id> <goals> <goal>helpmojo</goal> 
-									</goals> <phase>process-classes</phase> </execution> -->
-							</executions>
 						</plugin>
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
