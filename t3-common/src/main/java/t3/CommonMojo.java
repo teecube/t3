@@ -497,6 +497,8 @@ public class CommonMojo extends AbstractMojo {
 
 	// initialization of standalone POMs (ie no POM) because they are not included in a lifecycle
 	private static boolean standalonePOMInitialized = false;
+	public static boolean lifecyleParticipationProcessed = false;
+
 	private List<Map.Entry<String,String>> ignoredParameters;
 
 	public List<Map.Entry<String,String>> getIgnoredParameters() {
@@ -518,7 +520,8 @@ public class CommonMojo extends AbstractMojo {
 	}
 
 	protected <T> void initStandalonePOM() throws MojoExecutionException {
-		if (project != null && "standalone-pom".equals(project.getArtifactId()) && !standalonePOMInitialized) {
+//		if (project != null && "standalone-pom".equals(project.getArtifactId()) && !standalonePOMInitialized) {
+		if (!lifecyleParticipationProcessed && !standalonePOMInitialized) {
 			AdvancedMavenLifecycleParticipant lifecycleParticipant = getLifecycleParticipant();
 			lifecycleParticipant.setPlexus(plexus);
 			lifecycleParticipant.setLogger(logger);

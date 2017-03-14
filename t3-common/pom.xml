@@ -92,6 +92,11 @@
 			<artifactId>reflections</artifactId>
 		</dependency>
 		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-api</artifactId>
+		    <version>1.7.24</version>
+		</dependency>
+		<dependency>
 			<groupId>org.twdata.maven</groupId>
 			<artifactId>mojo-executor</artifactId>
 		</dependency>
