@@ -20,7 +20,9 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -34,6 +36,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 import t3.CommonMojo;
+import t3.CommonMojoInformation;
 import t3.Messages;
 
 /**
@@ -42,15 +45,66 @@ import t3.Messages;
  *
  */
 public class PropertiesEnforcer {
-	private static void setExecutablesExtension(MavenSession session) {
+	// Arch 
+    public static String ARCH_PPC = "ppc";
+    public static String ARCH_X86 = "x86";
+    public static String ARCH_X86_64 = "amd64";
+
+	// OS
+    public static String OS_WINDOWS = "windows";
+    public static String OS_OSX = "osx";
+    public static String OS_AIX = "aix";
+    public static String OS_SOLARIS = "solaris";
+    public static String OS_LINUX = "linux";
+
+	private static void setPlatformSpecificProperties(MavenSession session) {
+		// CommonMojoInformation.executablesExtension
 		String executablesExtension = "";
 		if (SystemUtils.IS_OS_WINDOWS) {
 			executablesExtension = ".exe";
 		}
 
+		// CommonMojoInformation.platformArch
+		String osArch;
+        Map<String, String> archMap = new HashMap<String, String>();
+        archMap.put("x86", ARCH_X86);
+        archMap.put("i386", ARCH_X86);
+        archMap.put("i486", ARCH_X86);
+        archMap.put("i586", ARCH_X86);
+        archMap.put("i686", ARCH_X86);
+        archMap.put("x86_64", ARCH_X86_64);
+        archMap.put("amd64", ARCH_X86_64);
+        archMap.put("powerpc", ARCH_PPC);
+        osArch = archMap.get(SystemUtils.OS_ARCH);
+        if (osArch == null) {
+            throw new IllegalArgumentException("Unknown architecture " + SystemUtils.OS_ARCH);
+        }
+
+		// CommonMojoInformation.platformOs
+		String osName;
+        if (SystemUtils.IS_OS_WINDOWS) {
+        	osName = OS_WINDOWS;
+        } else if (SystemUtils.IS_OS_MAC_OSX) {
+        	osName = OS_OSX;
+        } else if (SystemUtils.IS_OS_AIX) {
+        	osName = OS_AIX;
+        } else if (SystemUtils.IS_OS_SOLARIS) {
+        	osName = OS_SOLARIS;
+        } else if (SystemUtils.IS_OS_LINUX) {
+        	osName = OS_LINUX;
+        } else {
+            throw new IllegalArgumentException("Unknown operating system " + SystemUtils.OS_NAME);
+        }
+
 		for (MavenProject mavenProject : session.getProjects()) {
-			if (!mavenProject.getProperties().contains("executables.extension")) {
-				mavenProject.getProperties().put("executables.extension", executablesExtension);
+			if (!mavenProject.getProperties().contains(CommonMojoInformation.executablesExtension)) {
+				mavenProject.getProperties().put(CommonMojoInformation.executablesExtension, executablesExtension);
+			}
+			if (!mavenProject.getProperties().contains(CommonMojoInformation.platformArch)) {
+				mavenProject.getProperties().put(CommonMojoInformation.platformArch, osArch);
+			}
+			if (!mavenProject.getProperties().contains(CommonMojoInformation.platformOs)) {
+				mavenProject.getProperties().put(CommonMojoInformation.platformOs, osName);
 			}
 		}
 	}
@@ -87,7 +141,7 @@ public class PropertiesEnforcer {
 		logger.info(Messages.MESSAGE_SPACE);
 		logger.info(Messages.ENFORCING_RULES);
 
-		setExecutablesExtension(session);
+		setPlatformSpecificProperties(session);
 
 		logger.info(Messages.ENFORCING_GLOBAL_RULES);
 		enforceGlobalProperties(session, pluginManager, logger, fromClass, pluginKey);

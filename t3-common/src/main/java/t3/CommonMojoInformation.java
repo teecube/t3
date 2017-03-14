@@ -60,8 +60,17 @@ public class CommonMojoInformation {
 	public static final String jre64Version = "tibco.jre64.version";
 	public static final String jre64Version_description = "The TIBCO JRE version (as defined by its directory).";
 
-	/* built-in Maven properties */
+	/* platform dependent properties */
+	public static final String executablesExtension = "executables.extension";
 	public static final String executablesExtension_description = "The extension string for executables files on current system (might be empty for *nix or '.exe' for Windows).";
+
+	public static final String platformArch = "platform.arch";
+	public static final String platformArch_description = "The architecture of running platform (x86, x86_64, ia64, ppc, ...)";
+
+	public static final String platformOs = "platform.os";
+	public static final String platformOs_description = "The Operating System of running platform (linux, win, ...)";
+
+	/* built-in Maven properties */
 	public static final String directory_description = "The directory used by Maven to copy temporary files for builds (by default it is well-known 'target' directory).";
 	public static final String outputDirectory_description = "The directory used by Maven to copy artifacts created by builds.";
 	public static final String testOutputDirectory_description = "The directory used by Maven for all files related to tests.";

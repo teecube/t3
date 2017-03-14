@@ -75,8 +75,14 @@ import t3.plugin.annotations.injection.ParametersListener;
  */
 public class CommonMojo extends AbstractMojo {
 
-	@GlobalParameter (property = "executables.extension", required = true, description = CommonMojoInformation.executablesExtension_description, category = CommonMojoInformation.systemCategory)
+	@GlobalParameter (property = CommonMojoInformation.executablesExtension, required = true, description = CommonMojoInformation.executablesExtension_description, category = CommonMojoInformation.systemCategory)
 	protected String executablesExtension;
+
+	@GlobalParameter (property = CommonMojoInformation.platformArch, required = true, description = CommonMojoInformation.platformArch_description, category = CommonMojoInformation.systemCategory)
+	protected String platformArch;
+
+	@GlobalParameter (property = CommonMojoInformation.platformOs, required = true, description = CommonMojoInformation.platformOs_description, category = CommonMojoInformation.systemCategory)
+	protected String platformOs;
 
 	@GlobalParameter (property = "project.build.directory", description = CommonMojoInformation.directory_description, defaultValue = "${basedir}/target", category = CommonMojoInformation.mavenCategory) // target
 	protected File directory;
