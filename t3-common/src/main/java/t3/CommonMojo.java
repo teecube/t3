@@ -497,6 +497,7 @@ public class CommonMojo extends AbstractMojo {
 
 	// initialization of standalone POMs (ie no POM) because they are not included in a lifecycle
 	private static boolean standalonePOMInitialized = false;
+	public final static String mojoInitialized = "t3.initialized";
 
 	private List<Map.Entry<String,String>> ignoredParameters;
 
