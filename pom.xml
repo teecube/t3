@@ -1122,6 +1122,15 @@
 									<extractor>java-annotations</extractor>
 								</extractors>
 							</configuration>
+							<executions>
+								<execution>
+									<id>default-descriptor</id>
+									<goals>
+										<goal>descriptor</goal>
+									</goals>
+									<phase>process-classes</phase>
+								</execution>
+							</executions>
 						</plugin>
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
