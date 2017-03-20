@@ -83,12 +83,12 @@
 			<dependency>
 				<groupId>io.teecube.t3</groupId>
 				<artifactId>t3-common</artifactId>
-				<version>0.0.3</version>
+				<version>0.0.4-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>io.teecube.t3</groupId>
 				<artifactId>t3-site-enhancer</artifactId>
-				<version>0.0.3</version>
+				<version>0.0.4-SNAPSHOT</version>
 			</dependency>
 
 			<!-- Maven dependencies -->
