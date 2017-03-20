@@ -197,6 +197,11 @@
 				<artifactId>metainf-services</artifactId>
 				<version>1.6</version>
 			</dependency>
+			<dependency>
+			    <groupId>com.mashape.unirest</groupId>
+			    <artifactId>unirest-java</artifactId>
+			    <version>1.4.9</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -1851,7 +1856,7 @@
 				<toeDomainsURLBase>toe/domains</toeDomainsURLBase>
 
 				<nonEndorsement><![CDATA[<i class="fa fa-code color-highlight"><!-- Made --></i> with <i class="fa fa-heart color-highlight"><!-- love --></i> as an open source initiative, not endorsed by TIBCO.]]></nonEndorsement>
-				<socialLinks><![CDATA[<li><a href="https://git.teecu.be/teecube#projects" class="fa"><i class="fa fa-git-square fa-2x"></i></a></li><li><a href="https://twitter.com/t33cube" class="fa"><i class="fa fa-twitter fa-2x"></i></a></li>]]></socialLinks>
+				<socialLinks><![CDATA[<li><a href="https://git.teecu.be/teecube#projects" class="fa"><i class="fa fa-gitlab fa-2x"></i></a></li><li><a href="https://twitter.com/t33cube" class="fa"><i class="fa fa-twitter fa-2x"></i></a></li>]]></socialLinks>
 				<!-- Velocity-proof properties -->
 				<commandLineStart><![CDATA[<div class="window"><div class="title"><div class="circle-red">&#160;</div><div class="circle-yellow">&#160;</div><div class="circle-green">&#160;</div><p>${command-title}</p></div><div class="command"><span class="command"><span class="fa-stack fa-lg"><span class="fa fa-square fa-stack-2x"><!--preserve auto-closing elements--></span><span class="fa fa-terminal fa-stack-1x fa-inverse"><!--preserve auto-closing elements--></span></span></span><pre class="command">]]></commandLineStart>
 				<commandLineEnd><![CDATA[</pre><span class="command"><span class="fa-stack fa-lg"><span class="fa fa-square fa-stack-2x"><!--preserve auto-closing elements--></span><span class="fa fa-copy fa-stack-1x fa-inverse data-btn-command-line" data-clipboard-text="${data-clipboard-text}"><!--preserve auto-closing elements--></span></span></span></div></div>]]></commandLineEnd>
@@ -1883,12 +1888,12 @@
 						<plugin>
 							<groupId>io.teecube.t3</groupId>
 							<artifactId>t3-site-enhancer</artifactId>
-							<version>0.0.3</version>
+							<version>0.0.4-SNAPSHOT</version>
 							<dependencies>
 			                    <dependency>
 			                        <groupId>io.teecube.t3</groupId>
 			                        <artifactId>t3-common</artifactId>
-			                        <version>0.0.3</version>
+			                        <version>0.0.4-SNAPSHOT</version>
 			                    </dependency>
 								<dependency>
 									<groupId>org.rendersnake</groupId>
@@ -2031,6 +2036,7 @@
 									<goals>
 										<goal>generate-global-doc</goal>
 										<goal>generate-lifecycles-doc</goal>
+										<goal>generate-changelog</goal>
 										<goal>update-site</goal>
 										<goal>update-brand</goal>
 										<goal>update-doc-menu</goal>
