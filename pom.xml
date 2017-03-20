@@ -1561,17 +1561,19 @@
 
 										def setCurrentVersion(String coordinates, String propertyName) {
 											def result = null
-
 											def path = "$settings.localRepository/$coordinates/maven-metadata-local.xml"
 											def f = new File(path)
+
 											if (f != null && f.exists()) {
 												def fis = new FileInputStream(f)
-
 												def xpath = XPathFactory.newInstance().newXPath()
 
-												def nodes = xpath.evaluate('/metadata/versioning/release', new InputSource(fis), XPathConstants.NODESET)
-												nodes.each {
-													result = xpath.evaluate('text()', it)
+												def projectVersion = "$project.version"
+												if (!projectVersion.endsWith("-SNAPSHOT")) {
+													def nodes = xpath.evaluate('/metadata/versioning/release', new InputSource(fis), XPathConstants.NODESET)
+													nodes.each {
+														result = xpath.evaluate('text()', it)
+													}
 												}
 												if (result == null) {
 													fis = new FileInputStream(f)
@@ -1622,17 +1624,19 @@
 
 										def setCurrentVersion(String coordinates, String propertyName) {
 											def result = null
-
 											def path = "$settings.localRepository/$coordinates/maven-metadata-local.xml"
 											def f = new File(path)
+
 											if (f != null && f.exists()) {
 												def fis = new FileInputStream(f)
-
 												def xpath = XPathFactory.newInstance().newXPath()
 
-												def nodes = xpath.evaluate('/metadata/versioning/release', new InputSource(fis), XPathConstants.NODESET)
-												nodes.each {
-													result = xpath.evaluate('text()', it)
+												def projectVersion = "$project.version"
+												if (!projectVersion.endsWith("-SNAPSHOT")) {
+													def nodes = xpath.evaluate('/metadata/versioning/release', new InputSource(fis), XPathConstants.NODESET)
+													nodes.each {
+														result = xpath.evaluate('text()', it)
+													}
 												}
 												if (result == null) {
 													fis = new FileInputStream(f)
