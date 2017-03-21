@@ -90,6 +90,7 @@
 						</dependency>
 					</dependencies>
 					<configuration>
+						<tagNamePattern>v@{project.version}</tagNamePattern>
 						<workflowDescriptor>${project.basedir}/src/main/unleash/workflow</workflowDescriptor>
 					</configuration>
 				</plugin>
