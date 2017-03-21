@@ -5,6 +5,7 @@ prepareVersions
 setReleaseVersions
 checkAether
 addSpyPlugin
+updateCommonVersionInSiteEnhancer
 buildReleaseArtifacts
 removeSpyPlugin
 checkForScmChanges
