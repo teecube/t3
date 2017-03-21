@@ -1,0 +1,17 @@
+storeScmRevision
+checkProjectVersions
+checkParentVersions
+prepareVersions
+setReleaseVersions
+exec[1]
+checkAether
+addSpyPlugin
+buildReleaseArtifacts
+removeSpyPlugin
+checkForScmChanges
+tagScm
+detectReleaseArtifacts
+setDevVersion
+installArtifacts
+deployArtifacts
+exec[2]
