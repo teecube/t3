@@ -217,11 +217,6 @@
 				<artifactId>metainf-services</artifactId>
 				<version>1.6</version>
 			</dependency>
-			<dependency>
-			    <groupId>com.mashape.unirest</groupId>
-			    <artifactId>unirest-java</artifactId>
-			    <version>1.4.9</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -1403,7 +1398,10 @@
 				<jaxen-version>1.1.3</jaxen-version>
 				<logback-version>1.1.3</logback-version>
 				<lombok-version>1.14.8</lombok-version>
-				<metainf-services-version>1.6</metainf-services-version>						
+				<metainf-services-version>1.6</metainf-services-version>
+				<jackson-version>2.8.7</jackson-version>						
+				<joda-time-version>2.9.7</joda-time-version>						
+				<unirest-version>1.4.9</unirest-version>						
 			</properties>
             <dependencyManagement>
                 <dependencies>
@@ -1539,6 +1537,39 @@
 						<groupId>org.kohsuke.metainf-services</groupId>
 						<artifactId>metainf-services</artifactId>
 						<version>${metainf-services-version}</version>
+					</dependency>
+
+					<dependency>
+						<groupId>com.fasterxml.jackson.core</groupId>
+						<artifactId>jackson-core</artifactId>
+						<version>${jackson-version}</version>
+					</dependency>
+					<dependency>
+						<groupId>com.fasterxml.jackson.core</groupId>
+						<artifactId>jackson-databind</artifactId>
+						<version>${jackson-version}</version>
+					</dependency>
+					<dependency>
+						<groupId>com.fasterxml.jackson.core</groupId>
+						<artifactId>jackson-annotations</artifactId>
+						<version>${jackson-version}</version>
+					</dependency>
+					<dependency>
+						<groupId>com.fasterxml.jackson.datatype</groupId>
+						<artifactId>jackson-datatype-joda</artifactId>
+						<version>${jackson-version}</version>
+					</dependency>
+
+					<dependency>
+						<groupId>joda-time</groupId>
+						<artifactId>joda-time</artifactId>
+						<version>${joda-time-version}</version>
+					</dependency>
+
+					<dependency>
+					    <groupId>com.mashape.unirest</groupId>
+					    <artifactId>unirest-java</artifactId>
+					    <version>${unirest-version}</version>
 					</dependency>
 				</dependencies>
 			</dependencyManagement>
@@ -1923,11 +1954,11 @@
 							<artifactId>t3-site-enhancer</artifactId>
 							<version>0.0.3</version><!-- unleash-update2 -->
 							<dependencies>
-			                    <dependency>
-			                        <groupId>io.teecube.t3</groupId>
-			                        <artifactId>t3-common</artifactId>
-			                        <version>0.0.3</version><!-- unleash-update -->
-			                    </dependency>
+								<dependency>
+									<groupId>io.teecube.t3</groupId>
+									<artifactId>t3-common</artifactId>
+									<version>0.0.3</version><!-- unleash-update -->
+								</dependency>
 								<dependency>
 									<groupId>org.rendersnake</groupId>
 									<artifactId>rendersnake</artifactId>
