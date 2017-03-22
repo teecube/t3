@@ -3,7 +3,7 @@
 
 	<groupId>io.teecube</groupId>
 	<artifactId>t3</artifactId>
-	<version>0.0.5-SNAPSHOT</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>${ecosystemName}</name>
@@ -1926,7 +1926,7 @@
 			                    <dependency>
 			                        <groupId>io.teecube.t3</groupId>
 			                        <artifactId>t3-common</artifactId>
-			                        <version>0.0.4</version><!-- unleash-update -->
+			                        <version>0.0.3</version><!-- unleash-update -->
 			                    </dependency>
 								<dependency>
 									<groupId>org.rendersnake</groupId>
