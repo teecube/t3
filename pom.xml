@@ -86,7 +86,7 @@
 						<dependency>
 							<groupId>io.teecube.t3</groupId>
 							<artifactId>unleash-custom</artifactId>
-							<version>0.0.1</version>
+							<version>0.0.2</version>
 						</dependency>
 					</dependencies>
 					<configuration>
@@ -1921,7 +1921,7 @@
 						<plugin>
 							<groupId>io.teecube.t3</groupId>
 							<artifactId>t3-site-enhancer</artifactId>
-							<version>0.0.3</version><!-- unleash-update -->
+							<version>0.0.3</version><!-- unleash-update2 -->
 							<dependencies>
 			                    <dependency>
 			                        <groupId>io.teecube.t3</groupId>
