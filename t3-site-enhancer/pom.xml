@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>io.teecube</groupId>
 		<artifactId>t3</artifactId>
-		<version>0.0.5-SNAPSHOT</version>
+		<version>0.0.4-SNAPSHOT</version>
 	</parent>
 
 	<groupId>io.teecube.t3</groupId>
@@ -12,7 +12,7 @@
 
 	<packaging>maven-plugin</packaging>
 
-	<name>T³ - Site enhancer</name>
+	<name>${ecosystemName} - Site enhancer</name>
 	<description>Enhances Maven sites</description>
 
 	<properties>
