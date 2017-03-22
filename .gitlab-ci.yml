@@ -6,7 +6,7 @@ before_script:
 
 release:
     script:
-        - mvn -gs /home/m2/settings.xml -Dunleash.developmentVersion=$DEV_VERSION -Dunleash.releaseVersion=$RELEASE_VERSION -Dunleash.scmUsername=debovema -Dunleash.scmPasswordEnvVar=GIT_PASSWORD -Dunleash.profiles=release-profile unleash:perform
+        - mvn -gs /home/m2/settings.xml -Dunleash.developmentVersion=$DEV_VERSION -Dunleash.releaseVersion=$RELEASE_VERSION -Dunleash.scmUsername=debovema -Dunleash.scmPasswordEnvVar=GIT_PASSWORD -Dunleash.profiles=release-profile,t3-archive -P release-profile,t3-archive unleash:perform
         - "curl -X POST -F token=$REBUILD_TOKEN -F ref=master https://git.teecu.be/api/v3/projects/$CI_PROJECT_ID/trigger/builds"
         - "curl -X POST -F token=$REBUILD_TOKEN -F ref=t3/$RELEASE_VERSION https://git.teecu.be/api/v3/projects/$CI_PROJECT_ID/trigger/builds"
     only:
