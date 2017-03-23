@@ -1756,14 +1756,14 @@
 							</configuration>
 							<executions>
 								<execution>
-									<phase>verify</phase>
+									<phase>post-integration-test</phase>
 									<goals>
 										<goal>replace</goal>
 									</goals>
 								</execution>
 								<execution>
 									<id>update-root</id>
-									<phase>verify</phase>
+									<phase>post-integration-test</phase>
 									<inherited>false</inherited>
 									<goals>
 										<goal>replace</goal>
@@ -1799,7 +1799,7 @@
 								</execution>
 								<execution>
 									<id>update-versions</id>
-									<phase>verify</phase>
+									<phase>post-integration-test</phase>
 									<inherited>false</inherited>
 									<goals>
 										<goal>replace</goal>
