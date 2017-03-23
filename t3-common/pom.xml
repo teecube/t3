@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>io.teecube</groupId>
 		<artifactId>t3</artifactId>
-		<version>0.0.4-SNAPSHOT</version>
+		<version>0.0.4</version>
 	</parent>
 
 	<groupId>io.teecube.t3</groupId>
@@ -12,8 +12,8 @@
 
 	<packaging>jar</packaging>
 
-	<name>${ecosystemName} - Common</name>
-	<description>Utility classes for ${ecosystemName} projects</description>
+	<name>T³ - Common</name>
+	<description>Utility classes for T³ projects</description>
 
 	<properties>
 		<maven.site.skip>true</maven.site.skip>
