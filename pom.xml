@@ -3,14 +3,14 @@
 
 	<groupId>io.teecube</groupId>
 	<artifactId>t3</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>${ecosystemName}</name>
-	<description>${ecosystemName} (${ecosystemPhoneticName}) stands for ${ecosystemFullName}, it provides Maven plugins for Application Lifecycle Management (${ticName}), advanced components (${tacName}) and cloud-enabler features (${toeName}) for TIBCO products and projects.</description>
+	<name>T³</name>
+	<description>T³ (teecube) stands for TIBCO Enterprise Extensions, it provides Maven plugins for Application Lifecycle Management (TIC), advanced components (TAC) and cloud-enabler features (TOE) for TIBCO products and projects.</description>
 
 	<properties>
-		<releaseVersion>${project.version}</releaseVersion> <!-- default value will be overridden by release:perform command line -->
+		<releaseVersion>0.0.4</releaseVersion> <!-- default value will be overridden by release:perform command line -->
 		<project.scm.id>t3.git</project.scm.id>
 
 		<siteTopCaption>${ecosystemNameHighlight2}</siteTopCaption>
@@ -290,6 +290,31 @@
 							</execution>
 						</executions>
 					</plugin>
+					<!-- 
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<version>3.0.0</version>
+						<executions>
+							<execution>
+								<id>attach-artifacts</id>
+								<phase>package</phase>
+								<goals>
+									<goal>attach-artifact</goal>
+								</goals>
+								<configuration>
+									<artifacts>
+										<artifact>
+											<file>some file</file>
+											<type>extension of your file </type>
+											<classifier>optional</classifier>
+										</artifact>
+									</artifacts>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					 -->
 				</plugins>
 			</build>
 		</profile>
@@ -1952,12 +1977,12 @@
 						<plugin>
 							<groupId>io.teecube.t3</groupId>
 							<artifactId>t3-site-enhancer</artifactId>
-							<version>0.0.3</version><!-- unleash-update2 -->
+							<version>0.0.4</version><!-- unleash-update2 -->
 							<dependencies>
 								<dependency>
 									<groupId>io.teecube.t3</groupId>
 									<artifactId>t3-common</artifactId>
-									<version>0.0.3</version><!-- unleash-update -->
+									<version>0.0.4</version><!-- unleash-update -->
 								</dependency>
 								<dependency>
 									<groupId>org.rendersnake</groupId>
@@ -2334,11 +2359,11 @@
 	<distributionManagement>
 		<repository>
 			<id>t3.repo</id>
-			<url>${repositoryReleaseURL}</url>
+			<url>https://teecu.be/nexus/content/repositories/t3</url>
 		</repository>
 		<snapshotRepository>
 			<id>t3.repo.snapshot</id>
-			<url>${repositorySnapshotURL}</url>
+			<url>https://teecu.be/nexus/content/repositories/t3-snapshot</url>
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -2350,8 +2375,8 @@
 	</licenses>
 
 	<organization>
-		<name>${ecosystemCompany}</name>
-		<url>${ecosystemCompanyURL}</url>
+		<name>teecube</name>
+		<url>http://teecu.be</url>
 	</organization>
 
 	<prerequisites>
@@ -2365,6 +2390,6 @@
 		<tag>HEAD</tag>
 	</scm>
 
-	<url>${siteURL}</url>
+	<url>http://192.168.99.100:8081/nexus/content/sites/t3-site/t3/snapshot/</url>
 
 </project>
