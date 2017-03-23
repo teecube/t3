@@ -4,11 +4,9 @@ checkParentVersions
 prepareVersions
 setReleaseVersions
 checkAether
-addSpyPlugin
 updateCommonVersionInSiteEnhancer
 buildReleaseArtifacts
 updateCommonVersionInSiteEnhancer2
-removeSpyPlugin
 checkForScmChanges
 tagScm
 detectReleaseArtifacts
