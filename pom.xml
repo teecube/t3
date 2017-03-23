@@ -279,7 +279,7 @@
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
-								<phase>verify</phase>
+								<phase>post-integration-test</phase> <!-- before validate because artifact-spy-plugin needs to execute after -->
 								<goals>
 									<goal>sign</goal>
 								</goals>
