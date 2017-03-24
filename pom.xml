@@ -3,14 +3,14 @@
 
 	<groupId>io.teecube</groupId>
 	<artifactId>t3</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>${ecosystemName}</name>
-	<description>${ecosystemName} (${ecosystemPhoneticName}) stands for ${ecosystemFullName}, it provides Maven plugins for Application Lifecycle Management (${ticName}), advanced components (${tacName}) and cloud-enabler features (${toeName}) for TIBCO products and projects.</description>
+	<name>T³</name>
+	<description>T³ (teecube) stands for TIBCO Enterprise Extensions, it provides Maven plugins for Application Lifecycle Management (TIC), advanced components (TAC) and cloud-enabler features (TOE) for TIBCO products and projects.</description>
 
 	<properties>
-		<releaseVersion>${project.version}</releaseVersion> <!-- unleash: 1=<releaseVersion>${project.version}</releaseVersion> 2=<releaseVersion>&#36;{project.version}</releaseVersion> -->
+		<releaseVersion>0.0.4</releaseVersion> <!-- unleash: 1=<releaseVersion>0.0.4</releaseVersion> 2=<releaseVersion>&#36;{project.version}</releaseVersion> -->
 		<project.scm.id>t3.git</project.scm.id>
 
 		<siteTopCaption>${ecosystemNameHighlight2}</siteTopCaption>
@@ -2348,11 +2348,11 @@
 	<distributionManagement>
 		<repository>
 			<id>t3.repo</id>
-			<url>${repositoryReleaseURL}</url>
+			<url>https://teecu.be/nexus/content/repositories/t3</url>
 		</repository>
 		<snapshotRepository>
 			<id>t3.repo.snapshot</id>
-			<url>${repositorySnapshotURL}</url>
+			<url>https://teecu.be/nexus/content/repositories/t3-snapshot</url>
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -2364,8 +2364,8 @@
 	</licenses>
 
 	<organization>
-		<name>${ecosystemCompany}</name>
-		<url>${ecosystemCompanyURL}</url>
+		<name>teecube</name>
+		<url>http://teecu.be</url>
 	</organization>
 
 	<prerequisites>
@@ -2379,6 +2379,6 @@
 		<tag>HEAD</tag>
 	</scm>
 
-	<url>${siteURL}</url>
+	<url>http://192.168.99.100:8081/nexus/content/sites/t3-site/t3/snapshot/</url>
 
 </project>
