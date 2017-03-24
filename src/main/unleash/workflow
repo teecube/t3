@@ -10,6 +10,7 @@ checkForScmChanges
 genericReplacer[2]
 tagScm
 genericReplacer[3]
+copyPOMs
 detectReleaseArtifacts
 setDevVersion
 installArtifacts
