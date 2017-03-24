@@ -12,8 +12,8 @@
 
 	<packaging>jar</packaging>
 
-	<name>${ecosystemName} - Common</name>
-	<description>Utility classes for ${ecosystemName} projects</description>
+	<name>${ecosystemName} - Common</name> <!-- unleash: 1=<name>${ecosystemName} - Common</name> 2=<name>&#36;{ecosystemName} - Common</name> -->
+	<description>Utility classes for ${ecosystemName} projects</description> <!-- unleash: 1=<description>Utility classes for ${ecosystemName} projects</description> 2=<description>Utility classes for &#36;{ecosystemName} projects</description> -->
 
 	<properties>
 		<maven.site.skip>true</maven.site.skip>

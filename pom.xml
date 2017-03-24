@@ -6,8 +6,8 @@
 	<version>0.0.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>${ecosystemName}</name>
-	<description>${ecosystemName} (${ecosystemPhoneticName}) stands for ${ecosystemFullName}, it provides Maven plugins for Application Lifecycle Management (${ticName}), advanced components (${tacName}) and cloud-enabler features (${toeName}) for TIBCO products and projects.</description>
+	<name>${ecosystemName}</name> <!-- unleash: 1=<name>${ecosystemName}</name> 2=<name>&#36;{ecosystemName}</name> -->
+	<description>${ecosystemDescription}</description> <!-- unleash: 1=<description>${ecosystemDescription}</description> 2=<description>&#36;{ecosystemDescription}</description> -->
 
 	<properties>
 		<releaseVersion>${project.version}</releaseVersion> <!-- unleash: 1=<releaseVersion>${project.version}</releaseVersion> 2=<releaseVersion>&#36;{project.version}</releaseVersion> -->
@@ -232,12 +232,6 @@
             </activation>
 			<build>
 				<plugins>
-					<!--
-					<plugin>
-						<groupId>com.google.code.maven-replacer-plugin</groupId>
-						<artifactId>replacer</artifactId>
-					</plugin>
-					-->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-enforcer-plugin</artifactId>
@@ -319,6 +313,7 @@
 			</activation>
 			<properties>
 				<ecosystemName>T³</ecosystemName>
+				<ecosystemDescription>${ecosystemName} (${ecosystemPhoneticName}) stands for ${ecosystemFullName}, it provides Maven plugins for Application Lifecycle Management (${ticName}), advanced components (${tacName}) and cloud-enabler features (${toeName}) for TIBCO products and projects.</ecosystemDescription>
 				<ecosystemFullName>TIBCO Enterprise Extensions</ecosystemFullName>
 				<ecosystemPhoneticName>teecube</ecosystemPhoneticName>
 				<ecosystemLongName><![CDATA[<span class="color-highlight">T</span>IBCO <span class="color-highlight">E</span>nterprise <span class="color-highlight">E</span>xtensions]]></ecosystemLongName>
@@ -1748,91 +1743,6 @@
 				</plugins>
 				<pluginManagement>
 					<plugins>
-						<!--
-						replace parameters in Maven site URL <url>
-						(for mvnrepository.com for instance) and release version
-						-->
-						<!--
-						<plugin>
-							<groupId>com.google.code.maven-replacer-plugin</groupId>
-							<artifactId>replacer</artifactId>
-							<version>1.5.3</version>
-							<configuration>
-								<file>${project.basedir}/pom.xml</file>
-								<outputFile>${project.basedir}/pom.xml</outputFile>
-								<replacements>
-									<replacement>
-										<token>&lt;name&gt;.* - .*&lt;/name&gt;</token>
-										<value>&lt;name&gt;${project.name}&lt;/name&gt;</value>
-									</replacement>
-									<replacement>
-										<token>&lt;description&gt;.*&lt;/description&gt;</token>
-										<value>&lt;description&gt;${project.description}&lt;/description&gt;</value>
-									</replacement>
-								</replacements>
-							</configuration>
-							<executions>
-								<execution>
-									<phase>post-integration-test</phase>
-									<goals>
-										<goal>replace</goal>
-									</goals>
-								</execution>
-								<execution>
-									<id>update-root</id>
-									<phase>post-integration-test</phase>
-									<inherited>false</inherited>
-									<goals>
-										<goal>replace</goal>
-									</goals>
-									<configuration>
-										<replacements>
-											<replacement>
-												<token>&lt;name&gt;\$\{ecosystemName\}&lt;/name&gt;</token>
-												<value>&lt;name&gt;${ecosystemName}&lt;/name&gt;</value>
-											</replacement>
-											<replacement>
-												<token>&lt;url&gt;\$\{siteURL\}&lt;/url&gt;</token>
-												<value>&lt;url&gt;${siteURL}&lt;/url&gt;</value>
-											</replacement>
-											<replacement>
-												<token>&lt;url&gt;\$\{repositoryReleaseURL\}&lt;/url&gt;</token>
-												<value>&lt;url&gt;${repositoryReleaseURL}&lt;/url&gt;</value>
-											</replacement>
-											<replacement>
-												<token>&lt;url&gt;\$\{repositorySnapshotURL\}&lt;/url&gt;</token>
-												<value>&lt;url&gt;${repositorySnapshotURL}&lt;/url&gt;</value>
-											</replacement>
-											<replacement>
-												<token>&lt;name&gt;\$\{ecosystemCompany\}&lt;/name&gt;</token>
-												<value>&lt;name&gt;${ecosystemCompany}&lt;/name&gt;</value>
-											</replacement>
-											<replacement>
-												<token>&lt;url&gt;\$\{ecosystemCompanyURL\}&lt;/url&gt;</token>
-												<value>&lt;url&gt;${ecosystemCompanyURL}&lt;/url&gt;</value>
-											</replacement>
-										</replacements>
-									</configuration>
-								</execution>
-								<execution>
-									<id>update-versions</id>
-									<phase>post-integration-test</phase>
-									<inherited>false</inherited>
-									<goals>
-										<goal>replace</goal>
-									</goals>
-									<configuration>
-										<replacements>
-											<replacement>
-												<token>&lt;releaseVersion&gt;\$\{project.version\}&lt;/releaseVersion&gt;</token>
-												<value>&lt;releaseVersion&gt;${project.version}&lt;/releaseVersion&gt;</value>
-											</replacement>
-										</replacements>
-									</configuration>
-								</execution>
-							</executions>
-						</plugin>
-						-->
 						<plugin>
 							<groupId>org.codehaus.groovy.maven</groupId>
 							<artifactId>gmaven-plugin</artifactId>
@@ -2352,11 +2262,11 @@
 	<distributionManagement>
 		<repository>
 			<id>t3.repo</id>
-			<url>${repositoryReleaseURL}</url>
+			<url>${repositoryReleaseURL}</url> <!-- unleash: 1=<url>${repositoryReleaseURL}</url> 2=<url>&#36;{repositoryReleaseURL}</url> -->
 		</repository>
 		<snapshotRepository>
 			<id>t3.repo.snapshot</id>
-			<url>${repositorySnapshotURL}</url>
+			<url>${repositorySnapshotURL}</url> <!-- unleash: 1=<url>${repositorySnapshotURL}</url> 2=<url>&#36;{repositorySnapshotURL}</url> -->
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -2368,8 +2278,8 @@
 	</licenses>
 
 	<organization>
-		<name>${ecosystemCompany}</name>
-		<url>${ecosystemCompanyURL}</url>
+		<name>${ecosystemCompany}</name> <!-- unleash: 1=<name>${ecosystemCompany}</name> 2=<name>&#36;{ecosystemCompany}</name> -->
+		<url>${ecosystemCompanyURL}</url> <!-- unleash: 1=<url>${ecosystemCompanyURL}</url> 2=<url>&#36;{ecosystemCompanyURL}</url> -->
 	</organization>
 
 	<prerequisites>
@@ -2383,6 +2293,6 @@
 		<tag>HEAD</tag>
 	</scm>
 
-	<url>${siteURL}</url>
+	<url>${siteURL}</url> <!-- unleash: 1=<url>${siteURL}</url> 2=<url>&#36;{siteURL}</url> -->
 
 </project>
