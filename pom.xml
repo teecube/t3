@@ -232,10 +232,12 @@
             </activation>
 			<build>
 				<plugins>
+					<!--
 					<plugin>
 						<groupId>com.google.code.maven-replacer-plugin</groupId>
 						<artifactId>replacer</artifactId>
 					</plugin>
+					-->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-enforcer-plugin</artifactId>
@@ -1750,6 +1752,7 @@
 						replace parameters in Maven site URL <url>
 						(for mvnrepository.com for instance) and release version
 						-->
+						<!--
 						<plugin>
 							<groupId>com.google.code.maven-replacer-plugin</groupId>
 							<artifactId>replacer</artifactId>
@@ -1829,6 +1832,7 @@
 								</execution>
 							</executions>
 						</plugin>
+						-->
 						<plugin>
 							<groupId>org.codehaus.groovy.maven</groupId>
 							<artifactId>gmaven-plugin</artifactId>
