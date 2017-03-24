@@ -10,7 +10,7 @@
 	<description>${ecosystemDescription}</description> <!-- unleash: 1=<description>${ecosystemDescription}</description> 2=<description>&#36;{ecosystemDescription}</description> -->
 
 	<properties>
-		<releaseVersion>${project.version}</releaseVersion> <!-- unleash: 1=<releaseVersion>${project.version}</releaseVersion> 2=<releaseVersion>&#36;{project.version}</releaseVersion> -->
+		<releaseVersion>0.0.3</releaseVersion> <!-- unleash: 1=<releaseVersion>${project.version}</releaseVersion> 2=<releaseVersion>${releaseVersion}</releaseVersion> -->
 		<project.scm.id>t3.git</project.scm.id>
 
 		<siteTopCaption>${ecosystemNameHighlight2}</siteTopCaption>
@@ -1880,7 +1880,7 @@
 						<plugin>
 							<groupId>io.teecube.t3</groupId>
 							<artifactId>t3-site-enhancer</artifactId>
-							<version>0.0.3</version> <!-- unleash: 1=<version>&#36;{project.version}</version> 2=<releaseVersion>${project.version}</releaseVersion> -->
+							<version>0.0.3</version> <!-- unleash: 1=<version>${releaseVersion}</version> 2=<releaseVersion>${project.version}</releaseVersion> -->
 							<dependencies>
 								<dependency>
 									<groupId>io.teecube.t3</groupId>
