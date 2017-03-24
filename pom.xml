@@ -3,7 +3,7 @@
 
 	<groupId>io.teecube</groupId>
 	<artifactId>t3</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>${ecosystemName}</name> <!-- unleash: 1=<name>${ecosystemName}</name> 3=<name>&#36;{ecosystemName}</name> -->
@@ -297,6 +297,53 @@
 								<goals>
 									<goal>spy</goal>
 								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-pom</id>
+								<phase>verify</phase>
+								<inherited>false</inherited>
+								<goals>
+									<goal>copy</goal>
+								</goals>
+								<configuration>
+									<artifactItems>
+										<artifactItem>
+											<groupId>${project.groupId}</groupId>
+											<artifactId>${project.artifactId}</artifactId>
+											<version>${project.version}</version>
+											<type>pom</type>
+											<overWrite>true</overWrite>
+											<outputDirectory>${project.build.directory}/unleash</outputDirectory>
+											<destFileName>pom.xml</destFileName>
+										</artifactItem>
+									</artifactItems>
+								</configuration>
+							</execution>
+							<execution>
+								<id>copy-poms</id>
+								<phase>verify</phase>
+								<inherited>true</inherited>
+								<goals>
+									<goal>copy</goal>
+								</goals>
+								<configuration>
+									<artifactItems>
+										<artifactItem>
+											<groupId>${project.groupId}</groupId>
+											<artifactId>${project.artifactId}</artifactId>
+											<version>${project.version}</version>
+											<type>pom</type>
+											<overWrite>true</overWrite>
+											<outputDirectory>${project.build.directory}/unleash/${project.artifactId}</outputDirectory>
+											<destFileName>pom.xml</destFileName>
+										</artifactItem>
+									</artifactItems>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
@@ -1880,12 +1927,12 @@
 						<plugin>
 							<groupId>io.teecube.t3</groupId>
 							<artifactId>t3-site-enhancer</artifactId>
-							<version>0.0.3</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${project.version}</version> -->
+							<version>0.0.4</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${project.version}</version> -->
 							<dependencies>
 								<dependency>
 									<groupId>io.teecube.t3</groupId>
 									<artifactId>t3-common</artifactId>
-									<version>0.0.3</version> <!-- unleash: 1=<version>${project.version}</version> 3=<version>${project.version}</version> -->
+									<version>0.0.4</version> <!-- unleash: 1=<version>${project.version}</version> 3=<version>${project.version}</version> -->
 								</dependency>
 								<dependency>
 									<groupId>org.rendersnake</groupId>
