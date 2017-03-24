@@ -4,9 +4,9 @@ checkParentVersions
 prepareVersions
 setReleaseVersions
 checkAether
-updateCommonVersionInSiteEnhancer
+genericReplacer[1]
 buildReleaseArtifacts
-updateCommonVersionInSiteEnhancer2
+genericReplacer[2]
 checkForScmChanges
 tagScm
 detectReleaseArtifacts

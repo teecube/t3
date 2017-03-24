@@ -10,7 +10,7 @@
 	<description>${ecosystemName} (${ecosystemPhoneticName}) stands for ${ecosystemFullName}, it provides Maven plugins for Application Lifecycle Management (${ticName}), advanced components (${tacName}) and cloud-enabler features (${toeName}) for TIBCO products and projects.</description>
 
 	<properties>
-		<releaseVersion>${project.version}</releaseVersion> <!-- default value will be overridden by release:perform command line -->
+		<releaseVersion>${project.version}</releaseVersion> <!-- unleash: 1=<releaseVersion>${project.version}</releaseVersion> 2=<releaseVersion>&#36;{project.version}</releaseVersion> -->
 		<project.scm.id>t3.git</project.scm.id>
 
 		<siteTopCaption>${ecosystemNameHighlight2}</siteTopCaption>
