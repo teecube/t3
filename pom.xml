@@ -86,7 +86,7 @@
 						<dependency>
 							<groupId>io.teecube.t3</groupId>
 							<artifactId>unleash-custom</artifactId>
-							<version>0.0.3</version>
+							<version>0.0.4</version>
 						</dependency>
 					</dependencies>
 					<configuration>
