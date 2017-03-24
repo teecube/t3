@@ -9,6 +9,7 @@ buildReleaseArtifacts
 checkForScmChanges
 genericReplacer[2]
 tagScm
+genericReplacer[3]
 detectReleaseArtifacts
 setDevVersion
 installArtifacts
