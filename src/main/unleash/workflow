@@ -7,8 +7,8 @@ checkAether
 genericReplacer[1]
 buildReleaseArtifacts
 checkForScmChanges
-genericReplacer[2]
 tagScm
+genericReplacer[2]
 detectReleaseArtifacts
 setDevVersion
 installArtifacts
