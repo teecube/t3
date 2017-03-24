@@ -1880,12 +1880,12 @@
 						<plugin>
 							<groupId>io.teecube.t3</groupId>
 							<artifactId>t3-site-enhancer</artifactId>
-							<version>0.0.3</version> <!-- unleash: 1=<version>${releaseVersion}</version> 2=<releaseVersion>${project.version}</releaseVersion> -->
+							<version>0.0.3</version> <!-- unleash: 1=<version>${releaseVersion}</version> 2=<version>${project.version}</version> -->
 							<dependencies>
 								<dependency>
 									<groupId>io.teecube.t3</groupId>
 									<artifactId>t3-common</artifactId>
-									<version>0.0.3</version> <!-- unleash: 1=<version>${project.version}</version> 2=<releaseVersion>${project.version}</releaseVersion> -->
+									<version>0.0.3</version> <!-- unleash: 1=<version>${project.version}</version> 2=<version>${project.version}</version> -->
 								</dependency>
 								<dependency>
 									<groupId>org.rendersnake</groupId>
