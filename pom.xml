@@ -3,14 +3,14 @@
 
 	<groupId>io.teecube</groupId>
 	<artifactId>t3</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>${ecosystemName}</name>
 	<description>${ecosystemName} (${ecosystemPhoneticName}) stands for ${ecosystemFullName}, it provides Maven plugins for Application Lifecycle Management (${ticName}), advanced components (${tacName}) and cloud-enabler features (${toeName}) for TIBCO products and projects.</description>
 
 	<properties>
-		<releaseVersion>${project.version}</releaseVersion> <!-- unleash: 1=<releaseVersion>${project.version}</releaseVersion> 2=<releaseVersion>&#36;{project.version}</releaseVersion> -->
+		<releaseVersion>0.0.4</releaseVersion> <!-- unleash: 1=<releaseVersion>${project.version}</releaseVersion> 2=<releaseVersion>&#36;{project.version}</releaseVersion> -->
 		<project.scm.id>t3.git</project.scm.id>
 
 		<siteTopCaption>${ecosystemNameHighlight2}</siteTopCaption>
