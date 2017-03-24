@@ -12,10 +12,12 @@
 
 	<packaging>maven-plugin</packaging>
 
-	<name>${ecosystemName} - Site enhancer</name> <!-- unleash: 1=<name>${ecosystemName} - Site enhancer</name> 2=<name>&#36;{ecosystemName} - Site enhancer</name> -->
-	<description>Enhances Maven sites</description>
+	<name>${projectName}</name> <!-- unleash: 1=<name>${projectName}</name> 2=<name>&#36;{projectName}</name> -->
+	<description>${projectDescription}</description> <!-- unleash: 1=<description>${projectDescription}</description> 2=<description>&#36;{projectDescription}</description> -->
 
 	<properties>
+		<projectName>${ecosystemName} - Site enhancer</projectName>
+		<projectDescription>Enhances Maven sites</projectDescription>
 		<maven.site.skip>true</maven.site.skip>
 		<maven.site.deploy.skip>true</maven.site.deploy.skip>
 	</properties>

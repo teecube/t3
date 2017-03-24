@@ -12,10 +12,12 @@
 
 	<packaging>jar</packaging>
 
-	<name>${ecosystemName} - Common</name> <!-- unleash: 1=<name>${ecosystemName} - Common</name> 2=<name>&#36;{ecosystemName} - Common</name> -->
-	<description>Utility classes for ${ecosystemName} projects</description> <!-- unleash: 1=<description>Utility classes for ${ecosystemName} projects</description> 2=<description>Utility classes for &#36;{ecosystemName} projects</description> -->
+	<name>${projectName}</name> <!-- unleash: 1=<name>${projectName}</name> 2=<name>&#36;{projectName}</name> -->
+	<description>${projectDescription}</description> <!-- unleash: 1=<description>${projectDescription}</description> 2=<description>&#36;{projectDescription}</description> -->
 
 	<properties>
+		<projectName>${ecosystemName} - Common</projectName>
+		<projectDescription>Utility classes for ${ecosystemName} projects</projectDescription>
 		<maven.site.skip>true</maven.site.skip>
 		<maven.site.deploy.skip>true</maven.site.deploy.skip>
 	</properties>
