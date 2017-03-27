@@ -272,6 +272,10 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
 						<version>1.6</version>
+						<configuration>
+							<keyname>19781536</keyname>
+							<passphraseServerId>t3.gpg</passphraseServerId>
+						</configuration>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -279,10 +283,6 @@
 								<goals>
 									<goal>sign</goal>
 								</goals>
-								<configuration>
-									<keyname>19781536</keyname>
-									<passphraseServerId>t3.gpg</passphraseServerId>
-								</configuration>
 							</execution>
 						</executions>
 					</plugin>
