@@ -300,53 +300,6 @@
 							</execution>
 						</executions>
 					</plugin>
-					<plugin>
-						<artifactId>maven-dependency-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>copy-pom</id>
-								<phase>verify</phase>
-								<inherited>false</inherited>
-								<goals>
-									<goal>copy</goal>
-								</goals>
-								<configuration>
-									<artifactItems>
-										<artifactItem>
-											<groupId>${project.groupId}</groupId>
-											<artifactId>${project.artifactId}</artifactId>
-											<version>${project.version}</version>
-											<type>pom</type>
-											<overWrite>true</overWrite>
-											<outputDirectory>${project.build.directory}/unleash</outputDirectory>
-											<destFileName>pom.xml</destFileName>
-										</artifactItem>
-									</artifactItems>
-								</configuration>
-							</execution>
-							<execution>
-								<id>copy-poms</id>
-								<phase>verify</phase>
-								<inherited>true</inherited>
-								<goals>
-									<goal>copy</goal>
-								</goals>
-								<configuration>
-									<artifactItems>
-										<artifactItem>
-											<groupId>${project.groupId}</groupId>
-											<artifactId>${project.artifactId}</artifactId>
-											<version>${project.version}</version>
-											<type>pom</type>
-											<overWrite>true</overWrite>
-											<outputDirectory>${project.build.directory}/unleash/${project.artifactId}</outputDirectory>
-											<destFileName>pom.xml</destFileName>
-										</artifactItem>
-									</artifactItems>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
 				</plugins>
 			</build>
 		</profile>
