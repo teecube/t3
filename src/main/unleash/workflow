@@ -7,11 +7,10 @@ checkAether
 genericReplacer[1]
 buildReleaseArtifacts
 checkForScmChanges
+detectReleaseArtifacts
 genericReplacer[2]
 tagScm
 genericReplacer[3]
-copyPOMs
-detectReleaseArtifacts
 setDevVersion
 installArtifacts
 deployArtifacts
