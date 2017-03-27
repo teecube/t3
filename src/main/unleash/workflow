@@ -7,7 +7,7 @@ checkAether
 genericReplacer[1]
 buildReleaseArtifacts
 checkForScmChanges
-genericReplacer[2]
+genericReplacer[2, true]
 detectReleaseArtifacts
 tagScm
 genericReplacer[3]
