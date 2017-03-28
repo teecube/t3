@@ -12,8 +12,8 @@
 
 	<packaging>jar</packaging>
 
-	<name>${projectName}</name> <!-- unleash: 1=<name>${projectName}</name> 2=<name>&#36;{projectName}</name> -->
-	<description>${projectDescription}</description> <!-- unleash: 1=<description>${projectDescription}</description> 2=<description>&#36;{projectDescription}</description> -->
+	<name>${projectName}</name> <!-- unleash: 1=<name>${projectName}</name> 3=<name>&#36;{projectName}</name> -->
+	<description>${projectDescription}</description> <!-- unleash: 1=<description>${projectDescription}</description> 3=<description>&#36;{projectDescription}</description> -->
 
 	<properties>
 		<projectName>${ecosystemName} - Common</projectName>
