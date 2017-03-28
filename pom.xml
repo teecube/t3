@@ -19,7 +19,7 @@
 		<ecosystemGroupId>io.teecube</ecosystemGroupId>
 		<ecosystemGroupIdCommon>io.teecube.t3</ecosystemGroupIdCommon>
 		<ecosystemArtifactId>t3</ecosystemArtifactId>
-		<ecosystemVersion>${releaseVersion}</ecosystemVersion>
+		<ecosystemVersion>0.0.3</ecosystemVersion> <!-- unleash: 1=<ecosystemVersion>${project.version}</ecosystemVersion> 3=<ecosystemVersion>${ecosystemVersion}</ecosystemVersion> -->
 
 		<!-- default value not really used -->
 		<siteUploadURL>http://localhost</siteUploadURL>
