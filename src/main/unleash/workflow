@@ -10,7 +10,7 @@ checkForScmChanges
 genericReplacer[2, true]
 detectReleaseArtifacts
 tagScm
-genericReplacer[3]
+genericReplacer[3, true]
 setDevVersion
 installArtifacts
 deployArtifacts
