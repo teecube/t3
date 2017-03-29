@@ -3,14 +3,14 @@
 
 	<groupId>io.teecube</groupId>
 	<artifactId>t3</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.4</version>
 	<packaging>pom</packaging>
 
 	<name>${ecosystemName}</name> <!-- unleash: 1=<name>${ecosystemName}</name> 3=<name>&#36;{ecosystemName}</name> -->
 	<description>${ecosystemDescription}</description> <!-- unleash: 1=<description>${ecosystemDescription}</description> 3=<description>&#36;{ecosystemDescription}</description> -->
 
 	<properties>
-		<releaseVersion>0.0.3</releaseVersion> <!-- unleash: 1=<releaseVersion>${project.version}</releaseVersion> 3=<releaseVersion>${releaseVersion}</releaseVersion> -->
+		<releaseVersion>0.0.4</releaseVersion> <!-- unleash: 1=<releaseVersion>${project.version}</releaseVersion> 3=<releaseVersion>${releaseVersion}</releaseVersion> -->
 		<project.scm.id>t3.git</project.scm.id>
 
 		<siteTopCaption>${ecosystemNameHighlight2}</siteTopCaption>
@@ -19,7 +19,7 @@
 		<ecosystemGroupId>io.teecube</ecosystemGroupId>
 		<ecosystemGroupIdCommon>io.teecube.t3</ecosystemGroupIdCommon>
 		<ecosystemArtifactId>t3</ecosystemArtifactId>
-		<ecosystemVersion>0.0.3</ecosystemVersion> <!-- unleash: 1=<ecosystemVersion>${project.version}</ecosystemVersion> 3=<ecosystemVersion>${ecosystemVersion}</ecosystemVersion> -->
+		<ecosystemVersion>0.0.4</ecosystemVersion> <!-- unleash: 1=<ecosystemVersion>${project.version}</ecosystemVersion> 3=<ecosystemVersion>${ecosystemVersion}</ecosystemVersion> -->
 
 		<!-- default value not really used -->
 		<siteUploadURL>http://localhost</siteUploadURL>
@@ -1880,12 +1880,12 @@
 						<plugin>
 							<groupId>io.teecube.t3</groupId>
 							<artifactId>t3-site-enhancer</artifactId>
-							<version>0.0.3</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${project.version}</version> -->
+							<version>0.0.4</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${project.version}</version> -->
 							<dependencies>
 								<dependency>
 									<groupId>io.teecube.t3</groupId>
 									<artifactId>t3-common</artifactId>
-									<version>0.0.3</version> <!-- unleash: 1=<version>${project.version}</version> 3=<version>${project.version}</version> -->
+									<version>0.0.4</version> <!-- unleash: 1=<version>${project.version}</version> 3=<version>${project.version}</version> -->
 								</dependency>
 								<dependency>
 									<groupId>org.rendersnake</groupId>
@@ -2262,11 +2262,11 @@
 	<distributionManagement>
 		<repository>
 			<id>t3.repo</id>
-			<url>${repositoryReleaseURL}</url> <!-- unleash: 1=<url>${repositoryReleaseURL}</url> 3=<url>&#36;{repositoryReleaseURL}</url> -->
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url> <!-- unleash: 1=<url>${repositoryReleaseURL}</url> 3=<url>&#36;{repositoryReleaseURL}</url> -->
 		</repository>
 		<snapshotRepository>
 			<id>t3.repo.snapshot</id>
-			<url>${repositorySnapshotURL}</url> <!-- unleash: 1=<url>${repositorySnapshotURL}</url> 3=<url>&#36;{repositorySnapshotURL}</url> -->
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url> <!-- unleash: 1=<url>${repositorySnapshotURL}</url> 3=<url>&#36;{repositorySnapshotURL}</url> -->
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -2290,9 +2290,9 @@
 		<connection>scm:git:https://git.teecu.be/teecube/t3.git</connection>
 		<developerConnection>scm:git:https://git.teecu.be/teecube/t3.git</developerConnection>
 		<url>https://git.teecu.be/teecube/t3</url>
-		<tag>HEAD</tag>
+		<tag>v0.0.4</tag>
 	</scm>
 
-	<url>${siteURL}</url> <!-- unleash: 2=<url>${siteURL}</url> 3=<url>&#36;{siteURL}</url> -->
+	<url>https://teecu.be/t3/0.0.3/</url> <!-- unleash: 2=<url>${siteURL}</url> 3=<url>&#36;{siteURL}</url> -->
 
 </project>
