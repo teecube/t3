@@ -1,8 +1,8 @@
-image: jamesdbloom/docker-java7-maven
+image: debovema/docker-mvn
 
 test:
     script: 
-        - mvn -gs /home/m2/settings.xml clean install
+        - mvn -gs /home/m2/settings.xml clean deploy
     except:
         - tags
 
