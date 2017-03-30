@@ -103,12 +103,12 @@
 			<dependency>
 				<groupId>io.teecube.t3</groupId>
 				<artifactId>t3-common</artifactId>
-				<version>${project.version}</version>
+				<version>0.0.4-SNAPSHOT</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${project.version}</version> -->
 			</dependency>
 			<dependency>
 				<groupId>io.teecube.t3</groupId>
 				<artifactId>t3-site-enhancer</artifactId>
-				<version>${project.version}</version>
+				<version>0.0.4-SNAPSHOT</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${project.version}</version> -->
 			</dependency>
 
 			<!-- Maven dependencies -->
@@ -1419,7 +1419,7 @@
                     <dependency>
                         <groupId>io.teecube.t3</groupId>
                         <artifactId>t3-common</artifactId>
-                        <version>${project.version}</version>
+                        <version>0.0.4-SNAPSHOT</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${project.version}</version> -->
                     </dependency>
  
 					<dependency>
