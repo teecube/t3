@@ -2,7 +2,7 @@ image: debovema/docker-mvn
 
 test:
     script: 
-        - mvn -gs /home/m2/settings.xml clean deploy
+        - mvn -gs /home/m2/settings.xml clean deploy -P t3-snapshot
     except:
         - tags
 
