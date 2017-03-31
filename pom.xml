@@ -2014,6 +2014,9 @@
 								<extendedSidebars>
 									<extendedSidebar>index.html</extendedSidebar>
 								</extendedSidebars>
+								<excludedTagsPattern>
+									<excludedTagsPattern>t.*/.*</excludedTagsPattern>
+								</excludedTagsPattern>
 							</configuration>
 							<executions>
 								<execution>

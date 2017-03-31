@@ -149,7 +149,7 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 							if (hasMergeRequest) {
 								result = result._ul();
 							} else {
-								result = result.p().write("No merge requests for this release")._p();
+								result = result.p().write("No merge request for this release")._p();
 							}
 
 							// issues
