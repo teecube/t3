@@ -1857,6 +1857,8 @@
 				<notaBene><![CDATA[<b>NB:</b>]]></notaBene>
 
 				<includeSource>true</includeSource>
+
+				<t3.site.gitlab.apiEndPoint>https://git.teecu.be/api/v3</t3.site.gitlab.apiEndPoint>
 			</properties>
 			<distributionManagement>
 				<site>

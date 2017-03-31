@@ -35,18 +35,20 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.eclipse.aether.util.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.rendersnake.HtmlCanvas;
 import org.rendersnake.Renderable;
 import org.xml.sax.SAXException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
-import com.google.common.collect.Lists;
 import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
 
+import lombok.ast.libs.com.google.common.collect.Lists;
+import t3.site.gitlab.commits.Commit;
 import t3.site.gitlab.issues.Issue;
 import t3.site.gitlab.merge.MergeRequest;
 import t3.site.gitlab.project.Project;
@@ -69,7 +71,7 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 	@Parameter (property="t3.site.gitlab.privateToken")
 	private String privateToken;
 
-	@Parameter (property="t3.site.gitlab.repository")
+	@Parameter (property="t3.site.gitlab.repository", defaultValue="${project.scm.url}")
 	private String gitlabRepository;
 
 	@Parameter
@@ -114,6 +116,7 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 
 			final Project project = getProjectFromHttpUrl(gitlabRepository+".git");
 			final List<Tag> tags = getTags(project.getId());
+			final Commit lastCommit = getLatestCommit(project.getId());
 
 			// merge requests and issues
 			if (project.getMergeRequestsEnabled() || project.getIssuesEnabled()) {
@@ -125,12 +128,23 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 					@Override
 					public void renderOn(HtmlCanvas html) throws IOException {
 						List<HtmlCanvas> results = new ArrayList<HtmlCanvas>();
-						for (Tag tag : Lists.reverse(tags)) {
-							if (isTagExcluded(tag)) continue;
+						String lastCommitId = null;
+						for (Tag tag : tags) {
+							String commitId = tag.getCommit().getId();
+
+							if (isTagExcluded(tag)) {
+								lastCommitId = commitId;
+								continue;
+							}
 
 							HtmlCanvas result = new HtmlCanvas();
-							result = result.h3().write(tag.getName())._h3();
+							result = result.h3().write(tag.getName() + " (" + tag.getCommit().getCommittedDate().toString(DateTimeFormat.forPattern("yyyy-MM-dd")) + ")")._h3();
 							DateTime tagDate = tag.getCommit().getCommittedDate();
+
+							if (lastCommitId != null) {
+								result.p().a(href(gitlabRepository + "/compare/" + lastCommitId + "..." + commitId)).write("Full changelog")._a()._p();
+							}
+							lastCommitId = commitId;
 
 							// merge requests
 							boolean hasMergeRequest = false;
@@ -159,7 +173,7 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 								if (closeDate.isBefore(tagDate) && !issuesAdded.contains(issue.getIid())) {							
 									if (!hasIssues) {
 										hasIssues = true;
-										result = result.h4().write("Issues")._h4();
+										result = result.h4().write("Closed issues")._h4();
 										result = result.ul();
 									}
 									result = addIssue(result, issue);
@@ -184,6 +198,10 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 
 				// display merged merge requests with no tag (= next release)
 				html = html.h3().write("Next release")._h3();
+				String lastCommitId = tags.get(tags.size()-1).getCommit().getId();
+				if (lastCommitId != null) {
+					html.a(href(gitlabRepository + "/compare/" + lastCommitId + "..." + lastCommit.getId())).write("Full changelog")._a();
+				}
 
 				// merge requests
 				boolean hasMergeRequest = false;
@@ -208,7 +226,7 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 					if (!issuesAdded.contains(issue.getIid())) {
 						if (!hasIssues) {
 							hasIssues = true;
-							html = html.h4().write("Issues")._h4();
+							html = html.h4().write("Closed issues")._h4();
 							html = html.ul();
 						}
 						html = addIssue(html, issue);
@@ -283,14 +301,29 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 		return null;
 	}
 
+	private Commit getLatestCommit(Integer projectId) throws UnirestException {
+		return getCommits(projectId).get(0);		
+	}
+
+	private List<Commit> getCommits(Integer projectId) throws UnirestException {
+		GetRequest commitsRequest = Unirest.get(apiEndPoint + "/projects/"+projectId.toString()+"/repository/commits").header("PRIVATE-TOKEN", privateToken);
+
+		if (getRequestOK(commitsRequest)) {
+			String json = commitsRequest.asJson().getBody().getArray().toString();
+			return Arrays.asList(mapper.readValue(json, Commit[].class));
+		}
+
+		return null;
+	}
+
 	private List<Issue> getIssues(Integer projectId) throws UnirestException {
 		GetRequest mergeRequestsRequest = Unirest.get(apiEndPoint + "/projects/"+projectId.toString()+"/issues?state=closed").header("PRIVATE-TOKEN", privateToken);
-
+		
 		if (getRequestOK(mergeRequestsRequest)) {
 			String json = mergeRequestsRequest.asJson().getBody().getArray().toString();
 			return Arrays.asList(mapper.readValue(json, Issue[].class));
 		}
-
+		
 		return null;
 	}
 
@@ -314,10 +347,10 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 			Comparator<? super Tag> c = new Comparator<Tag>() {
 				@Override
 				public int compare(Tag t1, Tag t2) {
-					return t2.getCommit().getCommittedDate().compareTo(t1.getCommit().getCommittedDate());
+					return t1.getCommit().getCommittedDate().compareTo(t2.getCommit().getCommittedDate());
 				}
 			};
-			Collections.sort(result, c); // sort in reverse chronological time
+			Collections.sort(result, c); // sort in chronological time
 			return result;
 		}
 
