@@ -22,7 +22,10 @@ import static org.rendersnake.HtmlAttributesFactory.href;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -44,6 +47,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
 
+import t3.site.gitlab.issues.Issue;
 import t3.site.gitlab.merge.MergeRequest;
 import t3.site.gitlab.project.Project;
 import t3.site.gitlab.tags.Tag;
@@ -56,6 +60,9 @@ import t3.site.gitlab.tags.Tag;
 @Mojo(name = "generate-changelog", defaultPhase = LifecyclePhase.POST_SITE, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class GenerateChangelogMojo extends AbstractNewPageMojo {
 
+	@Parameter (property="t3.site.gitlab.apiEndPoint")
+	private String apiEndPoint;
+
 	@Parameter (property="t3.site.globalDocumentation.pageName", defaultValue="changelog")
 	private String pageName;
 
@@ -65,8 +72,8 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 	@Parameter (property="t3.site.gitlab.repository")
 	private String gitlabRepository;
 
-	@Parameter (property="t3.site.gitlab.apiEndPoint")
-	private String apiEndPoint;
+	@Parameter
+	private List<String> excludedTagsPattern;
 
 	@Override
 	public String getPageName() {
@@ -76,11 +83,16 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 	private List<Project> projects;
 	private ObjectMapper mapper;
 	private List<String> mergeRequestsAdded = new ArrayList<String>();
+	private List<Integer> issuesAdded = new ArrayList<Integer>();
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		if (StringUtils.isEmpty(privateToken) || StringUtils.isEmpty(gitlabRepository) || StringUtils.isEmpty(apiEndPoint)) {
 			return;
+		}
+
+		if (excludedTagsPattern == null) {
+			excludedTagsPattern = new ArrayList<String>();
 		}
 
 		super.execute();
@@ -102,25 +114,32 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 
 			final Project project = getProjectFromHttpUrl(gitlabRepository+".git");
 			final List<Tag> tags = getTags(project.getId());
-			
-			if (project.getMergeRequestsEnabled()) {
+
+			// merge requests and issues
+			if (project.getMergeRequestsEnabled() || project.getIssuesEnabled()) {
 				final List<MergeRequest> mergeRequests = getMergeRequests(project.getId());
+				final List<Issue> issues = getIssues(project.getId());
 
 				// display merged merge requests with their associated tag (= release)
-				Renderable tagsWithMergeRequests = new Renderable() {
+				Renderable tagsWithMergeRequestsAndIssues = new Renderable() {
 					@Override
 					public void renderOn(HtmlCanvas html) throws IOException {
 						List<HtmlCanvas> results = new ArrayList<HtmlCanvas>();
 						for (Tag tag : Lists.reverse(tags)) {
+							if (isTagExcluded(tag)) continue;
+
 							HtmlCanvas result = new HtmlCanvas();
-							boolean hasMergeRequest = false;
 							result = result.h3().write(tag.getName())._h3();
 							DateTime tagDate = tag.getCommit().getCommittedDate();
+
+							// merge requests
+							boolean hasMergeRequest = false;
 							for (MergeRequest mergeRequest : mergeRequests) {
 								DateTime mergeDate = mergeRequest.getCreatedAt();
 								if (mergeDate.isBefore(tagDate) && !mergeRequestsAdded.contains(mergeRequest.getSha())) {							
 									if (!hasMergeRequest) {
 										hasMergeRequest = true;
+										result = result.h4().write("Merge requests")._h4();
 										result = result.ul();
 									}
 									result = addMergeRequest(result, mergeRequest);
@@ -132,6 +151,27 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 							} else {
 								result = result.p().write("No merge requests for this release")._p();
 							}
+
+							// issues
+							boolean hasIssues = false;
+							for (Issue issue : issues) {
+								DateTime closeDate = issue.getCreatedAt();
+								if (closeDate.isBefore(tagDate) && !issuesAdded.contains(issue.getIid())) {							
+									if (!hasIssues) {
+										hasIssues = true;
+										result = result.h4().write("Issues")._h4();
+										result = result.ul();
+									}
+									result = addIssue(result, issue);
+									issuesAdded.add(issue.getIid());
+								}
+							}
+							if (hasIssues) {
+								result = result._ul();
+							} else {
+								result = result.p().write("No issue for this release")._p();
+							}
+
 							results.add(result);
 						}
 
@@ -139,15 +179,19 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 							html.write(result.toHtml(), false);
 						}
 					}
+
 				};
 
 				// display merged merge requests with no tag (= next release)
-				boolean hasMergeRequest = false;
 				html = html.h3().write("Next release")._h3();
+
+				// merge requests
+				boolean hasMergeRequest = false;
 				for (MergeRequest mergeRequest : mergeRequests) {
 					if (!mergeRequestsAdded.contains(mergeRequest.getSha())) {
 						if (!hasMergeRequest) {
 							hasMergeRequest = true;
+							html = html.h4().write("Merge requests")._h4();
 							html = html.ul();
 						}
 						html = addMergeRequest(html, mergeRequest);
@@ -158,7 +202,24 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 					html = html._ul();
 				}
 
-				html.render(tagsWithMergeRequests);
+				// issues
+				boolean hasIssues = false;
+				for (Issue issue : issues) {
+					if (!issuesAdded.contains(issue.getIid())) {
+						if (!hasIssues) {
+							hasIssues = true;
+							html = html.h4().write("Issues")._h4();
+							html = html.ul();
+						}
+						html = addIssue(html, issue);
+						issuesAdded.add(issue.getIid());
+					}
+				}
+				if (hasIssues) {
+					html = html._ul();
+				}
+
+				html.render(tagsWithMergeRequestsAndIssues);
 			}
 
 			html = html
@@ -173,12 +234,26 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 		return html;
 	}
 
-	private HtmlCanvas addMergeRequest(HtmlCanvas html, MergeRequest mergeRequest) throws IOException {
-		return html.li().h4().write(mergeRequest.getTitle() + " ").a(href(gitlabRepository + "/merge_requests/"+mergeRequest.getIid()).class_("external")).write("#"+mergeRequest.getIid())._a()._h4().p().write(mergeRequest.getDescription())._p()._li();
+	private boolean isTagExcluded(Tag tag) {
+		for (String pattern : excludedTagsPattern) {
+			if (Pattern.compile(pattern).matcher(tag.getName()).matches()) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private static boolean getRequestOK(GetRequest getRequest) throws UnirestException {
 		return getRequest != null && getRequest.asString() != null && getRequest.asString().getStatus() == 200;
+	}
+
+	private HtmlCanvas addMergeRequest(HtmlCanvas html, MergeRequest mergeRequest) throws IOException {
+		return html.li().h5().write(mergeRequest.getTitle() + " ").a(href(gitlabRepository + "/merge_requests/"+mergeRequest.getIid()).class_("external")).write("#"+mergeRequest.getIid())._a()._h5().p().write(mergeRequest.getDescription())._p()._li();
+	}
+
+	private HtmlCanvas addIssue(HtmlCanvas html, Issue issue) throws IOException {
+		return html.li().h5().write(issue.getTitle() + " ").a(href(gitlabRepository + "/issues/"+issue.getIid()).class_("external")).write("#"+issue.getIid())._a()._h5().p().write(issue.getDescription())._p()._li();
 	}
 
 	private List<Project> getProjects() throws UnirestException {
@@ -208,25 +283,44 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 		return null;
 	}
 
-	private List<MergeRequest> getMergeRequests(Integer projectId) throws UnirestException {
-		GetRequest mergeRequestsRequest = Unirest.get(apiEndPoint + "/projects/"+projectId.toString()+"/merge_requests?state=merged").header("PRIVATE-TOKEN", privateToken);
+	private List<Issue> getIssues(Integer projectId) throws UnirestException {
+		GetRequest mergeRequestsRequest = Unirest.get(apiEndPoint + "/projects/"+projectId.toString()+"/issues?state=closed").header("PRIVATE-TOKEN", privateToken);
 
 		if (getRequestOK(mergeRequestsRequest)) {
 			String json = mergeRequestsRequest.asJson().getBody().getArray().toString();
-			return Arrays.asList(mapper.readValue(json, MergeRequest[].class));
+			return Arrays.asList(mapper.readValue(json, Issue[].class));
 		}
 
 		return null;
 	}
 
-	private List<Tag> getTags(Integer projectId) throws UnirestException {
-		GetRequest mergeRequestsRequest = Unirest.get(apiEndPoint + "/projects/"+projectId.toString()+"/repository/tags").header("PRIVATE-TOKEN", privateToken);
+	private List<MergeRequest> getMergeRequests(Integer projectId) throws UnirestException {
+		GetRequest mergeRequestsRequest = Unirest.get(apiEndPoint + "/projects/"+projectId.toString()+"/merge_requests?state=merged").header("PRIVATE-TOKEN", privateToken);
 		
 		if (getRequestOK(mergeRequestsRequest)) {
 			String json = mergeRequestsRequest.asJson().getBody().getArray().toString();
-			return Arrays.asList(mapper.readValue(json, Tag[].class));
+			return Arrays.asList(mapper.readValue(json, MergeRequest[].class));
 		}
 		
+		return null;
+	}
+
+	private List<Tag> getTags(Integer projectId) throws UnirestException {
+		GetRequest tagsRequest = Unirest.get(apiEndPoint + "/projects/"+projectId.toString()+"/repository/tags").header("PRIVATE-TOKEN", privateToken);
+
+		if (getRequestOK(tagsRequest)) {
+			String json = tagsRequest.asJson().getBody().getArray().toString();
+			List<Tag> result = Arrays.asList(mapper.readValue(json, Tag[].class));
+			Comparator<? super Tag> c = new Comparator<Tag>() {
+				@Override
+				public int compare(Tag t1, Tag t2) {
+					return t2.getCommit().getCommittedDate().compareTo(t1.getCommit().getCommittedDate());
+				}
+			};
+			Collections.sort(result, c); // sort in reverse chronological time
+			return result;
+		}
+
 		return null;
 	}
 
