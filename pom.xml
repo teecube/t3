@@ -1646,7 +1646,7 @@
 												}
 												if (result == null) {
 													fis = new FileInputStream(f)
-													nodes = xpath.evaluate('/metadata/versioning/versions/version', new InputSource(fis), XPathConstants.NODESET)
+													nodes = xpath.evaluate('/metadata/versioning/versions/version[last()]', new InputSource(fis), XPathConstants.NODESET)
 													nodes.each {
 														result = xpath.evaluate('text()', it)
 													}
@@ -1709,7 +1709,7 @@
 												}
 												if (result == null) {
 													fis = new FileInputStream(f)
-													nodes = xpath.evaluate('/metadata/versioning/versions/version', new InputSource(fis), XPathConstants.NODESET)
+													nodes = xpath.evaluate('/metadata/versioning/versions/version[last()]', new InputSource(fis), XPathConstants.NODESET)
 													nodes.each {
 														result = xpath.evaluate('text()', it)
 													}
