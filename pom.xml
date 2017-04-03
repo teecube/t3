@@ -10,7 +10,7 @@
 	<description>${ecosystemDescription}</description> <!-- unleash: 1=<description>${ecosystemDescription}</description> 3=<description>&#36;{ecosystemDescription}</description> -->
 
 	<properties>
-		<releaseVersion>0.0.3</releaseVersion> <!-- unleash: 1=<releaseVersion>${project.version}</releaseVersion> 3=<releaseVersion>${releaseVersion}</releaseVersion> -->
+		<releaseVersion>0.0.3</releaseVersion> <!-- unleash: 1=<releaseVersion>${project.version}</releaseVersion> 3=<releaseVersion>${unleash.releaseVersion}</releaseVersion> -->
 		<project.scm.id>t3.git</project.scm.id>
 
 		<siteTopCaption>${ecosystemNameHighlight2}</siteTopCaption>
@@ -19,7 +19,7 @@
 		<ecosystemGroupId>io.teecube</ecosystemGroupId>
 		<ecosystemGroupIdCommon>io.teecube.t3</ecosystemGroupIdCommon>
 		<ecosystemArtifactId>t3</ecosystemArtifactId>
-		<ecosystemVersion>0.0.3</ecosystemVersion> <!-- unleash: 1=<ecosystemVersion>${project.version}</ecosystemVersion> 3=<ecosystemVersion>${ecosystemVersion}</ecosystemVersion> -->
+		<ecosystemVersion>0.0.3</ecosystemVersion> <!-- unleash: 1=<ecosystemVersion>${project.version}</ecosystemVersion> 3=<ecosystemVersion>${unleash.developmentVersion}</ecosystemVersion> -->
 
 		<!-- default value not really used -->
 		<siteUploadURL>http://localhost</siteUploadURL>
