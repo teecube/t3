@@ -6,8 +6,8 @@
 	<version>0.0.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>${ecosystemName}</name> <!-- unleash: 1=<name>${ecosystemName}</name> 3=<name>&#36;{ecosystemName}</name> -->
-	<description>${ecosystemDescription}</description> <!-- unleash: 1=<description>${ecosystemDescription}</description> 3=<description>&#36;{ecosystemDescription}</description> -->
+	<name>${ecosystemName}</name> <!-- unleash: 2=<name>${ecosystemName}</name> 3=<name>&#36;{ecosystemName}</name> -->
+	<description>${ecosystemDescription}</description> <!-- unleash: 2=<description>${ecosystemDescription}</description> 3=<description>&#36;{ecosystemDescription}</description> -->
 
 	<properties>
 		<releaseVersion>0.0.3</releaseVersion> <!-- unleash: 1=<releaseVersion>${project.version}</releaseVersion> 3=<releaseVersion>${unleash.releaseVersion}</releaseVersion> -->
@@ -2267,11 +2267,11 @@
 	<distributionManagement>
 		<repository>
 			<id>t3.repo</id>
-			<url>${repositoryReleaseURL}</url> <!-- unleash: 1=<url>${repositoryReleaseURL}</url> 3=<url>&#36;{repositoryReleaseURL}</url> -->
+			<url>${repositoryReleaseURL}</url> <!-- unleash: 2=<url>${repositoryReleaseURL}</url> 3=<url>&#36;{repositoryReleaseURL}</url> -->
 		</repository>
 		<snapshotRepository>
 			<id>t3.repo.snapshot</id>
-			<url>${repositorySnapshotURL}</url> <!-- unleash: 1=<url>${repositorySnapshotURL}</url> 3=<url>&#36;{repositorySnapshotURL}</url> -->
+			<url>${repositorySnapshotURL}</url> <!-- unleash: 2=<url>${repositorySnapshotURL}</url> 3=<url>&#36;{repositorySnapshotURL}</url> -->
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -2283,8 +2283,8 @@
 	</licenses>
 
 	<organization>
-		<name>${ecosystemCompany}</name> <!-- unleash: 1=<name>${ecosystemCompany}</name> 3=<name>&#36;{ecosystemCompany}</name> -->
-		<url>${ecosystemCompanyURL}</url> <!-- unleash: 1=<url>${ecosystemCompanyURL}</url> 3=<url>&#36;{ecosystemCompanyURL}</url> -->
+		<name>${ecosystemCompany}</name> <!-- unleash: 2=<name>${ecosystemCompany}</name> 3=<name>&#36;{ecosystemCompany}</name> -->
+		<url>${ecosystemCompanyURL}</url> <!-- unleash: 2=<url>${ecosystemCompanyURL}</url> 3=<url>&#36;{ecosystemCompanyURL}</url> -->
 	</organization>
 
 	<prerequisites>
