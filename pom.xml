@@ -1653,7 +1653,6 @@
 												}
 											}
 
-											def pName = "$propertyName"
 											if (result != null) {
 												//println "Setting $propertyName to $result"
 												project.properties["$propertyName"] = result
@@ -1716,7 +1715,6 @@
 												}
 											}
 
-											def pName = "$propertyName"
 											if (result != null) {
 												//println "Setting $propertyName to $result"
 												project.properties["$propertyName"] = result
