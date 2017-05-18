@@ -46,6 +46,9 @@ import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.options.MutableDataSet;
 
 import lombok.ast.libs.com.google.common.collect.Lists;
 import t3.site.gitlab.commits.Commit;
@@ -276,11 +279,24 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 	}
 
 	private HtmlCanvas addMergeRequest(HtmlCanvas html, MergeRequest mergeRequest) throws IOException {
-		return html.li().h5().write(mergeRequest.getTitle() + " ").a(href(gitlabRepository + "/merge_requests/"+mergeRequest.getIid()).class_("external")).write("#"+mergeRequest.getIid())._a()._h5().p().write(mergeRequest.getDescription())._p()._li();
+		MutableDataSet options = new MutableDataSet();
+		Parser parser = Parser.builder(options).build();
+		HtmlRenderer renderer = HtmlRenderer.builder(options).build();
+
+		String description = mergeRequest.getDescription();
+		description = renderer.render(parser.parse(description));
+
+		return html.li().h5().write(mergeRequest.getTitle() + " ").a(href(gitlabRepository + "/merge_requests/"+mergeRequest.getIid()).class_("external")).write("#"+mergeRequest.getIid())._a()._h5().write(description, false)._li();
 	}
 
 	private HtmlCanvas addIssue(HtmlCanvas html, Issue issue) throws IOException {
-		return html.li().h5().write(issue.getTitle() + " ").a(href(gitlabRepository + "/issues/"+issue.getIid()).class_("external")).write("#"+issue.getIid())._a()._h5().p().write(issue.getDescription())._p()._li();
+		MutableDataSet options = new MutableDataSet();
+		Parser parser = Parser.builder(options).build();
+		HtmlRenderer renderer = HtmlRenderer.builder(options).build();
+
+		String description = issue.getDescription();
+		description = renderer.render(parser.parse(description));
+		return html.li().h5().write(issue.getTitle() + " ").a(href(gitlabRepository + "/issues/"+issue.getIid()).class_("external")).write("#"+issue.getIid())._a()._h5().write(description, false)._li();
 	}
 
 	private List<Project> getProjects() throws UnirestException {
