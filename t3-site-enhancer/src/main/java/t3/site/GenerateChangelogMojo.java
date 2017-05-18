@@ -196,6 +196,11 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 
 				};
 
+				DateTime tagDate = null;
+				if (!tags.isEmpty()) { // get commit date of latest tag
+					tagDate = tags.get(tags.size()-1).getCommit().getCommittedDate();
+				}
+
 				// display merged merge requests with no tag (= next release)
 				html = html.h3().write("Next release")._h3();
 				String lastCommitId = tags.get(tags.size()-1).getCommit().getId();
@@ -206,7 +211,9 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 				// merge requests
 				boolean hasMergeRequest = false;
 				for (MergeRequest mergeRequest : mergeRequests) {
-					if (!mergeRequestsAdded.contains(mergeRequest.getSha())) {
+					DateTime mergeDate = mergeRequest.getCreatedAt();
+
+					if ((tagDate == null || !mergeDate.isBefore(tagDate)) && !mergeRequestsAdded.contains(mergeRequest.getSha())) {
 						if (!hasMergeRequest) {
 							hasMergeRequest = true;
 							html = html.h4().write("Merge requests")._h4();
@@ -223,7 +230,9 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 				// issues
 				boolean hasIssues = false;
 				for (Issue issue : issues) {
-					if (!issuesAdded.contains(issue.getIid())) {
+					DateTime closeDate = issue.getCreatedAt();
+
+					if ((tagDate == null || !closeDate.isBefore(tagDate)) && !issuesAdded.contains(issue.getIid())) {
 						if (!hasIssues) {
 							hasIssues = true;
 							html = html.h4().write("Closed issues")._h4();
