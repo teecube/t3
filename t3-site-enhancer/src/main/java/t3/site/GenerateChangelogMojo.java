@@ -279,9 +279,9 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 	}
 
 	private HtmlCanvas addMergeRequest(HtmlCanvas html, MergeRequest mergeRequest) throws IOException {
-        MutableDataSet options = new MutableDataSet();
-        Parser parser = Parser.builder(options).build();
-        HtmlRenderer renderer = HtmlRenderer.builder(options).build();
+		MutableDataSet options = new MutableDataSet();
+		Parser parser = Parser.builder(options).build();
+		HtmlRenderer renderer = HtmlRenderer.builder(options).build();
 
 		String description = mergeRequest.getDescription();
 		description = renderer.render(parser.parse(description));
@@ -290,9 +290,9 @@ public class GenerateChangelogMojo extends AbstractNewPageMojo {
 	}
 
 	private HtmlCanvas addIssue(HtmlCanvas html, Issue issue) throws IOException {
-        MutableDataSet options = new MutableDataSet();
-        Parser parser = Parser.builder(options).build();
-        HtmlRenderer renderer = HtmlRenderer.builder(options).build();
+		MutableDataSet options = new MutableDataSet();
+		Parser parser = Parser.builder(options).build();
+		HtmlRenderer renderer = HtmlRenderer.builder(options).build();
 
 		String description = issue.getDescription();
 		description = renderer.render(parser.parse(description));
