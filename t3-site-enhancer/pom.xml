@@ -78,7 +78,12 @@
 				<dependency>
 					<groupId>com.fasterxml.jackson.datatype</groupId>
 					<artifactId>jackson-datatype-joda</artifactId>
-				</dependency>  
+				</dependency>
+
+				<dependency>
+				    <groupId>com.vladsch.flexmark</groupId>
+				    <artifactId>flexmark-all</artifactId>
+				</dependency>
 			</dependencies>
 		</profile>
 	</profiles>
