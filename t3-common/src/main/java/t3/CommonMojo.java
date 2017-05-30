@@ -296,10 +296,18 @@ public class CommonMojo extends AbstractMojo {
 			result = mavenProject.getModel().getProperties().getProperty(propertyName);
 		}
 		if (lookInCommandLine && (result == null || result.isEmpty())) {
+			boolean wasEmpty = result != null && result.isEmpty();
 			result = getPropertyValueInCommandLine(propertyName, session);
+			if (result == null && wasEmpty) {
+				result = "";
+			}
 		}
 		if (lookInSettingsProperties && (result == null || result.isEmpty())) {
+			boolean wasEmpty = result != null && result.isEmpty();
 			result = getPropertyValueInSettings(propertyName, settings);
+			if (result == null && wasEmpty) {
+				result = "";
+			}
 		}
 
 		if (result == null && ("basedir".equals(propertyName) || "project.basedir".equals(propertyName))) {
