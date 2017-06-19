@@ -16,7 +16,14 @@
  */
 package t3;
 
+import static org.twdata.maven.mojoexecutor.MojoExecutor.artifactId;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.goal;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.groupId;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.plugin;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.version;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -57,6 +64,7 @@ import org.apache.maven.settings.Settings;
 import org.apache.maven.shared.filtering.MavenResourcesFiltering;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.logging.Logger;
+import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 import org.twdata.maven.mojoexecutor.MojoExecutor.ExecutionEnvironment;
 
 import com.google.inject.AbstractModule;
@@ -619,4 +627,78 @@ public class CommonMojo extends AbstractMojo {
 		this.settings = settings;
 	}
 
+	protected File copyDependency(String groupId, String artifactId, String version, String type, String classifier, File outputDirectory, String fileName) throws MojoExecutionException {
+		if (outputDirectory == null || !outputDirectory.isDirectory()) return null;
+
+		ArrayList<Element> configuration = new ArrayList<Element>();
+
+		List<Element> options = new ArrayList<>();
+		options.add(new Element("groupId", groupId));
+		options.add(new Element("artifactId", artifactId));
+		options.add(new Element("version", version)); 
+		options.add(new Element("type", type));
+		if (classifier != null) {
+			options.add(new Element("classifier", classifier));
+		}
+		options.add(new Element("outputDirectory", outputDirectory.getAbsolutePath()));
+		options.add(new Element("destFileName", fileName));
+		Element artifactItem = new Element("artifactItem", options.toArray(new Element[0]));
+		Element artifactItems = new Element("artifactItems", artifactItem);
+
+		configuration.add(artifactItems);
+		configuration.add(new Element("silent", "true"));
+
+		executeMojo(
+			plugin(
+				groupId("org.apache.maven.plugins"),
+				artifactId("maven-dependency-plugin"),
+				version("2.10") // version defined in pom.xml of this plugin
+			),
+			goal("copy"),
+			configuration(
+				configuration.toArray(new Element[0])
+			),
+			getEnvironment()
+		);
+
+		return new File(outputDirectory, fileName);
+	}
+
+	protected File copyDependency(String groupId, String artifactId, String version, String type, File outputDirectory, String fileName) throws MojoExecutionException {
+		return copyDependency(groupId, artifactId, version, type, null, outputDirectory, fileName);
+	}
+
+	protected File getDependency(String groupId, String artifactId, String version, String type, String classifier) throws MojoExecutionException {
+		if (outputDirectory == null || !outputDirectory.isDirectory()) return null;
+		
+		ArrayList<Element> configuration = new ArrayList<Element>();
+		
+		configuration.add(new Element("groupId", groupId));
+		configuration.add(new Element("artifactId", artifactId));
+		configuration.add(new Element("version", version)); 
+		configuration.add(new Element("packaging", type));
+		if (classifier != null) {
+			configuration.add(new Element("classifier", classifier));
+		}
+		configuration.add(new Element("transitive", "false"));
+
+		executeMojo(
+				plugin(
+					groupId("org.apache.maven.plugins"),
+					artifactId("maven-dependency-plugin"),
+					version("2.10") // version defined in pom.xml of this plugin
+				),
+				goal("get"),
+				configuration(
+					configuration.toArray(new Element[0])
+				),
+				getEnvironment()
+				);
+
+		return new File(session.getLocalRepository().getBasedir() + "/" + groupId.replace(".", "/") + "/" + artifactId + "/" + version + "/" + artifactId + "-" + version + (classifier != null ? "-" + classifier : "") + "." + type.toLowerCase());
+	}
+
+	protected File getDependency(String groupId, String artifactId, String version, String type) throws MojoExecutionException {
+		return getDependency(groupId, artifactId, version, type, null);
+	}
 }

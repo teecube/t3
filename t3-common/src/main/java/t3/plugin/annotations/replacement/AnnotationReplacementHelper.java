@@ -20,7 +20,6 @@ import static lombok.javac.handlers.JavacHandlerUtil.chainDots;
 
 import java.lang.annotation.Annotation;
 
-import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
@@ -123,9 +122,9 @@ public class AnnotationReplacementHelper {
 
 				if (fieldsToIgnore.contains(ident.name.toString())) {
 					if ("description".equals(ident.name.toString()) && value != null) {
-						VarSymbol s = (VarSymbol) value.sym;
-						String v = s.getConstantValue().toString();
-						System.out.println(v);
+//						VarSymbol s = (VarSymbol) value.sym;
+//						String v = s.getConstantValue().toString();
+//						System.out.println(v);
 
 						JCLiteral com = treeMaker.Literal("/* Hello world */");
 						javadocs.add(com);
