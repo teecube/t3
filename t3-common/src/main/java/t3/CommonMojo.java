@@ -515,9 +515,10 @@ public class CommonMojo extends AbstractMojo {
 	private static boolean standalonePOMInitialized = false;
 	public final static String mojoInitialized = "t3.initialized";
 
-	private List<Map.Entry<String,String>> ignoredParameters;
+	@Parameter
+	private Map<String,String> ignoredParameters;
 
-	public List<Map.Entry<String,String>> getIgnoredParameters() {
+	public Map<String,String> getIgnoredParameters() {
 		return ignoredParameters;
 	}
 
@@ -526,8 +527,8 @@ public class CommonMojo extends AbstractMojo {
 	 * @param ignoredParameters, the list to set
 	 * @return old ignoredParameters list
 	 */
-	public List<Map.Entry<String,String>> setIgnoredParameters(List<Map.Entry<String,String>> ignoredParameters) {
-		List<Entry<String, String>> oldIgnoredParameters = this.ignoredParameters;
+	public Map<String,String> setIgnoredParameters(Map<String,String> ignoredParameters) {
+		Map<String, String> oldIgnoredParameters = this.ignoredParameters;
 
 		this.ignoredParameters = ignoredParameters;
 
@@ -537,7 +538,7 @@ public class CommonMojo extends AbstractMojo {
 
 	protected <T> void initStandalonePOM() throws MojoExecutionException {
 //		if (project != null && "standalone-pom".equals(project.getArtifactId()) && !standalonePOMInitialized) {
-		if (!standalonePOMInitialized && !"true".equals(session.getUserProperties().get("t3.initialized"))) {
+		if (!standalonePOMInitialized && !"true".equals(session.getUserProperties().get(mojoInitialized))) {
 			AdvancedMavenLifecycleParticipant lifecycleParticipant = getLifecycleParticipant();
 			lifecycleParticipant.setPlexus(plexus);
 			lifecycleParticipant.setLogger(logger);

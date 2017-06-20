@@ -17,9 +17,7 @@
 package t3.plugin;
 
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.maven.classrealm.ClassRealmManager;
 import org.apache.maven.execution.MavenSession;
@@ -39,15 +37,15 @@ import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.LoggerManager;
 
-import t3.CommonMojo;
-import t3.MojosFactory;
-import t3.plugin.annotations.injection.ParametersListener;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.spi.TypeListener;
+
+import t3.CommonMojo;
+import t3.MojosFactory;
+import t3.plugin.annotations.injection.ParametersListener;
 
 /**
  *
@@ -60,7 +58,7 @@ public class PluginManager extends DefaultMavenPluginManager {
 	// actual Mojos factory is implemented in each Maven plugin
 	protected MojosFactory mojosFactory;
 
-	private List<Entry<String, String>> ignoredParameters;
+	private Map<String, String> ignoredParameters;
 
 	public static DefaultMavenPluginManager getDefaultMavenPluginManager(BuildPluginManager pluginManager) {
 		DefaultMavenPluginManager result = null;
@@ -90,7 +88,7 @@ public class PluginManager extends DefaultMavenPluginManager {
 		registerCustomPluginManager(pluginManager, mojosFactory, null);
 	}
 
-	public static void registerCustomPluginManager(BuildPluginManager pluginManager, MojosFactory mojosFactory, List<Map.Entry<String,String>> ignoredParameters) {
+	public static void registerCustomPluginManager(BuildPluginManager pluginManager, MojosFactory mojosFactory, Map<String,String> ignoredParameters) {
 		try {
 			Field f = pluginManager.getClass().getDeclaredField("mavenPluginManager");
 			f.setAccessible(true);
@@ -105,7 +103,7 @@ public class PluginManager extends DefaultMavenPluginManager {
 		}
 	}
 
-	private void setIgnoredParameters(List<Entry<String, String>> ignoredParameters) {
+	private void setIgnoredParameters(Map<String, String> ignoredParameters) {
 		this.ignoredParameters = ignoredParameters;
 	}
 
@@ -175,7 +173,7 @@ public class PluginManager extends DefaultMavenPluginManager {
 		return configuredMojo;
 	}
 
-	public static void addIgnoredParametersInPluginManager(BuildPluginManager pluginManager, List<Entry<String, String>> ignoredParameters) {
+	public static void addIgnoredParametersInPluginManager(BuildPluginManager pluginManager, Map<String, String> ignoredParameters) {
 		PluginManager customPluginManager = PluginManager.getCustomMavenPluginManager(pluginManager);
 
 		customPluginManager.setIgnoredParameters(ignoredParameters);

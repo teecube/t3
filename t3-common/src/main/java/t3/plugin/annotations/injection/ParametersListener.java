@@ -17,9 +17,7 @@
 package t3.plugin.annotations.injection;
 
 import java.lang.reflect.Field;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.maven.execution.MavenSession;
@@ -46,15 +44,15 @@ public class ParametersListener<T> implements TypeListener {
 
 	private T originalObject;
 	private MavenProject mavenProject;
-	private List<Map.Entry<String,String>> ignoredParameters;
+	private Map<String,String> ignoredParameters;
 
 	public ParametersListener(T originalObject, MavenProject mavenProject, MavenSession session) {
 		this(originalObject, mavenProject, session, null);
 	}
 
-	public ParametersListener(T originalObject, MavenProject mavenProject, MavenSession session, List<Map.Entry<String,String>> ignoredParameters) {
+	public ParametersListener(T originalObject, MavenProject mavenProject, MavenSession session, Map<String,String> ignoredParameters) {
 		if (ignoredParameters == null) {
-			ignoredParameters = new ArrayList<Map.Entry<String,String>>();
+			ignoredParameters = new HashMap<String,String>();
 		}
 
 		this.originalObject = originalObject;
@@ -65,7 +63,7 @@ public class ParametersListener<T> implements TypeListener {
 	}
 
 	@SuppressWarnings("unchecked")
-	public ParametersListener(AbstractModule originalObject, MavenProject mavenProject, MavenSession session, List<Map.Entry<String,String>> ignoredParameters) {
+	public ParametersListener(AbstractModule originalObject, MavenProject mavenProject, MavenSession session, Map<String,String> ignoredParameters) {
 		this((T) originalObject, mavenProject, session, ignoredParameters);
 	}
 
@@ -80,7 +78,7 @@ public class ParametersListener<T> implements TypeListener {
 		while (clazz != null) {
 			for (Field field : clazz.getDeclaredFields()) {
 				String value;
-				if (ignoredParameters.contains(new AbstractMap.SimpleEntry<>(field.getName(), clazz.getCanonicalName()))) {
+				if (ignoredParameters.containsKey(field.getName()) && clazz.getCanonicalName().equals(ignoredParameters.get(field.getName()))) {
 					continue;
 				}
 				if (field.isAnnotationPresent(GlobalParameter.class)) {
