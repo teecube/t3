@@ -670,8 +670,6 @@ public class CommonMojo extends AbstractMojo {
 	}
 
 	protected File getDependency(String groupId, String artifactId, String version, String type, String classifier) throws MojoExecutionException {
-		if (outputDirectory == null || !outputDirectory.isDirectory()) return null;
-		
 		ArrayList<Element> configuration = new ArrayList<Element>();
 		
 		configuration.add(new Element("groupId", groupId));
