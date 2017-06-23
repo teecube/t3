@@ -47,6 +47,7 @@ import org.apache.commons.exec.launcher.CommandLauncher;
 import org.apache.commons.exec.launcher.CommandLauncherFactory;
 import org.apache.maven.MavenExecutionException;
 import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
+import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugin.AbstractMojo;
@@ -669,7 +670,7 @@ public class CommonMojo extends AbstractMojo {
 		return copyDependency(groupId, artifactId, version, type, null, outputDirectory, fileName);
 	}
 
-	protected File getDependency(String groupId, String artifactId, String version, String type, String classifier) throws MojoExecutionException {
+	protected File getDependency(String groupId, String artifactId, String version, String type, String classifier) throws MojoExecutionException, ArtifactNotFoundException {
 		ArrayList<Element> configuration = new ArrayList<Element>();
 		
 		configuration.add(new Element("groupId", groupId));
@@ -681,7 +682,8 @@ public class CommonMojo extends AbstractMojo {
 		}
 		configuration.add(new Element("transitive", "false"));
 
-		executeMojo(
+		try {
+			executeMojo(
 				plugin(
 					groupId("org.apache.maven.plugins"),
 					artifactId("maven-dependency-plugin"),
@@ -693,11 +695,17 @@ public class CommonMojo extends AbstractMojo {
 				),
 				getEnvironment()
 				);
+		} catch (MojoExecutionException e) {
+			if (e.getCause() != null && e.getCause().getCause() != null && e.getCause().getCause() instanceof ArtifactNotFoundException) {
+				ArtifactNotFoundException artifactNotFoundException = (ArtifactNotFoundException) e.getCause().getCause();
+				throw artifactNotFoundException;
+			}
+		}
 
 		return new File(session.getLocalRepository().getBasedir() + "/" + groupId.replace(".", "/") + "/" + artifactId + "/" + version + "/" + artifactId + "-" + version + (classifier != null ? "-" + classifier : "") + "." + type.toLowerCase());
 	}
 
-	protected File getDependency(String groupId, String artifactId, String version, String type) throws MojoExecutionException {
+	protected File getDependency(String groupId, String artifactId, String version, String type) throws MojoExecutionException, ArtifactNotFoundException {
 		return getDependency(groupId, artifactId, version, type, null);
 	}
 }

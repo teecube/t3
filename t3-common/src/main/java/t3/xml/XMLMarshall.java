@@ -19,6 +19,7 @@ package t3.xml;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.ParameterizedType;
@@ -29,15 +30,18 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.SchemaFactory;
 
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
+import org.xml.sax.SAXException;
 
 import t3.xml.RootElementNamespaceFilter.NamespaceDeclaration;
 
@@ -63,9 +67,14 @@ public class XMLMarshall<Type, Factory> {
 
 	private Pattern patternElement = Pattern.compile("(\\w+)(\\[([\\w- \\*\\.\\/?]*)\\])?");
 	private HashMap<String, Object> map = new HashMap<String, Object>();
+	private InputStream xsdStream;
 
-	public XMLMarshall(File xmlFile) throws JAXBException {
+	public XMLMarshall(File xmlFile) throws JAXBException, SAXException {
 		this(xmlFile, Object.class);
+	}
+
+	public XMLMarshall(File xmlFile, InputStream xsdStream) throws JAXBException, SAXException {
+		this(xmlFile, xsdStream, Object.class);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -74,15 +83,23 @@ public class XMLMarshall<Type, Factory> {
 		return cls;
 	}
 
-	public XMLMarshall(File xmlFile, Class<?>... classesToBeBound) throws JAXBException {
+	public XMLMarshall(File xmlFile, InputStream xsdStream, Class<Object> class1) throws JAXBException, SAXException {
+		this.xmlFile = xmlFile;
+		this.xsdStream = xsdStream;
+
+		this.classesToBound = new ArrayList<Class<?>>();
+		this.classesToBound.add(getActualFactoryClass());
+		this.classesToBound.addAll(Arrays.asList(class1));
+
+		load();
+	}
+
+	public XMLMarshall(File xmlFile, Class<?>... classesToBeBound) throws JAXBException, SAXException {
 		this.xmlFile = xmlFile;
 
 		this.classesToBound = new ArrayList<Class<?>>();
 		this.classesToBound.add(getActualFactoryClass());
 		this.classesToBound.addAll(Arrays.asList(classesToBeBound));
-
-		this.rootElementLocalName = "";
-		this.namespaceDeclarationsToRemove = new ArrayList<NamespaceDeclaration>();
 
 		load();
 	}
@@ -97,12 +114,22 @@ public class XMLMarshall<Type, Factory> {
 	 * </p>
 	 *
 	 * @throws JAXBException
+	 * @throws SAXException 
 	 */
 	@SuppressWarnings("unchecked")
-	private void load() throws JAXBException {
+	private void load() throws JAXBException, SAXException {
+		this.rootElementLocalName = "";
+		this.namespaceDeclarationsToRemove = new ArrayList<NamespaceDeclaration>();
+
 		jaxbContext = JAXBContext.newInstance(this.classesToBound.toArray(new Class<?>[0]));
 
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+		
+		if (this.xsdStream != null) {
+			SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			jaxbUnmarshaller.setSchema(sf.newSchema(new StreamSource(xsdStream)));
+		}
+
 		Object o = null;
 		if (xmlFile == null || !xmlFile.exists()) {
 			StringBuffer xmlStr = new StringBuffer( "<?xml version=\"1.0\"?><root/>");
