@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>io.teecube</groupId>
 		<artifactId>t3</artifactId>
-		<version>0.0.8-SNAPSHOT</version>
+		<version>0.0.8</version>
 	</parent>
 
 	<groupId>io.teecube.t3</groupId>
@@ -12,8 +12,8 @@
 
 	<packaging>jar</packaging>
 
-	<name>${projectName}</name> <!-- unleash: 1=<name>${projectName}</name> 3=<name>&#36;{projectName}</name> -->
-	<description>${projectDescription}</description> <!-- unleash: 1=<description>${projectDescription}</description> 3=<description>&#36;{projectDescription}</description> -->
+	<name>T³ - Common</name> <!-- unleash: 1=<name>${projectName}</name> 3=<name>&#36;{projectName}</name> -->
+	<description>Utility classes for T³ projects</description> <!-- unleash: 1=<description>${projectDescription}</description> 3=<description>&#36;{projectDescription}</description> -->
 
 	<properties>
 		<projectName>${ecosystemName} - Common</projectName>
