@@ -16,6 +16,8 @@
  */
 package t3.site;
 
+import static org.rendersnake.HtmlAttributesFactory.class_;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,6 +26,11 @@ import java.util.List;
 import org.apache.maven.model.FileSet;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.rendersnake.HtmlCanvas;
+
+import t3.site.parameters.CommandLine;
+import t3.site.parameters.Sample;
 
 /**
  *
@@ -33,6 +40,43 @@ import org.apache.maven.plugin.MojoFailureException;
 public abstract class AbstractReplaceAllMojo extends AbstractSiteMojo {
 
 	public abstract void processHTMLFile(File htmlFile) throws Exception;
+
+	@Parameter
+	List<Sample> samples;
+
+	@Parameter
+	List<CommandLine> commandLines;
+
+	private HtmlCanvas generateSample(String title, String sample) throws IOException {
+		HtmlCanvas html = new HtmlCanvas();
+
+		this.project.getProperties().put("data-clipboard-text", sample);
+		this.project.getProperties().put("config-title", title);
+
+		String templateStart = replaceProperties(replaceProperties("${configTextStart}"));
+		String templateEnd = replaceProperties(replaceProperties("${configTextEnd}"));
+
+		html.write(templateStart, false);
+
+		html.
+		pre(class_("xml")).
+			write(sample, false)
+		._pre();
+
+		html.write(templateEnd, false);
+
+		return html;
+	}
+
+	private HtmlCanvas generateCommandLine(String title, String commandLine, List<String> arguments) throws IOException {
+		this.project.getProperties().put("data-clipboard-text", getFullCommandLine(commandLine, arguments));
+		this.project.getProperties().put("command-title", "&#160;");
+	
+		String templateStart = replaceProperties(replaceProperties("${commandLineStart}"));
+		String templateEnd = replaceProperties(replaceProperties("${commandLineEnd}"));
+	
+		return createCommandLines(commandLine, templateStart, templateEnd, arguments, new ArrayList<String>(), false);
+	}
 
 	protected List<File> getHTMLFiles() throws IOException {
 		FileSet htmlFiles = new FileSet();
@@ -73,6 +117,22 @@ public abstract class AbstractReplaceAllMojo extends AbstractSiteMojo {
 		siteProperties.addAll(staticSiteProperties);
 
 		try {
+			if (samples == null) {
+				samples = new ArrayList<Sample>();
+			}
+			if (commandLines == null) {
+				commandLines = new ArrayList<CommandLine>();
+			}
+
+			for (Sample sample : samples) {
+				String sampleContent = generateSample(sample.getTitle(), sample.getContent()).toHtml();
+				addPropertyInSessionRequest(sample.getProperty(), sampleContent);
+			}
+			for (CommandLine commandLine : commandLines) {
+				String commandLineContent = generateCommandLine(commandLine.getTitle(), commandLine.getCommandLine(), commandLine.getArguments()).toHtml();
+				addPropertyInSessionRequest(commandLine.getProperty(), commandLineContent);
+			}
+			
 			List<File> htmlFiles = getHTMLFiles();
 
 			for (File htmlFile : htmlFiles) {
