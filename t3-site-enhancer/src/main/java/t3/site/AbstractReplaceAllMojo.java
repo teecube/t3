@@ -50,7 +50,7 @@ public abstract class AbstractReplaceAllMojo extends AbstractSiteMojo {
 	private HtmlCanvas generateSample(String title, String sample) throws IOException {
 		HtmlCanvas html = new HtmlCanvas();
 
-		this.project.getProperties().put("data-clipboard-text", sample);
+		this.project.getProperties().put("data-clipboard-text", sample.replace("\n", "&#xa;"));
 		this.project.getProperties().put("config-title", title);
 
 		String templateStart = replaceProperties(replaceProperties("${configTextStart}"));
@@ -75,7 +75,7 @@ public abstract class AbstractReplaceAllMojo extends AbstractSiteMojo {
 		String templateStart = replaceProperties(replaceProperties("${commandLineStart}"));
 		String templateEnd = replaceProperties(replaceProperties("${commandLineEnd}"));
 	
-		return createCommandLines(commandLine, templateStart, templateEnd, arguments, new ArrayList<String>(), false);
+		return createCommandLines(commandLine, templateStart, templateEnd, arguments, new ArrayList<String>(), true);
 	}
 
 	protected List<File> getHTMLFiles() throws IOException {
