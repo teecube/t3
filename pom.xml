@@ -143,11 +143,11 @@
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>2.7</version>
 			</dependency>
-				<dependency>
-					<groupId>org.apache.maven.plugin-tools</groupId>
-					<artifactId>maven-plugin-annotations</artifactId>
-					<version>3.2</version>
-				</dependency>
+			<dependency>
+				<groupId>org.apache.maven.plugin-tools</groupId>
+				<artifactId>maven-plugin-annotations</artifactId>
+				<version>3.2</version>
+			</dependency>
 
 			<!-- Apache commons -->
 			<dependency>
@@ -185,7 +185,7 @@
 			<dependency>
 				<groupId>org.twdata.maven</groupId>
 				<artifactId>mojo-executor</artifactId>
-				<version>2.1.0</version>
+				<version>2.3.0</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.guava</groupId>
@@ -405,12 +405,13 @@
 				<maven.version>3.3.3</maven.version>
 				<maven.project>3.0-alpha-2</maven.project>
 				<maven.archiver>3.0.0</maven.archiver>
+				<maven.embedder>3.3.1</maven.embedder>
 
 				<maven.plugin.annotations>3.2</maven.plugin.annotations>
 				<maven.plugin.clean>2.6.1</maven.plugin.clean>
 				<maven.plugin.compiler>3.3</maven.plugin.compiler>
 				<maven.plugin.deploy>2.8.2</maven.plugin.deploy>
-				<maven.plugin.install>2.5.2</maven.plugin.install>
+				<maven.plugin.install>2.5.2</maven.plugin.install> <!-- WARN: references exist in Java code -->
 				<maven.plugin.resources>2.7</maven.plugin.resources>
 				<maven.plugin.site>3.4</maven.plugin.site>
 				<maven.plugin.tools-api>3.2</maven.plugin.tools-api>
@@ -426,7 +427,7 @@
 				<maven.plugin.antrun>1.7</maven.plugin.antrun>
 				<maven.plugin.archetype>2.2</maven.plugin.archetype>
 				<maven.plugin.assembly>2.5.2</maven.plugin.assembly>
-				<maven.plugin.dependency>2.10</maven.plugin.dependency>
+				<maven.plugin.dependency>2.10</maven.plugin.dependency> <!-- WARN: references exist in Java code -->
 				<maven.plugin.enforcer>1.4.1</maven.plugin.enforcer>
 				<maven.plugin.help>2.2</maven.plugin.help>
 				<maven.plugin.invoker>1.9</maven.plugin.invoker>
@@ -1355,6 +1356,12 @@
 						<artifactId>maven-plugin-annotations</artifactId>
 						<version>${maven.plugin.annotations}</version>
 					</dependency>
+
+			        <dependency>
+			            <groupId>org.apache.maven</groupId>
+			            <artifactId>maven-embedder</artifactId>
+						<version>${maven.embedder}</version>
+			        </dependency>
 				</dependencies>
 			</dependencyManagement>
 		</profile>
@@ -1393,7 +1400,7 @@
 				<codehaus.build-helper-maven-plugin>1.9.1</codehaus.build-helper-maven-plugin>
 				
 				<org.reflections.version>0.9.9</org.reflections.version>
-				<mojo-executor.version>2.1.0</mojo-executor.version>
+				<mojo-executor.version>2.3.0</mojo-executor.version>
 				<guava.version>14.0.1</guava.version>
 				<dom4j.version>1.6.1</dom4j.version>
 				<joox.version>1.3.0</joox.version>
@@ -1587,6 +1594,11 @@
 					    <groupId>com.vladsch.flexmark</groupId>
 					    <artifactId>flexmark-all</artifactId>
 					    <version>0.19.3</version>
+					</dependency>
+					<dependency>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-api</artifactId>
+						<version>1.7.22</version>
 					</dependency>
 				</dependencies>
 			</dependencyManagement>

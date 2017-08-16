@@ -708,4 +708,31 @@ public class CommonMojo extends AbstractMojo {
 	protected File getDependency(String groupId, String artifactId, String version, String type) throws MojoExecutionException, ArtifactNotFoundException {
 		return getDependency(groupId, artifactId, version, type, null);
 	}
+
+	protected void installDependency(String groupId, String artifactId, String version, String type, String classifier, File file) throws MojoExecutionException {
+		ArrayList<Element> configuration = new ArrayList<Element>();
+		
+		configuration.add(new Element("file", file.getAbsolutePath()));
+
+		configuration.add(new Element("groupId", groupId));
+		configuration.add(new Element("artifactId", artifactId));
+		configuration.add(new Element("version", version)); 
+		configuration.add(new Element("packaging", type));
+		if (classifier != null) {
+			configuration.add(new Element("classifier", classifier));
+		}
+
+		executeMojo(
+				plugin(
+						groupId("org.apache.maven.plugins"),
+						artifactId("maven-install-plugin"),
+						version("2.5.2") // version defined in pom.xml of this plugin
+						),
+				goal("install-file"),
+				configuration(
+						configuration.toArray(new Element[0])
+						),
+				getEnvironment()
+				);
+	}
 }
