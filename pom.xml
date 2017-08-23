@@ -1346,8 +1346,18 @@
 					</dependency>
 					<dependency>
 						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-install-plugin</artifactId>
+						<version>${maven.plugin.install}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-resources-plugin</artifactId>
 						<version>${maven.plugin.resources}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<version>${maven.plugin.enforcer}</version>
 					</dependency>
 
 					<!-- dependencies to annotations -->

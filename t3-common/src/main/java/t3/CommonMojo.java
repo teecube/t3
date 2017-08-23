@@ -27,8 +27,12 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.version;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,11 +49,15 @@ import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.exec.ShutdownHookProcessDestroyer;
 import org.apache.commons.exec.launcher.CommandLauncher;
 import org.apache.commons.exec.launcher.CommandLauncherFactory;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.MavenExecutionException;
 import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.Plugin;
+import org.apache.maven.model.PluginExecution;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecution;
@@ -63,11 +71,33 @@ import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.settings.Profile;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.shared.filtering.MavenResourcesFiltering;
+import org.apache.maven.shared.invoker.DefaultInvocationRequest;
+import org.apache.maven.shared.invoker.InvocationRequest.ReactorFailureBehavior;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.logging.Logger;
+import org.eclipse.aether.RepositorySystem;
+import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.artifact.Artifact;
+import org.eclipse.aether.artifact.DefaultArtifact;
+import org.eclipse.aether.collection.CollectRequest;
+import org.eclipse.aether.graph.Dependency;
+import org.eclipse.aether.graph.DependencyFilter;
+import org.eclipse.aether.resolution.ArtifactResult;
+import org.eclipse.aether.resolution.DependencyRequest;
+import org.eclipse.aether.resolution.DependencyResolutionException;
+import org.eclipse.aether.util.artifact.JavaScopes;
+import org.eclipse.aether.util.filter.DependencyFilterUtils;
+import org.jboss.shrinkwrap.resolver.api.maven.ConfigurableMavenResolverSystem;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+import org.jboss.shrinkwrap.resolver.api.maven.MavenResolvedArtifact;
+import org.jboss.shrinkwrap.resolver.api.maven.embedded.BuiltProject;
+import org.jboss.shrinkwrap.resolver.api.maven.embedded.EmbeddedMaven;
+import org.jboss.shrinkwrap.resolver.api.maven.embedded.pom.equipped.ConfigurationDistributionStage;
+import org.jboss.shrinkwrap.resolver.impl.maven.bootstrap.MavenSettingsBuilder;
 import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 import org.twdata.maven.mojoexecutor.MojoExecutor.ExecutionEnvironment;
 
+import com.google.common.io.Files;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -83,6 +113,12 @@ import t3.plugin.annotations.injection.ParametersListener;
  *
  */
 public class CommonMojo extends AbstractMojo {
+
+	@Component
+	private RepositorySystem system;
+
+	@org.apache.maven.plugins.annotations.Parameter(defaultValue = "${repositorySystemSession}", readonly = true)
+    private RepositorySystemSession systemSession;
 
 	@GlobalParameter (property = CommonMojoInformation.executablesExtension, required = true, description = CommonMojoInformation.executablesExtension_description, category = CommonMojoInformation.systemCategory)
 	protected String executablesExtension;
@@ -694,7 +730,7 @@ public class CommonMojo extends AbstractMojo {
 					configuration.toArray(new Element[0])
 				),
 				getEnvironment()
-				);
+			);
 		} catch (MojoExecutionException e) {
 			if (e.getCause() != null && e.getCause().getCause() != null && e.getCause().getCause() instanceof ArtifactNotFoundException) {
 				ArtifactNotFoundException artifactNotFoundException = (ArtifactNotFoundException) e.getCause().getCause();
@@ -709,7 +745,7 @@ public class CommonMojo extends AbstractMojo {
 		return getDependency(groupId, artifactId, version, type, null);
 	}
 
-	protected void installDependency(String groupId, String artifactId, String version, String type, String classifier, File file) throws MojoExecutionException {
+	protected void installDependency(String groupId, String artifactId, String version, String type, String classifier, File file, File localRepositoryPath) throws MojoExecutionException {
 		ArrayList<Element> configuration = new ArrayList<Element>();
 		
 		configuration.add(new Element("file", file.getAbsolutePath()));
@@ -721,18 +757,237 @@ public class CommonMojo extends AbstractMojo {
 		if (classifier != null) {
 			configuration.add(new Element("classifier", classifier));
 		}
+		if (localRepositoryPath != null) {
+			configuration.add(new Element("localRepositoryPath", localRepositoryPath.getAbsolutePath()));
+		}
 
 		executeMojo(
+			plugin(
+				groupId("org.apache.maven.plugins"),
+				artifactId("maven-install-plugin"),
+				version("2.5.2") // version defined in pom.xml of this plugin
+			),
+			goal("install-file"),
+			configuration(
+				configuration.toArray(new Element[0])
+			),
+			getEnvironment()
+		);
+	}
+
+	protected List<ArtifactResult> getPomArtifact(String coords) {
+        Artifact artifact = new DefaultArtifact(coords);
+
+        DependencyFilter classpathFlter = DependencyFilterUtils.classpathFilter(JavaScopes.COMPILE);
+
+        CollectRequest collectRequest = new CollectRequest();
+        collectRequest.setRoot(new Dependency( artifact, JavaScopes.COMPILE));
+        collectRequest.setRepositories(project.getRemotePluginRepositories());
+
+        DependencyRequest dependencyRequest = new DependencyRequest(collectRequest, classpathFlter);
+
+        List<ArtifactResult> artifactResults = null;
+		try {
+			artifactResults = system.resolveDependencies(systemSession, dependencyRequest).getArtifactResults();
+		} catch (DependencyResolutionException e) {
+			//
+		}
+
+		return artifactResults;
+	}
+
+	protected void goOffline(MavenProject project, File localRepositoryPath, String mavenVersion) throws MojoExecutionException {
+		localRepositoryPath.mkdirs();
+		File tmpDirectory = Files.createTempDir();
+
+		// create a default empty POM (because it's needed...)
+        File tmpPom = new File(tmpDirectory, "pom.xml");
+        try {
+			POMManager.writeModelToPOM(project.getModel(), tmpPom);
+		} catch (IOException e) {
+			throw new MojoExecutionException(e.getLocalizedMessage(), e);
+		}
+
+        // create a settings.xml with <pluginGroups>
+		InputStream globalSettingInputStream = this.getClass().getResourceAsStream("/maven/default-t3-settings.xml");
+		File globalSettingsFile = new File(tmpDirectory, "settings.xml");
+		OutputStream globalSettingsOutputStream = null;
+		try {
+			globalSettingsOutputStream = new FileOutputStream(globalSettingsFile);
+			IOUtils.copy(globalSettingInputStream, globalSettingsOutputStream);
+		} catch (IOException e1) {
+		} finally {
+			if (globalSettingsOutputStream != null) {
+				try {
+					globalSettingsOutputStream.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+
+        // create a maven-metadata-local.xml for tic plugin group
+		InputStream ticMetadataInputStream = this.getClass().getResourceAsStream("/maven/tic-maven-metadata-local.xml");
+		File ticGroupDirectory = new File(localRepositoryPath, "io/teecube/tic");
+		ticGroupDirectory.mkdirs();
+		File ticMetadataFile = new File(ticGroupDirectory, "maven-metadata-local.xml");
+		OutputStream ticMetadataOutputStream = null;
+		try {
+			ticMetadataOutputStream = new FileOutputStream(ticMetadataFile);
+			IOUtils.copy(ticMetadataInputStream, ticMetadataOutputStream);
+		} catch (IOException e1) {
+		} finally {
+			if (ticMetadataOutputStream != null) {
+				try {
+					ticMetadataOutputStream.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+
+		// create a maven-metadata-local.xml for toe plugin group
+		InputStream toeMetadataInputStream = this.getClass().getResourceAsStream("/maven/toe-maven-metadata-local.xml");
+		File toeGroupDirectory = new File(localRepositoryPath, "io/teecube/toe");
+		toeGroupDirectory.mkdirs();
+		File toeMetadataFile = new File(toeGroupDirectory, "maven-metadata-local.xml");
+		OutputStream toeMetadataOutputStream = null;
+		try {
+			toeMetadataOutputStream = new FileOutputStream(toeMetadataFile);
+			IOUtils.copy(toeMetadataInputStream, toeMetadataOutputStream);
+		} catch (IOException e1) {
+		} finally {
+			if (toeMetadataOutputStream != null) {
+				try {
+					toeMetadataOutputStream.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+
+		List<MavenResolvedArtifact> mavenResolvedArtifacts = new ArrayList<MavenResolvedArtifact>();
+
+		System.setProperty(MavenSettingsBuilder.ALT_LOCAL_REPOSITORY_LOCATION, session.getLocalRepository().getBasedir().replace("\\", "/"));
+
+		ConfigurableMavenResolverSystem mavenResolver = Maven.configureResolver();
+
+		List<ArtifactResult> poms = new ArrayList<ArtifactResult>();
+		poms.addAll(getPomArtifact("org.apache:apache:pom:4"));
+		poms.addAll(getPomArtifact("org.apache:apache:pom:6"));
+		poms.addAll(getPomArtifact("org.apache:apache:pom:10"));
+		poms.addAll(getPomArtifact("org.apache:apache:pom:11"));
+		poms.addAll(getPomArtifact("org.apache:apache:pom:13"));
+		poms.addAll(getPomArtifact("org.apache.maven:maven-parent:pom:9"));
+		poms.addAll(getPomArtifact("org.apache.maven:maven-parent:pom:15"));
+		poms.addAll(getPomArtifact("org.apache.maven:maven-parent:pom:21"));
+		poms.addAll(getPomArtifact("org.apache.maven:maven-parent:pom:22"));
+		poms.addAll(getPomArtifact("org.apache.maven:maven-parent:pom:23"));
+		poms.addAll(getPomArtifact("org.apache.maven.plugins:maven-plugins:pom:12"));
+		poms.addAll(getPomArtifact("org.apache.maven.plugins:maven-plugins:pom:16"));
+		poms.addAll(getPomArtifact("org.apache.maven.plugins:maven-plugins:pom:22"));
+		poms.addAll(getPomArtifact("org.apache.maven.plugins:maven-plugins:pom:23"));
+		poms.addAll(getPomArtifact("org.apache.maven.plugins:maven-plugins:pom:24"));
+		poms.addAll(getPomArtifact("org.apache.maven.release:maven-release:pom:2.3.2"));
+
+		// plugins from super POM 
+		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-antrun-plugin:jar:1.3").withoutTransitivity().asList(MavenResolvedArtifact.class));
+		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-assembly-plugin:jar:2.2-beta-5").withoutTransitivity().asList(MavenResolvedArtifact.class));
+		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-clean-plugin:jar:2.5").withoutTransitivity().asList(MavenResolvedArtifact.class));
+		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-dependency-plugin:jar:2.8").withoutTransitivity().asList(MavenResolvedArtifact.class));
+		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-deploy-plugin:jar:2.7").withoutTransitivity().asList(MavenResolvedArtifact.class));
+		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-install-plugin:jar:2.4").withoutTransitivity().asList(MavenResolvedArtifact.class));
+		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-release-plugin:jar:2.3.2").withoutTransitivity().asList(MavenResolvedArtifact.class));
+		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-site-plugin:jar:3.3").withoutTransitivity().asList(MavenResolvedArtifact.class));
+
+		// add plugins from project
+		for (Plugin plugin : project.getBuild().getPlugins()) {			
+			mavenResolvedArtifacts.addAll(mavenResolver.resolve(plugin.getKey() + ":jar:" + plugin.getVersion()).withoutTransitivity().asList(MavenResolvedArtifact.class));
+		}
+
+		// add all as artifacts
+		List<Artifact> artifacts = new ArrayList<Artifact>();
+		for (MavenResolvedArtifact mavenResolvedArtifact : mavenResolvedArtifacts) {
+			Artifact artifact = new DefaultArtifact(mavenResolvedArtifact.getCoordinate().getGroupId() + ":" + mavenResolvedArtifact.getCoordinate().getArtifactId() + ":" + mavenResolvedArtifact.getCoordinate().getType() + ":" + mavenResolvedArtifact.getCoordinate().getVersion());
+			File resolvedFile = mavenResolvedArtifact.asFile();
+			if (resolvedFile.getAbsolutePath().contains("..")) continue;
+			artifact = artifact.setFile(resolvedFile);
+
+			artifacts.add(artifact);
+		}
+		for (ArtifactResult pom : poms) {
+			artifacts.add(pom.getArtifact());
+		}
+
+		// install artifacts
+		for (Artifact artifact : artifacts) {
+			List<Element> configuration = new ArrayList<Element>();
+
+			configuration.add(new Element("localRepositoryPath", localRepositoryPath.getAbsolutePath()));
+			configuration.add(new Element("createChecksum", "true"));
+			configuration.add(new Element("updateReleaseInfo", "true"));
+			configuration.add(new Element("groupId", artifact.getGroupId()));
+			configuration.add(new Element("artifactId", artifact.getArtifactId()));
+			configuration.add(new Element("version", artifact.getVersion()));
+			configuration.add(new Element("file", artifact.getFile().getAbsolutePath()));
+			File pomFile = new File(artifact.getFile().getParentFile(), artifact.getArtifactId() + "-" + artifact.getVersion() + ".pom");
+			configuration.add(new Element("pomFile", pomFile.getAbsolutePath()));
+
+			executeMojo(
 				plugin(
-						groupId("org.apache.maven.plugins"),
-						artifactId("maven-install-plugin"),
-						version("2.5.2") // version defined in pom.xml of this plugin
-						),
+					groupId("org.apache.maven.plugins"),
+					artifactId("maven-install-plugin"),
+					version("2.5.2") // version defined in pom.xml of this plugin
+				),
 				goal("install-file"),
 				configuration(
-						configuration.toArray(new Element[0])
-						),
-				getEnvironment()
-				);
+					configuration.toArray(new Element[0])
+				),
+				executionEnvironment(project, session, pluginManager)
+			);
+		}
+
+		List<String> goals = new ArrayList<String>();
+		for (Plugin plugin : project.getBuild().getPlugins()) {
+			for (PluginExecution execution : plugin.getExecutions()) {
+				String prefix = execution.getId();
+				for (String goal : execution.getGoals()) {
+					goals.add(prefix + ":" + goal);
+				}
+			}
+		}
+
+		// execute the goals to bootstrap the plugin in local repository path
+		ConfigurationDistributionStage builder = EmbeddedMaven.forProject(tmpPom)
+															  .setQuiet()
+															  .setUserSettingsFile(globalSettingsFile)
+															  .setGlobalSettingsFile(globalSettingsFile)
+															  .setLocalRepositoryDirectory(localRepositoryPath)
+															  .useMaven3Version(mavenVersion)
+															  .setGoals(goals);
+		Field requestField;
+		try {
+			requestField = builder.getClass().getDeclaredField("request");
+			requestField.setAccessible(true);
+			DefaultInvocationRequest request = (DefaultInvocationRequest) requestField.get(builder);
+			request.setReactorFailureBehavior(ReactorFailureBehavior.FailAtEnd);
+		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e1) {
+		}
+
+		BuiltProject result = builder.ignoreFailure().build();
+
+		if (result.getMavenBuildExitCode() != 0) {
+			File logOutput = new File(this.directory, "go-offline.log");
+			try {
+				FileUtils.writeStringToFile(logOutput, result.getMavenLog(), StandardCharsets.UTF_8);
+			} catch (IOException e) {
+				
+			}
+
+			if (result.getMavenLog().contains("[ERROR] " + Messages.ENFORCER_RULES_FAILURE) || result.getMavenLog().contains("Nothing to merge.")) {
+				return;
+			}
+			getLog().error("Something went wrong in Maven build to go offline. Log file is: '" + logOutput.getAbsolutePath() + "'");
+
+			throw new MojoExecutionException("Unable to execute plugins goals to go offline.");
+		}
 	}
+
 }
