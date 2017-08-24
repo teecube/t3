@@ -8,7 +8,7 @@ test:
 
 site:
     script: 
-        - mvn -gs /home/m2/settings.xml clean site-deploy -P t3-snapshot
+        - mvn -gs /home/m2/settings.xml clean site-deploy -P t3-snapshot -X -e
     except:
         - tags
 
