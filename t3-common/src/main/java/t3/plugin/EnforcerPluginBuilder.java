@@ -41,7 +41,7 @@ public class EnforcerPluginBuilder extends PluginBuilder {
 
 	private final static String ENFORCER_GROUPID = "org.apache.maven.plugins";
 	private final static String ENFORCER_ARTIFACTID = "maven-enforcer-plugin";
-	private final static String ENFORCER_VERSION = "1.3.1";
+	private final static String ENFORCER_VERSION = "1.4.1";
 
 	public EnforcerPluginBuilder() {
 		super(ENFORCER_GROUPID, ENFORCER_ARTIFACTID, ENFORCER_VERSION);

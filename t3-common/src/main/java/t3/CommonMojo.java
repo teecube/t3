@@ -34,6 +34,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -50,7 +51,9 @@ import org.apache.commons.exec.ShutdownHookProcessDestroyer;
 import org.apache.commons.exec.launcher.CommandLauncher;
 import org.apache.commons.exec.launcher.CommandLauncherFactory;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.MavenExecutionException;
 import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
@@ -114,12 +117,6 @@ import t3.plugin.annotations.injection.ParametersListener;
  */
 public class CommonMojo extends AbstractMojo {
 
-	@Component
-	private RepositorySystem system;
-
-	@org.apache.maven.plugins.annotations.Parameter(defaultValue = "${repositorySystemSession}", readonly = true)
-    private RepositorySystemSession systemSession;
-
 	@GlobalParameter (property = CommonMojoInformation.executablesExtension, required = true, description = CommonMojoInformation.executablesExtension_description, category = CommonMojoInformation.systemCategory)
 	protected String executablesExtension;
 
@@ -178,6 +175,12 @@ public class CommonMojo extends AbstractMojo {
 
 	@Component
 	protected ArtifactRepositoryFactory artifactRepositoryFactory;
+
+	@Component
+	protected RepositorySystem system;
+
+	@org.apache.maven.plugins.annotations.Parameter(defaultValue = "${repositorySystemSession}", readonly = true)
+	protected RepositorySystemSession systemSession;
 
 	private static CommonMojo propertiesManager = null;
 	/**
@@ -796,6 +799,27 @@ public class CommonMojo extends AbstractMojo {
 		return artifactResults;
 	}
 
+	private void writeMavenMetadata(File localRepository, String groupIdPath, String resourcePath) {
+		// create a maven-metadata-local.xml for plugin group
+		InputStream metadataInputStream = this.getClass().getResourceAsStream(resourcePath);
+		File groupDirectory = new File(localRepository, groupIdPath);
+		groupDirectory.mkdirs();
+		File metadataFile = new File(groupDirectory, "maven-metadata-local.xml");
+		OutputStream metadataOutputStream = null;
+		try {
+			metadataOutputStream = new FileOutputStream(metadataFile);
+			IOUtils.copy(metadataInputStream, metadataOutputStream);
+		} catch (IOException e1) {
+		} finally {
+			if (metadataOutputStream != null) {
+				try {
+					metadataOutputStream.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+	}
+
 	protected void goOffline(MavenProject project, File localRepositoryPath, String mavenVersion) throws MojoExecutionException {
 		localRepositoryPath.mkdirs();
 		File tmpDirectory = Files.createTempDir();
@@ -825,43 +849,14 @@ public class CommonMojo extends AbstractMojo {
 			}
 		}
 
-        // create a maven-metadata-local.xml for tic plugin group
-		InputStream ticMetadataInputStream = this.getClass().getResourceAsStream("/maven/tic-maven-metadata-local.xml");
-		File ticGroupDirectory = new File(localRepositoryPath, "io/teecube/tic");
-		ticGroupDirectory.mkdirs();
-		File ticMetadataFile = new File(ticGroupDirectory, "maven-metadata-local.xml");
-		OutputStream ticMetadataOutputStream = null;
-		try {
-			ticMetadataOutputStream = new FileOutputStream(ticMetadataFile);
-			IOUtils.copy(ticMetadataInputStream, ticMetadataOutputStream);
-		} catch (IOException e1) {
-		} finally {
-			if (ticMetadataOutputStream != null) {
-				try {
-					ticMetadataOutputStream.close();
-				} catch (IOException e) {
-				}
-			}
-		}
+        // create a maven-metadata-local.xml for Maven plugin group
+		writeMavenMetadata(localRepositoryPath, "org/apache/maven/plugins", "/maven/maven-plugins-maven-metadata.xml");
+
+		// create a maven-metadata-local.xml for tic plugin group
+		writeMavenMetadata(localRepositoryPath, "io/teecube/tic", "/maven/tic-maven-metadata-local.xml");
 
 		// create a maven-metadata-local.xml for toe plugin group
-		InputStream toeMetadataInputStream = this.getClass().getResourceAsStream("/maven/toe-maven-metadata-local.xml");
-		File toeGroupDirectory = new File(localRepositoryPath, "io/teecube/toe");
-		toeGroupDirectory.mkdirs();
-		File toeMetadataFile = new File(toeGroupDirectory, "maven-metadata-local.xml");
-		OutputStream toeMetadataOutputStream = null;
-		try {
-			toeMetadataOutputStream = new FileOutputStream(toeMetadataFile);
-			IOUtils.copy(toeMetadataInputStream, toeMetadataOutputStream);
-		} catch (IOException e1) {
-		} finally {
-			if (toeMetadataOutputStream != null) {
-				try {
-					toeMetadataOutputStream.close();
-				} catch (IOException e) {
-				}
-			}
-		}
+		writeMavenMetadata(localRepositoryPath, "io/teecube/toe", "/maven/toe-maven-metadata-local.xml");
 
 		List<MavenResolvedArtifact> mavenResolvedArtifacts = new ArrayList<MavenResolvedArtifact>();
 
@@ -872,22 +867,37 @@ public class CommonMojo extends AbstractMojo {
 		List<ArtifactResult> poms = new ArrayList<ArtifactResult>();
 		poms.addAll(getPomArtifact("org.apache:apache:pom:4"));
 		poms.addAll(getPomArtifact("org.apache:apache:pom:6"));
+		poms.addAll(getPomArtifact("org.apache:apache:pom:9"));
 		poms.addAll(getPomArtifact("org.apache:apache:pom:10"));
 		poms.addAll(getPomArtifact("org.apache:apache:pom:11"));
 		poms.addAll(getPomArtifact("org.apache:apache:pom:13"));
+		poms.addAll(getPomArtifact("org.apache:apache:pom:17"));
+		poms.addAll(getPomArtifact("org.apache:apache:pom:18"));
+		poms.addAll(getPomArtifact("org.apache.ant:ant-parent:pom:1.8.1"));
+		poms.addAll(getPomArtifact("org.apache.commons:commons-parent:pom:24"));
 		poms.addAll(getPomArtifact("org.apache.maven:maven-parent:pom:9"));
 		poms.addAll(getPomArtifact("org.apache.maven:maven-parent:pom:15"));
 		poms.addAll(getPomArtifact("org.apache.maven:maven-parent:pom:21"));
 		poms.addAll(getPomArtifact("org.apache.maven:maven-parent:pom:22"));
 		poms.addAll(getPomArtifact("org.apache.maven:maven-parent:pom:23"));
+		poms.addAll(getPomArtifact("org.apache.maven:maven-parent:pom:27"));
+		poms.addAll(getPomArtifact("org.apache.maven:maven-parent:pom:30"));
 		poms.addAll(getPomArtifact("org.apache.maven.plugins:maven-plugins:pom:12"));
 		poms.addAll(getPomArtifact("org.apache.maven.plugins:maven-plugins:pom:16"));
 		poms.addAll(getPomArtifact("org.apache.maven.plugins:maven-plugins:pom:22"));
 		poms.addAll(getPomArtifact("org.apache.maven.plugins:maven-plugins:pom:23"));
 		poms.addAll(getPomArtifact("org.apache.maven.plugins:maven-plugins:pom:24"));
+		poms.addAll(getPomArtifact("org.apache.maven.archetype:maven-archetype:pom:3.0.1"));
+		poms.addAll(getPomArtifact("org.apache.maven.archetype:archetype-models:pom:3.0.1"));
+		poms.addAll(getPomArtifact("org.codehaus.plexus:plexus-components:pom:1.1.15"));
+		poms.addAll(getPomArtifact("org.codehaus.plexus:plexus-components:pom:1.1.18"));
+		poms.addAll(getPomArtifact("org.sonatype.aether:aether-parent:pom:1.7"));
+		poms.addAll(getPomArtifact("asm:asm-parent:pom:3.2"));
+		poms.addAll(getPomArtifact("org.slf4j:slf4j-parent:pom:1.7.5"));
+		poms.addAll(getPomArtifact("org.apache.maven.shared:maven-shared-components:pom:22"));
 		poms.addAll(getPomArtifact("org.apache.maven.release:maven-release:pom:2.3.2"));
 
-		// plugins from super POM 
+		// plugins from super POM
 		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-antrun-plugin:jar:1.3").withoutTransitivity().asList(MavenResolvedArtifact.class));
 		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-assembly-plugin:jar:2.2-beta-5").withoutTransitivity().asList(MavenResolvedArtifact.class));
 		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-clean-plugin:jar:2.5").withoutTransitivity().asList(MavenResolvedArtifact.class));
@@ -897,9 +907,14 @@ public class CommonMojo extends AbstractMojo {
 		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-release-plugin:jar:2.3.2").withoutTransitivity().asList(MavenResolvedArtifact.class));
 		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-site-plugin:jar:3.3").withoutTransitivity().asList(MavenResolvedArtifact.class));
 
+		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-archetype-plugin:jar:3.0.1").withTransitivity().asList(MavenResolvedArtifact.class));
+		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-enforcer-plugin:jar:1.3.1").withTransitivity().asList(MavenResolvedArtifact.class));
+		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-install-plugin:jar:2.5.2").withTransitivity().asList(MavenResolvedArtifact.class));
+		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.codehaus.plexus:plexus-component-annotations:jar:1.6").withTransitivity().asList(MavenResolvedArtifact.class));
+
 		// add plugins from project
 		for (Plugin plugin : project.getBuild().getPlugins()) {			
-			mavenResolvedArtifacts.addAll(mavenResolver.resolve(plugin.getKey() + ":jar:" + plugin.getVersion()).withoutTransitivity().asList(MavenResolvedArtifact.class));
+			mavenResolvedArtifacts.addAll(mavenResolver.resolve(plugin.getKey() + ":jar:" + plugin.getVersion()).withTransitivity().asList(MavenResolvedArtifact.class));
 		}
 
 		// add all as artifacts
@@ -908,6 +923,16 @@ public class CommonMojo extends AbstractMojo {
 			Artifact artifact = new DefaultArtifact(mavenResolvedArtifact.getCoordinate().getGroupId() + ":" + mavenResolvedArtifact.getCoordinate().getArtifactId() + ":" + mavenResolvedArtifact.getCoordinate().getType() + ":" + mavenResolvedArtifact.getCoordinate().getVersion());
 			File resolvedFile = mavenResolvedArtifact.asFile();
 			if (resolvedFile.getAbsolutePath().contains("..")) continue;
+			String name = resolvedFile.getName();
+			String shortName = artifact.getArtifactId() + "-" + artifact.getVersion();
+			int lengthWithoutExtension = name.length() - artifact.getExtension().length() - 1;
+			if (lengthWithoutExtension > 0) {
+				name = name.substring(0, lengthWithoutExtension);
+				if (!name.equals(shortName)) {
+					String classifier = name.substring(shortName.length() + 1);
+					artifact = new DefaultArtifact(mavenResolvedArtifact.getCoordinate().getGroupId() + ":" + mavenResolvedArtifact.getCoordinate().getArtifactId() + ":" + mavenResolvedArtifact.getCoordinate().getType() + ":" + classifier + ":" + mavenResolvedArtifact.getCoordinate().getVersion());
+				}
+			}
 			artifact = artifact.setFile(resolvedFile);
 
 			artifacts.add(artifact);
@@ -918,7 +943,14 @@ public class CommonMojo extends AbstractMojo {
 
 		// install artifacts
 		for (Artifact artifact : artifacts) {
+			boolean installPomSeparately = false;
 			List<Element> configuration = new ArrayList<Element>();
+
+			if (artifact.getArtifactId().equals("velocity") && artifact.getVersion().equals("1.5")) {
+				configuration.add(new Element("generatePom", "true"));
+				configuration.add(new Element("packaging", "jar"));
+				installPomSeparately = true;
+			}
 
 			configuration.add(new Element("localRepositoryPath", localRepositoryPath.getAbsolutePath()));
 			configuration.add(new Element("createChecksum", "true"));
@@ -928,7 +960,14 @@ public class CommonMojo extends AbstractMojo {
 			configuration.add(new Element("version", artifact.getVersion()));
 			configuration.add(new Element("file", artifact.getFile().getAbsolutePath()));
 			File pomFile = new File(artifact.getFile().getParentFile(), artifact.getArtifactId() + "-" + artifact.getVersion() + ".pom");
-			configuration.add(new Element("pomFile", pomFile.getAbsolutePath()));
+			if (StringUtils.isNotEmpty(artifact.getClassifier())) {
+				configuration.add(new Element("classifier", artifact.getClassifier()));				
+				configuration.add(new Element("generatePom", "true"));
+				configuration.add(new Element("packaging", "jar"));
+				installPomSeparately = true;
+			} else if (!installPomSeparately) {
+				configuration.add(new Element("pomFile", pomFile.getAbsolutePath()));
+			}
 
 			executeMojo(
 				plugin(
@@ -942,6 +981,56 @@ public class CommonMojo extends AbstractMojo {
 				),
 				executionEnvironment(project, session, pluginManager)
 			);
+
+			File artifactDirectory = new File(localRepositoryPath, artifact.getGroupId().replace(".", "/") + "/" + artifact.getArtifactId() + "/" + artifact.getVersion());
+			Collection<File> bundleFiles = FileUtils.listFiles(artifactDirectory, new String[] {"bundle"}, false);
+			if (!bundleFiles.isEmpty()) {
+				for (File bundleFile : bundleFiles) {
+					String filenameNoExt = FilenameUtils.removeExtension(bundleFile.getAbsolutePath());
+					bundleFile.renameTo(new File(filenameNoExt + ".jar"));
+					File md5File = new File(filenameNoExt + ".bundle.md5");
+					File sha1File = new File(filenameNoExt + ".bundle.sha1");
+					md5File.renameTo(new File(filenameNoExt + ".jar.md5"));
+					sha1File.renameTo(new File(filenameNoExt + ".jar.sha1"));
+				}
+			}
+			Collection<File> archetypeFiles = FileUtils.listFiles(artifactDirectory, new String[] {"maven-archetype"}, false);
+			if (!archetypeFiles.isEmpty()) {
+				for (File archetypeFile : archetypeFiles) {
+					String filenameNoExt = FilenameUtils.removeExtension(archetypeFile.getAbsolutePath());
+					archetypeFile.renameTo(new File(filenameNoExt + ".jar"));
+					File md5File = new File(filenameNoExt + ".maven-archetype.md5");
+					File sha1File = new File(filenameNoExt + ".maven-archetype.sha1");
+					md5File.renameTo(new File(filenameNoExt + ".jar.md5"));
+					sha1File.renameTo(new File(filenameNoExt + ".jar.sha1"));
+				}
+			}
+
+			if (installPomSeparately) {
+				configuration.clear();
+
+				configuration.add(new Element("localRepositoryPath", localRepositoryPath.getAbsolutePath()));
+				configuration.add(new Element("createChecksum", "true"));
+				configuration.add(new Element("updateReleaseInfo", "true"));
+				configuration.add(new Element("groupId", artifact.getGroupId()));
+				configuration.add(new Element("artifactId", artifact.getArtifactId()));
+				configuration.add(new Element("version", artifact.getVersion()));
+				configuration.add(new Element("file", pomFile.getAbsolutePath()));
+				configuration.add(new Element("packaging", "pom"));
+
+				executeMojo(
+					plugin(
+						groupId("org.apache.maven.plugins"),
+						artifactId("maven-install-plugin"),
+						version("2.5.2") // version defined in pom.xml of this plugin
+					),
+					goal("install-file"),
+					configuration(
+						configuration.toArray(new Element[0])
+					),
+					executionEnvironment(project, session, pluginManager)
+				);
+			}
 		}
 
 		List<String> goals = new ArrayList<String>();

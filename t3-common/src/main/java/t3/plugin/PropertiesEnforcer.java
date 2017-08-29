@@ -296,10 +296,10 @@ public class PropertiesEnforcer {
 		logger.fatalError(Messages.MESSAGE_SPACE);
 		String message = e.getCause().getLocalizedMessage();
 		message = formatMessage(message);
-		if (message != null) {
-			message = message.substring(message.indexOf("\n")+1);
-			message = "\n" + message;
-		}
-		throw new MavenExecutionException(message, new MojoExecutionException(message, new Throwable(message)));
+//		if (message != null) {
+//			message = message.substring(message.indexOf("\n")+1);
+//			message = "\n" + message;
+//		}
+		throw new MavenExecutionException(message, new MojoExecutionException(message));
 	}
 }
