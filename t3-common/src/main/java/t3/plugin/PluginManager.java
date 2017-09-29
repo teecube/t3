@@ -155,6 +155,9 @@ public class PluginManager extends DefaultMavenPluginManager {
 		Class<? extends CommonMojo> type;
 		try {
 			type = (Class<? extends CommonMojo>) configuredMojo.getClass();
+			if (!(configuredMojo instanceof CommonMojo)) {
+				return configuredMojo;
+			}
 		} catch (ClassCastException e) {
 			return configuredMojo;
 		}
@@ -170,6 +173,7 @@ public class PluginManager extends DefaultMavenPluginManager {
 
 	        i.injectMembers(rawMojo); // will also inject in configuredMojo
 		}
+
 		return configuredMojo;
 	}
 

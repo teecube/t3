@@ -33,8 +33,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -85,6 +87,7 @@ import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.collection.CollectRequest;
 import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.graph.DependencyFilter;
+import org.eclipse.aether.resolution.ArtifactResolutionException;
 import org.eclipse.aether.resolution.ArtifactResult;
 import org.eclipse.aether.resolution.DependencyRequest;
 import org.eclipse.aether.resolution.DependencyResolutionException;
@@ -652,6 +655,10 @@ public class CommonMojo extends AbstractMojo {
 		this.settings = mojo.settings;
 	}
 
+	public void setLogger(Logger logger) {
+		this.logger = logger;
+	}
+
 	public void setPluginManager(BuildPluginManager pluginManager) {
 		this.pluginManager = pluginManager;
 	}
@@ -693,7 +700,7 @@ public class CommonMojo extends AbstractMojo {
 			plugin(
 				groupId("org.apache.maven.plugins"),
 				artifactId("maven-dependency-plugin"),
-				version("2.10") // version defined in pom.xml of this plugin
+				version("3.0.2") // version defined in pom.xml of this plugin
 			),
 			goal("copy"),
 			configuration(
@@ -709,7 +716,7 @@ public class CommonMojo extends AbstractMojo {
 		return copyDependency(groupId, artifactId, version, type, null, outputDirectory, fileName);
 	}
 
-	protected File getDependency(String groupId, String artifactId, String version, String type, String classifier) throws MojoExecutionException, ArtifactNotFoundException {
+	protected File getDependency(String groupId, String artifactId, String version, String type, String classifier) throws MojoExecutionException, ArtifactNotFoundException, ArtifactResolutionException {
 		ArrayList<Element> configuration = new ArrayList<Element>();
 		
 		configuration.add(new Element("groupId", groupId));
@@ -726,7 +733,7 @@ public class CommonMojo extends AbstractMojo {
 				plugin(
 					groupId("org.apache.maven.plugins"),
 					artifactId("maven-dependency-plugin"),
-					version("2.10") // version defined in pom.xml of this plugin
+					version("3.0.2") // version defined in pom.xml of this plugin
 				),
 				goal("get"),
 				configuration(
@@ -738,13 +745,16 @@ public class CommonMojo extends AbstractMojo {
 			if (e.getCause() != null && e.getCause().getCause() != null && e.getCause().getCause() instanceof ArtifactNotFoundException) {
 				ArtifactNotFoundException artifactNotFoundException = (ArtifactNotFoundException) e.getCause().getCause();
 				throw artifactNotFoundException;
+			} else if (e.getCause() != null && e.getCause().getCause() != null && e.getCause().getCause() instanceof ArtifactResolutionException) {
+				ArtifactResolutionException artifactResolutionException = (ArtifactResolutionException) e.getCause().getCause();
+				throw artifactResolutionException;
 			}
 		}
 
 		return new File(session.getLocalRepository().getBasedir() + "/" + groupId.replace(".", "/") + "/" + artifactId + "/" + version + "/" + artifactId + "-" + version + (classifier != null ? "-" + classifier : "") + "." + type.toLowerCase());
 	}
 
-	protected File getDependency(String groupId, String artifactId, String version, String type) throws MojoExecutionException, ArtifactNotFoundException {
+	protected File getDependency(String groupId, String artifactId, String version, String type) throws MojoExecutionException, ArtifactNotFoundException, ArtifactResolutionException {
 		return getDependency(groupId, artifactId, version, type, null);
 	}
 
@@ -824,14 +834,6 @@ public class CommonMojo extends AbstractMojo {
 		localRepositoryPath.mkdirs();
 		File tmpDirectory = Files.createTempDir();
 
-		// create a default empty POM (because it's needed...)
-        File tmpPom = new File(tmpDirectory, "pom.xml");
-        try {
-			POMManager.writeModelToPOM(project.getModel(), tmpPom);
-		} catch (IOException e) {
-			throw new MojoExecutionException(e.getLocalizedMessage(), e);
-		}
-
         // create a settings.xml with <pluginGroups>
 		InputStream globalSettingInputStream = this.getClass().getResourceAsStream("/maven/default-t3-settings.xml");
 		File globalSettingsFile = new File(tmpDirectory, "settings.xml");
@@ -894,6 +896,11 @@ public class CommonMojo extends AbstractMojo {
 		poms.addAll(getPomArtifact("org.sonatype.aether:aether-parent:pom:1.7"));
 		poms.addAll(getPomArtifact("asm:asm-parent:pom:3.2"));
 		poms.addAll(getPomArtifact("org.slf4j:slf4j-parent:pom:1.7.5"));
+		poms.addAll(getPomArtifact("org.slf4j:slf4j-parent:pom:1.7.24"));
+		poms.addAll(getPomArtifact("org.eclipse.tycho:tycho:pom:0.22.0"));
+		poms.addAll(getPomArtifact("org.eclipse.tycho:sisu-equinox:pom:0.22.0"));
+		poms.addAll(getPomArtifact("org.eclipse.tycho:tycho-bundles:pom:0.22.0"));
+		poms.addAll(getPomArtifact("org.eclipse.tycho:tycho-p2:pom:0.22.0"));
 		poms.addAll(getPomArtifact("org.apache.maven.shared:maven-shared-components:pom:22"));
 		poms.addAll(getPomArtifact("org.apache.maven.release:maven-release:pom:2.3.2"));
 
@@ -909,7 +916,7 @@ public class CommonMojo extends AbstractMojo {
 
 		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-archetype-plugin:jar:3.0.1").withTransitivity().asList(MavenResolvedArtifact.class));
 		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-enforcer-plugin:jar:1.3.1").withTransitivity().asList(MavenResolvedArtifact.class));
-		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-install-plugin:jar:2.5.2").withTransitivity().asList(MavenResolvedArtifact.class));
+//		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-install-plugin:jar:2.5.2").withTransitivity().asList(MavenResolvedArtifact.class));
 		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.codehaus.plexus:plexus-component-annotations:jar:1.6").withTransitivity().asList(MavenResolvedArtifact.class));
 
 		// add plugins from project
@@ -1043,8 +1050,27 @@ public class CommonMojo extends AbstractMojo {
 			}
 		}
 
+		// create a default empty POM (because it's needed...)
+		File tmpPom = new File(tmpDirectory, "pom.xml");
+		try {
+			POMManager.writeModelToPOM(project.getModel(), tmpPom);
+		} catch (IOException e) {
+			throw new MojoExecutionException(e.getLocalizedMessage(), e);
+		}
+		List<Map.Entry<File, List<String>>> pomsWithGoal = getPOMsFromProject(project, tmpDirectory);
+		for (Entry<File, List<String>> pomWithGoals : pomsWithGoal) {
+			executeGoal(pomWithGoals.getKey(), globalSettingsFile, localRepositoryPath, mavenVersion, pomWithGoals.getValue());
+		}
+
+	}
+
+	private void executeGoal(File pomWithGoal, File globalSettingsFile, File localRepositoryPath, String mavenVersion, List<String> goals) throws MojoExecutionException {
+		goals.clear();
+
+		goals.add("validate");
+
 		// execute the goals to bootstrap the plugin in local repository path
-		ConfigurationDistributionStage builder = EmbeddedMaven.forProject(tmpPom)
+		ConfigurationDistributionStage builder = EmbeddedMaven.forProject(pomWithGoal)
 															  .setQuiet()
 															  .setUserSettingsFile(globalSettingsFile)
 															  .setGlobalSettingsFile(globalSettingsFile)
@@ -1070,13 +1096,47 @@ public class CommonMojo extends AbstractMojo {
 				
 			}
 
-			if (result.getMavenLog().contains("[ERROR] " + Messages.ENFORCER_RULES_FAILURE) || result.getMavenLog().contains("Nothing to merge.")) {
+			if (result.getMavenLog().contains("[ERROR] " + Messages.ENFORCER_RULES_FAILURE) ||
+				result.getMavenLog().contains("Nothing to merge.") ||
+				result.getMavenLog().contains("Unable to load topology from file")) {
 				return;
 			}
 			getLog().error("Something went wrong in Maven build to go offline. Log file is: '" + logOutput.getAbsolutePath() + "'");
 
 			throw new MojoExecutionException("Unable to execute plugins goals to go offline.");
-		}
+		}		
 	}
+
+	private List<Entry<File, List<String>>> getPOMsFromProject(MavenProject project, File tmpDirectory) throws MojoExecutionException {
+		List<Entry<File, List<String>>> result = new ArrayList<Entry<File, List<String>>>();
+
+		for (Plugin plugin : project.getModel().getBuild().getPlugins()) {
+			Model model = project.getModel().clone();
+			for (Iterator<Plugin> iterator = model.getBuild().getPlugins().iterator(); iterator.hasNext();) {
+				Plugin p = iterator.next();
+				if (!p.getKey().equals(plugin.getKey()) || (p.getExecutions().isEmpty())) {
+					iterator.remove();
+				}
+			}
+
+			if (model.getBuild().getPlugins().isEmpty()) {
+				continue;
+			}
+			try {
+				File tmpPom = File.createTempFile("pom", ".xml", tmpDirectory);
+				POMManager.writeModelToPOM(model, tmpPom);
+				List<String> goals = new ArrayList<String>();
+				for (String goal : model.getBuild().getPlugins().get(0).getExecutions().get(0).getGoals()) {
+					goals.add(model.getBuild().getPlugins().get(0).getExecutions().get(0).getId() + ":" + goal);
+				}
+				Entry<File, List<String>> entry = new AbstractMap.SimpleEntry<File, List<String>>(tmpPom, goals);
+				result.add(entry);
+			} catch (IOException e) {
+				throw new MojoExecutionException(e.getLocalizedMessage(), e);
+			}
+		}
+		return result;
+	}
+
 
 }
