@@ -448,16 +448,21 @@ public class CommonMojo extends AbstractMojo {
 
 	private static ExecutionEnvironment environment = null;
 
-	protected ExecutionEnvironment getEnvironment() {
-		return getEnvironment(pluginManager);
+	protected ExecutionEnvironment getEnvironment(boolean silentMojo) {
+		return getEnvironment(pluginManager, silentMojo);
 	}
 
-	protected ExecutionEnvironment getEnvironment(BuildPluginManager pluginManager) {
-		if (environment == null) {
+	protected ExecutionEnvironment getEnvironment(MavenProject project, MavenSession session, BuildPluginManager pluginManager, boolean silentMojo) {
+		if (environment == null || silentMojo) {
+			PluginManager.setSilentMojoInPluginManager(pluginManager, silentMojo);
 			environment = executionEnvironment(project, session, pluginManager);
 		}
 
 		return environment;
+	}
+
+	protected ExecutionEnvironment getEnvironment(BuildPluginManager pluginManager, boolean silentMojo) {
+		return getEnvironment(project, session, pluginManager, silentMojo);
 	}
 
 	// execution of binaries
@@ -706,7 +711,7 @@ public class CommonMojo extends AbstractMojo {
 			configuration(
 				configuration.toArray(new Element[0])
 			),
-			getEnvironment()
+			getEnvironment(true)
 		);
 
 		return new File(outputDirectory, fileName);
@@ -739,7 +744,7 @@ public class CommonMojo extends AbstractMojo {
 				configuration(
 					configuration.toArray(new Element[0])
 				),
-				getEnvironment()
+				getEnvironment(true)
 			);
 		} catch (MojoExecutionException e) {
 			if (e.getCause() != null && e.getCause().getCause() != null && e.getCause().getCause() instanceof ArtifactNotFoundException) {
@@ -784,7 +789,7 @@ public class CommonMojo extends AbstractMojo {
 			configuration(
 				configuration.toArray(new Element[0])
 			),
-			getEnvironment()
+			getEnvironment(true)
 		);
 	}
 
@@ -986,7 +991,7 @@ public class CommonMojo extends AbstractMojo {
 				configuration(
 					configuration.toArray(new Element[0])
 				),
-				executionEnvironment(project, session, pluginManager)
+				getEnvironment(project, session, pluginManager, true)
 			);
 
 			File artifactDirectory = new File(localRepositoryPath, artifact.getGroupId().replace(".", "/") + "/" + artifact.getArtifactId() + "/" + artifact.getVersion());

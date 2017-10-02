@@ -175,6 +175,10 @@
 			<artifactId>maven-invoker</artifactId>
 			<version>3.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-install-plugin</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

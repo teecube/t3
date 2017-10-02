@@ -19,9 +19,13 @@ package t3.plugin;
 import java.lang.reflect.Field;
 import java.util.Map;
 
+import org.apache.maven.artifact.installer.DefaultArtifactInstaller;
+import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.classrealm.ClassRealmManager;
+import org.apache.maven.cli.logging.Slf4jLogger;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.BuildPluginManager;
+import org.apache.maven.plugin.LegacySupport;
 import org.apache.maven.plugin.MavenPluginManager;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.PluginConfigurationException;
@@ -32,10 +36,13 @@ import org.apache.maven.plugin.internal.DefaultMavenPluginManager;
 import org.apache.maven.plugin.internal.PluginDependenciesResolver;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.rtinfo.RuntimeInformation;
+import org.codehaus.plexus.DefaultPlexusContainer;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.LoggerManager;
+import org.eclipse.aether.RepositorySystem;
+import org.eclipse.aether.internal.impl.DefaultRepositorySystem;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -59,6 +66,8 @@ public class PluginManager extends DefaultMavenPluginManager {
 	protected MojosFactory mojosFactory;
 
 	private Map<String, String> ignoredParameters;
+
+	private boolean silentMojo = false;
 
 	public static DefaultMavenPluginManager getDefaultMavenPluginManager(BuildPluginManager pluginManager) {
 		DefaultMavenPluginManager result = null;
@@ -147,10 +156,57 @@ public class PluginManager extends DefaultMavenPluginManager {
 		return new ParametersListener<T>(configuredMojo, session.getCurrentProject(), session, ignoredParameters);
 	}
 
+    @org.apache.maven.plugins.annotations.Component
+    private RepositorySystem repoSystem;
+
+    @org.apache.maven.plugins.annotations.Component
+    private LegacySupport legacySupport;
+
+    @org.apache.maven.plugins.annotations.Component
+    protected ArtifactRepository localRepository;
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> T getConfiguredMojo(Class<T> mojoInterface, final MavenSession session, MojoExecution mojoExecution) throws PluginConfigurationException, PluginContainerException {
 		final T configuredMojo = super.getConfiguredMojo(mojoInterface, session, mojoExecution); // retrieve configuredMojo to know the actual type of the Mojo to configure
+
+		if (this.silentMojo) {
+//			((AbstractMojo) configuredMojo).setLog(new NoOpLogger());
+
+			if (configuredMojo.getClass().getCanonicalName().equals("org.apache.maven.plugin.install.InstallFileMojo")) {
+
+				Field f;
+				try {
+					f = this.getClass().getSuperclass().getDeclaredField("container");
+					f.setAccessible(true);
+					DefaultPlexusContainer container = (DefaultPlexusContainer) f.get(this);
+					Logger l = container.getLogger();
+
+					f = configuredMojo.getClass().getSuperclass().getDeclaredField("installer");
+					f.setAccessible(true);
+					DefaultArtifactInstaller artifactInstaller = (DefaultArtifactInstaller) f.get(configuredMojo);
+
+					f = artifactInstaller.getClass().getDeclaredField("repoSystem");
+					f.setAccessible(true);
+					DefaultRepositorySystem repoSystem = (DefaultRepositorySystem) f.get(artifactInstaller);
+					repoSystem.setLoggerFactory(null);
+
+					f = artifactInstaller.getClass().getSuperclass().getDeclaredField("logger");
+					f.setAccessible(true);
+					Slf4jLogger slf4jLogger = (Slf4jLogger) f.get(artifactInstaller);
+
+					f = slf4jLogger.getClass().getDeclaredField("logger");
+					f.setAccessible(true);
+					Object simpleLogger = f.get(l);
+
+					f = simpleLogger.getClass().getDeclaredField("currentLogLevel");
+					f.setAccessible(true);
+					f.set(simpleLogger, 50);
+				} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+					System.err.println(e.getLocalizedMessage());
+				}
+			}
+		}
 
 		Class<? extends CommonMojo> type;
 		try {
@@ -181,6 +237,12 @@ public class PluginManager extends DefaultMavenPluginManager {
 		PluginManager customPluginManager = PluginManager.getCustomMavenPluginManager(pluginManager);
 
 		customPluginManager.setIgnoredParameters(ignoredParameters);
+	}
+
+	public static void setSilentMojoInPluginManager(BuildPluginManager pluginManager, boolean silentMojo) {
+		PluginManager customPluginManager = PluginManager.getCustomMavenPluginManager(pluginManager);
+
+		customPluginManager.silentMojo = silentMojo;
 	}
 
 }
