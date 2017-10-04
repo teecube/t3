@@ -18,7 +18,6 @@ package t3;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.artifactId;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.goal;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.groupId;
@@ -31,11 +30,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +81,7 @@ import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.InvocationRequest.ReactorFailureBehavior;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.artifact.Artifact;
@@ -100,6 +102,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.embedded.BuiltProject;
 import org.jboss.shrinkwrap.resolver.api.maven.embedded.EmbeddedMaven;
 import org.jboss.shrinkwrap.resolver.api.maven.embedded.pom.equipped.ConfigurationDistributionStage;
 import org.jboss.shrinkwrap.resolver.impl.maven.bootstrap.MavenSettingsBuilder;
+import org.slf4j.LoggerFactory;
 import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 import org.twdata.maven.mojoexecutor.MojoExecutor.ExecutionEnvironment;
 
@@ -448,21 +451,20 @@ public class CommonMojo extends AbstractMojo {
 
 	private static ExecutionEnvironment environment = null;
 
-	protected ExecutionEnvironment getEnvironment(boolean silentMojo) {
-		return getEnvironment(pluginManager, silentMojo);
+	protected ExecutionEnvironment getEnvironment() {
+		return getEnvironment(pluginManager);
 	}
 
-	protected ExecutionEnvironment getEnvironment(MavenProject project, MavenSession session, BuildPluginManager pluginManager, boolean silentMojo) {
-		if (environment == null || silentMojo) {
-			PluginManager.setSilentMojoInPluginManager(pluginManager, silentMojo);
+	protected ExecutionEnvironment getEnvironment(MavenProject project, MavenSession session, BuildPluginManager pluginManager) {
+		if (environment == null) {
 			environment = executionEnvironment(project, session, pluginManager);
 		}
 
 		return environment;
 	}
 
-	protected ExecutionEnvironment getEnvironment(BuildPluginManager pluginManager, boolean silentMojo) {
-		return getEnvironment(project, session, pluginManager, silentMojo);
+	protected ExecutionEnvironment getEnvironment(BuildPluginManager pluginManager) {
+		return getEnvironment(project, session, pluginManager);
 	}
 
 	// execution of binaries
@@ -711,7 +713,8 @@ public class CommonMojo extends AbstractMojo {
 			configuration(
 				configuration.toArray(new Element[0])
 			),
-			getEnvironment(true)
+			getEnvironment(),
+			true
 		);
 
 		return new File(outputDirectory, fileName);
@@ -744,7 +747,8 @@ public class CommonMojo extends AbstractMojo {
 				configuration(
 					configuration.toArray(new Element[0])
 				),
-				getEnvironment(true)
+				getEnvironment(),
+				true
 			);
 		} catch (MojoExecutionException e) {
 			if (e.getCause() != null && e.getCause().getCause() != null && e.getCause().getCause() instanceof ArtifactNotFoundException) {
@@ -756,7 +760,11 @@ public class CommonMojo extends AbstractMojo {
 			}
 		}
 
-		return new File(session.getLocalRepository().getBasedir() + "/" + groupId.replace(".", "/") + "/" + artifactId + "/" + version + "/" + artifactId + "-" + version + (classifier != null ? "-" + classifier : "") + "." + type.toLowerCase());
+		File result = new File(session.getLocalRepository().getBasedir() + "/" + groupId.replace(".", "/") + "/" + artifactId + "/" + version + "/" + artifactId + "-" + version + (classifier != null ? "-" + classifier : "") + "." + type.toLowerCase());
+
+		getLog().info("Artifact '" + groupId + ":" + artifactId + ":" + version + ":" + type.toLowerCase() + (classifier != null ? ":" + classifier : "") + "' has been resolved to '" + result.getAbsolutePath() + "'");
+
+		return result;
 	}
 
 	protected File getDependency(String groupId, String artifactId, String version, String type) throws MojoExecutionException, ArtifactNotFoundException, ArtifactResolutionException {
@@ -789,7 +797,8 @@ public class CommonMojo extends AbstractMojo {
 			configuration(
 				configuration.toArray(new Element[0])
 			),
-			getEnvironment(true)
+			getEnvironment(),
+			true
 		);
 	}
 
@@ -991,7 +1000,8 @@ public class CommonMojo extends AbstractMojo {
 				configuration(
 					configuration.toArray(new Element[0])
 				),
-				getEnvironment(project, session, pluginManager, true)
+				getEnvironment(project, session, pluginManager),
+				true
 			);
 
 			File artifactDirectory = new File(localRepositoryPath, artifact.getGroupId().replace(".", "/") + "/" + artifact.getArtifactId() + "/" + artifact.getVersion());
@@ -1040,7 +1050,8 @@ public class CommonMojo extends AbstractMojo {
 					configuration(
 						configuration.toArray(new Element[0])
 					),
-					executionEnvironment(project, session, pluginManager)
+					executionEnvironment(project, session, pluginManager),
+					true
 				);
 			}
 		}
@@ -1063,10 +1074,19 @@ public class CommonMojo extends AbstractMojo {
 			throw new MojoExecutionException(e.getLocalizedMessage(), e);
 		}
 		List<Map.Entry<File, List<String>>> pomsWithGoal = getPOMsFromProject(project, tmpDirectory);
-		for (Entry<File, List<String>> pomWithGoals : pomsWithGoal) {
-			executeGoal(pomWithGoals.getKey(), globalSettingsFile, localRepositoryPath, mavenVersion, pomWithGoals.getValue());
-		}
+		
+		PrintStream oldSystemErr = System.err;
+		PrintStream oldSystemOut = System.out;
+		try {
+			silentSystemStreams();
 
+			for (Entry<File, List<String>> pomWithGoals : pomsWithGoal) {
+				executeGoal(pomWithGoals.getKey(), globalSettingsFile, localRepositoryPath, mavenVersion, pomWithGoals.getValue());
+			}
+		} finally {
+			System.setErr(oldSystemErr);
+			System.setOut(oldSystemOut);
+		}
 	}
 
 	private void executeGoal(File pomWithGoal, File globalSettingsFile, File localRepositoryPath, String mavenVersion, List<String> goals) throws MojoExecutionException {
@@ -1093,7 +1113,10 @@ public class CommonMojo extends AbstractMojo {
 
 		BuiltProject result = builder.ignoreFailure().build();
 
-		if (result.getMavenBuildExitCode() != 0) {
+		if (result == null) {
+			throw new MojoExecutionException("Unable to execute plugins goals to go offline.");
+		}
+		else if (result.getMavenBuildExitCode() != 0) {
 			File logOutput = new File(this.directory, "go-offline.log");
 			try {
 				FileUtils.writeStringToFile(logOutput, result.getMavenLog(), StandardCharsets.UTF_8);
@@ -1143,5 +1166,79 @@ public class CommonMojo extends AbstractMojo {
 		return result;
 	}
 
+	public void executeMojo(Plugin plugin, String goal, Xpp3Dom configuration, ExecutionEnvironment env) throws MojoExecutionException {
+		executeMojo(plugin, goal, configuration, env, false);
+	}
 
+	public void executeMojo(Plugin plugin, String goal, Xpp3Dom configuration, ExecutionEnvironment env, boolean quiet) throws MojoExecutionException {
+		PrintStream oldSystemErr = System.err;
+		PrintStream oldSystemOut = System.out;
+		Map<String, Integer> logLevels = new HashMap<String, Integer>(); // a Map to store initial values of log levels
+		if (quiet) {
+			try {
+				silentSystemStreams();
+				PluginManager.setSilentMojoInPluginManager(pluginManager, true);
+				changeSlf4jLoggerLogLevel("org.codehaus.plexus.PlexusContainer", 50, logLevels);
+				changeSlf4jLoggerLogLevel("org.apache.maven.cli.transfer.Slf4jMavenTransferListener", 50, logLevels);
+	
+				org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo(plugin, goal, configuration, env);
+			} finally {
+				System.setErr(oldSystemErr);
+				System.setOut(oldSystemOut);
+				restoreSlf4jLoggerLogLevel("org.codehaus.plexus.PlexusContainer", logLevels);
+				restoreSlf4jLoggerLogLevel("org.apache.maven.cli.transfer.Slf4jMavenTransferListener", logLevels);
+				PluginManager.setSilentMojoInPluginManager(pluginManager, false);
+			}
+		} else {			
+			org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo(plugin, goal, configuration, env);
+		}
+	}
+
+	private int getSlf4jLoggerLogLevel(String slf4jLoggerName) {
+		org.slf4j.Logger logger = LoggerFactory.getLogger(slf4jLoggerName);
+		Field currentLogLevelField;
+		try {
+			currentLogLevelField = logger.getClass().getDeclaredField("currentLogLevel");
+			currentLogLevelField.setAccessible(true);
+			return (int) currentLogLevelField.get(logger);
+		} catch (Exception e) {
+			// nothing
+		}
+		return -1;
+	}
+
+	private void restoreSlf4jLoggerLogLevel(String slf4jLoggerName, Map<String, Integer> logLevels) {
+		int initialValue = logLevels.get(slf4jLoggerName); // retrieve initial value
+
+		setSlf4jLoggerLogLevel(slf4jLoggerName, initialValue); // restore initial value
+
+		logLevels.remove(slf4jLoggerName); // delete initial value for this logger
+	}
+
+	private void changeSlf4jLoggerLogLevel(String slf4jLoggerName, int logLevel, Map<String, Integer> logLevels) {
+		logLevels.put(slf4jLoggerName, getSlf4jLoggerLogLevel(slf4jLoggerName)); // store initial value
+
+		setSlf4jLoggerLogLevel(slf4jLoggerName, logLevel); // set new value
+	}
+
+	private void setSlf4jLoggerLogLevel(String slf4jLoggerName, int logLevel) {
+		org.slf4j.Logger logger = LoggerFactory.getLogger(slf4jLoggerName);
+		Field currentLogLevelField;
+		try {
+			currentLogLevelField = logger.getClass().getDeclaredField("currentLogLevel");
+			currentLogLevelField.setAccessible(true);
+			currentLogLevelField.set(logger, logLevel);
+		} catch (Exception e) {
+			// nothing
+		}
+	}
+
+	private void silentSystemStreams() {	
+		System.setErr(new PrintStream(new OutputStream(){
+			public void write(int b) {}
+		}));
+		System.setOut(new PrintStream(new OutputStream(){
+			public void write(int b) {}
+		}));
+	}
 }
