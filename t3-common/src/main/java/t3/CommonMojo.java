@@ -724,7 +724,7 @@ public class CommonMojo extends AbstractMojo {
 		return copyDependency(groupId, artifactId, version, type, null, outputDirectory, fileName);
 	}
 
-	protected File getDependency(String groupId, String artifactId, String version, String type, String classifier) throws MojoExecutionException, ArtifactNotFoundException, ArtifactResolutionException {
+	protected File getDependency(String groupId, String artifactId, String version, String type, String classifier, boolean silent) throws MojoExecutionException, ArtifactNotFoundException, ArtifactResolutionException {
 		ArrayList<Element> configuration = new ArrayList<Element>();
 		
 		configuration.add(new Element("groupId", groupId));
@@ -735,6 +735,8 @@ public class CommonMojo extends AbstractMojo {
 			configuration.add(new Element("classifier", classifier));
 		}
 		configuration.add(new Element("transitive", "false"));
+
+		getLog().info("Resolving artifact '" + groupId + ":" + artifactId + ":" + version + ":" + type.toLowerCase() + (classifier != null ? ":" + classifier : "") + "'...");
 
 		try {
 			executeMojo(
@@ -748,7 +750,7 @@ public class CommonMojo extends AbstractMojo {
 					configuration.toArray(new Element[0])
 				),
 				getEnvironment(),
-				true
+				silent
 			);
 		} catch (MojoExecutionException e) {
 			if (e.getCause() != null && e.getCause().getCause() != null && e.getCause().getCause() instanceof ArtifactNotFoundException) {
@@ -767,8 +769,8 @@ public class CommonMojo extends AbstractMojo {
 		return result;
 	}
 
-	protected File getDependency(String groupId, String artifactId, String version, String type) throws MojoExecutionException, ArtifactNotFoundException, ArtifactResolutionException {
-		return getDependency(groupId, artifactId, version, type, null);
+	protected File getDependency(String groupId, String artifactId, String version, String type, boolean silent) throws MojoExecutionException, ArtifactNotFoundException, ArtifactResolutionException {
+		return getDependency(groupId, artifactId, version, type, null, silent);
 	}
 
 	protected void installDependency(String groupId, String artifactId, String version, String type, String classifier, File file, File localRepositoryPath) throws MojoExecutionException {
