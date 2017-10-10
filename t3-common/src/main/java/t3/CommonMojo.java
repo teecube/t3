@@ -773,7 +773,7 @@ public class CommonMojo extends AbstractMojo {
 		return getDependency(groupId, artifactId, version, type, null, silent);
 	}
 
-	protected void installDependency(String groupId, String artifactId, String version, String type, String classifier, File file, File localRepositoryPath) throws MojoExecutionException {
+	protected void deployDependency(String groupId, String artifactId, String version, String type, String classifier, File file, String remoteRepositoryId, String remoteRepositoryURL, boolean silent) throws MojoExecutionException {
 		ArrayList<Element> configuration = new ArrayList<Element>();
 		
 		configuration.add(new Element("file", file.getAbsolutePath()));
@@ -785,6 +785,42 @@ public class CommonMojo extends AbstractMojo {
 		if (classifier != null) {
 			configuration.add(new Element("classifier", classifier));
 		}
+
+		if (remoteRepositoryId != null) {
+			configuration.add(new Element("repositoryId", remoteRepositoryId));
+		}
+		if (remoteRepositoryURL != null) {
+			configuration.add(new Element("url", remoteRepositoryURL));
+		}
+
+		executeMojo(
+			plugin(
+				groupId("org.apache.maven.plugins"),
+				artifactId("maven-deploy-plugin"),
+				version("2.8.2") // version defined in pom.xml of this plugin
+			),
+			goal("deploy-file"),
+			configuration(
+				configuration.toArray(new Element[0])
+			),
+			getEnvironment(),
+			silent
+		);
+	}
+
+	protected void installDependency(String groupId, String artifactId, String version, String type, String classifier, File file, File localRepositoryPath, boolean silent) throws MojoExecutionException {
+		ArrayList<Element> configuration = new ArrayList<Element>();
+		
+		configuration.add(new Element("file", file.getAbsolutePath()));
+
+		configuration.add(new Element("groupId", groupId));
+		configuration.add(new Element("artifactId", artifactId));
+		configuration.add(new Element("version", version)); 
+		configuration.add(new Element("packaging", type));
+		if (classifier != null) {
+			configuration.add(new Element("classifier", classifier));
+		}
+
 		if (localRepositoryPath != null) {
 			configuration.add(new Element("localRepositoryPath", localRepositoryPath.getAbsolutePath()));
 		}
@@ -800,7 +836,7 @@ public class CommonMojo extends AbstractMojo {
 				configuration.toArray(new Element[0])
 			),
 			getEnvironment(),
-			true
+			silent
 		);
 	}
 
@@ -932,7 +968,6 @@ public class CommonMojo extends AbstractMojo {
 
 		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-archetype-plugin:jar:3.0.1").withTransitivity().asList(MavenResolvedArtifact.class));
 		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-enforcer-plugin:jar:1.3.1").withTransitivity().asList(MavenResolvedArtifact.class));
-//		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-install-plugin:jar:2.5.2").withTransitivity().asList(MavenResolvedArtifact.class));
 		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.codehaus.plexus:plexus-component-annotations:jar:1.6").withTransitivity().asList(MavenResolvedArtifact.class));
 
 		// add plugins from project

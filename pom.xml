@@ -410,7 +410,7 @@
 				<maven.plugin.annotations>3.2</maven.plugin.annotations>
 				<maven.plugin.clean>2.6.1</maven.plugin.clean>
 				<maven.plugin.compiler>3.3</maven.plugin.compiler>
-				<maven.plugin.deploy>2.8.2</maven.plugin.deploy>
+				<maven.plugin.deploy>2.8.2</maven.plugin.deploy> <!-- WARN: references exist in Java code -->
 				<maven.plugin.install>2.5.2</maven.plugin.install> <!-- WARN: references exist in Java code -->
 				<maven.plugin.resources>2.7</maven.plugin.resources>
 				<maven.plugin.site>3.4</maven.plugin.site>
@@ -1343,6 +1343,11 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-dependency-plugin</artifactId>
 						<version>${maven.plugin.dependency}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-deploy-plugin</artifactId>
+						<version>${maven.plugin.deploy}</version>
 					</dependency>
 					<dependency>
 						<groupId>org.apache.maven.plugins</groupId>
