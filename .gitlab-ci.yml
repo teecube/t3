@@ -1,4 +1,4 @@
-image: debovema/docker-mvn
+image: jamesdbloom/docker-java7-maven
 
 test:
     script: 
