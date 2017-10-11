@@ -1413,7 +1413,7 @@
 				<mycila.plugin.license>2.11</mycila.plugin.license>
 
 				<jvnet.maven-jaxb2-plugin>0.13.1</jvnet.maven-jaxb2-plugin>
-				<codehaus.build-helper-maven-plugin>1.9.1</codehaus.build-helper-maven-plugin>
+				<codehaus.build-helper-maven-plugin>3.0.0</codehaus.build-helper-maven-plugin>
 				
 				<org.reflections.version>0.9.9</org.reflections.version>
 				<mojo-executor.version>2.3.0</mojo-executor.version>
