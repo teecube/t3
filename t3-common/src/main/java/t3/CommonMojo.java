@@ -976,6 +976,7 @@ public class CommonMojo extends AbstractMojo {
 		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.apache.maven.plugins:maven-enforcer-plugin:jar:1.3.1").withTransitivity().asList(MavenResolvedArtifact.class));
 		mavenResolvedArtifacts.addAll(mavenResolver.resolve("org.codehaus.plexus:plexus-component-annotations:jar:1.6").withTransitivity().asList(MavenResolvedArtifact.class));
 
+//		org.jboss.shrinkwrap.resolver.impl.maven.logging.LogTransferListener
 		// add plugins from project
 		for (Plugin plugin : project.getBuild().getPlugins()) {			
 			mavenResolvedArtifacts.addAll(mavenResolver.resolve(plugin.getKey() + ":jar:" + plugin.getVersion()).withTransitivity().asList(MavenResolvedArtifact.class));
@@ -1030,6 +1031,7 @@ public class CommonMojo extends AbstractMojo {
 				configuration.add(new Element("packaging", "jar"));
 				installPomSeparately = true;
 			} else if (!installPomSeparately) {
+				if (!pomFile.exists()) continue;
 				configuration.add(new Element("pomFile", pomFile.getAbsolutePath()));
 			}
 
