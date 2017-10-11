@@ -1,4 +1,4 @@
-image: jamesdbloom/docker-java7-maven
+image: debovema/docker-mvn
 
 test:
     script: 
@@ -13,6 +13,7 @@ site:
         - tags
 
 site-redeploy:
+    image: jamesdbloom/docker-java7-maven
     script: 
         - mvn -gs /home/m2/settings.xml clean site-deploy -P t3-archive
         - mvn -gs /home/m2/settings.xml clean site-deploy -P t3-release
