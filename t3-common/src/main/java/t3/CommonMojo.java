@@ -55,6 +55,7 @@ import org.apache.commons.exec.DefaultExecuteResultHandler;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.ExecuteWatchdog;
+import org.apache.commons.exec.LogOutputStream;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.exec.ShutdownHookProcessDestroyer;
 import org.apache.commons.exec.launcher.CommandLauncher;
@@ -76,6 +77,7 @@ import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
@@ -492,14 +494,52 @@ public class CommonMojo extends AbstractMojo {
 		return sb.toString();
 	}
 
-	protected int executeBinary(File binary, List<String> arguments, File workingDir, String errorMsg, boolean fork, boolean synchronous) throws IOException, MojoExecutionException {
-		Integer result = -666;
+	public class CollectingLogOutputStream extends LogOutputStream {
+		private Log logger;
+		private String prefix;
+		private boolean first = true;
 
+		public CollectingLogOutputStream(Log log, String prefix) {
+			this.logger = log;
+			this.prefix = prefix;
+		}
+		public CollectingLogOutputStream(Log log) {
+			this(log, "");
+		}
+
+	    @Override
+	    protected void processLine(String line, int level) {
+	    	if (first) {
+	    		first = false;
+	    		logger.info("");
+	    	}
+	    	logger.info(prefix + line);
+	    }
+	}
+
+	protected int executeBinary(File binary, List<String> arguments, File workingDir, String errorMsg, boolean fork, boolean synchronous) throws IOException, MojoExecutionException {
 		CommandLine cmdLine = new CommandLine(binary);
 
 		for (String argument : arguments) {
 			cmdLine.addArgument(argument);
 		}
+
+		return executeBinary(cmdLine, workingDir, errorMsg, fork, synchronous);
+	}
+
+	protected int executeBinary(String commandLine, File workingDir, String errorMsg) throws IOException, MojoExecutionException {
+		return executeBinary(commandLine, workingDir, errorMsg, false, true);
+	}
+
+	protected int executeBinary(String commandLine, File workingDir, String errorMsg, boolean fork, boolean synchronous) throws IOException, MojoExecutionException {
+		CommandLine cmdLine = CommandLine.parse(commandLine);
+
+		return executeBinary(cmdLine, workingDir, errorMsg, fork, synchronous);
+	}
+
+	protected int executeBinary(CommandLine cmdLine, File workingDir, String errorMsg, boolean fork, boolean synchronous) throws IOException, MojoExecutionException {
+		Integer result = -666;
+
 		getLog().debug("command line : " + cmdLine.toString());
 		getLog().debug("working directory : " + workingDir);
 
@@ -544,7 +584,9 @@ public class CommonMojo extends AbstractMojo {
 				if (silentBinaryExecution) {
 					getLog().info("$ " + displayCommandLine(cmdLine));
 				}
-				getLog().error("\n" + stdOutAndErr.toString());
+				if (stdOutAndErr instanceof ByteArrayOutputStream) {
+					getLog().error("\n" + stdOutAndErr.toString());
+				}
 				if (!"0".equals(result.toString())) {
 					getLog().info("Exit status of command was: " + result.toString());
 				}
@@ -1162,7 +1204,10 @@ public class CommonMojo extends AbstractMojo {
 			throw new MojoExecutionException("Unable to execute plugins goals to go offline.");
 		}
 		else if (result.getMavenBuildExitCode() != 0) {
-			File logOutput = new File(this.directory, "go-offline.log");
+			File goOfflineDirectory = new File(directory, "go-offline");
+			goOfflineDirectory.mkdirs();
+
+			File logOutput = new File(goOfflineDirectory, "go-offline.log");
 			try {
 				FileUtils.writeStringToFile(logOutput, result.getMavenLog(), StandardCharsets.UTF_8);
 			} catch (IOException e) {
