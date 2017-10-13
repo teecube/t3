@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>io.teecube</groupId>
 		<artifactId>t3</artifactId>
-		<version>0.0.13-SNAPSHOT</version>
+		<version>0.0.14-SNAPSHOT</version>
 	</parent>
 
 	<groupId>io.teecube.t3</groupId>
