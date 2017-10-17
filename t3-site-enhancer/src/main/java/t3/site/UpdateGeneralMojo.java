@@ -36,6 +36,7 @@ import org.rendersnake.HtmlCanvas;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 import t3.site.parameters.DependencyWithAdditionalArguments;
 
@@ -61,144 +62,140 @@ public class UpdateGeneralMojo extends AbstractReplaceAllMojo {
 			replaceProperty(htmlFile, propertyToUpdate, propertyToUpdate, propertyInRootProject, onlyInOriginalModel, lookInSettings);
 		}
 
-		addSocial(htmlFile);
-		fixLinks(htmlFile);
-		processCommandLines(htmlFile);
-		fixFooter(htmlFile);
+		addHTMLEntities(htmlFile);
+		try {
+			addSocial(htmlFile);
+			fixLinks(htmlFile);
+			processCommandLines(htmlFile);
+			fixFooter(htmlFile);
+			removeIgnoredParameters(htmlFile);
+		} catch (Exception e) {
+			removeHTMLEntities(htmlFile);
+			return;
+		} finally {
+			removeHTMLEntities(htmlFile);
+		}
 	}
 
-	private void addSocial(File htmlFile) {
+	private void removeIgnoredParameters(File htmlFile) throws Exception {
+		Match document = JOOX.$(htmlFile);
+
+		// remove ignored parameters
+		Match td = document.xpath("//tr[./td/b/a/@href='#ignoredParameters']");
+		td.remove();
+
+		Match hre = document.xpath("//p[./b/a/@name='ignoredParameters']/following-sibling::hr[1]");
+		hre.remove();
+		Match ul = document.xpath("//p[./b/a/@name='ignoredParameters']/following-sibling::ul[1]");
+		ul.remove();
+		Match div = document.xpath("//p[./b/a/@name='ignoredParameters']/following-sibling::div[1]");
+		div.remove();
+		Match p = document.xpath("//p[./b/a/@name='ignoredParameters']");
+		p.remove();
+
+		printDocument(document.document(), htmlFile);
+	}
+
+	private void addSocial(File htmlFile) throws Exception {
 		String socialLinks = this.getPropertyValue("socialLinks");
 		if (socialLinks == null || socialLinks.isEmpty()) {
 			return;
 		}
 
-		addHTMLEntities(htmlFile);
-		try {
-			Match document = JOOX.$(htmlFile);
+		Match document = JOOX.$(htmlFile);
 
-			// add non endorsement warning
-			document.xpath("//ul[@class='nav pull-right']").prepend(socialLinks);
+		// add non endorsement warning
+		document.xpath("//ul[@class='nav pull-right']").prepend(socialLinks);
 
-			printDocument(document.document(), htmlFile);
-		} catch (Exception e) {
-			removeHTMLEntities(htmlFile);
-			return;
-		} finally {
-			removeHTMLEntities(htmlFile);
-		}
+		printDocument(document.document(), htmlFile);
 	}
 
-	private void fixFooter(File htmlFile) {
-		addHTMLEntities(htmlFile);
-		try {
-			Match document = JOOX.$(htmlFile);
+	private void fixFooter(File htmlFile) throws Exception  {
+		Match document = JOOX.$(htmlFile);
 
-			// add non endorsement warning
-			document.xpath("//p[@class='copyright']").prepend(this.getPropertyValue("nonEndorsement") + "<br />");
+		// add non endorsement warning
+		document.xpath("//p[@class='copyright']").prepend(this.getPropertyValue("nonEndorsement") + "<br />");
 
-			Match version = JOOX.$(JOOX.$(document.xpath("//p[@class='version-date']").get(0)));
-			// add time to the date if we are in SNAPSHOT version
-			Element projectVersion = version.xpath("//span[@class='projectVersion']").get(0);
-			if (projectVersion != null && projectVersion.getTextContent().contains("SNAPSHOT")) {
-				Element publishDate = version.xpath("//span[@class='publishDate']").get(0);
-				if (publishDate != null) {
-			        Calendar cal = Calendar.getInstance();
-			        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		Match version = JOOX.$(JOOX.$(document.xpath("//p[@class='version-date']").get(0)));
+		// add time to the date if we are in SNAPSHOT version
+		Element projectVersion = version.xpath("//span[@class='projectVersion']").get(0);
+		if (projectVersion != null && projectVersion.getTextContent().contains("SNAPSHOT")) {
+			Element publishDate = version.xpath("//span[@class='publishDate']").get(0);
+			if (publishDate != null) {
+		        Calendar cal = Calendar.getInstance();
+		        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
-					publishDate.setTextContent(publishDate.getTextContent().substring(0, publishDate.getTextContent().length()-2) + " " + sdf.format(cal.getTime()));
-				}
+				publishDate.setTextContent(publishDate.getTextContent().substring(0, publishDate.getTextContent().length()-2) + " " + sdf.format(cal.getTime()));
 			}
-
-			printDocument(document.document(), htmlFile);
-		} catch (Exception e) {
-			removeHTMLEntities(htmlFile);
-			return;
-		} finally {
-			removeHTMLEntities(htmlFile);
 		}
+
+		printDocument(document.document(), htmlFile);
 	}
 
-	private void processCommandLines(File htmlFile) {
-		addHTMLEntities(htmlFile);
-		try {
-			Match document = JOOX.$(htmlFile);
-			Match lists = document.xpath("//div[@class='command']");
-			for (Iterator<Element> iterator = lists.iterator(); iterator.hasNext();) {
-				Element element = (Element) iterator.next();
+	private void processCommandLines(File htmlFile) throws Exception {
+		Match document = JOOX.$(htmlFile);
+		Match lists = document.xpath("//div[@class='command']");
+		for (Iterator<Element> iterator = lists.iterator(); iterator.hasNext();) {
+			Element element = (Element) iterator.next();
 
-				Match fullCommand = JOOX.$(JOOX.$(element).toString());
-				Match command = fullCommand.xpath("//span[@id='command']");
-				Match arguments = fullCommand.xpath("//span[@class='argument']");
-				Match results = fullCommand.xpath("//span[@class='result']");
-				Match t = fullCommand.xpath("//div[@class='command']");
-				String title = null;
-				if (t != null && t.get(0) != null) {
-					title = t.get(0).getAttribute("title");
-				}
-
-				if (command != null && !command.isEmpty()) {
-					String commandLine = command.get(0).getTextContent();
-					List<String> args = new ArrayList<String>();
-					if (arguments != null) {
-						for (Element arg : arguments) {
-							args.add(arg.getTextContent());
-						}
-					}
-					List<String> results_ = new ArrayList<String>();
-					if (results != null) {
-						for (Element result : results) {
-							results_.add(result.getTextContent());
-						}
-					}
-
-					this.project.getProperties().put("data-clipboard-text", getFullCommandLine(commandLine , args));
-					if (title == null || title.isEmpty()) {
-						title = "&#160;";
-					}
-					this.project.getProperties().put("command-title", title);
-
-					String templateStart = replaceProperties(replaceProperties("${commandLineStart}"));
-					String templateEnd = replaceProperties(replaceProperties("${commandLineEnd}"));
-
-					HtmlCanvas commandLineHTML = createCommandLines(commandLine, templateStart, templateEnd, args, results_, true);
-
-					Element newElement = JOOX.$(commandLineHTML.toHtml()).get(0);
-					Node newElementImported = element.getOwnerDocument().importNode(newElement, true);
-					element.getParentNode().appendChild(newElementImported);
-					element.getParentNode().removeChild(element);
-				}
+			Match fullCommand = JOOX.$(JOOX.$(element).toString());
+			Match command = fullCommand.xpath("//span[@id='command']");
+			Match arguments = fullCommand.xpath("//span[@class='argument']");
+			Match results = fullCommand.xpath("//span[@class='result']");
+			Match t = fullCommand.xpath("//div[@class='command']");
+			String title = null;
+			if (t != null && t.get(0) != null) {
+				title = t.get(0).getAttribute("title");
 			}
-			printDocument(document.document(), htmlFile);
-		} catch (Exception e) {
-			removeHTMLEntities(htmlFile);
-			return;
-		} finally {
-			removeHTMLEntities(htmlFile);
+
+			if (command != null && !command.isEmpty()) {
+				String commandLine = command.get(0).getTextContent();
+				List<String> args = new ArrayList<String>();
+				if (arguments != null) {
+					for (Element arg : arguments) {
+						args.add(arg.getTextContent());
+					}
+				}
+				List<String> results_ = new ArrayList<String>();
+				if (results != null) {
+					for (Element result : results) {
+						results_.add(result.getTextContent());
+					}
+				}
+
+				this.project.getProperties().put("data-clipboard-text", getFullCommandLine(commandLine , args));
+				if (title == null || title.isEmpty()) {
+					title = "&#160;";
+				}
+				this.project.getProperties().put("command-title", title);
+
+				String templateStart = replaceProperties(replaceProperties("${commandLineStart}"));
+				String templateEnd = replaceProperties(replaceProperties("${commandLineEnd}"));
+
+				HtmlCanvas commandLineHTML = createCommandLines(commandLine, templateStart, templateEnd, args, results_, true);
+
+				Element newElement = JOOX.$(commandLineHTML.toHtml()).get(0);
+				Node newElementImported = element.getOwnerDocument().importNode(newElement, true);
+				element.getParentNode().appendChild(newElementImported);
+				element.getParentNode().removeChild(element);
+			}
 		}
+		printDocument(document.document(), htmlFile);
 	}
 
-	private void fixLinks(File htmlFile) {
-		addHTMLEntities(htmlFile);
-		try {
-			Match document = JOOX.$(htmlFile);
-			Match lists = document.xpath("//a");
-			for (org.w3c.dom.Element element : lists) {
-				Attr href = element.getAttributeNode("href");
-				if (href != null) {
-					String value = href.getValue();
-					if (value != null) {
-						href.setValue(value.replaceAll("(?<!(http:|https:))[//]+", "/"));
-					}
+	private void fixLinks(File htmlFile) throws Exception {
+		Match document = JOOX.$(htmlFile);
+		Match lists = document.xpath("//a");
+		for (org.w3c.dom.Element element : lists) {
+			Attr href = element.getAttributeNode("href");
+			if (href != null) {
+				String value = href.getValue();
+				if (value != null) {
+					href.setValue(value.replaceAll("(?<!(http:|https:))[//]+", "/"));
 				}
 			}
-			printDocument(document.document(), htmlFile);
-		} catch (Exception e) {
-			removeHTMLEntities(htmlFile);
-			return;
-		} finally {
-			removeHTMLEntities(htmlFile);
 		}
+		printDocument(document.document(), htmlFile);
 	}
 
 	@Override
