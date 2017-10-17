@@ -24,6 +24,7 @@ public class CommandLine {
 	private String title;
 	private String commandLine;
 	private List<String> arguments;
+	private List<String> results;
 
 	public String getProperty() {
 		return property;
@@ -55,5 +56,13 @@ public class CommandLine {
 
 	public void setArguments(List<String> arguments) {
 		this.arguments = arguments;
+	}
+
+	public List<String> getResults() {
+		return results;
+	}
+
+	public void setResults(List<String> results) {
+		this.results = results;
 	}
 }

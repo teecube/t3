@@ -68,14 +68,14 @@ public abstract class AbstractReplaceAllMojo extends AbstractSiteMojo {
 		return html;
 	}
 
-	private HtmlCanvas generateCommandLine(String title, String commandLine, List<String> arguments) throws IOException {
+	private HtmlCanvas generateCommandLine(String title, String commandLine, List<String> arguments, List<String> results) throws IOException {
 		this.project.getProperties().put("data-clipboard-text", getFullCommandLine(commandLine, arguments));
 		this.project.getProperties().put("command-title", "&#160;");
-	
+
 		String templateStart = replaceProperties(replaceProperties("${commandLineStart}"));
 		String templateEnd = replaceProperties(replaceProperties("${commandLineEnd}"));
-	
-		return createCommandLines(commandLine, templateStart, templateEnd, arguments, new ArrayList<String>(), true);
+
+		return createCommandLines(commandLine, templateStart, templateEnd, arguments, results, true);
 	}
 
 	protected List<File> getHTMLFiles() throws IOException {
@@ -129,7 +129,13 @@ public abstract class AbstractReplaceAllMojo extends AbstractSiteMojo {
 				addPropertyInSessionRequest(sample.getProperty(), sampleContent);
 			}
 			for (CommandLine commandLine : commandLines) {
-				String commandLineContent = generateCommandLine(commandLine.getTitle(), commandLine.getCommandLine(), commandLine.getArguments()).toHtml();
+				if (commandLine.getArguments() == null) {
+					commandLine.setArguments(new ArrayList<String>());
+				}
+				if (commandLine.getResults() == null) {
+					commandLine.setResults(new ArrayList<String>());
+				}
+				String commandLineContent = generateCommandLine(commandLine.getTitle(), commandLine.getCommandLine(), commandLine.getArguments(), commandLine.getResults()).toHtml();
 				addPropertyInSessionRequest(commandLine.getProperty(), commandLineContent);
 			}
 			

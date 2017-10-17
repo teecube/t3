@@ -206,10 +206,11 @@ pre.config {
 }
 pre.command {
 	background-color: #333;
-	min-width: 340px;
+	min-width: 400px;
 }
 pre.config {
 	background-color: white;
+	min-width: 400px;
 }
 pre.config pre {
 	background-color: white;

@@ -259,6 +259,9 @@ public abstract class AbstractSiteMojo extends CommonMojo {
 			}
 		}
 
+		if (!results.isEmpty()) {
+			result.write("<span class='result'> </span>" + breakAdd + "\n", false);
+		}
 		for (String r : results) {
 			result.write("<span class='result'>" + r + "</span>" + breakAdd + "\n", false);
 		}
