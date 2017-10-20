@@ -43,6 +43,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1315,7 +1316,11 @@ public class CommonMojo extends AbstractMojo {
 		org.slf4j.Logger logger = LoggerFactory.getLogger(slf4jLoggerName);
 		Field currentLogLevelField;
 		try {
-			currentLogLevelField = logger.getClass().getDeclaredField("currentLogLevel");
+			try {
+				currentLogLevelField = logger.getClass().getDeclaredField("currentLogLevel");
+			} catch (NoSuchFieldException e) { // for Maven 3.5.0+
+				currentLogLevelField = logger.getClass().getSuperclass().getDeclaredField("currentLogLevel");				
+			}
 			currentLogLevelField.setAccessible(true);
 			currentLogLevelField.set(logger, logLevel);
 		} catch (Exception e) {
