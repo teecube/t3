@@ -36,7 +36,16 @@ On the second screen, the *teecube* projects can be selected:
 
 ![Eclipse Installer projects](src/site/resources/images/EclipseInstaller_Projects.png)
 
-Accept all licenses and unsigned content when asked.
+Configuration for the workspace is set on next screen:
+
+![Eclipse Installer projects](src/site/resources/images/EclipseInstaller_Configuration.png)
+
+Follow instruction to complete the setup (Next, Finish) and accept all licenses
+and unsigned content when asked.
+
+After some minutes, Eclipse workspace is ready.
+
+### Use predefined *Run configurations*
 
 ## Generate the documentation locally
 
