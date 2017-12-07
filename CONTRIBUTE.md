@@ -5,9 +5,9 @@
 ### Download and install Eclipse Installer
 
 The Eclipse Installer (aka Eclipse Oomph Installer) can be downloaded from 
-https://wiki.eclipse.org/Eclipse_Installer
+https://wiki.eclipse.org/Eclipse_Installer.
 
-After launching the download file, switch to Advanced Mode:
+After launching the downloaded file, switch to Advanced Mode:
 
 ![Eclipse Installer switch to Advanced Mode](src/site/resources/images/EclipseInstaller_AdvancedMode.png)
 
@@ -16,14 +16,27 @@ a permanent location:
 
 ![Eclipse Installer to permanent location](src/site/resources/images/EclipseInstaller_PermanentLocation.png)
 
-Select yes. The default location is $HOME/eclipse-installer
-(%UserProfile%/eclipse-installer for Windows).
+Select yes. The default location is *$HOME/eclipse-installer*
+(*%UserProfile%/eclipse-installer* for Windows).
 
 At last, navigate to this permanent location and edit file _eclipse-inst.ini_ by
 adding this line at the end:
 ```
 -Doomph.redirection.setups=http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/->https://git.teecu.be/teecube/t3-setup/raw/master/
 ```
+
+Relaunch the Eclipse Installer.
+
+### Set up a ready-to-use Eclipse environment
+
+On the first screen of the Eclipse Installer, an Eclipse version can be chosen.
+Default one to use is *Eclipse IDE for Java Developers*.
+
+On the second screen, the *teecube* projects can be selected:
+
+![Eclipse Installer projects](src/site/resources/images/EclipseInstaller_Projects.png)
+
+Accept all licenses and unsigned content when asked.
 
 ## Generate the documentation locally
 
