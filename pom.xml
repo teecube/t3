@@ -2331,7 +2331,7 @@
 	</organization>
 
 	<prerequisites>
-		<maven>3.1</maven>
+		<maven>3.3.3</maven>
 	</prerequisites>
 
 	<scm>
