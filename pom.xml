@@ -24,6 +24,8 @@
 		<!-- default value not really used -->
 		<siteUploadURL>http://localhost</siteUploadURL>
 		<siteUploadProtocol/>
+        <repositoryReleaseURL/>
+        <repositorySnapshotURL/>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -251,16 +253,16 @@
 											<message>
 												<![CDATA[repositoryReleaseURL is required]]>
 											</message>
-											<regex>.*</regex>
-											<regexMessage>repositoryReleaseURL</regexMessage>
+											<regex>.+</regex>
+											<regexMessage>repositoryReleaseURL property must exist and must not be empty</regexMessage>
 										</requireProperty>
 										<requireProperty>
 											<property>repositorySnapshotURL</property>
 											<message>
 												<![CDATA[repositorySnapshotURL is required]]>
 											</message>
-											<regex>.*</regex>
-											<regexMessage>repositorySnapshotURL</regexMessage>
+											<regex>.+</regex>
+											<regexMessage>repositorySnapshotURL property must exist and must not be empty</regexMessage>
 										</requireProperty>
 									</rules>
 								</configuration>
@@ -435,6 +437,8 @@
 				<maven.plugin.release>2.5.3</maven.plugin.release>
 
 				<plexus.component.metadata>1.6</plexus.component.metadata>
+
+				<siteDisplayURL/>
 			</properties>
 
 			<build>
@@ -1109,8 +1113,8 @@
 											<requireProperty>
 												<property>siteDisplayURL</property>
 												<message><![CDATA[siteDisplayURL]]></message>
-												<regex>.*</regex>
-												<regexMessage>siteDisplayURL</regexMessage>
+												<regex>.+</regex>
+												<regexMessage>siteDisplayURL property must exist and must not be empty</regexMessage>
 											</requireProperty>
 											<requireProperty>
 												<property>siteUploadURL</property>
