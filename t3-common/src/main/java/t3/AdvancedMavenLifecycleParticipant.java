@@ -17,7 +17,9 @@
 package t3;
 
 import org.apache.maven.MavenExecutionException;
+import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
+import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
@@ -44,12 +46,13 @@ import org.codehaus.plexus.logging.Logger;
 */
 public interface AdvancedMavenLifecycleParticipant {
 	// setters
-	public void setPlexus(PlexusContainer plexus);
-	public void setLogger(Logger logger);
 	public void setArtifactRepositoryFactory(ArtifactRepositoryFactory artifactRepositoryFactory);
+	public void setArtifactHandler(ArtifactHandler artifactHandler);
+	public void setArtifactResolver(ArtifactResolver artifactResolver);
+	public void setLogger(Logger logger);
+	public void setPlexus(PlexusContainer plexus);
 	public void setPluginManager(BuildPluginManager pluginManager);
 	public void setProjectBuilder(ProjectBuilder projectBuilder);
-	public void setPluginDescriptor(PluginDescriptor pluginDescriptor);
 
 	// method from org.apache.maven.AbstractMavenLifecycleParticipant
     public void afterProjectsRead(MavenSession session) throws MavenExecutionException;
