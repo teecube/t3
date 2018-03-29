@@ -36,65 +36,65 @@ import static org.rendersnake.HtmlAttributesFactory.*;
 @Mojo(name = "update-archetype", defaultPhase = LifecyclePhase.POST_SITE)
 public class UpdateArchetypeMojo extends AbstractReplaceMojo {
 
-	@Override
-	protected String getFileNameToReplace() {
-		return "index.html";
-	}
+    @Override
+    protected String getFileNameToReplace() {
+        return "index.html";
+    }
 
-	private HtmlCanvas getArchetypeSection() throws IOException {
-		HtmlCanvas html = new HtmlCanvas();
+    private HtmlCanvas getArchetypeSection() throws IOException {
+        HtmlCanvas html = new HtmlCanvas();
 
-		html.div(class_("section")).
-				div(class_("page-header")).
-					h2(id("Archetype")).em().write(project.getArtifactId())._em().write(" archetype")._h2()
-				._div().
-				a(name("Archetype"))._a();
+        html.div(class_("section")).
+                div(class_("page-header")).
+                    h2(id("Archetype")).em().write(project.getArtifactId())._em().write(" archetype")._h2()
+                ._div().
+                a(name("Archetype"))._a();
 
-		String additionalHTML = replaceProperties(getPropertyValue(project, "archetypeAdditionalHTML", false, false, false));
+        String additionalHTML = replaceProperties(getPropertyValue(project, "archetypeAdditionalHTML", false, false, false));
 
-		if (additionalHTML != null && ! additionalHTML.isEmpty()) {
-			html.write(additionalHTML, false);
-		}
+        if (additionalHTML != null && ! additionalHTML.isEmpty()) {
+            html.write(additionalHTML, false);
+        }
 
-		Dependency dependency = new Dependency();
-		dependency.setGroupId(project.getGroupId());
-		dependency.setArtifactId(project.getArtifactId());
-		dependency.setVersion(project.getVersion());
-		String archetypeAdditionalArguments = replaceProperties(project.getProperties().getProperty("archetypeAdditionalArguments"));
-		HtmlCanvas commandLine = createArchetypesCommandLines(dependency, archetypeAdditionalArguments, false);
+        Dependency dependency = new Dependency();
+        dependency.setGroupId(project.getGroupId());
+        dependency.setArtifactId(project.getArtifactId());
+        dependency.setVersion(project.getVersion());
+        String archetypeAdditionalArguments = replaceProperties(project.getProperties().getProperty("archetypeAdditionalArguments"));
+        HtmlCanvas commandLine = createArchetypesCommandLines(dependency, archetypeAdditionalArguments, false);
 
-		html.write(commandLine.toHtml(), false)
-			._div();
+        html.write(commandLine.toHtml(), false)
+            ._div();
 
-		return html;
-	}
+        return html;
+    }
 
-	@Override
-	public void processHTMLFile(File htmlFile) throws Exception {
-		if ("maven-archetype".equals(project.getPackaging()) || "pom".equals(project.getPackaging())) {
-			addHTMLEntities(htmlFile);
+    @Override
+    public void processHTMLFile(File htmlFile) throws Exception {
+        if ("maven-archetype".equals(project.getPackaging()) || "pom".equals(project.getPackaging())) {
+            addHTMLEntities(htmlFile);
 
-			Match document = JOOX.$(htmlFile);
-			try {
-				document.xpath("//div[@class='main-body']/div[@class='row']/div[@class='span8']").attr("class", "span12");
-			} catch (Exception e) {
-				removeHTMLEntities(htmlFile);
-				return;
-			}
-			getLog().debug(project.getPackaging());
-			getLog().debug(htmlFile.getAbsolutePath());
+            Match document = JOOX.$(htmlFile);
+            try {
+                document.xpath("//div[@class='main-body']/div[@class='row']/div[@class='span8']").attr("class", "span12");
+            } catch (Exception e) {
+                removeHTMLEntities(htmlFile);
+                return;
+            }
+            getLog().debug(project.getPackaging());
+            getLog().debug(htmlFile.getAbsolutePath());
 
-			printDocument(document.document(), htmlFile);
+            printDocument(document.document(), htmlFile);
 
-			if ("maven-archetype".equals(project.getPackaging())) {
-				HtmlCanvas html = getArchetypeSection();
-				replaceByLine(htmlFile,
-					"<div class=\"body-content\">.*</p></div>",
-					"<div class=\"body-content\">" + html.toHtml() + "</div>");
-			}
+            if ("maven-archetype".equals(project.getPackaging())) {
+                HtmlCanvas html = getArchetypeSection();
+                replaceByLine(htmlFile,
+                    "<div class=\"body-content\">.*</p></div>",
+                    "<div class=\"body-content\">" + html.toHtml() + "</div>");
+            }
 
-			removeHTMLEntities(htmlFile);
-		}
-	}
+            removeHTMLEntities(htmlFile);
+        }
+    }
 
 }

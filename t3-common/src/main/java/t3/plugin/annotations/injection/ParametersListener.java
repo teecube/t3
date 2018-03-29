@@ -40,57 +40,57 @@ import java.util.Map;
  */
 public class ParametersListener<T> implements TypeListener {
 
-	private T originalObject;
-	private MavenProject mavenProject;
-	private Map<String,String> ignoredParameters;
+    private T originalObject;
+    private MavenProject mavenProject;
+    private Map<String,String> ignoredParameters;
 
-	public ParametersListener(T originalObject, MavenProject mavenProject, MavenSession session) {
-		this(originalObject, mavenProject, session, null);
-	}
+    public ParametersListener(T originalObject, MavenProject mavenProject, MavenSession session) {
+        this(originalObject, mavenProject, session, null);
+    }
 
-	public ParametersListener(T originalObject, MavenProject mavenProject, MavenSession session, Map<String,String> ignoredParameters) {
-		if (ignoredParameters == null) {
-			ignoredParameters = new HashMap<String,String>();
-		}
+    public ParametersListener(T originalObject, MavenProject mavenProject, MavenSession session, Map<String,String> ignoredParameters) {
+        if (ignoredParameters == null) {
+            ignoredParameters = new HashMap<String,String>();
+        }
 
-		this.originalObject = originalObject;
-		this.mavenProject = mavenProject;
-		this.ignoredParameters = ignoredParameters;
+        this.originalObject = originalObject;
+        this.mavenProject = mavenProject;
+        this.ignoredParameters = ignoredParameters;
 
-		PluginConfigurator.propertiesManager = CommonMojo.propertiesManager(session, mavenProject);
-	}
+        PluginConfigurator.propertiesManager = CommonMojo.propertiesManager(session, mavenProject);
+    }
 
-	@SuppressWarnings("unchecked")
-	public ParametersListener(AbstractModule originalObject, MavenProject mavenProject, MavenSession session, Map<String,String> ignoredParameters) {
-		this((T) originalObject, mavenProject, session, ignoredParameters);
-	}
+    @SuppressWarnings("unchecked")
+    public ParametersListener(AbstractModule originalObject, MavenProject mavenProject, MavenSession session, Map<String,String> ignoredParameters) {
+        this((T) originalObject, mavenProject, session, ignoredParameters);
+    }
 
-	@SuppressWarnings("unchecked")
-	public ParametersListener(AbstractModule originalObject, MavenProject mavenProject, MavenSession session) {
-		this((T) originalObject, mavenProject, session, null);
-	}
+    @SuppressWarnings("unchecked")
+    public ParametersListener(AbstractModule originalObject, MavenProject mavenProject, MavenSession session) {
+        this((T) originalObject, mavenProject, session, null);
+    }
 
-	@SuppressWarnings("unchecked")
-	public <I> void hear(TypeLiteral<I> typeLiteral, TypeEncounter<I> typeEncounter) {
-		Class<?> clazz = typeLiteral.getRawType();
-		while (clazz != null) {
-			for (Field field : clazz.getDeclaredFields()) {
-				String value;
-				if (ignoredParameters.containsKey(field.getName()) && clazz.getCanonicalName().equals(ignoredParameters.get(field.getName()))) {
-					continue;
-				}
-				if (field.isAnnotationPresent(GlobalParameter.class)) {
-					GlobalParameter globalParameter = field.getAnnotation(GlobalParameter.class);
-					value = PluginConfigurator.updateProperty(mavenProject, globalParameter);
-				} else if (field.isAnnotationPresent(Parameter.class)) {
-					Parameter mojoParameter = field.getAnnotation(Parameter.class);
-					value = PluginConfigurator.updateProperty(mavenProject, mojoParameter);
-				} else {
-					continue;
-				}
-				typeEncounter.register((MembersInjector<? super I>) new ParametersMembersInjector<T>(field, value, (T) originalObject));
-			}
-			clazz = clazz.getSuperclass();
-		}
-	}
+    @SuppressWarnings("unchecked")
+    public <I> void hear(TypeLiteral<I> typeLiteral, TypeEncounter<I> typeEncounter) {
+        Class<?> clazz = typeLiteral.getRawType();
+        while (clazz != null) {
+            for (Field field : clazz.getDeclaredFields()) {
+                String value;
+                if (ignoredParameters.containsKey(field.getName()) && clazz.getCanonicalName().equals(ignoredParameters.get(field.getName()))) {
+                    continue;
+                }
+                if (field.isAnnotationPresent(GlobalParameter.class)) {
+                    GlobalParameter globalParameter = field.getAnnotation(GlobalParameter.class);
+                    value = PluginConfigurator.updateProperty(mavenProject, globalParameter);
+                } else if (field.isAnnotationPresent(Parameter.class)) {
+                    Parameter mojoParameter = field.getAnnotation(Parameter.class);
+                    value = PluginConfigurator.updateProperty(mavenProject, mojoParameter);
+                } else {
+                    continue;
+                }
+                typeEncounter.register((MembersInjector<? super I>) new ParametersMembersInjector<T>(field, value, (T) originalObject));
+            }
+            clazz = clazz.getSuperclass();
+        }
+    }
 }

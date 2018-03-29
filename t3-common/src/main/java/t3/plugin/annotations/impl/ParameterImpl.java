@@ -25,89 +25,89 @@ import java.util.List;
  */
 public class ParameterImpl {
 
-	private String field;
-	private String type;
-	private String property;
-	private String defaultValue;
-	private boolean required;
-	private List<String> requiredForPackagings;
-	private String description;
-	private String category; // only for GlobalParameter
-	private boolean valueGuessedByDefault; // only for GlobalParameter
+    private String field;
+    private String type;
+    private String property;
+    private String defaultValue;
+    private boolean required;
+    private List<String> requiredForPackagings;
+    private String description;
+    private String category; // only for GlobalParameter
+    private boolean valueGuessedByDefault; // only for GlobalParameter
 
-	public ParameterImpl(String field, String type, String property, String defaultValue, boolean required, List<String> requiredForPackagings, String description, String category, boolean valueGuessedByDefault) {
-		this.field = field;
-		this.type = type;
-		this.property = property;
-		this.defaultValue = defaultValue;
-		this.required = required;
-		this.setRequiredForPackagings(requiredForPackagings);
-		this.description = description;
-		this.category = category;
-		this.valueGuessedByDefault = valueGuessedByDefault;
-	}
+    public ParameterImpl(String field, String type, String property, String defaultValue, boolean required, List<String> requiredForPackagings, String description, String category, boolean valueGuessedByDefault) {
+        this.field = field;
+        this.type = type;
+        this.property = property;
+        this.defaultValue = defaultValue;
+        this.required = required;
+        this.setRequiredForPackagings(requiredForPackagings);
+        this.description = description;
+        this.category = category;
+        this.valueGuessedByDefault = valueGuessedByDefault;
+    }
 
-	public String getField() {
-		return field;
-	}
-	public void setField(String field) {
-		this.field = field;
-	}
+    public String getField() {
+        return field;
+    }
+    public void setField(String field) {
+        this.field = field;
+    }
 
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
+    public String getType() {
+        return type;
+    }
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public String getProperty() {
-		return property;
-	}
-	public void setProperty(String property) {
-		this.property = property;
-	}
+    public String getProperty() {
+        return property;
+    }
+    public void setProperty(String property) {
+        this.property = property;
+    }
 
-	public String getDefaultValue() {
-		return defaultValue;
-	}
-	public void setDefaultValue(String defaultValue) {
-		this.defaultValue = defaultValue;
-	}
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
 
-	public boolean isRequired() {
-		return required;
-	}
-	public void setRequired(boolean required) {
-		this.required = required;
-	}
+    public boolean isRequired() {
+        return required;
+    }
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
 
-	public List<String> getRequiredForPackagings() {
-		return requiredForPackagings;
-	}
-	public void setRequiredForPackagings(List<String> requiredForPackagings) {
-		this.requiredForPackagings = requiredForPackagings;
-	}
+    public List<String> getRequiredForPackagings() {
+        return requiredForPackagings;
+    }
+    public void setRequiredForPackagings(List<String> requiredForPackagings) {
+        this.requiredForPackagings = requiredForPackagings;
+    }
 
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getCategory() {
-		return category;
-	}
-	public void setCategory(String category) {
-		this.category = category;
-	}
+    public String getCategory() {
+        return category;
+    }
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
-	public boolean isValueGuessedByDefault() {
-		return valueGuessedByDefault;
-	}
-	public void setCategory(boolean valueGuessedByDefault) {
-		this.valueGuessedByDefault = valueGuessedByDefault;
-	}
+    public boolean isValueGuessedByDefault() {
+        return valueGuessedByDefault;
+    }
+    public void setCategory(boolean valueGuessedByDefault) {
+        this.valueGuessedByDefault = valueGuessedByDefault;
+    }
 
 }

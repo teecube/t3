@@ -51,34 +51,34 @@ import java.util.List;
 @HandlerPriority(1024)
 public class HandleMojoReplacement extends JavacAnnotationHandler<Mojo> {
 
-	public String getAnnotationCanonicalName() {
-		return Mojo.class.getCanonicalName();
-	}
+    public String getAnnotationCanonicalName() {
+        return Mojo.class.getCanonicalName();
+    }
 
-	public List<String> getReplacementClassElements() {
-		List<String> result = new ArrayList<String>();
-		result.add("org");
-		result.add("apache");
-		result.add("maven");
-		result.add("plugins");
-		result.add("annotations");
-		result.add("Mojo");
-		return result;
-	}
+    public List<String> getReplacementClassElements() {
+        List<String> result = new ArrayList<String>();
+        result.add("org");
+        result.add("apache");
+        result.add("maven");
+        result.add("plugins");
+        result.add("annotations");
+        result.add("Mojo");
+        return result;
+    }
 
-	@Override
-	public void handle(final AnnotationValues<Mojo> annotation, final JCAnnotation ast, final JavacNode annotationNode) {
-		// no inheritance possible
+    @Override
+    public void handle(final AnnotationValues<Mojo> annotation, final JCAnnotation ast, final JavacNode annotationNode) {
+        // no inheritance possible
 
-		// add "t3.plugin.annotations.Mojo" where "org.apache.maven.plugins.annotations.Mojo" is found
-		AnnotationReplacementHelper.duplicateAnnotationWithAnother(annotation, ast, annotationNode, getAnnotationCanonicalName(), getReplacementClassElements(), new ArrayList<String>());
+        // add "t3.plugin.annotations.Mojo" where "org.apache.maven.plugins.annotations.Mojo" is found
+        AnnotationReplacementHelper.duplicateAnnotationWithAnother(annotation, ast, annotationNode, getAnnotationCanonicalName(), getReplacementClassElements(), new ArrayList<String>());
 
-		// let's add a call to "super.initStandalonePOM" at the beginning of
-		// "execute()" method of the Mojo
-		List<String> methodToAddName = new ArrayList<String>();
-		methodToAddName.add("super");
-		methodToAddName.add("initStandalonePOM");
-		AnnotationReplacementHelper.addMethodCallInMethodBody(annotation, ast, annotationNode, "execute", methodToAddName, true);
-	}
+        // let's add a call to "super.initStandalonePOM" at the beginning of
+        // "execute()" method of the Mojo
+        List<String> methodToAddName = new ArrayList<String>();
+        methodToAddName.add("super");
+        methodToAddName.add("initStandalonePOM");
+        AnnotationReplacementHelper.addMethodCallInMethodBody(annotation, ast, annotationNode, "execute", methodToAddName, true);
+    }
 
 }

@@ -30,10 +30,10 @@ import java.lang.annotation.*;
 @Target( { ElementType.FIELD } )
 @Inherited
 public @interface GlobalParameter {
-	String property();
-	String defaultValue() default "";
-	boolean required() default false;
-	String description() default "";
-	String category() default "";
-	boolean valueGuessedByDefault() default true;
+    String property();
+    String defaultValue() default "";
+    boolean required() default false;
+    String description() default "";
+    String category() default "";
+    boolean valueGuessedByDefault() default true;
 }

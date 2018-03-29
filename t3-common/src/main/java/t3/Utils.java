@@ -37,9 +37,9 @@ import java.util.regex.Pattern;
 public class Utils {
 
     static class PathResolutionException extends RuntimeException {
-		private static final long serialVersionUID = 2723212952556555691L;
+        private static final long serialVersionUID = 2723212952556555691L;
 
-		PathResolutionException(String msg) {
+        PathResolutionException(String msg) {
             super(msg);
         }
     }
@@ -134,30 +134,30 @@ public class Utils {
         StringBuilder sb = new StringBuilder();
         for (String string : strings) {
             if (sb.length() > 0) {
-				sb.append(", ");
+                sb.append(", ");
             }
             sb.append(string);
         }
         return sb.toString();
     }
 
-	public static List<File> toFileList(FileSet fileSet) throws IOException {
+    public static List<File> toFileList(FileSet fileSet) throws IOException {
         File directory = new File(fileSet.getDirectory());
         String includes = toCommaSeparatedString(fileSet.getIncludes());
         String excludes = toCommaSeparatedString(fileSet.getExcludes());
         return FileUtils.getFiles(directory, includes, excludes);
     }
 
-	/**
-	 * <p>
-	 * Convert an expression with wildcards to a regex.
-	 *
-	 * source = http://www.rgagnon.com/javadetails/java-0515.html
-	 * </p>
-	 *
-	 * @param wildcard
-	 * @return
-	 */
+    /**
+     * <p>
+     * Convert an expression with wildcards to a regex.
+     *
+     * source = http://www.rgagnon.com/javadetails/java-0515.html
+     * </p>
+     *
+     * @param wildcard
+     * @return
+     */
     public static String wildcardToRegex(String wildcard) {
         StringBuffer s = new StringBuffer(wildcard.length());
         s.append('^');
@@ -187,48 +187,48 @@ public class Utils {
     }
 
     public static Integer countMatchesInFile(File file, String pattern) throws IOException {
-		Integer result = 0;
-		if (file == null || !file.exists()) {
-			return result;
-		}
+        Integer result = 0;
+        if (file == null || !file.exists()) {
+            return result;
+        }
 
-		Pattern p = Pattern.compile(pattern);
+        Pattern p = Pattern.compile(pattern);
 
-		String string = null;
-		BufferedReader reader = new BufferedReader(new FileReader(file));
+        String string = null;
+        BufferedReader reader = new BufferedReader(new FileReader(file));
 
-		while ((string = reader.readLine()) != null) {
-		    Matcher matcher = p.matcher(string);
+        while ((string = reader.readLine()) != null) {
+            Matcher matcher = p.matcher(string);
 
-		    while (matcher.find()) {
-		        result++;
-		    }
-		}
-		reader.close();
+            while (matcher.find()) {
+                result++;
+            }
+        }
+        reader.close();
 
-		return result;
+        return result;
     }
 
     public static List<String> getMatchesFromFile(File file, String pattern) throws IOException {
-		List<String> result = new ArrayList<String>();
-		if (file == null || !file.exists()) {
-			return result;
-		}
+        List<String> result = new ArrayList<String>();
+        if (file == null || !file.exists()) {
+            return result;
+        }
 
-		Pattern p = Pattern.compile(pattern);
+        Pattern p = Pattern.compile(pattern);
 
-		String string = null;
-		BufferedReader reader = new BufferedReader(new FileReader(file));
+        String string = null;
+        BufferedReader reader = new BufferedReader(new FileReader(file));
 
-		while ((string = reader.readLine()) != null) {
-			Matcher matcher = p.matcher(string);
+        while ((string = reader.readLine()) != null) {
+            Matcher matcher = p.matcher(string);
 
-			while (matcher.find()) {
-				result.add(matcher.group());
-			}
-		}
-		reader.close();
+            while (matcher.find()) {
+                result.add(matcher.group());
+            }
+        }
+        reader.close();
 
-		return result;
+        return result;
     }
 }

@@ -23,15 +23,15 @@ package t3.xml;
  */
 public abstract class XMLVisitor<T> implements XMLFromPropertiesMapping {
 
-	private T visited = null;
+    private T visited = null;
 
-	public XMLVisitor(T visited) {
-		this.visited = visited;
-	}
+    public XMLVisitor(T visited) {
+        this.visited = visited;
+    }
 
-	@SuppressWarnings("unchecked") // must check!
-	protected T visited() {
-		return visited != null ? visited : (T) this;
-	}
+    @SuppressWarnings("unchecked") // must check!
+    protected T visited() {
+        return visited != null ? visited : (T) this;
+    }
 
 }

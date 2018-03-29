@@ -32,8 +32,8 @@ import java.util.List;
  */
 public class RootElementNamespaceFilter extends XMLFilterImpl {
 
-	private String rootElementLocalName;
-	private List<NamespaceDeclaration> namespaceDeclarationsToRemove;
+    private String rootElementLocalName;
+    private List<NamespaceDeclaration> namespaceDeclarationsToRemove;
 
     public static class NamespaceDeclaration {
         private String prefix;
@@ -49,64 +49,64 @@ public class RootElementNamespaceFilter extends XMLFilterImpl {
             this.uri = uri;
         }
 
-		@Override
-		public boolean equals(Object obj) {
-			if (!(obj instanceof NamespaceDeclaration))
-				return false;
-			if (obj == this)
-				return true;
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof NamespaceDeclaration))
+                return false;
+            if (obj == this)
+                return true;
 
-			NamespaceDeclaration rhs = (NamespaceDeclaration) obj;
-			return new EqualsBuilder().
-				append(prefix, rhs.prefix).
-				append(uri, rhs.uri).
-				isEquals();
-		}
+            NamespaceDeclaration rhs = (NamespaceDeclaration) obj;
+            return new EqualsBuilder().
+                append(prefix, rhs.prefix).
+                append(uri, rhs.uri).
+                isEquals();
+        }
 
     }
 
-	/**
-	 *
-	 * @param rootElementLocalName, the document root element local name
-	 * @param namespaceDeclarationsToRemove, list of prefix in the form "xmlns:prefix"
-	 */
-	public RootElementNamespaceFilter(String rootElementLocalName, List<NamespaceDeclaration> namespaceDeclarationsToRemove) {
-		super();
+    /**
+     *
+     * @param rootElementLocalName, the document root element local name
+     * @param namespaceDeclarationsToRemove, list of prefix in the form "xmlns:prefix"
+     */
+    public RootElementNamespaceFilter(String rootElementLocalName, List<NamespaceDeclaration> namespaceDeclarationsToRemove) {
+        super();
 
-		if (rootElementLocalName == null) {
-			this.rootElementLocalName = "";
-		}
-		this.rootElementLocalName = rootElementLocalName;
+        if (rootElementLocalName == null) {
+            this.rootElementLocalName = "";
+        }
+        this.rootElementLocalName = rootElementLocalName;
 
-		if (namespaceDeclarationsToRemove == null) {
-			namespaceDeclarationsToRemove = new ArrayList<NamespaceDeclaration>();
-		}
-		this.namespaceDeclarationsToRemove = namespaceDeclarationsToRemove;
-	}
+        if (namespaceDeclarationsToRemove == null) {
+            namespaceDeclarationsToRemove = new ArrayList<NamespaceDeclaration>();
+        }
+        this.namespaceDeclarationsToRemove = namespaceDeclarationsToRemove;
+    }
 
-	@Override
-	public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-		if (localName.equals(rootElementLocalName)) {
-			AttributesImpl result = new AttributesImpl();
+    @Override
+    public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+        if (localName.equals(rootElementLocalName)) {
+            AttributesImpl result = new AttributesImpl();
 
-			if (atts.getLength() > 0) {
-				for (int i = 0; i < atts.getLength(); i++) {
-					String _uri = atts.getURI(i);
-					String _localName = atts.getLocalName(i);
-					String _qName = atts.getQName(i);
-					String _type = atts.getType(i);
-					String _value = atts.getValue(i);
+            if (atts.getLength() > 0) {
+                for (int i = 0; i < atts.getLength(); i++) {
+                    String _uri = atts.getURI(i);
+                    String _localName = atts.getLocalName(i);
+                    String _qName = atts.getQName(i);
+                    String _type = atts.getType(i);
+                    String _value = atts.getValue(i);
 
-					if (!namespaceDeclarationsToRemove.contains(new NamespaceDeclaration(_qName, _value))) {
-						result.addAttribute(_uri, _localName, _qName, _type, _value);
-					}
-				}
-			}
+                    if (!namespaceDeclarationsToRemove.contains(new NamespaceDeclaration(_qName, _value))) {
+                        result.addAttribute(_uri, _localName, _qName, _type, _value);
+                    }
+                }
+            }
 
-			super.startElement(uri, localName, qName, result);
-		} else {
-			super.startElement(uri, localName, qName, atts);
-		}
-	}
+            super.startElement(uri, localName, qName, result);
+        } else {
+            super.startElement(uri, localName, qName, atts);
+        }
+    }
 
 }

@@ -22,15 +22,15 @@ package t3.site.parameters;
  *
  */
 public class SubMenu {
-	public String name;
-	public String url;
+    public String name;
+    public String url;
 
-	public SubMenu() {
+    public SubMenu() {
 
-	}
+    }
 
-	public SubMenu(String name, String url) {
-		this.name = name;
-		this.url = url;
-	}
+    public SubMenu(String name, String url) {
+        this.name = name;
+        this.url = url;
+    }
 }

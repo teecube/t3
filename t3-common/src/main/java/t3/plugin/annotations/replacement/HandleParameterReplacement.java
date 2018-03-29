@@ -46,29 +46,29 @@ import java.util.List;
 @HandlerPriority(1024)
 public class HandleParameterReplacement extends JavacAnnotationHandler<Parameter> {
 
-	public String getAnnotationCanonicalName() {
-		return Parameter.class.getCanonicalName();
-	}
+    public String getAnnotationCanonicalName() {
+        return Parameter.class.getCanonicalName();
+    }
 
-	public List<String> getReplacementClassElements() {
-		List<String> result = new ArrayList<String>();
-		result.add("org");
-		result.add("apache");
-		result.add("maven");
-		result.add("plugins");
-		result.add("annotations");
-		result.add("Parameter");
-		return result;
-	}
+    public List<String> getReplacementClassElements() {
+        List<String> result = new ArrayList<String>();
+        result.add("org");
+        result.add("apache");
+        result.add("maven");
+        result.add("plugins");
+        result.add("annotations");
+        result.add("Parameter");
+        return result;
+    }
 
-	@Override
-	public void handle(final AnnotationValues<Parameter> annotation, final JCAnnotation ast, final JavacNode annotationNode) {
-		List<String> fieldsToIgnore = new ArrayList<>();
-		fieldsToIgnore.add("description");
-		fieldsToIgnore.add("requiredForPackagings");
+    @Override
+    public void handle(final AnnotationValues<Parameter> annotation, final JCAnnotation ast, final JavacNode annotationNode) {
+        List<String> fieldsToIgnore = new ArrayList<>();
+        fieldsToIgnore.add("description");
+        fieldsToIgnore.add("requiredForPackagings");
 
-		// no inheritance possible
-		AnnotationReplacementHelper.duplicateAnnotationWithAnother(annotation, ast, annotationNode, getAnnotationCanonicalName(), getReplacementClassElements(), fieldsToIgnore);
-	}
+        // no inheritance possible
+        AnnotationReplacementHelper.duplicateAnnotationWithAnother(annotation, ast, annotationNode, getAnnotationCanonicalName(), getReplacementClassElements(), fieldsToIgnore);
+    }
 
 }

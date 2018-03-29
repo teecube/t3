@@ -44,15 +44,15 @@ import org.codehaus.plexus.logging.Logger;
 *
 */
 public interface AdvancedMavenLifecycleParticipant {
-	// setters
+    // setters
     void setArtifactRepositoryFactory(ArtifactRepositoryFactory artifactRepositoryFactory);
-	void setArtifactHandler(ArtifactHandler artifactHandler);
-	void setArtifactResolver(ArtifactResolver artifactResolver);
-	void setLogger(Logger logger);
-	void setPlexus(PlexusContainer plexus);
-	void setPluginManager(BuildPluginManager pluginManager);
-	void setProjectBuilder(ProjectBuilder projectBuilder);
+    void setArtifactHandler(ArtifactHandler artifactHandler);
+    void setArtifactResolver(ArtifactResolver artifactResolver);
+    void setLogger(Logger logger);
+    void setPlexus(PlexusContainer plexus);
+    void setPluginManager(BuildPluginManager pluginManager);
+    void setProjectBuilder(ProjectBuilder projectBuilder);
 
-	// method from org.apache.maven.AbstractMavenLifecycleParticipant
+    // method from org.apache.maven.AbstractMavenLifecycleParticipant
     void afterProjectsRead(MavenSession session) throws MavenExecutionException;
 }

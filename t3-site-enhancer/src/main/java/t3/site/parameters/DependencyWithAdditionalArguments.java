@@ -19,15 +19,15 @@ package t3.site.parameters;
 import org.apache.maven.model.Dependency;
 
 public class DependencyWithAdditionalArguments extends Dependency {
-	private static final long serialVersionUID = -2314389014736859116L;
+    private static final long serialVersionUID = -2314389014736859116L;
 
-	private String archetypeAdditionalArguments;
+    private String archetypeAdditionalArguments;
 
-	public String getArchetypeAdditionalArguments() {
-		return archetypeAdditionalArguments;
-	}
+    public String getArchetypeAdditionalArguments() {
+        return archetypeAdditionalArguments;
+    }
 
-	public void setArchetypeAdditionalArguments(String archetypeAdditionalArguments) {
-		this.archetypeAdditionalArguments = archetypeAdditionalArguments;
-	}
+    public void setArchetypeAdditionalArguments(String archetypeAdditionalArguments) {
+        this.archetypeAdditionalArguments = archetypeAdditionalArguments;
+    }
 }

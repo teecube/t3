@@ -59,346 +59,346 @@ import static org.rendersnake.HtmlAttributesFactory.href;
 @Mojo(name = "generate-changelog", defaultPhase = LifecyclePhase.POST_SITE, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class GenerateChangelogMojo extends AbstractNewPageMojo {
 
-	@Parameter (property="t3.site.gitlab.apiEndPoint")
-	private String apiEndPoint;
+    @Parameter (property="t3.site.gitlab.apiEndPoint")
+    private String apiEndPoint;
 
-	@Parameter (property="t3.site.globalDocumentation.pageName", defaultValue="changelog")
-	private String pageName;
+    @Parameter (property="t3.site.globalDocumentation.pageName", defaultValue="changelog")
+    private String pageName;
 
-	@Parameter (property="t3.site.gitlab.privateToken")
-	private String privateToken;
+    @Parameter (property="t3.site.gitlab.privateToken")
+    private String privateToken;
 
-	@Parameter (property="t3.site.gitlab.repository", defaultValue="${project.scm.url}")
-	private String gitlabRepository;
+    @Parameter (property="t3.site.gitlab.repository", defaultValue="${project.scm.url}")
+    private String gitlabRepository;
 
-	@Parameter
-	private List<String> excludedTagsPattern;
+    @Parameter
+    private List<String> excludedTagsPattern;
 
-	@Override
-	public String getPageName() {
-		return pageName;
-	}
+    @Override
+    public String getPageName() {
+        return pageName;
+    }
 
-	private List<Project> projects;
-	private ObjectMapper mapper;
-	private List<String> mergeRequestsAdded = new ArrayList<String>();
-	private List<Integer> issuesAdded = new ArrayList<Integer>();
+    private List<Project> projects;
+    private ObjectMapper mapper;
+    private List<String> mergeRequestsAdded = new ArrayList<String>();
+    private List<Integer> issuesAdded = new ArrayList<Integer>();
 
-	@Override
-	public void execute() throws MojoExecutionException, MojoFailureException {
-		if (StringUtils.isEmpty(privateToken) || StringUtils.isEmpty(gitlabRepository) || StringUtils.isEmpty(apiEndPoint)) {
-			return;
-		}
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        if (StringUtils.isEmpty(privateToken) || StringUtils.isEmpty(gitlabRepository) || StringUtils.isEmpty(apiEndPoint)) {
+            return;
+        }
 
-		if (excludedTagsPattern == null) {
-			excludedTagsPattern = new ArrayList<String>();
-		}
+        if (excludedTagsPattern == null) {
+            excludedTagsPattern = new ArrayList<String>();
+        }
 
-		super.execute();
-	}
+        super.execute();
+    }
 
-	@Override
-	public HtmlCanvas getContent(HtmlCanvas html) throws IOException, SAXException, MojoExecutionException, MojoFailureException {
-		try {
-			init();
+    @Override
+    public HtmlCanvas getContent(HtmlCanvas html) throws IOException, SAXException, MojoExecutionException, MojoFailureException {
+        try {
+            init();
 
-			html = html.
-				div(class_("row")).
-					div(class_("span12")).
-						div(class_("body-content")).
-							div(class_("section")).
-								div(class_("page-header")).
-									h2().write("Changelog")._h2()
-								._div();
+            html = html.
+                div(class_("row")).
+                    div(class_("span12")).
+                        div(class_("body-content")).
+                            div(class_("section")).
+                                div(class_("page-header")).
+                                    h2().write("Changelog")._h2()
+                                ._div();
 
-			final Project project = getProjectFromHttpUrl(gitlabRepository+".git");
-			final List<Tag> tags = getTags(project.getId());
-			final Commit lastCommit = getLatestCommit(project.getId());
+            final Project project = getProjectFromHttpUrl(gitlabRepository+".git");
+            final List<Tag> tags = getTags(project.getId());
+            final Commit lastCommit = getLatestCommit(project.getId());
 
-			// merge requests and issues
-			if (project.getMergeRequestsEnabled() || project.getIssuesEnabled()) {
-				final List<MergeRequest> mergeRequests = getMergeRequests(project.getId());
-				final List<Issue> issues = getIssues(project.getId());
+            // merge requests and issues
+            if (project.getMergeRequestsEnabled() || project.getIssuesEnabled()) {
+                final List<MergeRequest> mergeRequests = getMergeRequests(project.getId());
+                final List<Issue> issues = getIssues(project.getId());
 
-				// display merged merge requests with their associated tag (= release)
-				Renderable tagsWithMergeRequestsAndIssues = new Renderable() {
-					@Override
-					public void renderOn(HtmlCanvas html) throws IOException {
-						List<HtmlCanvas> results = new ArrayList<HtmlCanvas>();
-						String lastCommitId = null;
-						for (Tag tag : tags) {
-							String commitId = tag.getCommit().getId();
+                // display merged merge requests with their associated tag (= release)
+                Renderable tagsWithMergeRequestsAndIssues = new Renderable() {
+                    @Override
+                    public void renderOn(HtmlCanvas html) throws IOException {
+                        List<HtmlCanvas> results = new ArrayList<HtmlCanvas>();
+                        String lastCommitId = null;
+                        for (Tag tag : tags) {
+                            String commitId = tag.getCommit().getId();
 
-							if (isTagExcluded(tag)) {
-								lastCommitId = commitId;
-								continue;
-							}
+                            if (isTagExcluded(tag)) {
+                                lastCommitId = commitId;
+                                continue;
+                            }
 
-							HtmlCanvas result = new HtmlCanvas();
-							result = result.h3().write(tag.getName() + " (" + tag.getCommit().getCommittedDate().toString(DateTimeFormat.forPattern("yyyy-MM-dd")) + ")")._h3();
-							DateTime tagDate = tag.getCommit().getCommittedDate();
+                            HtmlCanvas result = new HtmlCanvas();
+                            result = result.h3().write(tag.getName() + " (" + tag.getCommit().getCommittedDate().toString(DateTimeFormat.forPattern("yyyy-MM-dd")) + ")")._h3();
+                            DateTime tagDate = tag.getCommit().getCommittedDate();
 
-							if (lastCommitId != null) {
-								result.p().a(href(gitlabRepository + "/compare/" + lastCommitId + "..." + commitId)).write("Full changelog")._a()._p();
-							}
-							lastCommitId = commitId;
+                            if (lastCommitId != null) {
+                                result.p().a(href(gitlabRepository + "/compare/" + lastCommitId + "..." + commitId)).write("Full changelog")._a()._p();
+                            }
+                            lastCommitId = commitId;
 
-							// merge requests
-							boolean hasMergeRequest = false;
-							for (MergeRequest mergeRequest : mergeRequests) {
-								DateTime mergeDate = mergeRequest.getCreatedAt();
-								if (mergeDate.isBefore(tagDate) && !mergeRequestsAdded.contains(mergeRequest.getSha())) {							
-									if (!hasMergeRequest) {
-										hasMergeRequest = true;
-										result = result.h4().write("Merge requests")._h4();
-										result = result.ul();
-									}
-									result = addMergeRequest(result, mergeRequest);
-									mergeRequestsAdded.add(mergeRequest.getSha());
-								}
-							}
-							if (hasMergeRequest) {
-								result = result._ul();
-							} else {
-								result = result.p().write("No merge request for this release")._p();
-							}
+                            // merge requests
+                            boolean hasMergeRequest = false;
+                            for (MergeRequest mergeRequest : mergeRequests) {
+                                DateTime mergeDate = mergeRequest.getCreatedAt();
+                                if (mergeDate.isBefore(tagDate) && !mergeRequestsAdded.contains(mergeRequest.getSha())) {                            
+                                    if (!hasMergeRequest) {
+                                        hasMergeRequest = true;
+                                        result = result.h4().write("Merge requests")._h4();
+                                        result = result.ul();
+                                    }
+                                    result = addMergeRequest(result, mergeRequest);
+                                    mergeRequestsAdded.add(mergeRequest.getSha());
+                                }
+                            }
+                            if (hasMergeRequest) {
+                                result = result._ul();
+                            } else {
+                                result = result.p().write("No merge request for this release")._p();
+                            }
 
-							// issues
-							boolean hasIssues = false;
-							for (Issue issue : issues) {
-								DateTime closeDate = issue.getCreatedAt();
-								if (closeDate.isBefore(tagDate) && !issuesAdded.contains(issue.getIid())) {							
-									if (!hasIssues) {
-										hasIssues = true;
-										result = result.h4().write("Closed issues")._h4();
-										result = result.ul();
-									}
-									result = addIssue(result, issue);
-									issuesAdded.add(issue.getIid());
-								}
-							}
-							if (hasIssues) {
-								result = result._ul();
-							} else {
-								result = result.p().write("No issue for this release")._p();
-							}
+                            // issues
+                            boolean hasIssues = false;
+                            for (Issue issue : issues) {
+                                DateTime closeDate = issue.getCreatedAt();
+                                if (closeDate.isBefore(tagDate) && !issuesAdded.contains(issue.getIid())) {                            
+                                    if (!hasIssues) {
+                                        hasIssues = true;
+                                        result = result.h4().write("Closed issues")._h4();
+                                        result = result.ul();
+                                    }
+                                    result = addIssue(result, issue);
+                                    issuesAdded.add(issue.getIid());
+                                }
+                            }
+                            if (hasIssues) {
+                                result = result._ul();
+                            } else {
+                                result = result.p().write("No issue for this release")._p();
+                            }
 
-							results.add(result);
-						}
+                            results.add(result);
+                        }
 
-						for (HtmlCanvas result : Lists.reverse(results)) {
-							html.write(result.toHtml(), false);
-						}
-					}
+                        for (HtmlCanvas result : Lists.reverse(results)) {
+                            html.write(result.toHtml(), false);
+                        }
+                    }
 
-				};
+                };
 
-				DateTime tagDate = null;
-				if (!tags.isEmpty()) { // get commit date of latest tag
-					tagDate = tags.get(tags.size()-1).getCommit().getCommittedDate();
-				}
+                DateTime tagDate = null;
+                if (!tags.isEmpty()) { // get commit date of latest tag
+                    tagDate = tags.get(tags.size()-1).getCommit().getCommittedDate();
+                }
 
-				// display merged merge requests with no tag (= next release)
-				html = html.h3().write("Next release")._h3();
-				String lastCommitId = tags.get(tags.size()-1).getCommit().getId();
-				if (lastCommitId != null) {
-					html.a(href(gitlabRepository + "/compare/" + lastCommitId + "..." + lastCommit.getId())).write("Full changelog")._a();
-				}
+                // display merged merge requests with no tag (= next release)
+                html = html.h3().write("Next release")._h3();
+                String lastCommitId = tags.get(tags.size()-1).getCommit().getId();
+                if (lastCommitId != null) {
+                    html.a(href(gitlabRepository + "/compare/" + lastCommitId + "..." + lastCommit.getId())).write("Full changelog")._a();
+                }
 
-				// merge requests
-				boolean hasMergeRequest = false;
-				for (MergeRequest mergeRequest : mergeRequests) {
-					DateTime mergeDate = mergeRequest.getCreatedAt();
+                // merge requests
+                boolean hasMergeRequest = false;
+                for (MergeRequest mergeRequest : mergeRequests) {
+                    DateTime mergeDate = mergeRequest.getCreatedAt();
 
-					if ((tagDate == null || !mergeDate.isBefore(tagDate)) && !mergeRequestsAdded.contains(mergeRequest.getSha())) {
-						if (!hasMergeRequest) {
-							hasMergeRequest = true;
-							html = html.h4().write("Merge requests")._h4();
-							html = html.ul();
-						}
-						html = addMergeRequest(html, mergeRequest);
-						mergeRequestsAdded.add(mergeRequest.getSha());
-					}
-				}
-				if (hasMergeRequest) {
-					html = html._ul();
-				}
+                    if ((tagDate == null || !mergeDate.isBefore(tagDate)) && !mergeRequestsAdded.contains(mergeRequest.getSha())) {
+                        if (!hasMergeRequest) {
+                            hasMergeRequest = true;
+                            html = html.h4().write("Merge requests")._h4();
+                            html = html.ul();
+                        }
+                        html = addMergeRequest(html, mergeRequest);
+                        mergeRequestsAdded.add(mergeRequest.getSha());
+                    }
+                }
+                if (hasMergeRequest) {
+                    html = html._ul();
+                }
 
-				// issues
-				boolean hasIssues = false;
-				for (Issue issue : issues) {
-					DateTime closeDate = issue.getCreatedAt();
+                // issues
+                boolean hasIssues = false;
+                for (Issue issue : issues) {
+                    DateTime closeDate = issue.getCreatedAt();
 
-					if ((tagDate == null || !closeDate.isBefore(tagDate)) && !issuesAdded.contains(issue.getIid())) {
-						if (!hasIssues) {
-							hasIssues = true;
-							html = html.h4().write("Closed issues")._h4();
-							html = html.ul();
-						}
-						html = addIssue(html, issue);
-						issuesAdded.add(issue.getIid());
-					}
-				}
-				if (hasIssues) {
-					html = html._ul();
-				}
+                    if ((tagDate == null || !closeDate.isBefore(tagDate)) && !issuesAdded.contains(issue.getIid())) {
+                        if (!hasIssues) {
+                            hasIssues = true;
+                            html = html.h4().write("Closed issues")._h4();
+                            html = html.ul();
+                        }
+                        html = addIssue(html, issue);
+                        issuesAdded.add(issue.getIid());
+                    }
+                }
+                if (hasIssues) {
+                    html = html._ul();
+                }
 
-				html.render(tagsWithMergeRequestsAndIssues);
-			}
+                html.render(tagsWithMergeRequestsAndIssues);
+            }
 
-			html = html
-							._div()
-						._div()
-					._div()
-				._div();
-		} catch (UnirestException e) {
-			throw new MojoExecutionException(e.getLocalizedMessage(), e);
-		}
+            html = html
+                            ._div()
+                        ._div()
+                    ._div()
+                ._div();
+        } catch (UnirestException e) {
+            throw new MojoExecutionException(e.getLocalizedMessage(), e);
+        }
 
-		return html;
-	}
+        return html;
+    }
 
-	private boolean isTagExcluded(Tag tag) {
-		for (String pattern : excludedTagsPattern) {
-			if (Pattern.compile(pattern).matcher(tag.getName()).matches()) {
-				return true;
-			}
-		}
+    private boolean isTagExcluded(Tag tag) {
+        for (String pattern : excludedTagsPattern) {
+            if (Pattern.compile(pattern).matcher(tag.getName()).matches()) {
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	private static boolean getRequestOK(GetRequest getRequest) throws UnirestException {
-		return getRequest != null && getRequest.asString() != null && getRequest.asString().getStatus() == 200;
-	}
+    private static boolean getRequestOK(GetRequest getRequest) throws UnirestException {
+        return getRequest != null && getRequest.asString() != null && getRequest.asString().getStatus() == 200;
+    }
 
-	private HtmlCanvas addMergeRequest(HtmlCanvas html, MergeRequest mergeRequest) throws IOException {
-		MutableDataSet options = new MutableDataSet();
-		Parser parser = Parser.builder(options).build();
-		HtmlRenderer renderer = HtmlRenderer.builder(options).build();
+    private HtmlCanvas addMergeRequest(HtmlCanvas html, MergeRequest mergeRequest) throws IOException {
+        MutableDataSet options = new MutableDataSet();
+        Parser parser = Parser.builder(options).build();
+        HtmlRenderer renderer = HtmlRenderer.builder(options).build();
 
-		String description = mergeRequest.getDescription();
-		description = renderer.render(parser.parse(description));
+        String description = mergeRequest.getDescription();
+        description = renderer.render(parser.parse(description));
 
-		return html.li().h5().write(mergeRequest.getTitle() + " ").a(href(gitlabRepository + "/merge_requests/"+mergeRequest.getIid()).class_("external")).write("#"+mergeRequest.getIid())._a()._h5().write(description, false)._li();
-	}
+        return html.li().h5().write(mergeRequest.getTitle() + " ").a(href(gitlabRepository + "/merge_requests/"+mergeRequest.getIid()).class_("external")).write("#"+mergeRequest.getIid())._a()._h5().write(description, false)._li();
+    }
 
-	private HtmlCanvas addIssue(HtmlCanvas html, Issue issue) throws IOException {
-		MutableDataSet options = new MutableDataSet();
-		Parser parser = Parser.builder(options).build();
-		HtmlRenderer renderer = HtmlRenderer.builder(options).build();
+    private HtmlCanvas addIssue(HtmlCanvas html, Issue issue) throws IOException {
+        MutableDataSet options = new MutableDataSet();
+        Parser parser = Parser.builder(options).build();
+        HtmlRenderer renderer = HtmlRenderer.builder(options).build();
 
-		String description = issue.getDescription();
-		description = renderer.render(parser.parse(description));
-		return html.li().h5().write(issue.getTitle() + " ").a(href(gitlabRepository + "/issues/"+issue.getIid()).class_("external")).write("#"+issue.getIid())._a()._h5().write(description, false)._li();
-	}
+        String description = issue.getDescription();
+        description = renderer.render(parser.parse(description));
+        return html.li().h5().write(issue.getTitle() + " ").a(href(gitlabRepository + "/issues/"+issue.getIid()).class_("external")).write("#"+issue.getIid())._a()._h5().write(description, false)._li();
+    }
 
-	private List<Project> getProjects() throws UnirestException {
-		if (projects != null) {
-			return projects;
-		}
+    private List<Project> getProjects() throws UnirestException {
+        if (projects != null) {
+            return projects;
+        }
 
-		GetRequest projectsRequest = Unirest.get(apiEndPoint + "/projects").header("PRIVATE-TOKEN", privateToken);
+        GetRequest projectsRequest = Unirest.get(apiEndPoint + "/projects").header("PRIVATE-TOKEN", privateToken);
 
-		if (getRequestOK(projectsRequest)) {
-			String json = projectsRequest.asJson().getBody().getArray().toString();
-			projects = Arrays.asList(mapper.readValue(json, Project[].class));
-		}
+        if (getRequestOK(projectsRequest)) {
+            String json = projectsRequest.asJson().getBody().getArray().toString();
+            projects = Arrays.asList(mapper.readValue(json, Project[].class));
+        }
 
-		return projects;
-	}
+        return projects;
+    }
 
-	private Project getProjectFromHttpUrl(String httpUrl) throws UnirestException {
-		List<Project> projects = getProjects();
+    private Project getProjectFromHttpUrl(String httpUrl) throws UnirestException {
+        List<Project> projects = getProjects();
 
-		for (Project project : projects) {
-			if (project.getHttpUrlToRepo().equals(httpUrl)) {
-				return project;
-			}
-		}
+        for (Project project : projects) {
+            if (project.getHttpUrlToRepo().equals(httpUrl)) {
+                return project;
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	private Commit getLatestCommit(Integer projectId) throws UnirestException {
-		return getCommits(projectId).get(0);		
-	}
+    private Commit getLatestCommit(Integer projectId) throws UnirestException {
+        return getCommits(projectId).get(0);        
+    }
 
-	private List<Commit> getCommits(Integer projectId) throws UnirestException {
-		GetRequest commitsRequest = Unirest.get(apiEndPoint + "/projects/"+projectId.toString()+"/repository/commits").header("PRIVATE-TOKEN", privateToken);
+    private List<Commit> getCommits(Integer projectId) throws UnirestException {
+        GetRequest commitsRequest = Unirest.get(apiEndPoint + "/projects/"+projectId.toString()+"/repository/commits").header("PRIVATE-TOKEN", privateToken);
 
-		if (getRequestOK(commitsRequest)) {
-			String json = commitsRequest.asJson().getBody().getArray().toString();
-			return Arrays.asList(mapper.readValue(json, Commit[].class));
-		}
+        if (getRequestOK(commitsRequest)) {
+            String json = commitsRequest.asJson().getBody().getArray().toString();
+            return Arrays.asList(mapper.readValue(json, Commit[].class));
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	private List<Issue> getIssues(Integer projectId) throws UnirestException {
-		GetRequest mergeRequestsRequest = Unirest.get(apiEndPoint + "/projects/"+projectId.toString()+"/issues?state=closed").header("PRIVATE-TOKEN", privateToken);
-		
-		if (getRequestOK(mergeRequestsRequest)) {
-			String json = mergeRequestsRequest.asJson().getBody().getArray().toString();
-			return Arrays.asList(mapper.readValue(json, Issue[].class));
-		}
-		
-		return null;
-	}
+    private List<Issue> getIssues(Integer projectId) throws UnirestException {
+        GetRequest mergeRequestsRequest = Unirest.get(apiEndPoint + "/projects/"+projectId.toString()+"/issues?state=closed").header("PRIVATE-TOKEN", privateToken);
+        
+        if (getRequestOK(mergeRequestsRequest)) {
+            String json = mergeRequestsRequest.asJson().getBody().getArray().toString();
+            return Arrays.asList(mapper.readValue(json, Issue[].class));
+        }
+        
+        return null;
+    }
 
-	private List<MergeRequest> getMergeRequests(Integer projectId) throws UnirestException {
-		GetRequest mergeRequestsRequest = Unirest.get(apiEndPoint + "/projects/"+projectId.toString()+"/merge_requests?state=merged").header("PRIVATE-TOKEN", privateToken);
-		
-		if (getRequestOK(mergeRequestsRequest)) {
-			String json = mergeRequestsRequest.asJson().getBody().getArray().toString();
-			return Arrays.asList(mapper.readValue(json, MergeRequest[].class));
-		}
-		
-		return null;
-	}
+    private List<MergeRequest> getMergeRequests(Integer projectId) throws UnirestException {
+        GetRequest mergeRequestsRequest = Unirest.get(apiEndPoint + "/projects/"+projectId.toString()+"/merge_requests?state=merged").header("PRIVATE-TOKEN", privateToken);
+        
+        if (getRequestOK(mergeRequestsRequest)) {
+            String json = mergeRequestsRequest.asJson().getBody().getArray().toString();
+            return Arrays.asList(mapper.readValue(json, MergeRequest[].class));
+        }
+        
+        return null;
+    }
 
-	private List<Tag> getTags(Integer projectId) throws UnirestException {
-		GetRequest tagsRequest = Unirest.get(apiEndPoint + "/projects/"+projectId.toString()+"/repository/tags").header("PRIVATE-TOKEN", privateToken);
+    private List<Tag> getTags(Integer projectId) throws UnirestException {
+        GetRequest tagsRequest = Unirest.get(apiEndPoint + "/projects/"+projectId.toString()+"/repository/tags").header("PRIVATE-TOKEN", privateToken);
 
-		if (getRequestOK(tagsRequest)) {
-			String json = tagsRequest.asJson().getBody().getArray().toString();
-			List<Tag> result = Arrays.asList(mapper.readValue(json, Tag[].class));
-			Comparator<? super Tag> c = new Comparator<Tag>() {
-				@Override
-				public int compare(Tag t1, Tag t2) {
-					return t1.getCommit().getCommittedDate().compareTo(t2.getCommit().getCommittedDate());
-				}
-			};
-			Collections.sort(result, c); // sort in chronological time
-			return result;
-		}
+        if (getRequestOK(tagsRequest)) {
+            String json = tagsRequest.asJson().getBody().getArray().toString();
+            List<Tag> result = Arrays.asList(mapper.readValue(json, Tag[].class));
+            Comparator<? super Tag> c = new Comparator<Tag>() {
+                @Override
+                public int compare(Tag t1, Tag t2) {
+                    return t1.getCommit().getCommittedDate().compareTo(t2.getCommit().getCommittedDate());
+                }
+            };
+            Collections.sort(result, c); // sort in chronological time
+            return result;
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	private void init() throws IOException, UnirestException {
-		mapper = new ObjectMapper() {
-		    private com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
+    private void init() throws IOException, UnirestException {
+        mapper = new ObjectMapper() {
+            private com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
 
-		    public <T> T readValue(String value, Class<T> valueType) {
-		        try {
-		        	jacksonObjectMapper.registerModule(new JodaModule());
-		            return jacksonObjectMapper.readValue(value, valueType);
-		        } catch (IOException e) {
-		            throw new RuntimeException(e);
-		        }
-		    }
+            public <T> T readValue(String value, Class<T> valueType) {
+                try {
+                    jacksonObjectMapper.registerModule(new JodaModule());
+                    return jacksonObjectMapper.readValue(value, valueType);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
 
-		    public String writeValue(Object value) {
-		        try {
-		            return jacksonObjectMapper.writeValueAsString(value);
-		        } catch (JsonProcessingException e) {
-		            throw new RuntimeException(e);
-		        }
-		    }
-		};
+            public String writeValue(Object value) {
+                try {
+                    return jacksonObjectMapper.writeValueAsString(value);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
 
-		Unirest.setObjectMapper(mapper);
-	}
+        Unirest.setObjectMapper(mapper);
+    }
 
 }

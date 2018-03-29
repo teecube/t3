@@ -35,41 +35,41 @@ import java.util.Set;
  */
 public class AnnotationsHelper {
 
-	public static <A extends Annotation> Set<Field> getFieldsAnnotatedWith(Class<?> fromClass, Class<A> annotationClass) {
-		return getFieldsAnnotatedWith(fromClass, annotationClass, ClasspathHelper.contextClassLoader());
-	}
+    public static <A extends Annotation> Set<Field> getFieldsAnnotatedWith(Class<?> fromClass, Class<A> annotationClass) {
+        return getFieldsAnnotatedWith(fromClass, annotationClass, ClasspathHelper.contextClassLoader());
+    }
 
-	public static <A extends Annotation> Set<Field> getFieldsAnnotatedWith(Class<?> fromClass, Class<A> annotationClass, ClassLoader... classLoaders) {
-		Reflections.log = NOPLogger.NOP_LOGGER;
+    public static <A extends Annotation> Set<Field> getFieldsAnnotatedWith(Class<?> fromClass, Class<A> annotationClass, ClassLoader... classLoaders) {
+        Reflections.log = NOPLogger.NOP_LOGGER;
 
-		Reflections reflections = new Reflections(new ConfigurationBuilder()
-			.setUrls(ClasspathHelper.forClass(fromClass, classLoaders),
-					 ClasspathHelper.forClass(annotationClass, classLoaders))
-			.setScanners(new FieldAnnotationsScanner()).addClassLoaders(classLoaders)
-		);
+        Reflections reflections = new Reflections(new ConfigurationBuilder()
+            .setUrls(ClasspathHelper.forClass(fromClass, classLoaders),
+                     ClasspathHelper.forClass(annotationClass, classLoaders))
+            .setScanners(new FieldAnnotationsScanner()).addClassLoaders(classLoaders)
+        );
 
-		Set<Field> fields = reflections.getFieldsAnnotatedWith(annotationClass);
+        Set<Field> fields = reflections.getFieldsAnnotatedWith(annotationClass);
 
-		return fields;
-	}
+        return fields;
+    }
 
-	public static <A extends Annotation> Set<Class<?>> getTypesAnnotatedWith(Class<?> fromClass, Class<A> annotationClass) {
-		return getTypesAnnotatedWith(fromClass, annotationClass, ClasspathHelper.contextClassLoader());		
-	}
+    public static <A extends Annotation> Set<Class<?>> getTypesAnnotatedWith(Class<?> fromClass, Class<A> annotationClass) {
+        return getTypesAnnotatedWith(fromClass, annotationClass, ClasspathHelper.contextClassLoader());        
+    }
 
-	public static <A extends Annotation> Set<Class<?>> getTypesAnnotatedWith(Class<?> fromClass, Class<A> annotationClass, ClassLoader... classLoaders) {
-		Reflections.log = NOPLogger.NOP_LOGGER;
-//		Reflections.log = null;
+    public static <A extends Annotation> Set<Class<?>> getTypesAnnotatedWith(Class<?> fromClass, Class<A> annotationClass, ClassLoader... classLoaders) {
+        Reflections.log = NOPLogger.NOP_LOGGER;
+//        Reflections.log = null;
 
-		Reflections reflections = new Reflections(new ConfigurationBuilder()
-			.setUrls(ClasspathHelper.forClass(fromClass, classLoaders),
-					 ClasspathHelper.forClass(annotationClass, classLoaders))
-			.setScanners(new TypeAnnotationsScanner(), new SubTypesScanner()).addClassLoaders(classLoaders)
-		);
+        Reflections reflections = new Reflections(new ConfigurationBuilder()
+            .setUrls(ClasspathHelper.forClass(fromClass, classLoaders),
+                     ClasspathHelper.forClass(annotationClass, classLoaders))
+            .setScanners(new TypeAnnotationsScanner(), new SubTypesScanner()).addClassLoaders(classLoaders)
+        );
 
-		Set<Class<?>> types = reflections.getTypesAnnotatedWith(annotationClass);
+        Set<Class<?>> types = reflections.getTypesAnnotatedWith(annotationClass);
 
-		return types;
-	}
+        return types;
+    }
 
 }

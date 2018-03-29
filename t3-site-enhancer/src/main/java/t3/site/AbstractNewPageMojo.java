@@ -33,42 +33,42 @@ import java.io.IOException;
  */
 public abstract class AbstractNewPageMojo extends AbstractSiteMojo {
 
-	private File copyFromIndex() throws IOException {
-		File indexFile = new File(outputDirectory.getAbsolutePath(), "index.html");
-		File htmlFile = new File(outputDirectory.getAbsolutePath(), getPageName() + ".html");
-		FileUtils.copyFile(indexFile, htmlFile);
+    private File copyFromIndex() throws IOException {
+        File indexFile = new File(outputDirectory.getAbsolutePath(), "index.html");
+        File htmlFile = new File(outputDirectory.getAbsolutePath(), getPageName() + ".html");
+        FileUtils.copyFile(indexFile, htmlFile);
 
-		replaceByLine(htmlFile, "<a href=\"\" id=\"bannerLeft\">", "<a id=\"bannerLeft\" href=\"./index.html\">", false, "ms");
+        replaceByLine(htmlFile, "<a href=\"\" id=\"bannerLeft\">", "<a id=\"bannerLeft\" href=\"./index.html\">", false, "ms");
 
-		return htmlFile;
-	}
+        return htmlFile;
+    }
 
-	private void saveDocumentationFile(File htmlFile, HtmlCanvas html) throws FileNotFoundException, MojoExecutionException {
-		replaceByLine(htmlFile,
-					  "<div class=\"main-body\">.*</div>" + System.lineSeparator() + System.lineSeparator() + "\t</div><!-- /container -->",
-					  "<div class=\"main-body\">." + System.lineSeparator() + formatHtml(html.toHtml()) + System.lineSeparator() + "\t</div>" + System.lineSeparator() + System.lineSeparator() + "\t</div><!-- /container -->",
-					  false,
-					  "ms");
-	}
+    private void saveDocumentationFile(File htmlFile, HtmlCanvas html) throws FileNotFoundException, MojoExecutionException {
+        replaceByLine(htmlFile,
+                      "<div class=\"main-body\">.*</div>" + System.lineSeparator() + System.lineSeparator() + "\t</div><!-- /container -->",
+                      "<div class=\"main-body\">." + System.lineSeparator() + formatHtml(html.toHtml()) + System.lineSeparator() + "\t</div>" + System.lineSeparator() + System.lineSeparator() + "\t</div><!-- /container -->",
+                      false,
+                      "ms");
+    }
 
-	public abstract HtmlCanvas getContent(HtmlCanvas html) throws IOException, SAXException, MojoExecutionException, MojoFailureException;
+    public abstract HtmlCanvas getContent(HtmlCanvas html) throws IOException, SAXException, MojoExecutionException, MojoFailureException;
 
-	public abstract String getPageName();
+    public abstract String getPageName();
 
-	@Override
-	public void execute() throws MojoExecutionException, MojoFailureException {
-		super.execute();
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        super.execute();
 
-		File htmlFile;
-		try {
-			HtmlCanvas html = getContent(new HtmlCanvas());
-			if (html != null) {
-				htmlFile = copyFromIndex();
-				saveDocumentationFile(htmlFile, html);
-			}
-		} catch (IOException | SAXException e) {
-			throw new MojoExecutionException(e.getLocalizedMessage(), e);
-		}
-	}
+        File htmlFile;
+        try {
+            HtmlCanvas html = getContent(new HtmlCanvas());
+            if (html != null) {
+                htmlFile = copyFromIndex();
+                saveDocumentationFile(htmlFile, html);
+            }
+        } catch (IOException | SAXException e) {
+            throw new MojoExecutionException(e.getLocalizedMessage(), e);
+        }
+    }
 
 }

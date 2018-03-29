@@ -26,6 +26,6 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Category {
-	String title();
-	String description() default "";
+    String title();
+    String description() default "";
 }

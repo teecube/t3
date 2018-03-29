@@ -29,17 +29,17 @@ import java.util.List;
  */
 public abstract class AbstractReplaceMojo extends AbstractReplaceAllMojo {
 
-	protected abstract String getFileNameToReplace();
+    protected abstract String getFileNameToReplace();
 
-	@Override
-	protected List<File> getHTMLFiles() throws IOException {
-		FileSet htmlFiles = new FileSet();
-		htmlFiles.setDirectory(outputDirectory.getAbsolutePath());
+    @Override
+    protected List<File> getHTMLFiles() throws IOException {
+        FileSet htmlFiles = new FileSet();
+        htmlFiles.setDirectory(outputDirectory.getAbsolutePath());
 
-		htmlFiles.addInclude(getFileNameToReplace());
+        htmlFiles.addInclude(getFileNameToReplace());
 
-		return toFileList(htmlFiles);
-	}
+        return toFileList(htmlFiles);
+    }
 
-	
+    
 }

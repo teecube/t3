@@ -27,5 +27,5 @@ import java.lang.annotation.*;
 @Target( { ElementType.TYPE } )
 @Inherited
 public @interface Categories {
-	Category[] value();
+    Category[] value();
 }

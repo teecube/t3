@@ -35,90 +35,90 @@ import java.util.Set;
  */
 public class ParametersHelper {
 
-	private static String getProperty(Annotation annotation) {
-		return (String) getObject(annotation, "property");
-	}
+    private static String getProperty(Annotation annotation) {
+        return (String) getObject(annotation, "property");
+    }
 
-	private static String getDefaultValue(Annotation annotation) {
-		return (String) getObject(annotation, "defaultValue");
-	}
+    private static String getDefaultValue(Annotation annotation) {
+        return (String) getObject(annotation, "defaultValue");
+    }
 
-	private static boolean getRequired(Annotation annotation) {
-		return (boolean) getObject(annotation, "required");
-	}
+    private static boolean getRequired(Annotation annotation) {
+        return (boolean) getObject(annotation, "required");
+    }
 
-	private static List<String> getRequiredForPackagings(Annotation annotation) {
-		String[] result = (String[]) getObject(annotation, "requiredForPackagings");
-		return result == null ? null : (List<String>) Arrays.asList(result);
-	}
+    private static List<String> getRequiredForPackagings(Annotation annotation) {
+        String[] result = (String[]) getObject(annotation, "requiredForPackagings");
+        return result == null ? null : (List<String>) Arrays.asList(result);
+    }
 
-	private static String getDescription(Annotation annotation) {
-		return (String) getObject(annotation, "description");
-	}
+    private static String getDescription(Annotation annotation) {
+        return (String) getObject(annotation, "description");
+    }
 
-	private static String getCategory(Annotation annotation) {
-		Object o = getObject(annotation, "category");
-		return o != null ? (String) o : null;
-	}
+    private static String getCategory(Annotation annotation) {
+        Object o = getObject(annotation, "category");
+        return o != null ? (String) o : null;
+    }
 
-	private static boolean getValueGuessedByDefault(Annotation annotation) {
-		Object o = getObject(annotation, "valueGuessedByDefault");
-		return o != null ? (Boolean) o : true;
-	}
+    private static boolean getValueGuessedByDefault(Annotation annotation) {
+        Object o = getObject(annotation, "valueGuessedByDefault");
+        return o != null ? (Boolean) o : true;
+    }
 
-	private static Object getObject(Annotation annotation, String methodName) {
-		InvocationHandler handler = Proxy.getInvocationHandler(annotation);
-		Method method;
-		try {
-			method = annotation.annotationType().getMethod(methodName, (Class<?>[]) null);
-			return handler.invoke(annotation, method, null);
-		} catch (Throwable e) {
-			return null;
-		}
-	}
+    private static Object getObject(Annotation annotation, String methodName) {
+        InvocationHandler handler = Proxy.getInvocationHandler(annotation);
+        Method method;
+        try {
+            method = annotation.annotationType().getMethod(methodName, (Class<?>[]) null);
+            return handler.invoke(annotation, method, null);
+        } catch (Throwable e) {
+            return null;
+        }
+    }
 
-	public static <A extends Annotation> Set<ParameterImpl> getFieldsAnnotatedWith(Set<Field> fields, Class<A> parameterAnnotation) {
-		Set<ParameterImpl> result = new HashSet<ParameterImpl>();
+    public static <A extends Annotation> Set<ParameterImpl> getFieldsAnnotatedWith(Set<Field> fields, Class<A> parameterAnnotation) {
+        Set<ParameterImpl> result = new HashSet<ParameterImpl>();
 
-		for (Field field : fields) {
-			field.setAccessible(true);
-			A annotation = field.getAnnotation(parameterAnnotation);
+        for (Field field : fields) {
+            field.setAccessible(true);
+            A annotation = field.getAnnotation(parameterAnnotation);
 
-			String property = null;
-			String defaultValue = null;
-			boolean required = false;
-			List<String> requiredForPackagings = null;
-			String description = null;
-			String category = null;
-			boolean valueGuessedByDefault = true;
+            String property = null;
+            String defaultValue = null;
+            boolean required = false;
+            List<String> requiredForPackagings = null;
+            String description = null;
+            String category = null;
+            boolean valueGuessedByDefault = true;
 
-			if (annotation != null) {
-				property = getProperty(annotation);
-				defaultValue = getDefaultValue(annotation);
-				required = getRequired(annotation);
-				requiredForPackagings = getRequiredForPackagings(annotation);
-				description = getDescription(annotation);
-				category = getCategory(annotation);
-				valueGuessedByDefault = getValueGuessedByDefault(annotation);
-			} else {
-				for (Annotation a : field.getAnnotations()) {
-					if (a.annotationType().getCanonicalName().equals(parameterAnnotation.getCanonicalName())) {
-						property = getProperty(a);
-						defaultValue = getDefaultValue(a);
-						required = getRequired(a);
-						requiredForPackagings = getRequiredForPackagings(a);
-						description = getDescription(a);
-						category = getCategory(a);
-						valueGuessedByDefault = getValueGuessedByDefault(a);
-					}
-				}
-			}
-			if (property != null) {
-				result.add(new ParameterImpl(field.getName(), field.getType().getCanonicalName(), property, defaultValue, required, requiredForPackagings, description, category, valueGuessedByDefault));
-			}
-		}
+            if (annotation != null) {
+                property = getProperty(annotation);
+                defaultValue = getDefaultValue(annotation);
+                required = getRequired(annotation);
+                requiredForPackagings = getRequiredForPackagings(annotation);
+                description = getDescription(annotation);
+                category = getCategory(annotation);
+                valueGuessedByDefault = getValueGuessedByDefault(annotation);
+            } else {
+                for (Annotation a : field.getAnnotations()) {
+                    if (a.annotationType().getCanonicalName().equals(parameterAnnotation.getCanonicalName())) {
+                        property = getProperty(a);
+                        defaultValue = getDefaultValue(a);
+                        required = getRequired(a);
+                        requiredForPackagings = getRequiredForPackagings(a);
+                        description = getDescription(a);
+                        category = getCategory(a);
+                        valueGuessedByDefault = getValueGuessedByDefault(a);
+                    }
+                }
+            }
+            if (property != null) {
+                result.add(new ParameterImpl(field.getName(), field.getType().getCanonicalName(), property, defaultValue, required, requiredForPackagings, description, category, valueGuessedByDefault));
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 
 }

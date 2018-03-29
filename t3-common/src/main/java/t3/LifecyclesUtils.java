@@ -32,81 +32,81 @@ import java.util.ListIterator;
 
 public class LifecyclesUtils {
 
-	public static List<Lifecycle<Phase>> parse(File componentsFile, MavenProject project, MavenSession session) throws SAXException, IOException {
-		List<Lifecycle<Phase>> lifecycles = new ArrayList<Lifecycle<Phase>>();
+    public static List<Lifecycle<Phase>> parse(File componentsFile, MavenProject project, MavenSession session) throws SAXException, IOException {
+        List<Lifecycle<Phase>> lifecycles = new ArrayList<Lifecycle<Phase>>();
 
-		Match lifecyclesElements;
-		lifecyclesElements = JOOX.$(componentsFile).xpath("//component[implementation='org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping']");
-		for (Element element : lifecyclesElements) {
-			List<Phase> phases = new ArrayList<Phase>();
-			Match phasesElements = JOOX.$(element).xpath("configuration/phases/*");
-			for (Element phase : phasesElements) {
-				phases.add(new Phase(phase.getNodeName(), phase.getTextContent(), project, session));
-			}
-			lifecycles.add(new Lifecycle<Phase>(JOOX.$(element).xpath("role-hint").text(), phases));
-		}
-		return lifecycles;
-	}
+        Match lifecyclesElements;
+        lifecyclesElements = JOOX.$(componentsFile).xpath("//component[implementation='org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping']");
+        for (Element element : lifecyclesElements) {
+            List<Phase> phases = new ArrayList<Phase>();
+            Match phasesElements = JOOX.$(element).xpath("configuration/phases/*");
+            for (Element phase : phasesElements) {
+                phases.add(new Phase(phase.getNodeName(), phase.getTextContent(), project, session));
+            }
+            lifecycles.add(new Lifecycle<Phase>(JOOX.$(element).xpath("role-hint").text(), phases));
+        }
+        return lifecycles;
+    }
 
-	public static class Lifecycle<P extends Phase> {
-		private String packagingName;
-		private List<P> phases;
+    public static class Lifecycle<P extends Phase> {
+        private String packagingName;
+        private List<P> phases;
 
-		public Lifecycle(String packagingName, List<P> phases) {
-			this.packagingName = packagingName;
-			this.phases = phases;
-		}
+        public Lifecycle(String packagingName, List<P> phases) {
+            this.packagingName = packagingName;
+            this.phases = phases;
+        }
 
-		public String getPackagingName() {
-			return packagingName;
-		}
-		public void setPackagingName(String packagingName) {
-			this.packagingName = packagingName;
-		}
+        public String getPackagingName() {
+            return packagingName;
+        }
+        public void setPackagingName(String packagingName) {
+            this.packagingName = packagingName;
+        }
 
-		public List<P> getPhases() {
-			return phases;
-		}
-		public void setPhases(List<P> phases) {
-			this.phases = phases;
-		}
+        public List<P> getPhases() {
+            return phases;
+        }
+        public void setPhases(List<P> phases) {
+            this.phases = phases;
+        }
 
-	}
+    }
 
-	public static class Phase {
-		private String phaseName;
-		private List<String> goals;
-		private final MavenProject mavenProject;
+    public static class Phase {
+        private String phaseName;
+        private List<String> goals;
+        private final MavenProject mavenProject;
 
-		public Phase(String phaseName, String goals, MavenProject mavenProject, MavenSession session) {
-			this.phaseName = phaseName;
-			this.mavenProject = mavenProject;
+        public Phase(String phaseName, String goals, MavenProject mavenProject, MavenSession session) {
+            this.phaseName = phaseName;
+            this.mavenProject = mavenProject;
 
-			CommonMojo propertiesManager = CommonMojo.propertiesManager(session, mavenProject);
+            CommonMojo propertiesManager = CommonMojo.propertiesManager(session, mavenProject);
 
-			this.goals = Arrays.asList(goals.split("\\s*,\\s*"));
-			for (ListIterator<String> iterator = this.goals.listIterator(); iterator.hasNext();) {
-				String goal = iterator.next();
+            this.goals = Arrays.asList(goals.split("\\s*,\\s*"));
+            for (ListIterator<String> iterator = this.goals.listIterator(); iterator.hasNext();) {
+                String goal = iterator.next();
 
-				iterator.set(propertiesManager.replaceProperties(goal.trim()));
-			}
+                iterator.set(propertiesManager.replaceProperties(goal.trim()));
+            }
 
-		}
+        }
 
-		public List<String> getGoals() {
-			return goals;
-		}
-		public void setGoals(List<String> goals) {
-			this.goals = goals;
-		}
-		public MavenProject getMavenProject() {
-			return mavenProject;
-		}
-		public String getPhaseName() {
-			return phaseName;
-		}
-		public void setPhaseName(String phaseName) {
-			this.phaseName = phaseName;
-		}
-	}
+        public List<String> getGoals() {
+            return goals;
+        }
+        public void setGoals(List<String> goals) {
+            this.goals = goals;
+        }
+        public MavenProject getMavenProject() {
+            return mavenProject;
+        }
+        public String getPhaseName() {
+            return phaseName;
+        }
+        public void setPhaseName(String phaseName) {
+            this.phaseName = phaseName;
+        }
+    }
 }

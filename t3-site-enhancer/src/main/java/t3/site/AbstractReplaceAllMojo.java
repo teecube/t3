@@ -38,115 +38,115 @@ import static org.rendersnake.HtmlAttributesFactory.class_;
  */
 public abstract class AbstractReplaceAllMojo extends AbstractSiteMojo {
 
-	public abstract void processHTMLFile(File htmlFile) throws Exception;
+    public abstract void processHTMLFile(File htmlFile) throws Exception;
 
-	@Parameter
-	List<Sample> samples;
+    @Parameter
+    List<Sample> samples;
 
-	@Parameter
-	List<CommandLine> commandLines;
+    @Parameter
+    List<CommandLine> commandLines;
 
-	private HtmlCanvas generateSample(String title, String sample) throws IOException {
-		HtmlCanvas html = new HtmlCanvas();
+    private HtmlCanvas generateSample(String title, String sample) throws IOException {
+        HtmlCanvas html = new HtmlCanvas();
 
-		this.project.getProperties().put("data-clipboard-text", sample.replace("\n", "&#xa;"));
-		this.project.getProperties().put("config-title", title);
+        this.project.getProperties().put("data-clipboard-text", sample.replace("\n", "&#xa;"));
+        this.project.getProperties().put("config-title", title);
 
-		String templateStart = replaceProperties(replaceProperties("${configTextStart}"));
-		String templateEnd = replaceProperties(replaceProperties("${configTextEnd}"));
+        String templateStart = replaceProperties(replaceProperties("${configTextStart}"));
+        String templateEnd = replaceProperties(replaceProperties("${configTextEnd}"));
 
-		html.write(templateStart, false);
+        html.write(templateStart, false);
 
-		html.
-		pre(class_("xml")).
-			write(sample, false)
-		._pre();
+        html.
+        pre(class_("xml")).
+            write(sample, false)
+        ._pre();
 
-		html.write(templateEnd, false);
+        html.write(templateEnd, false);
 
-		return html;
-	}
+        return html;
+    }
 
-	private HtmlCanvas generateCommandLine(String title, String commandLine, List<String> arguments, List<String> results) throws IOException {
-		this.project.getProperties().put("data-clipboard-text", getFullCommandLine(commandLine, arguments));
-		this.project.getProperties().put("command-title", "&#160;");
+    private HtmlCanvas generateCommandLine(String title, String commandLine, List<String> arguments, List<String> results) throws IOException {
+        this.project.getProperties().put("data-clipboard-text", getFullCommandLine(commandLine, arguments));
+        this.project.getProperties().put("command-title", "&#160;");
 
-		String templateStart = replaceProperties(replaceProperties("${commandLineStart}"));
-		String templateEnd = replaceProperties(replaceProperties("${commandLineEnd}"));
+        String templateStart = replaceProperties(replaceProperties("${commandLineStart}"));
+        String templateEnd = replaceProperties(replaceProperties("${commandLineEnd}"));
 
-		return createCommandLines(commandLine, templateStart, templateEnd, arguments, results, true);
-	}
+        return createCommandLines(commandLine, templateStart, templateEnd, arguments, results, true);
+    }
 
-	protected List<File> getHTMLFiles() throws IOException {
-		FileSet htmlFiles = new FileSet();
-		htmlFiles.setDirectory(outputDirectory.getAbsolutePath());
+    protected List<File> getHTMLFiles() throws IOException {
+        FileSet htmlFiles = new FileSet();
+        htmlFiles.setDirectory(outputDirectory.getAbsolutePath());
 
-		htmlFiles.addInclude("**/*.html");
-		htmlFiles.addExclude("apidocs/**/*");
-		htmlFiles.addExclude("xref/**/*");
+        htmlFiles.addInclude("**/*.html");
+        htmlFiles.addExclude("apidocs/**/*");
+        htmlFiles.addExclude("xref/**/*");
 
-		return toFileList(htmlFiles);
-	}
+        return toFileList(htmlFiles);
+    }
 
-	@Override
-	public void execute() throws MojoExecutionException, MojoFailureException {
-		super.execute();
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        super.execute();
 
-		if (siteProperties == null) {
-			siteProperties = new ArrayList<String>();
-		}
-		if (fromRootParentProperties == null) {
-			fromRootParentProperties = new ArrayList<String>();
-		}
-		if (inOriginalModelProperties == null) {
-			inOriginalModelProperties = new ArrayList<String>();
-		}
-		if (lookInSettingsProperties == null) {
-			lookInSettingsProperties = new ArrayList<String>();
-		}
+        if (siteProperties == null) {
+            siteProperties = new ArrayList<String>();
+        }
+        if (fromRootParentProperties == null) {
+            fromRootParentProperties = new ArrayList<String>();
+        }
+        if (inOriginalModelProperties == null) {
+            inOriginalModelProperties = new ArrayList<String>();
+        }
+        if (lookInSettingsProperties == null) {
+            lookInSettingsProperties = new ArrayList<String>();
+        }
 
-		if (staticSiteProperties == null) {
-			staticSiteProperties = new ArrayList<String>();
-		}
-		if (staticLookInSettingsProperties == null) {
-			staticLookInSettingsProperties = new ArrayList<String>();
-		}
+        if (staticSiteProperties == null) {
+            staticSiteProperties = new ArrayList<String>();
+        }
+        if (staticLookInSettingsProperties == null) {
+            staticLookInSettingsProperties = new ArrayList<String>();
+        }
 
-		lookInSettingsProperties.addAll(staticLookInSettingsProperties);
-		siteProperties.addAll(staticSiteProperties);
+        lookInSettingsProperties.addAll(staticLookInSettingsProperties);
+        siteProperties.addAll(staticSiteProperties);
 
-		try {
-			if (samples == null) {
-				samples = new ArrayList<Sample>();
-			}
-			if (commandLines == null) {
-				commandLines = new ArrayList<CommandLine>();
-			}
+        try {
+            if (samples == null) {
+                samples = new ArrayList<Sample>();
+            }
+            if (commandLines == null) {
+                commandLines = new ArrayList<CommandLine>();
+            }
 
-			for (Sample sample : samples) {
-				String sampleContent = generateSample(sample.getTitle(), sample.getContent()).toHtml();
-				addPropertyInSessionRequest(sample.getProperty(), sampleContent);
-			}
-			for (CommandLine commandLine : commandLines) {
-				if (commandLine.getArguments() == null) {
-					commandLine.setArguments(new ArrayList<String>());
-				}
-				if (commandLine.getResults() == null) {
-					commandLine.setResults(new ArrayList<String>());
-				}
-				String commandLineContent = generateCommandLine(commandLine.getTitle(), commandLine.getCommandLine(), commandLine.getArguments(), commandLine.getResults()).toHtml();
-				addPropertyInSessionRequest(commandLine.getProperty(), commandLineContent);
-			}
-			
-			List<File> htmlFiles = getHTMLFiles();
+            for (Sample sample : samples) {
+                String sampleContent = generateSample(sample.getTitle(), sample.getContent()).toHtml();
+                addPropertyInSessionRequest(sample.getProperty(), sampleContent);
+            }
+            for (CommandLine commandLine : commandLines) {
+                if (commandLine.getArguments() == null) {
+                    commandLine.setArguments(new ArrayList<String>());
+                }
+                if (commandLine.getResults() == null) {
+                    commandLine.setResults(new ArrayList<String>());
+                }
+                String commandLineContent = generateCommandLine(commandLine.getTitle(), commandLine.getCommandLine(), commandLine.getArguments(), commandLine.getResults()).toHtml();
+                addPropertyInSessionRequest(commandLine.getProperty(), commandLineContent);
+            }
+            
+            List<File> htmlFiles = getHTMLFiles();
 
-			for (File htmlFile : htmlFiles) {
-				getLog().debug(htmlFile.getAbsolutePath());
-				processHTMLFile(htmlFile);
-			}
-		} catch (Exception e) {
-			throw new MojoExecutionException(e.getLocalizedMessage(), e);
-		}
-	}
+            for (File htmlFile : htmlFiles) {
+                getLog().debug(htmlFile.getAbsolutePath());
+                processHTMLFile(htmlFile);
+            }
+        } catch (Exception e) {
+            throw new MojoExecutionException(e.getLocalizedMessage(), e);
+        }
+    }
 
 }

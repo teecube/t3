@@ -23,6 +23,6 @@ package t3.xml;
  */
 public interface XMLFromPropertiesMapping {
 
-	public Object addParameter(String key, String value);
+    public Object addParameter(String key, String value);
 
 }

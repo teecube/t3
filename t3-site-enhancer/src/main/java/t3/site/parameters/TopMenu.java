@@ -24,16 +24,16 @@ import java.util.List;
  *
  */
 public class TopMenu {
-	public String name;
-	public String url;
-	public List<SubMenu> submenus;
+    public String name;
+    public String url;
+    public List<SubMenu> submenus;
 
-	public TopMenu() {
+    public TopMenu() {
 
-	}
+    }
 
-	public TopMenu(String name, String url) {
-		this.name = name;
-		this.url = url;
-	}
+    public TopMenu(String name, String url) {
+        this.name = name;
+        this.url = url;
+    }
 }

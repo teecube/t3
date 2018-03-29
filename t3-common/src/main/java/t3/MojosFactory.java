@@ -30,38 +30,38 @@ import java.util.*;
  */
 public class MojosFactory {
 
-	public <T extends AbstractMojo> T getMojo(Class<T> type) {
-		return null;
-	}
+    public <T extends AbstractMojo> T getMojo(Class<T> type) {
+        return null;
+    }
 
-	public static <T> Map<String, LifecyclePhase> getMojosGoals(Class<T> type, boolean onlyRequiresProject) {
-		Map<String, LifecyclePhase> result = new HashMap<String, LifecyclePhase>();
+    public static <T> Map<String, LifecyclePhase> getMojosGoals(Class<T> type, boolean onlyRequiresProject) {
+        Map<String, LifecyclePhase> result = new HashMap<String, LifecyclePhase>();
 
-		Set<Class<?>> mojos = AnnotationsHelper.getTypesAnnotatedWith(type, Mojo.class);
+        Set<Class<?>> mojos = AnnotationsHelper.getTypesAnnotatedWith(type, Mojo.class);
 
-		for (Class<?> mojo : mojos) {
-			Mojo m = mojo.getAnnotation(Mojo.class);
-			String goal = m.name();
-			LifecyclePhase phase = m.defaultPhase();
-			if (!onlyRequiresProject || m.requiresProject()) {
-				result.put(goal, phase);
-			}
-		}
+        for (Class<?> mojo : mojos) {
+            Mojo m = mojo.getAnnotation(Mojo.class);
+            String goal = m.name();
+            LifecyclePhase phase = m.defaultPhase();
+            if (!onlyRequiresProject || m.requiresProject()) {
+                result.put(goal, phase);
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	public static <T> List<String> getMojosGoalsForLifecyclePhase(Class<T> type, LifecyclePhase lifecyclePhase, boolean onlyRequiresProject) {
-		List<String> result = new ArrayList<String>();
+    public static <T> List<String> getMojosGoalsForLifecyclePhase(Class<T> type, LifecyclePhase lifecyclePhase, boolean onlyRequiresProject) {
+        List<String> result = new ArrayList<String>();
 
-		Map<String, LifecyclePhase> goals = getMojosGoals(type, onlyRequiresProject);
-		for (String goal : goals.keySet()) {
-			LifecyclePhase phase = goals.get(goal);
-			if (phase.ordinal() <= lifecyclePhase.ordinal()) {
-				result.add(goal);
-			}
-		}
+        Map<String, LifecyclePhase> goals = getMojosGoals(type, onlyRequiresProject);
+        for (String goal : goals.keySet()) {
+            LifecyclePhase phase = goals.get(goal);
+            if (phase.ordinal() <= lifecyclePhase.ordinal()) {
+                result.add(goal);
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 }

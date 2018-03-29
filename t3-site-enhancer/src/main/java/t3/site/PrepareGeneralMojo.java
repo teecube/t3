@@ -29,20 +29,20 @@ import org.apache.maven.plugins.annotations.Mojo;
 @Mojo(name = "prepare-general", defaultPhase = LifecyclePhase.PRE_SITE)
 public class PrepareGeneralMojo extends AbstractSiteMojo {
 
-	@Override
-	public void execute() throws MojoExecutionException, MojoFailureException {
-		String siteURL = getRootProjectProperty(project, "siteURL");
-		siteURL = replaceProperties(siteURL);
-		if (siteURL != null) {
-			project.getModel().getProperties().put("siteURL", siteURL);
-		}
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        String siteURL = getRootProjectProperty(project, "siteURL");
+        siteURL = replaceProperties(siteURL);
+        if (siteURL != null) {
+            project.getModel().getProperties().put("siteURL", siteURL);
+        }
 
-		updateSiteUrl(replaceProperties(project.getUrl()), replaceProperties(project.getDistributionManagement().getSite().getUrl()));
-	}
+        updateSiteUrl(replaceProperties(project.getUrl()), replaceProperties(project.getDistributionManagement().getSite().getUrl()));
+    }
 
-	private void updateSiteUrl(String url, String siteUrl) {
-		project.getDistributionManagement().getSite().setUrl(siteUrl);
-		project.setUrl(url);
-	}
+    private void updateSiteUrl(String url, String siteUrl) {
+        project.getDistributionManagement().getSite().setUrl(siteUrl);
+        project.setUrl(url);
+    }
 
 }
