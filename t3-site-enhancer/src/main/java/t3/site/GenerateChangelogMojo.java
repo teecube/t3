@@ -16,17 +16,16 @@
  */
 package t3.site;
 
-import static org.rendersnake.HtmlAttributesFactory.class_;
-import static org.rendersnake.HtmlAttributesFactory.href;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.regex.Pattern;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.mashape.unirest.http.ObjectMapper;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mashape.unirest.request.GetRequest;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.options.MutableDataSet;
+import lombok.ast.libs.com.google.common.collect.Lists;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -39,23 +38,18 @@ import org.joda.time.format.DateTimeFormat;
 import org.rendersnake.HtmlCanvas;
 import org.rendersnake.Renderable;
 import org.xml.sax.SAXException;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
-import com.mashape.unirest.http.ObjectMapper;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.request.GetRequest;
-import com.vladsch.flexmark.html.HtmlRenderer;
-import com.vladsch.flexmark.parser.Parser;
-import com.vladsch.flexmark.util.options.MutableDataSet;
-
-import lombok.ast.libs.com.google.common.collect.Lists;
 import t3.site.gitlab.commits.Commit;
 import t3.site.gitlab.issues.Issue;
 import t3.site.gitlab.merge.MergeRequest;
 import t3.site.gitlab.project.Project;
 import t3.site.gitlab.tags.Tag;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.regex.Pattern;
+
+import static org.rendersnake.HtmlAttributesFactory.class_;
+import static org.rendersnake.HtmlAttributesFactory.href;
 
 /**
  *

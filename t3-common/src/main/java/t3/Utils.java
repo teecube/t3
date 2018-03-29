@@ -16,6 +16,10 @@
  */
 package t3;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.maven.model.FileSet;
+import org.codehaus.plexus.util.FileUtils;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -24,10 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.io.FilenameUtils;
-import org.apache.maven.model.FileSet;
-import org.codehaus.plexus.util.FileUtils;
 
 /**
  *

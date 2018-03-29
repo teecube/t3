@@ -16,16 +16,16 @@
  */
 package t3.plugin.annotations.helpers;
 
+import t3.plugin.annotations.Categories;
+import t3.plugin.annotations.Category;
+import t3.plugin.annotations.impl.CategoryImpl;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.HashSet;
 import java.util.Set;
-
-import t3.plugin.annotations.Categories;
-import t3.plugin.annotations.Category;
-import t3.plugin.annotations.impl.CategoryImpl;
 
 /**
  *

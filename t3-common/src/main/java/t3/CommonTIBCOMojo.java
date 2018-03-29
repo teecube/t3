@@ -16,7 +16,11 @@
  */
 package t3;
 
-import static org.apache.commons.io.FileUtils.copyFile;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.maven.execution.MavenSession;
+import org.apache.maven.plugin.MojoExecutionException;
+import t3.plugin.PropertiesEnforcer;
+import t3.plugin.annotations.GlobalParameter;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -25,12 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.maven.execution.MavenSession;
-import org.apache.maven.plugin.MojoExecutionException;
-
-import t3.plugin.PropertiesEnforcer;
-import t3.plugin.annotations.GlobalParameter;
+import static org.apache.commons.io.FileUtils.copyFile;
 
 /**
  *

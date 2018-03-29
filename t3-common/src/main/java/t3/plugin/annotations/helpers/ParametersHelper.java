@@ -16,6 +16,8 @@
  */
 package t3.plugin.annotations.helpers;
 
+import t3.plugin.annotations.impl.ParameterImpl;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -25,8 +27,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import t3.plugin.annotations.impl.ParameterImpl;
 
 /**
  *

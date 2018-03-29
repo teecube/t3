@@ -16,23 +16,21 @@
  */
 package t3.plugin.annotations.injection;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.maven.execution.MavenSession;
-import org.apache.maven.project.MavenProject;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.MembersInjector;
 import com.google.inject.TypeLiteral;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
-
+import org.apache.maven.execution.MavenSession;
+import org.apache.maven.project.MavenProject;
 import t3.CommonMojo;
 import t3.plugin.PluginConfigurator;
 import t3.plugin.annotations.GlobalParameter;
 import t3.plugin.annotations.Parameter;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *

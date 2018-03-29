@@ -16,15 +16,15 @@
  */
 package t3.site;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.rendersnake.HtmlCanvas;
 import org.xml.sax.SAXException;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  *

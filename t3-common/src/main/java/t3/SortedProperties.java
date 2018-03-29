@@ -16,28 +16,14 @@
  */
 package t3;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Properties;
-import java.util.TreeSet;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.shared.filtering.MavenResourcesExecution;
+
+import java.io.*;
+import java.math.BigInteger;
+import java.util.*;
 
 /**
  * <p>

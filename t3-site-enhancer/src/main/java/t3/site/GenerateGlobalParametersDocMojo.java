@@ -16,24 +16,6 @@
  */
 package t3.site;
 
-import static org.rendersnake.HtmlAttributesFactory.border;
-import static org.rendersnake.HtmlAttributesFactory.class_;
-import static org.rendersnake.HtmlAttributesFactory.href;
-import static org.rendersnake.HtmlAttributesFactory.id;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -44,12 +26,21 @@ import org.apache.maven.project.MavenProject;
 import org.reflections.util.ClasspathHelper;
 import org.rendersnake.HtmlCanvas;
 import org.rendersnake.Renderable;
-
 import t3.plugin.annotations.helpers.AnnotationsHelper;
 import t3.plugin.annotations.helpers.CategoriesHelper;
 import t3.plugin.annotations.helpers.ParametersHelper;
 import t3.plugin.annotations.impl.CategoryImpl;
 import t3.plugin.annotations.impl.ParameterImpl;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.*;
+
+import static org.rendersnake.HtmlAttributesFactory.*;
 
 /**
  *

@@ -16,17 +16,12 @@
  */
 package t3;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
-
 import t3.plugin.annotations.Mojo;
 import t3.plugin.annotations.helpers.AnnotationsHelper;
+
+import java.util.*;
 
 /**
  *

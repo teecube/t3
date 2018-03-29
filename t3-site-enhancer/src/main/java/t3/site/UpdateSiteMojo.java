@@ -16,8 +16,15 @@
  */
 package t3.site;
 
-import static org.rendersnake.HtmlAttributesFactory.class_;
-import static org.rendersnake.HtmlAttributesFactory.href;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.rendersnake.HtmlCanvas;
+import org.rendersnake.Renderable;
+import t3.site.parameters.SubMenu;
+import t3.site.parameters.TopMenu;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,16 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.rendersnake.HtmlCanvas;
-import org.rendersnake.Renderable;
-
-import t3.site.parameters.SubMenu;
-import t3.site.parameters.TopMenu;
+import static org.rendersnake.HtmlAttributesFactory.class_;
+import static org.rendersnake.HtmlAttributesFactory.href;
 
 /**
  *

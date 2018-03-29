@@ -16,19 +16,17 @@
  */
 package t3.site;
 
-import static org.rendersnake.HtmlAttributesFactory.class_;
-import static org.rendersnake.HtmlAttributesFactory.id;
-import static org.rendersnake.HtmlAttributesFactory.name;
-
-import java.io.File;
-import java.io.IOException;
-
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.joox.JOOX;
 import org.joox.Match;
 import org.rendersnake.HtmlCanvas;
+
+import java.io.File;
+import java.io.IOException;
+
+import static org.rendersnake.HtmlAttributesFactory.*;
 
 /**
  *

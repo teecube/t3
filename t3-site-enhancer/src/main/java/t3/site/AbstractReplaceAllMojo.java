@@ -16,21 +16,20 @@
  */
 package t3.site;
 
-import static org.rendersnake.HtmlAttributesFactory.class_;
+import org.apache.maven.model.FileSet;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.rendersnake.HtmlCanvas;
+import t3.site.parameters.CommandLine;
+import t3.site.parameters.Sample;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.maven.model.FileSet;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.rendersnake.HtmlCanvas;
-
-import t3.site.parameters.CommandLine;
-import t3.site.parameters.Sample;
+import static org.rendersnake.HtmlAttributesFactory.class_;
 
 /**
  *

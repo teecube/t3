@@ -16,11 +16,6 @@
  */
 package t3.site;
 
-import static org.rendersnake.HtmlAttributesFactory.class_;
-
-import java.io.File;
-import java.io.IOException;
-
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -28,6 +23,11 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.project.MavenProject;
 import org.rendersnake.HtmlCanvas;
 import org.rendersnake.Renderable;
+
+import java.io.File;
+import java.io.IOException;
+
+import static org.rendersnake.HtmlAttributesFactory.class_;
 
 /**
  *

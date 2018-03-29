@@ -16,14 +16,14 @@
  */
 package t3.xml;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.XMLFilterImpl;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -68,7 +68,7 @@ public class RootElementNamespaceFilter extends XMLFilterImpl {
 	/**
 	 *
 	 * @param rootElementLocalName, the document root element local name
-	 * @param prefixes, list of prefix in the form "xmlns:prefix"
+	 * @param namespaceDeclarationsToRemove, list of prefix in the form "xmlns:prefix"
 	 */
 	public RootElementNamespaceFilter(String rootElementLocalName, List<NamespaceDeclaration> namespaceDeclarationsToRemove) {
 		super();

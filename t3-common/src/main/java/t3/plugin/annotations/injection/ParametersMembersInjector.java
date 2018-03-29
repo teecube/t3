@@ -16,10 +16,10 @@
  */
 package t3.plugin.annotations.injection;
 
+import com.google.inject.MembersInjector;
+
 import java.io.File;
 import java.lang.reflect.Field;
-
-import com.google.inject.MembersInjector;
 
 /**
  *

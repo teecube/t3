@@ -16,12 +16,16 @@
  */
 package t3.xml;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.XMLWriter;
+import org.xml.sax.SAXException;
+import t3.xml.RootElementNamespaceFilter.NamespaceDeclaration;
+
+import javax.xml.XMLConstants;
+import javax.xml.bind.*;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.SchemaFactory;
+import java.io.*;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,21 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.SchemaFactory;
-
-import org.dom4j.io.OutputFormat;
-import org.dom4j.io.XMLWriter;
-import org.xml.sax.SAXException;
-
-import t3.xml.RootElementNamespaceFilter.NamespaceDeclaration;
 
 /**
  *

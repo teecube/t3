@@ -16,12 +16,12 @@
  */
 package t3.site;
 
-import java.io.File;
-
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.joox.JOOX;
 import org.joox.Match;
+
+import java.io.File;
 
 /**
  *

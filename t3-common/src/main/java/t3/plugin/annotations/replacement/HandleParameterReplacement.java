@@ -16,18 +16,16 @@
  */
 package t3.plugin.annotations.replacement;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.kohsuke.MetaInfServices;
-
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
-
 import lombok.core.AnnotationValues;
 import lombok.core.HandlerPriority;
 import lombok.javac.JavacAnnotationHandler;
 import lombok.javac.JavacNode;
+import org.kohsuke.MetaInfServices;
 import t3.plugin.annotations.Parameter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>

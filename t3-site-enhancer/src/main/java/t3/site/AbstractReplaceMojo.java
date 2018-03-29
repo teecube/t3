@@ -16,11 +16,11 @@
  */
 package t3.site;
 
+import org.apache.maven.model.FileSet;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
-import org.apache.maven.model.FileSet;
 
 /**
  *

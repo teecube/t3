@@ -16,15 +16,6 @@
  */
 package t3;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
@@ -34,6 +25,10 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+
+import java.io.*;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * <p>
@@ -448,8 +443,9 @@ public class POMManager {
 	/**
 	 * Check whether a module exists in a POM.
 	 *
-	 * @param rootPOM
-	 * @param relative
+	 * @param pom
+	 * @param relativePath
+	 * @param profileId
 	 * @return
 	 * @throws XmlPullParserException
 	 * @throws IOException

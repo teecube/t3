@@ -16,19 +16,19 @@
  */
 package t3;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ListIterator;
-
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.joox.JOOX;
 import org.joox.Match;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ListIterator;
 
 public class LifecyclesUtils {
 

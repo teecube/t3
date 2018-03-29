@@ -16,13 +16,6 @@
  */
 package t3.plugin;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginExecution;
@@ -30,6 +23,13 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  *

@@ -16,17 +16,6 @@
  */
 package t3.plugin;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Properties;
-import java.util.Set;
-import java.util.regex.Pattern;
-
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginExecution;
@@ -38,11 +27,16 @@ import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
-
 import t3.CommonMojo;
 import t3.plugin.annotations.GlobalParameter;
 import t3.plugin.annotations.Parameter;
 import t3.plugin.annotations.helpers.AnnotationsHelper;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  *

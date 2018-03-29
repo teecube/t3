@@ -16,25 +16,11 @@
  */
 package t3.site;
 
-import static org.rendersnake.HtmlAttributesFactory.border;
-import static org.rendersnake.HtmlAttributesFactory.class_;
-import static org.rendersnake.HtmlAttributesFactory.href;
-import static org.rendersnake.HtmlAttributesFactory.id;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Component;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.DefaultPlexusContainer;
 import org.joox.JOOX;
@@ -43,8 +29,14 @@ import org.rendersnake.HtmlCanvas;
 import org.rendersnake.Renderable;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
-
 import t3.LifecyclesUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.rendersnake.HtmlAttributesFactory.*;
 
 /**
  *
