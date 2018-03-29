@@ -16,21 +16,20 @@
  */
 package t3.plugin;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.PluginExecution;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
-
 import t3.plugin.annotations.Mojo;
 import t3.plugin.annotations.Parameter;
 import t3.plugin.annotations.helpers.AnnotationsHelper;
 import t3.plugin.annotations.helpers.ParametersHelper;
 import t3.plugin.annotations.impl.ParameterImpl;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -98,7 +97,6 @@ public class EnforcerPluginBuilder extends PluginBuilder {
 					configuration.getChild("rules").addChild(rule);
 					enabled = true;
 				}
-//				System.out.println(field.getName());
 			}
 		}
 		

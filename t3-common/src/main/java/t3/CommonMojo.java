@@ -16,46 +16,19 @@
  */
 package t3;
 
-import static org.twdata.maven.mojoexecutor.MojoExecutor.artifactId;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.goal;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.groupId;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.plugin;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.version;
-
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.lang.reflect.Field;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
+import com.google.common.io.Files;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.matcher.Matchers;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.DefaultExecuteResultHandler;
-import org.apache.commons.exec.DefaultExecutor;
-import org.apache.commons.exec.ExecuteException;
-import org.apache.commons.exec.ExecuteWatchdog;
-import org.apache.commons.exec.LogOutputStream;
-import org.apache.commons.exec.PumpStreamHandler;
-import org.apache.commons.exec.ShutdownHookProcessDestroyer;
+import org.apache.commons.exec.*;
 import org.apache.commons.exec.launcher.CommandLauncher;
 import org.apache.commons.exec.launcher.CommandLauncherFactory;
 import org.apache.commons.io.FileUtils;
@@ -69,11 +42,7 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginExecution;
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.BuildPluginManager;
-import org.apache.maven.plugin.MojoExecution;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.*;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Component;
@@ -110,18 +79,20 @@ import org.jboss.shrinkwrap.resolver.api.maven.embedded.EmbeddedMaven;
 import org.jboss.shrinkwrap.resolver.api.maven.embedded.pom.equipped.ConfigurationDistributionStage;
 import org.jboss.shrinkwrap.resolver.impl.maven.bootstrap.MavenSettingsBuilder;
 import org.slf4j.LoggerFactory;
-import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
-import org.twdata.maven.mojoexecutor.MojoExecutor.ExecutionEnvironment;
-
-import com.google.common.io.Files;
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.matcher.Matchers;
-
+import org.twdata.maven.mojoexecutor.MojoExecutor.*;
 import t3.plugin.PluginManager;
 import t3.plugin.annotations.GlobalParameter;
 import t3.plugin.annotations.injection.ParametersListener;
+
+import java.io.*;
+import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
 /**
  *
@@ -629,7 +600,7 @@ public class CommonMojo extends AbstractMojo {
 	 * @param ignoredParameters, the list to set
 	 * @return old ignoredParameters list
 	 */
-	public Map<String, String> setIgnoredParameters(Map<String, String> ignoredParameters) {
+	public Map<String, String> setIgnoredParameters(Map<String, String> ignoredParameters) throws MojoExecutionException {
 		Map<String, String> oldIgnoredParameters = this.ignoredParameters;
 
 		this.ignoredParameters = ignoredParameters;
@@ -666,7 +637,7 @@ public class CommonMojo extends AbstractMojo {
 		i.injectMembers(this); // will also inject in configuredMojo
 	}
 
-	protected AdvancedMavenLifecycleParticipant getLifecycleParticipant() throws MojoExecutionException {
+	protected AdvancedMavenLifecycleParticipant getLifecycleParticipant() {
 		logger.warn("getLifecycleParticipant() is not overridden!");
 		return null; // to be overridden in children classes
 	}
@@ -776,7 +747,7 @@ public class CommonMojo extends AbstractMojo {
 		return copyDependency(groupId, artifactId, version, type, null, outputDirectory, fileName);
 	}
 
-	protected File getDependency(String groupId, String artifactId, String version, String type, String classifier, boolean silent) throws MojoExecutionException, ArtifactNotFoundException, ArtifactResolutionException {
+	protected File getDependency(String groupId, String artifactId, String version, String type, String classifier, boolean silent) throws ArtifactNotFoundException, ArtifactResolutionException {
 		ArrayList<Element> configuration = new ArrayList<Element>();
 
 		configuration.add(new Element("groupId", groupId));
@@ -1301,6 +1272,8 @@ public class CommonMojo extends AbstractMojo {
 	}
 
 	private void restoreSlf4jLoggerLogLevel(String slf4jLoggerName, Map<String, Integer> logLevels) {
+		if (logLevels == null || logLevels.size() == 0) return;
+
 		int initialValue = logLevels.get(slf4jLoggerName); // retrieve initial value
 
 		setSlf4jLoggerLogLevel(slf4jLoggerName, initialValue); // restore initial value

@@ -16,23 +16,18 @@
  */
 package t3.plugin;
 
-import java.lang.reflect.Field;
-import java.util.Map;
-
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.matcher.Matchers;
+import com.google.inject.spi.TypeListener;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.classrealm.ClassRealmManager;
 import org.apache.maven.execution.MavenSession;
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.BuildPluginManager;
-import org.apache.maven.plugin.LegacySupport;
-import org.apache.maven.plugin.MavenPluginManager;
-import org.apache.maven.plugin.MojoExecution;
-import org.apache.maven.plugin.PluginConfigurationException;
-import org.apache.maven.plugin.PluginContainerException;
-import org.apache.maven.plugin.PluginDescriptorCache;
-import org.apache.maven.plugin.PluginRealmCache;
+import org.apache.maven.plugin.*;
 import org.apache.maven.plugin.internal.DefaultMavenPluginManager;
 import org.apache.maven.plugin.internal.PluginDependenciesResolver;
+import org.apache.maven.plugin.version.PluginVersionResolver;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.rtinfo.RuntimeInformation;
 import org.codehaus.plexus.PlexusContainer;
@@ -40,17 +35,13 @@ import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.LoggerManager;
 import org.eclipse.aether.RepositorySystem;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.matcher.Matchers;
-import com.google.inject.spi.TypeListener;
-
 import t3.CommonMojo;
 import t3.MojosFactory;
 import t3.log.NoOpLogger;
 import t3.plugin.annotations.injection.ParametersListener;
+
+import java.lang.reflect.Field;
+import java.util.Map;
 
 /**
  *
@@ -60,6 +51,7 @@ import t3.plugin.annotations.injection.ParametersListener;
 @Component( role = MavenPluginManager.class )
 public class PluginManager extends DefaultMavenPluginManager {
 
+	public static ClassLoader extensionClassLoader;
 	// actual Mojos factory is implemented in each Maven plugin
 	protected MojosFactory mojosFactory;
 
@@ -79,16 +71,16 @@ public class PluginManager extends DefaultMavenPluginManager {
 		return result;
 	}
 
-	public static PluginManager getCustomMavenPluginManager(BuildPluginManager pluginManager) {
-		PluginManager result = null;
-		try {
-			Field f = pluginManager.getClass().getDeclaredField("mavenPluginManager");
-			f.setAccessible(true);
-			result = (PluginManager) f.get(pluginManager);
-		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-			e.printStackTrace();
-		}
-		return result;
+	public static PluginManager getCustomMavenPluginManager(BuildPluginManager pluginManager) throws MojoExecutionException {
+			PluginManager result = null;
+			try {
+				Field f = pluginManager.getClass().getDeclaredField("mavenPluginManager");
+				f.setAccessible(true);
+				result = (PluginManager) f.get(pluginManager);
+			} catch (Exception e) {
+				throw new MojoExecutionException(e.getLocalizedMessage(), e);
+			}
+			return result;
 	}
 
 	public static void registerCustomPluginManager(BuildPluginManager pluginManager, MojosFactory mojosFactory) {
@@ -96,6 +88,7 @@ public class PluginManager extends DefaultMavenPluginManager {
 	}
 
 	public static void registerCustomPluginManager(BuildPluginManager pluginManager, MojosFactory mojosFactory, Map<String,String> ignoredParameters) {
+		extensionClassLoader = Thread.currentThread().getContextClassLoader();
 		try {
 			Field f = pluginManager.getClass().getDeclaredField("mavenPluginManager");
 			f.setAccessible(true);
@@ -145,6 +138,9 @@ public class PluginManager extends DefaultMavenPluginManager {
 			copyField("pluginRealmCache", PluginRealmCache.class, defaultMavenPluginManager);
 			copyField("pluginDependenciesResolver", PluginDependenciesResolver.class, defaultMavenPluginManager);
 			copyField("runtimeInformation", RuntimeInformation.class, defaultMavenPluginManager);
+			copyField("extensionRealmCache", ExtensionRealmCache.class, defaultMavenPluginManager);
+			copyField("pluginVersionResolver", PluginVersionResolver.class, defaultMavenPluginManager);
+			copyField("pluginArtifactsCache", PluginArtifactsCache.class, defaultMavenPluginManager);
 		} catch (Exception e) {
 			// no trace
 		}
@@ -197,16 +193,23 @@ public class PluginManager extends DefaultMavenPluginManager {
 		return configuredMojo;
 	}
 
-	public static void addIgnoredParametersInPluginManager(BuildPluginManager pluginManager, Map<String, String> ignoredParameters) {
+	public static void addIgnoredParametersInPluginManager(BuildPluginManager pluginManager, Map<String, String> ignoredParameters) throws MojoExecutionException {
 		PluginManager customPluginManager = PluginManager.getCustomMavenPluginManager(pluginManager);
 
 		customPluginManager.setIgnoredParameters(ignoredParameters);
 	}
 
-	public static void setSilentMojoInPluginManager(BuildPluginManager pluginManager, boolean silentMojo) {
-		PluginManager customPluginManager = PluginManager.getCustomMavenPluginManager(pluginManager);
+	public static void setSilentMojoInPluginManager(BuildPluginManager pluginManager, boolean silentMojo) throws MojoExecutionException {
+		DefaultMavenPluginManager customPluginManager = PluginManager.getDefaultMavenPluginManager(pluginManager);
 
-		customPluginManager.silentMojo = silentMojo;
+		Field silentMojoField = null;
+		try {
+			silentMojoField = customPluginManager.getClass().getDeclaredField("silentMojo");
+			silentMojoField.setAccessible(true);
+			silentMojoField.set(customPluginManager, silentMojo);
+		} catch (IllegalAccessException | NoSuchFieldException e) {
+			throw new MojoExecutionException(e.getLocalizedMessage(), e);
+		}
 	}
 
 }

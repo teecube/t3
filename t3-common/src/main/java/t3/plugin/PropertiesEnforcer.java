@@ -16,14 +16,6 @@
  */
 package t3.plugin;
 
-import static org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.MavenExecutionException;
@@ -34,10 +26,17 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
-
 import t3.CommonMojo;
 import t3.CommonMojoInformation;
 import t3.Messages;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
 
 /**
  *
@@ -134,7 +133,6 @@ public class PropertiesEnforcer {
 	 * @param pluginManager
 	 * @param logger
 	 * @param fromClass 
-	 * @param pluginDescriptor 
 	 * @throws MavenExecutionException
 	 */
 	public static <T> void enforceProperties(MavenSession session, BuildPluginManager pluginManager, Logger logger, List<String> projectPackagings, Class<T> fromClass, String pluginKey) throws MavenExecutionException {
@@ -146,13 +144,18 @@ public class PropertiesEnforcer {
 		logger.info(Messages.ENFORCING_GLOBAL_RULES);
 		enforceGlobalProperties(session, pluginManager, logger, fromClass, pluginKey);
 		logger.info(Messages.ENFORCED_GLOBAL_RULES);
-		logger.info(Messages.MESSAGE_SPACE);
+		if (!"standalone-pom".equals(session.getCurrentProject().getArtifactId())) {
+			logger.info(Messages.MESSAGE_SPACE);
+		}
 
 		boolean projectRules = false;
 
 		for (MavenProject mavenProject : session.getProjects()) {
 			if (projectPackagings.contains(mavenProject.getPackaging())) {
 				if (!projectRules) {
+					if ("standalone-pom".equals(session.getCurrentProject().getArtifactId())) {
+						logger.info(Messages.MESSAGE_SPACE);
+					}
 					logger.info(Messages.ENFORCING_PER_PROJECT_RULES);
 					projectRules = true;
 				}

@@ -22,9 +22,9 @@ import org.apache.maven.MavenExecutionException;
 import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
+import org.apache.maven.classrealm.ClassRealmManager;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.BuildPluginManager;
-import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 import org.codehaus.plexus.PlexusContainer;
@@ -58,6 +58,9 @@ public abstract class CommonMavenLifecycleParticipant extends AbstractMavenLifec
     protected ProjectBuilder projectBuilder;
 
     protected CommonMojo propertiesManager;
+
+    @Requirement
+    private ClassRealmManager classRealmManager;
 
     @Override
     public void setArtifactHandler(ArtifactHandler artifactHandler) {
