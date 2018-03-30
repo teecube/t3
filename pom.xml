@@ -94,6 +94,9 @@
 							<profile>release-profile</profile>
 							<profile>t3-archive</profile>
 						</profiles>
+						<releaseArgs>
+						    <releaseArg>-DperformRelease=true</releaseArg>
+						</releaseArgs>
 						<tagNamePattern>v@{project.version}</tagNamePattern>
 						<workflowDescriptor>${project.basedir}/src/main/unleash/workflow</workflowDescriptor>
 					</configuration>
