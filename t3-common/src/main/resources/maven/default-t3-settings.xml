@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    (C) Copyright 2016-2017 teecube
+    (C) Copyright 2016-2018 teecube
     (http://teecu.be) and others.
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,6 @@
     limitations under the License.
 
 -->
-
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
