@@ -14,8 +14,8 @@ site:
 
 site-redeploy:
     script: 
-        - mvn clean site-deploy -P t3-archive
-        - mvn clean site-deploy -P t3-release
+        - mvn clean -N site-deploy -P t3-archive
+        - mvn clean -N site-deploy -P t3-release
     only:
         - tags
 
