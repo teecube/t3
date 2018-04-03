@@ -234,7 +234,7 @@
 					<value>true</value>
 				</property>
             </activation>
-rel			<build>
+			<build>
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
