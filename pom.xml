@@ -234,10 +234,10 @@
 					<value>true</value>
 				</property>
             </activation>
+			<properties>
+                <ecosystemVersion>${unleash.releaseVersion}</ecosystemVersion>
+			</properties>
 			<build>
-			    <properties>
-			        <ecosystemVersion>${unleash.releaseVersion}</ecosystemVersion>
-			    </properties>
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
