@@ -235,6 +235,9 @@
 				</property>
             </activation>
 			<build>
+			    <properties>
+			        <ecosystemVersion>${unleash.releaseVersion}</ecosystemVersion>
+			    </properties>
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
