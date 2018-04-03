@@ -13,7 +13,6 @@ site:
         - tags
 
 site-redeploy:
-    image: jamesdbloom/docker-java7-maven
     script: 
         - mvn clean site-deploy -P t3-archive
         - mvn clean site-deploy -P t3-release
