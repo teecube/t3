@@ -2,21 +2,20 @@ image: debovema/docker-mvn
 
 test:
     script: 
-        - mvn -gs /home/m2/settings.xml clean deploy -P t3-snapshot
+        - mvn clean deploy -P t3-snapshot
     except:
         - tags
 
 site:
     script: 
-        - mvn -gs /home/m2/settings.xml clean site-deploy -P t3-snapshot
+        - mvn clean site-deploy -P t3-snapshot
     except:
         - tags
 
 site-redeploy:
-    image: jamesdbloom/docker-java7-maven
     script: 
-        - mvn -gs /home/m2/settings.xml clean site-deploy -P t3-archive
-        - mvn -gs /home/m2/settings.xml clean site-deploy -P t3-release
+        - mvn clean -N site-deploy -P t3-archive
+        - mvn clean -N site-deploy -P t3-release
     only:
         - tags
 
