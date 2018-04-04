@@ -277,6 +277,10 @@
 						<artifactId>maven-gpg-plugin</artifactId>
 						<version>1.6</version>
 						<configuration>
+							<gpgArguments>
+								<arg>--no-random-seed-file</arg>
+								<arg>--no-permission-warning</arg>
+							</gpgArguments>
 							<keyname>19781536</keyname>
 							<passphraseServerId>t3.gpg</passphraseServerId>
 						</configuration>
@@ -1674,6 +1678,10 @@
 											def result = null
 											def path = "$settings.localRepository/$coordinates/maven-metadata-local.xml"
 											def f = new File(path)
+											if (!f.exists()) {
+												path = "$settings.localRepository/$coordinates/maven-metadata-central.xml"
+												f = new File(path)
+											}
 
 											if (f != null && f.exists()) {
 												def fis = new FileInputStream(f)
@@ -1736,6 +1744,10 @@
 											def result = null
 											def path = "$settings.localRepository/$coordinates/maven-metadata-local.xml"
 											def f = new File(path)
+											if (!f.exists()) {
+												path = "$settings.localRepository/$coordinates/maven-metadata-central.xml"
+												f = new File(path)
+											}
 
 											if (f != null && f.exists()) {
 												def fis = new FileInputStream(f)
