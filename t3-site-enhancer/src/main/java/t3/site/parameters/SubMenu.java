@@ -1,5 +1,5 @@
 /**
- * (C) Copyright 2016-2017 teecube
+ * (C) Copyright 2016-2018 teecube
  * (http://teecu.be) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,15 +22,15 @@ package t3.site.parameters;
  *
  */
 public class SubMenu {
-	public String name;
-	public String url;
+    public String name;
+    public String url;
 
-	public SubMenu() {
+    public SubMenu() {
 
-	}
+    }
 
-	public SubMenu(String name, String url) {
-		this.name = name;
-		this.url = url;
-	}
+    public SubMenu(String name, String url) {
+        this.name = name;
+        this.url = url;
+    }
 }

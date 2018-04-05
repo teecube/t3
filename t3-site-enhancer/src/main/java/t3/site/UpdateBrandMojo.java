@@ -1,5 +1,5 @@
 /**
- * (C) Copyright 2016-2017 teecube
+ * (C) Copyright 2016-2018 teecube
  * (http://teecu.be) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,11 +16,6 @@
  */
 package t3.site;
 
-import static org.rendersnake.HtmlAttributesFactory.class_;
-
-import java.io.File;
-import java.io.IOException;
-
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -28,6 +23,11 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.project.MavenProject;
 import org.rendersnake.HtmlCanvas;
 import org.rendersnake.Renderable;
+
+import java.io.File;
+import java.io.IOException;
+
+import static org.rendersnake.HtmlAttributesFactory.class_;
 
 /**
  *
@@ -37,68 +37,68 @@ import org.rendersnake.Renderable;
 @Mojo(name = "update-brand", defaultPhase = LifecyclePhase.POST_SITE)
 public class UpdateBrandMojo extends AbstractReplaceAllMojo {
 
-	@Override
-	public void processHTMLFile(File htmlFile) throws Exception {
-		HtmlCanvas html = new HtmlCanvas();
-		html
-			.div(class_("brand"));
+    @Override
+    public void processHTMLFile(File htmlFile) throws Exception {
+        HtmlCanvas html = new HtmlCanvas();
+        html
+            .div(class_("brand"));
 
-		updateTop(project, html, true, false);
+        updateTop(project, html, true, false);
 
-		html
-			._div();
+        html
+            ._div();
 
-		replaceByLine(htmlFile, "<div class=\"brand\".*</div>", formatHtml(html.toHtml()));
-	}
+        replaceByLine(htmlFile, "<div class=\"brand\".*</div>", formatHtml(html.toHtml()));
+    }
 
-	@Override
-	public void execute() throws MojoExecutionException, MojoFailureException {
-		super.execute();
-	}
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        super.execute();
+    }
 
-	private void updateTop(MavenProject project, HtmlCanvas html, boolean last, boolean nextIsEmpty) throws IOException {
-		if (project == null) return;
+    private void updateTop(MavenProject project, HtmlCanvas html, boolean last, boolean nextIsEmpty) throws IOException {
+        if (project == null) return;
 
-		SiteTop siteTop = new SiteTop(project);
+        SiteTop siteTop = new SiteTop(project);
 
-		updateTop(project.getParent(), html, false, siteTop.caption.isEmpty());
+        updateTop(project.getParent(), html, false, siteTop.caption.isEmpty());
 
-		html.render(siteTop);
+        html.render(siteTop);
 
-		if (!last && !nextIsEmpty) {
-			html
-				.span(class_("brand")
-						)
-					.write("/")
-				._span()
-			;
-		}
-	}
+        if (!last && !nextIsEmpty) {
+            html
+                .span(class_("brand")
+                        )
+                    .write("/")
+                ._span()
+            ;
+        }
+    }
 
-	protected class SiteTop implements Renderable {
+    protected class SiteTop implements Renderable {
 
-		private String caption;
-		private String link;
+        private String caption;
+        private String link;
 
-		public SiteTop(MavenProject project) {
-			this.caption = getPropertyValue(project, "siteTopCaption", false, false, false);
-			this.link = getPropertyValue(project, "siteTopLink", false, false, false);
-			if (this.link == null || this.link.isEmpty()) {
-				this.link = project.getUrl() + "/index.html";
-			} else {
-				this.link += "/";
-			}
-		}
+        public SiteTop(MavenProject project) {
+            this.caption = getPropertyValue(project, "siteTopCaption", false, false, false);
+            this.link = getPropertyValue(project, "siteTopLink", false, false, false);
+            if (this.link == null || this.link.isEmpty()) {
+                this.link = project.getUrl() + "/index.html";
+            } else {
+                this.link += "/";
+            }
+        }
 
-		@Override
-		public void renderOn(HtmlCanvas html) throws IOException {
-			if (caption == null || caption.trim().isEmpty()) return;
+        @Override
+        public void renderOn(HtmlCanvas html) throws IOException {
+            if (caption == null || caption.trim().isEmpty()) return;
 
-			html
-			.a(class_("brand").href(link))
-				.write(caption, false)
-			._a();
-		}
-	}
+            html
+            .a(class_("brand").href(link))
+                .write(caption, false)
+            ._a();
+        }
+    }
 
 }

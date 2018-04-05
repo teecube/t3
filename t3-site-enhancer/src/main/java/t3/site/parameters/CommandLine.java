@@ -1,5 +1,5 @@
 /**
- * (C) Copyright 2016-2017 teecube
+ * (C) Copyright 2016-2018 teecube
  * (http://teecu.be) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,49 +20,49 @@ import java.util.List;
 
 public class CommandLine {
 
-	private String property;
-	private String title;
-	private String commandLine;
-	private List<String> arguments;
-	private List<String> results;
+    private String property;
+    private String title;
+    private String commandLine;
+    private List<String> arguments;
+    private List<String> results;
 
-	public String getProperty() {
-		return property;
-	}
+    public String getProperty() {
+        return property;
+    }
 
-	public void setProperty(String property) {
-		this.property = property;
-	}
+    public void setProperty(String property) {
+        this.property = property;
+    }
 
-	public String getTitle() {
-		return title;
-	}
-	
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getTitle() {
+        return title;
+    }
+    
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public String getCommandLine() {
-		return commandLine;
-	}
-	
-	public void setCommandLine(String commandLine) {
-		this.commandLine = commandLine;
-	}
+    public String getCommandLine() {
+        return commandLine;
+    }
+    
+    public void setCommandLine(String commandLine) {
+        this.commandLine = commandLine;
+    }
 
-	public List<String> getArguments() {
-		return arguments;
-	}
+    public List<String> getArguments() {
+        return arguments;
+    }
 
-	public void setArguments(List<String> arguments) {
-		this.arguments = arguments;
-	}
+    public void setArguments(List<String> arguments) {
+        this.arguments = arguments;
+    }
 
-	public List<String> getResults() {
-		return results;
-	}
+    public List<String> getResults() {
+        return results;
+    }
 
-	public void setResults(List<String> results) {
-		this.results = results;
-	}
+    public void setResults(List<String> results) {
+        this.results = results;
+    }
 }

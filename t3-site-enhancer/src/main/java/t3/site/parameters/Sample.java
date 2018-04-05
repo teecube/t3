@@ -1,5 +1,5 @@
 /**
- * (C) Copyright 2016-2017 teecube
+ * (C) Copyright 2016-2018 teecube
  * (http://teecu.be) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,31 +18,31 @@ package t3.site.parameters;
 
 public class Sample {
 
-	private String property;
-	private String title;
-	private String content;
+    private String property;
+    private String title;
+    private String content;
 
-	public String getProperty() {
-		return property;
-	}
+    public String getProperty() {
+        return property;
+    }
 
-	public void setProperty(String property) {
-		this.property = property;
-	}
+    public void setProperty(String property) {
+        this.property = property;
+    }
 
-	public String getTitle() {
-		return title;
-	}
-	
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getTitle() {
+        return title;
+    }
+    
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public String getContent() {
-		return content;
-	}
-	
-	public void setContent(String content) {
-		this.content = content;
-	}
+    public String getContent() {
+        return content;
+    }
+    
+    public void setContent(String content) {
+        this.content = content;
+    }
 }

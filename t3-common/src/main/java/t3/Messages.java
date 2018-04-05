@@ -1,5 +1,5 @@
 /**
- * (C) Copyright 2016-2017 teecube
+ * (C) Copyright 2016-2018 teecube
  * (http://teecu.be) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,16 +23,16 @@ package t3;
  */
 public abstract class Messages {
 
-	public static final String MESSAGE_SPACE = "";
+    public static final String MESSAGE_SPACE = "";
 
-	public static final String SKIPPING = "Skipping.";
+    public static final String SKIPPING = "Skipping.";
 
-	public static final String ENFORCING_RULES = "Enforcing rules...";
-	public static final String ENFORCING_GLOBAL_RULES = "Global Rules...";
-	public static final String ENFORCED_GLOBAL_RULES = "Global Rules are validated.";
-	public static final String ENFORCING_PER_PROJECT_RULES = "Project Rules...";
-	public static final String ENFORCED_PER_PROJECT_RULES = "Projects Rules are validated.";
-	public static final String ENFORCER_RULES_FAILURE = "The required rules are invalid.";
+    public static final String ENFORCING_RULES = "Enforcing rules...";
+    public static final String ENFORCING_GLOBAL_RULES = "Global Rules...";
+    public static final String ENFORCED_GLOBAL_RULES = "Global Rules are validated.";
+    public static final String ENFORCING_PER_PROJECT_RULES = "Project Rules...";
+    public static final String ENFORCED_PER_PROJECT_RULES = "Projects Rules are validated.";
+    public static final String ENFORCER_RULES_FAILURE = "The required rules are invalid.";
 
-	public static final String ARTIFACT_NOT_FOUND = "The artifact was not found."; // improve this message
+    public static final String ARTIFACT_NOT_FOUND = "The artifact was not found."; // improve this message
 }

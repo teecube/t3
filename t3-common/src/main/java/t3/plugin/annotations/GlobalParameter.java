@@ -1,5 +1,5 @@
 /**
- * (C) Copyright 2016-2017 teecube
+ * (C) Copyright 2016-2018 teecube
  * (http://teecu.be) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,11 +16,7 @@
  */
 package t3.plugin.annotations;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * <p>
@@ -34,10 +30,10 @@ import java.lang.annotation.Target;
 @Target( { ElementType.FIELD } )
 @Inherited
 public @interface GlobalParameter {
-	String property();
-	String defaultValue() default "";
-	boolean required() default false;
-	String description() default "";
-	String category() default "";
-	boolean valueGuessedByDefault() default true;
+    String property();
+    String defaultValue() default "";
+    boolean required() default false;
+    String description() default "";
+    String category() default "";
+    boolean valueGuessedByDefault() default true;
 }

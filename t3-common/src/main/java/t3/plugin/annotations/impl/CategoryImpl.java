@@ -1,5 +1,5 @@
 /**
- * (C) Copyright 2016-2017 teecube
+ * (C) Copyright 2016-2018 teecube
  * (http://teecu.be) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,26 +24,26 @@ package t3.plugin.annotations.impl;
  */
 public class CategoryImpl {
 
-	private String title;
-	private String description;
+    private String title;
+    private String description;
 
-	public CategoryImpl(String title, String description) {
-		this.title = title;
-		this.description = description;
-	}
+    public CategoryImpl(String title, String description) {
+        this.title = title;
+        this.description = description;
+    }
 
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getTitle() {
+        return title;
+    }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
 }

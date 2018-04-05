@@ -1,5 +1,5 @@
 /**
- * (C) Copyright 2016-2017 teecube
+ * (C) Copyright 2016-2018 teecube
  * (http://teecu.be) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,16 +16,16 @@
  */
 package t3.plugin.annotations.helpers;
 
+import t3.plugin.annotations.Categories;
+import t3.plugin.annotations.Category;
+import t3.plugin.annotations.impl.CategoryImpl;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.HashSet;
 import java.util.Set;
-
-import t3.plugin.annotations.Categories;
-import t3.plugin.annotations.Category;
-import t3.plugin.annotations.impl.CategoryImpl;
 
 /**
  *
@@ -34,59 +34,59 @@ import t3.plugin.annotations.impl.CategoryImpl;
  */
 public class CategoriesHelper {
 
-	private static String getTitle(Annotation annotation) {
-		return (String) getObject(annotation, "title");
-	}
+    private static String getTitle(Annotation annotation) {
+        return (String) getObject(annotation, "title");
+    }
 
-	private static String getDescription(Annotation annotation) {
-		return (String) getObject(annotation, "description");
-	}
+    private static String getDescription(Annotation annotation) {
+        return (String) getObject(annotation, "description");
+    }
 
-	private static Object[] getCategories(Annotation annotation) {
-		return (Object[]) getObject(annotation, "value");
-	}
-	
-	private static Object getObject(Annotation annotation, String methodName) {
-		InvocationHandler handler = Proxy.getInvocationHandler(annotation);
-		Method method;
-		try {
-			method = annotation.annotationType().getMethod(methodName, (Class<?>[]) null);
-			return handler.invoke(annotation, method, null);
-		} catch (Throwable e) {
-			return null;
-		}
-	}
+    private static Object[] getCategories(Annotation annotation) {
+        return (Object[]) getObject(annotation, "value");
+    }
+    
+    private static Object getObject(Annotation annotation, String methodName) {
+        InvocationHandler handler = Proxy.getInvocationHandler(annotation);
+        Method method;
+        try {
+            method = annotation.annotationType().getMethod(methodName, (Class<?>[]) null);
+            return handler.invoke(annotation, method, null);
+        } catch (Throwable e) {
+            return null;
+        }
+    }
 
-	public static <A extends Annotation> Set<CategoryImpl> getCategories(Set<Class<?>> types) {
-		Set<CategoryImpl> result = new HashSet<CategoryImpl>();
+    public static <A extends Annotation> Set<CategoryImpl> getCategories(Set<Class<?>> types) {
+        Set<CategoryImpl> result = new HashSet<CategoryImpl>();
 
-		String title = null;
-		String description = null;
+        String title = null;
+        String description = null;
 
-		for (Class<?> type : types) {
-			Categories categories = type.getAnnotation(Categories.class);
-			if (categories == null) {
-				for (Annotation a1 : type.getAnnotations()) {
-					if (a1.annotationType().getCanonicalName().equals(Categories.class.getCanonicalName())) {
-						Object[] categories_ = getCategories(a1);
-						for (Object category : categories_) {
-							Annotation a2 = (Annotation) category;
-							title = getTitle(a2);
-							description = getDescription(a2);
-							result.add(new CategoryImpl(title, description));
-						}
-					}
-				}
-			} else {
-				for (Category category : categories.value()) {
-					title = getTitle(category);
-					description = getDescription(category);
-					result.add(new CategoryImpl(title, description));
-				}
-			}
-		}
+        for (Class<?> type : types) {
+            Categories categories = type.getAnnotation(Categories.class);
+            if (categories == null) {
+                for (Annotation a1 : type.getAnnotations()) {
+                    if (a1.annotationType().getCanonicalName().equals(Categories.class.getCanonicalName())) {
+                        Object[] categories_ = getCategories(a1);
+                        for (Object category : categories_) {
+                            Annotation a2 = (Annotation) category;
+                            title = getTitle(a2);
+                            description = getDescription(a2);
+                            result.add(new CategoryImpl(title, description));
+                        }
+                    }
+                }
+            } else {
+                for (Category category : categories.value()) {
+                    title = getTitle(category);
+                    description = getDescription(category);
+                    result.add(new CategoryImpl(title, description));
+                }
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 
 }

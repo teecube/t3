@@ -1,5 +1,5 @@
 /**
- * (C) Copyright 2016-2017 teecube
+ * (C) Copyright 2016-2018 teecube
  * (http://teecu.be) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,11 +16,11 @@
  */
 package t3.site;
 
+import org.apache.maven.model.FileSet;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
-import org.apache.maven.model.FileSet;
 
 /**
  *
@@ -29,17 +29,17 @@ import org.apache.maven.model.FileSet;
  */
 public abstract class AbstractReplaceMojo extends AbstractReplaceAllMojo {
 
-	protected abstract String getFileNameToReplace();
+    protected abstract String getFileNameToReplace();
 
-	@Override
-	protected List<File> getHTMLFiles() throws IOException {
-		FileSet htmlFiles = new FileSet();
-		htmlFiles.setDirectory(outputDirectory.getAbsolutePath());
+    @Override
+    protected List<File> getHTMLFiles() throws IOException {
+        FileSet htmlFiles = new FileSet();
+        htmlFiles.setDirectory(outputDirectory.getAbsolutePath());
 
-		htmlFiles.addInclude(getFileNameToReplace());
+        htmlFiles.addInclude(getFileNameToReplace());
 
-		return toFileList(htmlFiles);
-	}
+        return toFileList(htmlFiles);
+    }
 
-	
+    
 }

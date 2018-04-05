@@ -1,5 +1,5 @@
 /**
- * (C) Copyright 2016-2017 teecube
+ * (C) Copyright 2016-2018 teecube
  * (http://teecu.be) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,16 +24,16 @@ import java.util.List;
  *
  */
 public class TopMenu {
-	public String name;
-	public String url;
-	public List<SubMenu> submenus;
+    public String name;
+    public String url;
+    public List<SubMenu> submenus;
 
-	public TopMenu() {
+    public TopMenu() {
 
-	}
+    }
 
-	public TopMenu(String name, String url) {
-		this.name = name;
-		this.url = url;
-	}
+    public TopMenu(String name, String url) {
+        this.name = name;
+        this.url = url;
+    }
 }
