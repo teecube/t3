@@ -24,8 +24,6 @@
 		<!-- default value not really used -->
 		<siteUploadURL>http://localhost</siteUploadURL>
 		<siteUploadProtocol/>
-        <repositoryReleaseURL/>
-        <repositorySnapshotURL/>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
