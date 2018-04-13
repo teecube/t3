@@ -259,4 +259,19 @@ public class Utils {
         return map.get(l) + toRoman(number-l);
     }
 
+    /* based on https://stackoverflow.com/a/30259745 */
+    public static String toAlphabetic(int i) {
+        if( i<0 ) {
+            return "-"+toAlphabetic(-i-1);
+        }
+
+        int quot = i/26;
+        int rem = i%26;
+        char letter = (char)((int)'a' + rem);
+        if( quot == 0 ) {
+            return ""+letter;
+        } else {
+            return toAlphabetic(quot-1) + letter;
+        }
+    }
 }
