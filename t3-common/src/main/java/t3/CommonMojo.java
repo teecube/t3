@@ -472,11 +472,16 @@ public class CommonMojo extends AbstractMojo {
     public class CollectingLogOutputStream extends LogOutputStream {
         private Log logger;
         private String prefix;
-        private boolean first = true;
+        private boolean first;
 
-        public CollectingLogOutputStream(Log log, String prefix) {
+        public CollectingLogOutputStream(Log log, String prefix, boolean addBlankBeforeFirstLine) {
             this.logger = log;
             this.prefix = prefix;
+            this.first = addBlankBeforeFirstLine;
+        }
+
+        public CollectingLogOutputStream(Log log, String prefix) {
+            this(log, prefix, true);
         }
 
         public CollectingLogOutputStream(Log log) {
