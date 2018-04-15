@@ -694,12 +694,28 @@ public class CommonMojo extends AbstractMojo {
         this.logger = logger;
     }
 
+    public PluginDescriptor getPluginDescriptor() {
+        return pluginDescriptor;
+    }
+
+    public BuildPluginManager getPluginManager() {
+        return pluginManager;
+    }
+
     public void setPluginManager(BuildPluginManager pluginManager) {
         this.pluginManager = pluginManager;
     }
 
+    public MavenProject getProject() {
+        return project;
+    }
+
     public void setProject(MavenProject project) {
         this.project = project;
+    }
+
+    public MavenSession getSession() {
+        return session;
     }
 
     public void setSession(MavenSession session) {
@@ -752,7 +768,7 @@ public class CommonMojo extends AbstractMojo {
         return copyDependency(groupId, artifactId, version, type, null, outputDirectory, fileName);
     }
 
-    protected File getDependency(String groupId, String artifactId, String version, String type, String classifier, boolean silent) throws ArtifactNotFoundException, ArtifactResolutionException {
+    public File getDependency(String groupId, String artifactId, String version, String type, String classifier, boolean silent) throws ArtifactNotFoundException, ArtifactResolutionException {
         ArrayList<Element> configuration = new ArrayList<Element>();
 
         configuration.add(new Element("groupId", groupId));
@@ -797,7 +813,7 @@ public class CommonMojo extends AbstractMojo {
         return result;
     }
 
-    protected File getDependency(String groupId, String artifactId, String version, String type, boolean silent) throws MojoExecutionException, ArtifactNotFoundException, ArtifactResolutionException {
+    public File getDependency(String groupId, String artifactId, String version, String type, boolean silent) throws MojoExecutionException, ArtifactNotFoundException, ArtifactResolutionException {
         return getDependency(groupId, artifactId, version, type, null, silent);
     }
 
