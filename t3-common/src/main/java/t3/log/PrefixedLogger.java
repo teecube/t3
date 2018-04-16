@@ -24,12 +24,22 @@ import java.lang.reflect.Field;
 
 public class PrefixedLogger extends DefaultLog {
 
-    private final String prefix;
+    private final String debugPrefix;
+    private final String infoPrefix;
+    private final String warnPrefix;
+    private final String errorPrefix;
 
     public PrefixedLogger(Logger logger, String prefix) {
+        this(logger, prefix, prefix, prefix, prefix);
+    }
+
+    public PrefixedLogger(Logger logger, String debugPrefix, String infoPrefix, String warnPrefix, String errorPrefix) {
         super(logger);
 
-        this.prefix = prefix;
+        this.debugPrefix = debugPrefix;
+        this.infoPrefix = infoPrefix;
+        this.warnPrefix = warnPrefix;
+        this.errorPrefix = errorPrefix;
     }
 
     public static Logger getLoggerFromLog(Log log) {
@@ -46,21 +56,21 @@ public class PrefixedLogger extends DefaultLog {
 
     @Override
     public void debug(CharSequence content) {
-        super.debug(prefix + content);
+        super.debug(debugPrefix + content);
     }
 
     @Override
     public void info(CharSequence content) {
-        super.info(prefix + content);
+        super.info(infoPrefix + content);
     }
 
     @Override
     public void warn(CharSequence content) {
-        super.warn(prefix + content);
+        super.warn(warnPrefix + content);
     }
 
     @Override
     public void error(CharSequence content) {
-        super.error(prefix + content);
+        super.error(errorPrefix + content);
     }
 }
