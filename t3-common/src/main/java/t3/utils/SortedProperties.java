@@ -14,12 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3;
+package t3.utils;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.shared.filtering.MavenResourcesExecution;
+import t3.CommonMojo;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -27,9 +28,8 @@ import java.util.*;
 
 /**
  * <p>
- * This inner-class extends java.util.Properties with all properties sorted
- * alphabetically. Also, the setProperty method is overridden to support
- * multiple input types and check for null values.
+ * This class extends java.util.Properties with all properties sorted alphabetically. Also, the setProperty method is
+ * overridden to support multiple input types and check for null values.
  * </p>
  *
  * @author Mathieu Debove &lt;mad@teecu.be&gt;
@@ -128,8 +128,8 @@ public class SortedProperties extends Properties {
                 List<String> filters = new ArrayList<String>();
                 List<String> nonFilteredFileExtensions = new ArrayList<String>();
 
-                MavenResourcesExecution mre = new MavenResourcesExecution(resources, tmpDir, mojo.project, mojo.sourceEncoding, filters, nonFilteredFileExtensions, mojo.session);
-                mojo.mavenResourcesFiltering.filterResources(mre);
+                MavenResourcesExecution mre = new MavenResourcesExecution(resources, tmpDir, mojo.getProject(), mojo.getSourceEncoding(), filters, nonFilteredFileExtensions, mojo.getSession());
+                mojo.getMavenResourcesFiltering().filterResources(mre);
 
                 FileUtils.copyDirectory(tmpDir, outputFile.getParentFile());
                 FileUtils.deleteDirectory(tmpDir);

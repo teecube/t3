@@ -24,10 +24,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.matcher.Matchers;
-import org.apache.commons.compress.archivers.ArchiveException;
-import org.apache.commons.compress.archivers.ArchiveOutputStream;
-import org.apache.commons.compress.archivers.ArchiveStreamFactory;
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.exec.*;
 import org.apache.commons.exec.launcher.CommandLauncher;
 import org.apache.commons.exec.launcher.CommandLauncherFactory;
@@ -83,6 +79,7 @@ import org.twdata.maven.mojoexecutor.MojoExecutor.*;
 import t3.plugin.PluginManager;
 import t3.plugin.annotations.GlobalParameter;
 import t3.plugin.annotations.injection.ParametersListener;
+import t3.utils.POMManager;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -95,6 +92,15 @@ import java.util.regex.Pattern;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
 /**
+ * This abstract Mojo provides basic helpers methods to simplify Maven mojos creation.
+ *
+ * These helpers are divided in several categories:
+ *
+ *   I. Advanced Maven lifecycle management
+ *  II. Advanced Maven properties management
+ * III. System command launcher
+ *  IV. Custom Mojo executor
+ *   V. Advanded Maven dependencies management
  *
  * @author Mathieu Debove &lt;mad@teecu.be&gt;
  *
@@ -125,43 +131,41 @@ public class CommonMojo extends AbstractMojo {
     @GlobalParameter(property = "project.build.sourceEncoding", defaultValue = "UTF-8", description = CommonMojoInformation.sourceEncoding_description, category = CommonMojoInformation.mavenCategory)
     protected String sourceEncoding;
 
-    @Parameter(defaultValue = "${basedir}", readonly = true)
-    protected File projectBasedir;
-
-    @Parameter(defaultValue = "${session}", readonly = true)
-    protected MavenSession session;
-
-    @Parameter(defaultValue = "${project}", readonly = true)
-    protected MavenProject project;
-
-    @Parameter(defaultValue = "${mojoExecution}", readonly = true)
-    protected MojoExecution mojoExecution;
-
-    @Parameter(defaultValue = "${plugin}", readonly = true)
-    protected PluginDescriptor pluginDescriptor; // plugin descriptor of this plugin
-
-    @Parameter(defaultValue = "${settings}", readonly = true)
-    protected Settings settings;
-
-    public static final Pattern mavenPropertyPattern = Pattern.compile("\\$\\{([^}]*)\\}"); // ${prop} regex pattern
-
     @Component
-    protected ProjectBuilder projectBuilder;
-
-    @Component(role = org.apache.maven.shared.filtering.MavenResourcesFiltering.class, hint = "default")
-    protected MavenResourcesFiltering mavenResourcesFiltering;
-
-    @Component(role = BuildPluginManager.class)
-    protected BuildPluginManager pluginManager;
-
-    @Component
-    protected PlexusContainer plexus;
+    protected ArtifactRepositoryFactory artifactRepositoryFactory;
 
     @Component
     protected Logger logger;
 
+    @Component(role = org.apache.maven.shared.filtering.MavenResourcesFiltering.class, hint = "default")
+    protected MavenResourcesFiltering mavenResourcesFiltering;
+
+    @Parameter(defaultValue = "${mojoExecution}", readonly = true)
+    protected MojoExecution mojoExecution;
+
     @Component
-    protected ArtifactRepositoryFactory artifactRepositoryFactory;
+    protected PlexusContainer plexus;
+
+    @Parameter(defaultValue = "${plugin}", readonly = true)
+    protected PluginDescriptor pluginDescriptor; // plugin descriptor of this plugin
+
+    @Component(role = BuildPluginManager.class)
+    protected BuildPluginManager pluginManager;
+
+    @Parameter(defaultValue = "${project}", readonly = true)
+    protected MavenProject project;
+
+    @Parameter(defaultValue = "${basedir}", readonly = true)
+    protected File projectBasedir;
+
+    @Component
+    protected ProjectBuilder projectBuilder;
+
+    @Parameter(defaultValue = "${session}", readonly = true)
+    protected MavenSession session;
+
+    @Parameter(defaultValue = "${settings}", readonly = true)
+    protected Settings settings;
 
     @Component
     protected RepositorySystem system;
@@ -169,31 +173,92 @@ public class CommonMojo extends AbstractMojo {
     @org.apache.maven.plugins.annotations.Parameter(defaultValue = "${repositorySystemSession}", readonly = true)
     protected RepositorySystemSession systemSession;
 
-    private static CommonMojo propertiesManager = null;
+    public static final Pattern mavenPropertyPattern = Pattern.compile("\\$\\{([^}]*)\\}"); // ${prop} regex pattern
+
+    public CommonMojo() {
+    }
 
     /**
      * <p>
-     * Instantiate a minimalistic {@link CommonMojo} to use properties
-     * management as a standalone object.
+     * A copy-constructor to create a CommonMojo from another, keeping the pluginManager, project, session and settings.
+     * In fact this constructor is to create a CommonMojo to be called by another CommonMojo.
      * </p>
      *
-     * @param session
-     * @param mavenProject
-     * @return
+     * @param mojo
      */
-    public static CommonMojo propertiesManager(MavenSession session, MavenProject mavenProject) {
-        if (propertiesManager != null) {
-            propertiesManager.setProject(mavenProject);
-            return propertiesManager;
-        }
-        propertiesManager = new CommonMojo();
-        propertiesManager.setProject(mavenProject);
-        propertiesManager.setSession(session);
-        propertiesManager.setSettings(session.getSettings());
+    public CommonMojo(CommonMojo mojo) {
+        if (mojo == null) return;
 
-        return propertiesManager;
+        this.artifactRepositoryFactory = mojo.artifactRepositoryFactory;
+        this.setLog(mojo.getLog()); // from parent class AbstractMojo
+        this.logger = mojo.logger;
+        this.mavenResourcesFiltering = mojo.mavenResourcesFiltering;
+        this.mojoExecution = mojo.mojoExecution;
+        this.plexus = mojo.plexus;
+        this.setPluginContext(mojo.getPluginContext()); // from parent class AbstractMojo
+        this.pluginDescriptor = mojo.pluginDescriptor;
+        this.pluginManager = mojo.pluginManager;
+        this.project = mojo.project;
+        this.projectBasedir = mojo.projectBasedir;
+        this.projectBuilder = mojo.projectBuilder;
+        this.session = mojo.session;
+        this.settings = mojo.settings;
+        this.system = mojo.system;
+        this.systemSession = mojo.systemSession;
     }
 
+    //<editor-fold desc="Getters and setters">
+    public void setLogger(Logger logger) {
+        this.logger = logger;
+    }
+
+    public MavenResourcesFiltering getMavenResourcesFiltering() {
+        return mavenResourcesFiltering;
+    }
+
+    public PluginDescriptor getPluginDescriptor() {
+        return pluginDescriptor;
+    }
+
+    public BuildPluginManager getPluginManager() {
+        return pluginManager;
+    }
+
+    public void setPluginManager(BuildPluginManager pluginManager) {
+        this.pluginManager = pluginManager;
+    }
+
+    public MavenProject getProject() {
+        return project;
+    }
+
+    public void setProject(MavenProject project) {
+        this.project = project;
+    }
+
+    public MavenSession getSession() {
+        return session;
+    }
+
+    public void setSession(MavenSession session) {
+        this.session = session;
+    }
+
+    public void setSettings(Settings settings) {
+        this.settings = settings;
+    }
+
+    public String getSourceEncoding() {
+        return sourceEncoding;
+    }
+    //</editor-fold>
+
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        createOutputDirectory();
+    }
+
+    //<editor-fold desc="Basic methods">
     /**
      * <p>
      * Create the output directory (usually "target/") if it doesn't exist yet.
@@ -215,28 +280,99 @@ public class CommonMojo extends AbstractMojo {
         return session.getRequest().getGoals().contains(goal);
     }
 
-    // properties
-    @SuppressWarnings("unchecked") // because of Maven poor typing
-    public String getPropertyValueInSettings(String propertyName, Settings settings) {
-        if (settings == null) {
-            return null;
-        }
+    protected void skipGoal(String skipParameterName) {
+        getLog().info(Messages.SKIPPING + " Set '" + skipParameterName + "' to 'false' to execute this goal");
+    }
+    //</editor-fold>
 
-        List<String> activeProfiles = settings.getActiveProfiles();
+    /* --------------------------- */
+    /* I. Advanced Maven lifecycle */
+    /* --------------------------- */
+    //<editor-fold desc="Advanced Maven lifecycle">
 
-        for (Object _profileWithId : settings.getProfilesAsMap().entrySet()) {
-            Entry<String, Profile> profileWithId = (Entry<String, Profile>) _profileWithId;
-            if (activeProfiles.contains(profileWithId.getKey())) {
-                Profile profile = profileWithId.getValue();
+    // initialization of standalone POMs (ie no POM) because they are not included in a lifecycle
+    private static boolean standalonePOMInitialized = false;
+    public final static String mojoInitialized = "t3.initialized";
 
-                String value = profile.getProperties().getProperty(propertyName);
-                if (value != null) {
-                    return value;
-                }
+    @Parameter
+    private Map<String, String> ignoredParameters;
+
+    public Map<String, String> getIgnoredParameters() {
+        return ignoredParameters;
+    }
+
+    /**
+     * @param ignoredParameters, the list to set
+     * @return old ignoredParameters list
+     */
+    public Map<String, String> setIgnoredParameters(Map<String, String> ignoredParameters) throws MojoExecutionException {
+        Map<String, String> oldIgnoredParameters = this.ignoredParameters;
+
+        this.ignoredParameters = ignoredParameters;
+
+        PluginManager.addIgnoredParametersInPluginManager(this.pluginManager, ignoredParameters);
+        return oldIgnoredParameters;
+    }
+
+    protected <T> void initStandalonePOM() throws MojoExecutionException {
+        if (!standalonePOMInitialized && !"true".equals(session.getUserProperties().get(mojoInitialized))) {
+            AdvancedMavenLifecycleParticipant lifecycleParticipant = getLifecycleParticipant();
+            lifecycleParticipant.setPlexus(plexus);
+            lifecycleParticipant.setLogger(logger);
+            lifecycleParticipant.setArtifactRepositoryFactory(artifactRepositoryFactory);
+            lifecycleParticipant.setPluginManager(pluginManager);
+            lifecycleParticipant.setProjectBuilder(projectBuilder);
+            try {
+                lifecycleParticipant.afterProjectsRead(session);
+            } catch (MavenExecutionException e) {
+                throw new MojoExecutionException(e.getLocalizedMessage(), e);
             }
+
+            standalonePOMInitialized = true;
         }
 
-        return null;
+        Injector i = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bindListener(Matchers.any(), new ParametersListener<T>(this, session.getCurrentProject(), session, ignoredParameters)); // WARN: using getCurrentProject() ?
+            }
+        });
+
+        i.injectMembers(this); // will also inject in configuredMojo
+    }
+
+    protected AdvancedMavenLifecycleParticipant getLifecycleParticipant() {
+        logger.warn("getLifecycleParticipant() is not overridden!"); // this warning is for developers only
+        return null; // to be overridden in children classes
+    }
+    //</editor-fold>
+
+    /* ------------------------------- */
+    /* II. Advanced Maven properties management */
+    /* ------------------------------- */
+    //<editor-fold desc="Maven properties management">
+    private static CommonMojo propertiesManager = null;
+
+    /**
+     * <p>
+     * Instantiate a minimalistic {@link CommonMojo} to use properties management in a standalone object.
+     * </p>
+     *
+     * @param session
+     * @param mavenProject
+     * @return an initialized {@link CommonMojo} to use for properties management
+     */
+    public static CommonMojo propertiesManager(MavenSession session, MavenProject mavenProject) {
+        if (propertiesManager != null) {
+            propertiesManager.setProject(mavenProject);
+            return propertiesManager;
+        }
+        propertiesManager = new CommonMojo();
+        propertiesManager.setProject(mavenProject);
+        propertiesManager.setSession(session);
+        propertiesManager.setSettings(session.getSettings());
+
+        return propertiesManager;
     }
 
     private List<String> getActiveProfiles(Settings settings) {
@@ -261,26 +397,26 @@ public class CommonMojo extends AbstractMojo {
     }
 
     @SuppressWarnings("unchecked") // because of Maven poor typing
-    public boolean propertyExistsInSettings(String propertyName, Settings settings) {
+    public String getPropertyValueInSettings(String propertyName, Settings settings) {
         if (settings == null) {
-            return false;
+            return null;
         }
 
-        List<String> activeProfiles = getActiveProfiles(settings);
+        List<String> activeProfiles = settings.getActiveProfiles();
 
         for (Object _profileWithId : settings.getProfilesAsMap().entrySet()) {
             Entry<String, Profile> profileWithId = (Entry<String, Profile>) _profileWithId;
             if (activeProfiles.contains(profileWithId.getKey())) {
                 Profile profile = profileWithId.getValue();
 
-                boolean result = profile.getProperties().containsKey(propertyName);
-                if (result) {
-                    return result;
+                String value = profile.getProperties().getProperty(propertyName);
+                if (value != null) {
+                    return value;
                 }
             }
         }
 
-        return false;
+        return null;
     }
 
     private String getPropertyValueInCommandLine(String propertyName, MavenSession session) {
@@ -289,21 +425,6 @@ public class CommonMojo extends AbstractMojo {
         }
 
         return session.getRequest().getUserProperties().getProperty(propertyName);
-    }
-
-    public boolean propertyExistsInSettings(String propertyName) {
-        return propertyExistsInSettings(propertyName, session.getSettings());
-    }
-
-    public boolean propertyExists(String propertyName) {
-        return propertyExists(project, propertyName);
-    }
-
-    public boolean propertyExists(MavenProject mavenProject, String propertyName) {
-        return mavenProject.getOriginalModel().getProperties().containsKey(propertyName) ||
-                mavenProject.getModel().getProperties().containsKey(propertyName) ||
-                session.getRequest().getUserProperties().containsKey(propertyName) ||
-                propertyExistsInSettings(propertyName, session.getSettings());
     }
 
     private String getPropertyValueInOriginalModel(Model originalModel, String propertyName, List<org.apache.maven.model.Profile> activeProfiles) {
@@ -364,6 +485,21 @@ public class CommonMojo extends AbstractMojo {
         return result;
     }
 
+    public String getPropertyValue(String modelPropertyName, boolean propertyInRootProject, boolean onlyInOriginalModel, boolean lookInSettings) {
+        String value = null;
+        if (lookInSettings) {
+            value = getPropertyValueInSettings(modelPropertyName, settings);
+        }
+        if (value == null) {
+            if (propertyInRootProject) {
+                value = getRootProjectProperty(project, modelPropertyName, onlyInOriginalModel);
+            } else {
+                value = getPropertyValue(modelPropertyName, onlyInOriginalModel);
+            }
+        }
+        return value;
+    }
+
     public String getPropertyValue(String propertyName, boolean onlyInOriginalModel) {
         return getPropertyValue(project, propertyName, true, true, onlyInOriginalModel);
     }
@@ -380,21 +516,50 @@ public class CommonMojo extends AbstractMojo {
         return mavenProject == null ? "" : (mavenProject.getParent() == null ? getPropertyValue(mavenProject, propertyName, false, false, onlyInOriginalModel) : getRootProjectProperty(mavenProject.getParent(), propertyName, onlyInOriginalModel));
     }
 
-    public String getPropertyValue(String modelPropertyName, boolean propertyInRootProject, boolean onlyInOriginalModel, boolean lookInSettings) {
-        String value = null;
-        if (lookInSettings) {
-            value = getPropertyValueInSettings(modelPropertyName, settings);
+    @SuppressWarnings("unchecked") // because of Maven poor typing
+    public boolean propertyExistsInSettings(String propertyName, Settings settings) {
+        if (settings == null) {
+            return false;
         }
-        if (value == null) {
-            if (propertyInRootProject) {
-                value = getRootProjectProperty(project, modelPropertyName, onlyInOriginalModel);
-            } else {
-                value = getPropertyValue(modelPropertyName, onlyInOriginalModel);
+
+        List<String> activeProfiles = getActiveProfiles(settings);
+
+        for (Object _profileWithId : settings.getProfilesAsMap().entrySet()) {
+            Entry<String, Profile> profileWithId = (Entry<String, Profile>) _profileWithId;
+            if (activeProfiles.contains(profileWithId.getKey())) {
+                Profile profile = profileWithId.getValue();
+
+                boolean result = profile.getProperties().containsKey(propertyName);
+                if (result) {
+                    return result;
+                }
             }
         }
-        return value;
+
+        return false;
     }
 
+    public boolean propertyExistsInSettings(String propertyName) {
+        return propertyExistsInSettings(propertyName, session.getSettings());
+    }
+
+    public boolean propertyExists(String propertyName) {
+        return propertyExists(project, propertyName);
+    }
+
+    public boolean propertyExists(MavenProject mavenProject, String propertyName) {
+        return mavenProject.getOriginalModel().getProperties().containsKey(propertyName) ||
+                mavenProject.getModel().getProperties().containsKey(propertyName) ||
+                session.getRequest().getUserProperties().containsKey(propertyName) ||
+                propertyExistsInSettings(propertyName, session.getSettings());
+    }
+
+    /**
+     * Replace all properties in the ${maven.format} with their actual values based on current project and session.
+     *
+     * @param string
+     * @return string with properties replaced
+     */
     public String replaceProperties(String string) {
         if (string == null) return null;
 
@@ -415,6 +580,14 @@ public class CommonMojo extends AbstractMojo {
         return string;
     }
 
+    /**
+     * Replace only a given property in the ${maven.format} with the provided value
+     *
+     * @param string
+     * @param propertyKey
+     * @param propertyValue
+     * @return string with property replaced by its value
+     */
     public String replaceProperty(String string, String propertyKey, String propertyValue) {
         if (string == null || propertyKey == null || propertyValue == null) return null;
 
@@ -430,24 +603,28 @@ public class CommonMojo extends AbstractMojo {
 
         return string;
     }
-    //
+    //</editor-fold>
 
-    private static ExecutionEnvironment environment = null;
+    /* ---------------------------- */
+    /* III. System command launcher */
+    /* ---------------------------- */
+    //<editor-fold desc="System command launcher">
+    private static ExecutionEnvironment executionEnvironment = null;
 
     protected ExecutionEnvironment getEnvironment() {
         return getEnvironment(pluginManager);
     }
 
-    protected ExecutionEnvironment getEnvironment(MavenProject project, MavenSession session, BuildPluginManager pluginManager) {
-        if (environment == null) {
-            environment = executionEnvironment(project, session, pluginManager);
-        }
-
-        return environment;
-    }
-
     protected ExecutionEnvironment getEnvironment(BuildPluginManager pluginManager) {
         return getEnvironment(project, session, pluginManager);
+    }
+
+    protected ExecutionEnvironment getEnvironment(MavenProject project, MavenSession session, BuildPluginManager pluginManager) {
+        if (executionEnvironment == null) {
+            executionEnvironment = executionEnvironment(project, session, pluginManager);
+        }
+
+        return executionEnvironment;
     }
 
     // execution of binaries
@@ -588,143 +765,108 @@ public class CommonMojo extends AbstractMojo {
     protected int executeBinary(File binary, ArrayList<String> arguments, File workingDirectory, String errorMsg) throws IOException, MojoExecutionException {
         return executeBinary(binary, arguments, workingDirectory, errorMsg, false, true);
     }
-    //
+    //</editor-fold>
 
-    // initialization of standalone POMs (ie no POM) because they are not included in a lifecycle
-    private static boolean standalonePOMInitialized = false;
-    public final static String mojoInitialized = "t3.initialized";
-
-    @Parameter
-    private Map<String, String> ignoredParameters;
-
-    public Map<String, String> getIgnoredParameters() {
-        return ignoredParameters;
+    /* ------------------------ */
+    /* IV. Custom Mojo executor */
+    /* ------------------------ */
+    //<editor-fold desc="Custom Mojo executor">
+    public void executeMojo(Plugin plugin, String goal, Xpp3Dom configuration, ExecutionEnvironment executionEnvironment) throws MojoExecutionException {
+        executeMojo(plugin, goal, configuration, executionEnvironment, false);
     }
 
-    /**
-     * @param ignoredParameters, the list to set
-     * @return old ignoredParameters list
-     */
-    public Map<String, String> setIgnoredParameters(Map<String, String> ignoredParameters) throws MojoExecutionException {
-        Map<String, String> oldIgnoredParameters = this.ignoredParameters;
-
-        this.ignoredParameters = ignoredParameters;
-
-        PluginManager.addIgnoredParametersInPluginManager(this.pluginManager, ignoredParameters);
-        return oldIgnoredParameters;
-    }
-
-    protected <T> void initStandalonePOM() throws MojoExecutionException {
-//        if (project != null && "standalone-pom".equals(project.getArtifactId()) && !standalonePOMInitialized) {
-        if (!standalonePOMInitialized && !"true".equals(session.getUserProperties().get(mojoInitialized))) {
-            AdvancedMavenLifecycleParticipant lifecycleParticipant = getLifecycleParticipant();
-            lifecycleParticipant.setPlexus(plexus);
-            lifecycleParticipant.setLogger(logger);
-            lifecycleParticipant.setArtifactRepositoryFactory(artifactRepositoryFactory);
-            lifecycleParticipant.setPluginManager(pluginManager);
-            lifecycleParticipant.setProjectBuilder(projectBuilder);
+    public void executeMojo(Plugin plugin, String goal, Xpp3Dom configuration, ExecutionEnvironment executionEnvironment, boolean quiet) throws MojoExecutionException {
+        PrintStream oldSystemErr = System.err;
+        PrintStream oldSystemOut = System.out;
+        Map<String, Integer> logLevels = new HashMap<String, Integer>(); // a Map to store initial values of log levels
+        if (quiet) {
             try {
-                lifecycleParticipant.afterProjectsRead(session);
-            } catch (MavenExecutionException e) {
-                throw new MojoExecutionException(e.getLocalizedMessage(), e);
-            }
+                silentSystemStreams();
+                PluginManager.setSilentMojoInPluginManager(pluginManager, true);
+                changeSlf4jLoggerLogLevel("org.codehaus.plexus.PlexusContainer", 50, logLevels);
+                changeSlf4jLoggerLogLevel("org.apache.maven.cli.transfer.Slf4jMavenTransferListener", 50, logLevels);
 
-            standalonePOMInitialized = true;
+                org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo(plugin, goal, configuration, executionEnvironment);
+            } finally {
+                System.setErr(oldSystemErr);
+                System.setOut(oldSystemOut);
+                restoreSlf4jLoggerLogLevel("org.codehaus.plexus.PlexusContainer", logLevels);
+                restoreSlf4jLoggerLogLevel("org.apache.maven.cli.transfer.Slf4jMavenTransferListener", logLevels);
+                PluginManager.setSilentMojoInPluginManager(pluginManager, false);
+            }
+        } else {
+            org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo(plugin, goal, configuration, executionEnvironment);
         }
+    }
 
-        Injector i = Guice.createInjector(new AbstractModule() {
-            @Override
-            protected void configure() {
-                bindListener(Matchers.any(), new ParametersListener<T>(this, session.getCurrentProject(), session, ignoredParameters)); // WARN: using getCurrentProject() ?
+    private void changeSlf4jLoggerLogLevel(String slf4jLoggerName, int logLevel, Map<String, Integer> logLevels) {
+        logLevels.put(slf4jLoggerName, getSlf4jLoggerLogLevel(slf4jLoggerName)); // store initial value
+
+        setSlf4jLoggerLogLevel(slf4jLoggerName, logLevel); // set new value
+    }
+
+    private int getSlf4jLoggerLogLevel(String slf4jLoggerName) {
+        org.slf4j.Logger logger = LoggerFactory.getLogger(slf4jLoggerName);
+        Field currentLogLevelField;
+        try {
+            currentLogLevelField = logger.getClass().getDeclaredField("currentLogLevel");
+            currentLogLevelField.setAccessible(true);
+            return (int) currentLogLevelField.get(logger);
+        } catch (Exception e) {
+            // nothing
+        }
+        return -1;
+    }
+
+    private void restoreSlf4jLoggerLogLevel(String slf4jLoggerName, Map<String, Integer> logLevels) {
+        if (logLevels == null || logLevels.size() == 0) return;
+
+        int initialValue = logLevels.get(slf4jLoggerName); // retrieve initial value
+
+        setSlf4jLoggerLogLevel(slf4jLoggerName, initialValue); // restore initial value
+
+        logLevels.remove(slf4jLoggerName); // delete initial value for this logger
+    }
+
+    private void setSlf4jLoggerLogLevel(String slf4jLoggerName, int logLevel) {
+        org.slf4j.Logger logger = LoggerFactory.getLogger(slf4jLoggerName);
+        Field currentLogLevelField;
+        try {
+            try {
+                currentLogLevelField = logger.getClass().getDeclaredField("currentLogLevel");
+            } catch (NoSuchFieldException e) { // for Maven 3.5.0+
+                currentLogLevelField = logger.getClass().getSuperclass().getDeclaredField("currentLogLevel");
             }
-        });
-
-        i.injectMembers(this); // will also inject in configuredMojo
+            currentLogLevelField.setAccessible(true);
+            currentLogLevelField.set(logger, logLevel);
+        } catch (Exception e) {
+            // nothing
+        }
     }
 
-    protected AdvancedMavenLifecycleParticipant getLifecycleParticipant() {
-        logger.warn("getLifecycleParticipant() is not overridden!");
-        return null; // to be overridden in children classes
+    private void silentSystemStreams() {
+        System.setErr(new PrintStream(new OutputStream() {
+            public void write(int b) {
+            }
+        }));
+        System.setOut(new PrintStream(new OutputStream() {
+            public void write(int b) {
+            }
+        }));
     }
-    //
+    //</editor-fold>
 
-    @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
-        createOutputDirectory();
-    }
-
-    protected void skipGoal(String skipParameterName) {
-        getLog().info(Messages.SKIPPING + " Set '" + skipParameterName + "' to 'false' to execute this goal");
-    }
-
-    public CommonMojo() {
-    }
-
-    /**
-     * <p>
-     * A minimalist copy-constructor to create a CommonMojo from another,
-     * keeping the pluginManager, project, session and settings.
-     * In fact this constructor is to create a CommonMojo to be called by
-     * another CommonMojo.
-     * </p>
-     *
-     * @param mojo
-     */
-    public CommonMojo(CommonMojo mojo) {
-        if (mojo == null) return;
-
-        this.artifactRepositoryFactory = mojo.artifactRepositoryFactory;
-        this.logger = mojo.logger;
-//        this.setLog(new NoOpLogger());
-        this.setLog(mojo.getLog());
-        this.mavenResourcesFiltering = mojo.mavenResourcesFiltering;
-        this.mojoExecution = mojo.mojoExecution;
-        this.plexus = mojo.plexus;
-        this.setPluginContext(mojo.getPluginContext());
-        this.pluginDescriptor = mojo.pluginDescriptor;
-        this.pluginManager = mojo.pluginManager;
-        this.project = mojo.project;
-        this.projectBasedir = mojo.projectBasedir;
-        this.projectBuilder = mojo.projectBuilder;
-        this.session = mojo.session;
-        this.settings = mojo.settings;
-    }
-
-    public void setLogger(Logger logger) {
-        this.logger = logger;
-    }
-
-    public PluginDescriptor getPluginDescriptor() {
-        return pluginDescriptor;
-    }
-
-    public BuildPluginManager getPluginManager() {
-        return pluginManager;
-    }
-
-    public void setPluginManager(BuildPluginManager pluginManager) {
-        this.pluginManager = pluginManager;
-    }
-
-    public MavenProject getProject() {
-        return project;
-    }
-
-    public void setProject(MavenProject project) {
-        this.project = project;
-    }
-
-    public MavenSession getSession() {
-        return session;
-    }
-
-    public void setSession(MavenSession session) {
-        this.session = session;
-    }
-
-    public void setSettings(Settings settings) {
-        this.settings = settings;
-    }
+    /* ------------------------------------------ */
+    /* V. Advanded Maven dependencies management */
+    /* ------------------------------------------ */
+    //<editor-fold desc="Advanded Maven dependencies management">
+    public static final String mavenPluginsGroupId = "org.apache.maven.plugins";
+    public static final String mavenPluginDependencyArtifactId = "maven-dependency-plugin";
+    public static final String mavenPluginDependencyVersion = "3.0.2";
+    public static final String mavenPluginDeployArtifactId = "maven-deploy-plugin";
+    public static final String mavenPluginDeployVersion = "2.8.2";
+    public static final String mavenPluginInstallArtifactId = "maven-install-plugin";
+    public static final String mavenPluginInstallVersion = "2.5.2";
 
     protected File copyDependency(String groupId, String artifactId, String version, String type, String classifier, File outputDirectory, String fileName) throws MojoExecutionException {
         if (outputDirectory == null || !outputDirectory.isDirectory()) return null;
@@ -748,17 +890,17 @@ public class CommonMojo extends AbstractMojo {
         configuration.add(new Element("silent", "true"));
 
         executeMojo(
-                plugin(
-                        groupId("org.apache.maven.plugins"),
-                        artifactId("maven-dependency-plugin"),
-                        version("3.0.2") // version defined in pom.xml of this plugin
-                ),
-                goal("copy"),
-                configuration(
-                        configuration.toArray(new Element[0])
-                ),
-                getEnvironment(),
-                true
+            plugin(
+                groupId(mavenPluginsGroupId),
+                artifactId(mavenPluginDependencyArtifactId),
+                version(mavenPluginDependencyVersion) // version defined in pom.xml of this plugin
+            ),
+            goal("copy"),
+            configuration(
+                configuration.toArray(new Element[0])
+            ),
+            getEnvironment(),
+            true
         );
 
         return new File(outputDirectory, fileName);
@@ -766,55 +908,6 @@ public class CommonMojo extends AbstractMojo {
 
     protected File copyDependency(String groupId, String artifactId, String version, String type, File outputDirectory, String fileName) throws MojoExecutionException {
         return copyDependency(groupId, artifactId, version, type, null, outputDirectory, fileName);
-    }
-
-    public File getDependency(String groupId, String artifactId, String version, String type, String classifier, boolean silent) throws ArtifactNotFoundException, ArtifactResolutionException {
-        ArrayList<Element> configuration = new ArrayList<Element>();
-
-        configuration.add(new Element("groupId", groupId));
-        configuration.add(new Element("artifactId", artifactId));
-        configuration.add(new Element("version", version));
-        configuration.add(new Element("packaging", type));
-        if (classifier != null) {
-            configuration.add(new Element("classifier", classifier));
-        }
-        configuration.add(new Element("transitive", "false"));
-
-        getLog().info("Resolving artifact '" + groupId + ":" + artifactId + ":" + version + ":" + type.toLowerCase() + (classifier != null ? ":" + classifier : "") + "'...");
-
-        try {
-            executeMojo(
-                    plugin(
-                            groupId("org.apache.maven.plugins"),
-                            artifactId("maven-dependency-plugin"),
-                            version("3.0.2") // version defined in pom.xml of this plugin
-                    ),
-                    goal("get"),
-                    configuration(
-                            configuration.toArray(new Element[0])
-                    ),
-                    getEnvironment(),
-                    silent
-            );
-        } catch (MojoExecutionException e) {
-            if (e.getCause() != null && e.getCause().getCause() != null && e.getCause().getCause() instanceof ArtifactNotFoundException) {
-                ArtifactNotFoundException artifactNotFoundException = (ArtifactNotFoundException) e.getCause().getCause();
-                throw artifactNotFoundException;
-            } else if (e.getCause() != null && e.getCause().getCause() != null && e.getCause().getCause() instanceof ArtifactResolutionException) {
-                ArtifactResolutionException artifactResolutionException = (ArtifactResolutionException) e.getCause().getCause();
-                throw artifactResolutionException;
-            }
-        }
-
-        File result = new File(session.getLocalRepository().getBasedir() + "/" + groupId.replace(".", "/") + "/" + artifactId + "/" + version + "/" + artifactId + "-" + version + (classifier != null ? "-" + classifier : "") + "." + type.toLowerCase());
-
-        getLog().info("Artifact '" + groupId + ":" + artifactId + ":" + version + ":" + type.toLowerCase() + (classifier != null ? ":" + classifier : "") + "' has been resolved to '" + result.getAbsolutePath() + "'");
-
-        return result;
-    }
-
-    public File getDependency(String groupId, String artifactId, String version, String type, boolean silent) throws MojoExecutionException, ArtifactNotFoundException, ArtifactResolutionException {
-        return getDependency(groupId, artifactId, version, type, null, silent);
     }
 
     protected void deployDependency(String groupId, String artifactId, String version, String type, String classifier, File file, String remoteRepositoryId, String remoteRepositoryURL, boolean silent) throws MojoExecutionException {
@@ -838,18 +931,67 @@ public class CommonMojo extends AbstractMojo {
         }
 
         executeMojo(
+            plugin(
+                groupId(mavenPluginsGroupId),
+                artifactId(mavenPluginDeployArtifactId),
+                version(mavenPluginDeployVersion) // version defined in pom.xml of this plugin
+            ),
+            goal("deploy-file"),
+            configuration(
+                configuration.toArray(new Element[0])
+            ),
+            getEnvironment(),
+            silent
+        );
+    }
+
+    public File getDependency(String groupId, String artifactId, String version, String type, String classifier, boolean silent) throws ArtifactNotFoundException, ArtifactResolutionException {
+        ArrayList<Element> configuration = new ArrayList<Element>();
+
+        configuration.add(new Element("groupId", groupId));
+        configuration.add(new Element("artifactId", artifactId));
+        configuration.add(new Element("version", version));
+        configuration.add(new Element("packaging", type));
+        if (classifier != null) {
+            configuration.add(new Element("classifier", classifier));
+        }
+        configuration.add(new Element("transitive", "false"));
+
+        getLog().info("Resolving artifact '" + groupId + ":" + artifactId + ":" + version + ":" + type.toLowerCase() + (classifier != null ? ":" + classifier : "") + "'...");
+
+        try {
+            executeMojo(
                 plugin(
-                        groupId("org.apache.maven.plugins"),
-                        artifactId("maven-deploy-plugin"),
-                        version("2.8.2") // version defined in pom.xml of this plugin
+                    groupId(mavenPluginsGroupId),
+                    artifactId(mavenPluginDependencyArtifactId),
+                    version(mavenPluginDependencyVersion) // version defined in pom.xml of this plugin
                 ),
-                goal("deploy-file"),
+                goal("get"),
                 configuration(
-                        configuration.toArray(new Element[0])
+                    configuration.toArray(new Element[0])
                 ),
                 getEnvironment(),
                 silent
-        );
+            );
+        } catch (MojoExecutionException e) {
+            if (e.getCause() != null && e.getCause().getCause() != null && e.getCause().getCause() instanceof ArtifactNotFoundException) {
+                ArtifactNotFoundException artifactNotFoundException = (ArtifactNotFoundException) e.getCause().getCause();
+                throw artifactNotFoundException;
+            } else if (e.getCause() != null && e.getCause().getCause() != null && e.getCause().getCause() instanceof ArtifactResolutionException) {
+                ArtifactResolutionException artifactResolutionException = (ArtifactResolutionException) e.getCause().getCause();
+                throw artifactResolutionException;
+            }
+        }
+
+        File result = new File(session.getLocalRepository().getBasedir() + "/" + groupId.replace(".", "/") + "/" + artifactId + "/" + version + "/" + artifactId + "-" + version + (classifier != null ? "-" + classifier : "") + "." + type.toLowerCase());
+
+        getLog().info("Artifact '" + groupId + ":" + artifactId + ":" + version + ":" + type.toLowerCase() + (classifier != null ? ":" + classifier : "") + "' has been resolved to '" + result.getAbsolutePath() + "'");
+
+        return result;
+    }
+
+    public File getDependency(String groupId, String artifactId, String version, String type, boolean silent) throws MojoExecutionException, ArtifactNotFoundException, ArtifactResolutionException {
+        return getDependency(groupId, artifactId, version, type, null, silent);
     }
 
     protected void installDependency(String groupId, String artifactId, String version, String type, String classifier, File file, File localRepositoryPath, boolean silent) throws MojoExecutionException {
@@ -870,20 +1012,84 @@ public class CommonMojo extends AbstractMojo {
         }
 
         executeMojo(
-                plugin(
-                        groupId("org.apache.maven.plugins"),
-                        artifactId("maven-install-plugin"),
-                        version("2.5.2") // version defined in pom.xml of this plugin
-                ),
-                goal("install-file"),
-                configuration(
-                        configuration.toArray(new Element[0])
-                ),
-                getEnvironment(),
-                silent
+            plugin(
+                groupId(mavenPluginsGroupId),
+                artifactId(mavenPluginInstallArtifactId),
+                version(mavenPluginInstallVersion) // version defined in pom.xml of this plugin
+            ),
+            goal("install-file"),
+            configuration(
+                configuration.toArray(new Element[0])
+            ),
+            getEnvironment(),
+            silent
         );
     }
 
+        //<editor-fold desc="Generic dependencies resolver">
+    /* Generic dependecies resolver */
+    protected List<org.apache.maven.model.Dependency> resolvedDependencies;
+
+    protected class ResolveDependenciesWithProjectMojo extends ResolveDependenciesMojo {
+
+        public ResolveDependenciesWithProjectMojo(MavenProject project) throws MojoExecutionException {
+            super();
+
+            // inject Maven project
+            Field projectField = null;
+            try {
+                projectField = this.getClass().getSuperclass().getSuperclass().getSuperclass().getSuperclass().getDeclaredField("project");
+                projectField.setAccessible(true);
+                projectField.set(this, project);
+            } catch (IllegalAccessException | NoSuchFieldException e) {
+                throw new MojoExecutionException(e.getLocalizedMessage(), e);
+            }
+
+            // make the goal silent
+            this.setSilent(true);
+        }
+
+    }
+
+    protected List<org.apache.maven.model.Dependency> getDependencies(Predicate<org.apache.maven.model.Dependency> dependencyPredicate) throws MojoExecutionException {
+        if (resolvedDependencies != null) {
+            if (resolvedDependencies.isEmpty()) {
+                return resolvedDependencies;
+            } else {
+                return Lists.newArrayList(Collections2.filter(resolvedDependencies, dependencyPredicate));
+            }
+        }
+
+        resolvedDependencies = new ArrayList<org.apache.maven.model.Dependency>();
+        ResolveDependenciesWithProjectMojo rdm = new ResolveDependenciesWithProjectMojo(project);
+
+        try {
+            rdm.execute();
+            Set<org.apache.maven.artifact.Artifact> dependencies = rdm.getResults().getResolvedDependencies();
+
+            for (org.apache.maven.artifact.Artifact artifact : dependencies) {
+                org.apache.maven.model.Dependency d = new org.apache.maven.model.Dependency();
+                d.setGroupId(artifact.getGroupId());
+                d.setArtifactId(artifact.getArtifactId());
+                d.setVersion(artifact.getVersion());
+                d.setType(artifact.getType());
+                d.setClassifier(artifact.getClassifier());
+                resolvedDependencies.add(d);
+            }
+        } catch (MojoFailureException e) {
+            throw new MojoExecutionException(e.getLocalizedMessage(), e);
+        }
+
+        if (resolvedDependencies.isEmpty()) {
+            return resolvedDependencies;
+        } else {
+            return Lists.newArrayList(Collections2.filter(resolvedDependencies, dependencyPredicate));
+        }
+    }
+        //</editor-fold>
+    //</editor-fold>
+
+    //<editor-fold desc="Maven offline mode generator">
     protected List<ArtifactResult> getPomArtifact(String coords) {
         Artifact artifact = new DefaultArtifact(coords);
 
@@ -905,25 +1111,30 @@ public class CommonMojo extends AbstractMojo {
         return artifactResults;
     }
 
-    private void writeMavenMetadata(File localRepository, String groupIdPath, String resourcePath) {
-        // create a maven-metadata-local.xml for plugin group
-        InputStream metadataInputStream = this.getClass().getResourceAsStream(resourcePath);
-        File groupDirectory = new File(localRepository, groupIdPath);
-        groupDirectory.mkdirs();
-        File metadataFile = new File(groupDirectory, "maven-metadata-local.xml");
-        OutputStream metadataOutputStream = null;
+    protected void copyResourceToFile(String resourcePath, File outputFile) {
+        InputStream inputStream = this.getClass().getResourceAsStream(resourcePath); // retrieve resource from path
+        OutputStream outputStream = null;
         try {
-            metadataOutputStream = new FileOutputStream(metadataFile);
-            IOUtils.copy(metadataInputStream, metadataOutputStream);
+            outputStream = new FileOutputStream(outputFile);
+            IOUtils.copy(inputStream, outputStream);
         } catch (IOException e1) {
         } finally {
-            if (metadataOutputStream != null) {
+            if (outputStream != null) {
                 try {
-                    metadataOutputStream.close();
+                    outputStream.close();
                 } catch (IOException e) {
                 }
             }
         }
+    }
+
+    private void writeMavenMetadata(File localRepository, String groupIdPath, String resourcePath) {
+        // create a maven-metadata-local.xml for plugin group
+        File groupDirectory = new File(localRepository, groupIdPath);
+        groupDirectory.mkdirs();
+        File metadataFile = new File(groupDirectory, "maven-metadata-local.xml");
+
+        copyResourceToFile(resourcePath, metadataFile);
     }
 
     protected void goOffline(MavenProject project, File localRepositoryPath, String mavenVersion) throws MojoExecutionException {
@@ -933,19 +1144,7 @@ public class CommonMojo extends AbstractMojo {
         // create a settings.xml with <pluginGroups>
         InputStream globalSettingInputStream = this.getClass().getResourceAsStream("/maven/default-t3-settings.xml");
         File globalSettingsFile = new File(tmpDirectory, "settings.xml");
-        OutputStream globalSettingsOutputStream = null;
-        try {
-            globalSettingsOutputStream = new FileOutputStream(globalSettingsFile);
-            IOUtils.copy(globalSettingInputStream, globalSettingsOutputStream);
-        } catch (IOException e1) {
-        } finally {
-            if (globalSettingsOutputStream != null) {
-                try {
-                    globalSettingsOutputStream.close();
-                } catch (IOException e) {
-                }
-            }
-        }
+        copyResourceToFile("/maven/default-t3-settings.xml", globalSettingsFile);
 
         // create a maven-metadata-local.xml for Maven plugin group
         writeMavenMetadata(localRepositoryPath, "org/apache/maven/plugins", "/maven/maven-plugins-maven-metadata.xml");
@@ -1074,17 +1273,17 @@ public class CommonMojo extends AbstractMojo {
             }
 
             executeMojo(
-                    plugin(
-                            groupId("org.apache.maven.plugins"),
-                            artifactId("maven-install-plugin"),
-                            version("2.5.2") // version defined in pom.xml of this plugin
-                    ),
-                    goal("install-file"),
-                    configuration(
-                            configuration.toArray(new Element[0])
-                    ),
-                    getEnvironment(project, session, pluginManager),
-                    true
+                plugin(
+                    groupId("org.apache.maven.plugins"),
+                    artifactId(mavenPluginInstallArtifactId),
+                    version(mavenPluginInstallVersion) // version defined in pom.xml of this plugin
+                ),
+                goal("install-file"),
+                configuration(
+                    configuration.toArray(new Element[0])
+                ),
+                getEnvironment(project, session, pluginManager),
+                true
             );
 
             File artifactDirectory = new File(localRepositoryPath, artifact.getGroupId().replace(".", "/") + "/" + artifact.getArtifactId() + "/" + artifact.getVersion());
@@ -1124,17 +1323,17 @@ public class CommonMojo extends AbstractMojo {
                 configuration.add(new Element("packaging", "pom"));
 
                 executeMojo(
-                        plugin(
-                                groupId("org.apache.maven.plugins"),
-                                artifactId("maven-install-plugin"),
-                                version("2.5.2") // version defined in pom.xml of this plugin
-                        ),
-                        goal("install-file"),
-                        configuration(
-                                configuration.toArray(new Element[0])
-                        ),
-                        executionEnvironment(project, session, pluginManager),
-                        true
+                    plugin(
+                        groupId("org.apache.maven.plugins"),
+                        artifactId(mavenPluginInstallArtifactId),
+                        version(mavenPluginInstallVersion) // version defined in pom.xml of this plugin
+                    ),
+                    goal("install-file"),
+                    configuration(
+                        configuration.toArray(new Element[0])
+                    ),
+                    executionEnvironment(project, session, pluginManager),
+                    true
                 );
             }
         }
@@ -1250,195 +1449,6 @@ public class CommonMojo extends AbstractMojo {
         }
         return result;
     }
+    //</editor-fold>
 
-    public void executeMojo(Plugin plugin, String goal, Xpp3Dom configuration, ExecutionEnvironment env) throws MojoExecutionException {
-        executeMojo(plugin, goal, configuration, env, false);
-    }
-
-    public void executeMojo(Plugin plugin, String goal, Xpp3Dom configuration, ExecutionEnvironment env, boolean quiet) throws MojoExecutionException {
-        PrintStream oldSystemErr = System.err;
-        PrintStream oldSystemOut = System.out;
-        Map<String, Integer> logLevels = new HashMap<String, Integer>(); // a Map to store initial values of log levels
-        if (quiet) {
-            try {
-                silentSystemStreams();
-                PluginManager.setSilentMojoInPluginManager(pluginManager, true);
-                changeSlf4jLoggerLogLevel("org.codehaus.plexus.PlexusContainer", 50, logLevels);
-                changeSlf4jLoggerLogLevel("org.apache.maven.cli.transfer.Slf4jMavenTransferListener", 50, logLevels);
-
-                org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo(plugin, goal, configuration, env);
-            } finally {
-                System.setErr(oldSystemErr);
-                System.setOut(oldSystemOut);
-                restoreSlf4jLoggerLogLevel("org.codehaus.plexus.PlexusContainer", logLevels);
-                restoreSlf4jLoggerLogLevel("org.apache.maven.cli.transfer.Slf4jMavenTransferListener", logLevels);
-                PluginManager.setSilentMojoInPluginManager(pluginManager, false);
-            }
-        } else {
-            org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo(plugin, goal, configuration, env);
-        }
-    }
-
-    private int getSlf4jLoggerLogLevel(String slf4jLoggerName) {
-        org.slf4j.Logger logger = LoggerFactory.getLogger(slf4jLoggerName);
-        Field currentLogLevelField;
-        try {
-            currentLogLevelField = logger.getClass().getDeclaredField("currentLogLevel");
-            currentLogLevelField.setAccessible(true);
-            return (int) currentLogLevelField.get(logger);
-        } catch (Exception e) {
-            // nothing
-        }
-        return -1;
-    }
-
-    private void restoreSlf4jLoggerLogLevel(String slf4jLoggerName, Map<String, Integer> logLevels) {
-        if (logLevels == null || logLevels.size() == 0) return;
-
-        int initialValue = logLevels.get(slf4jLoggerName); // retrieve initial value
-
-        setSlf4jLoggerLogLevel(slf4jLoggerName, initialValue); // restore initial value
-
-        logLevels.remove(slf4jLoggerName); // delete initial value for this logger
-    }
-
-    private void changeSlf4jLoggerLogLevel(String slf4jLoggerName, int logLevel, Map<String, Integer> logLevels) {
-        logLevels.put(slf4jLoggerName, getSlf4jLoggerLogLevel(slf4jLoggerName)); // store initial value
-
-        setSlf4jLoggerLogLevel(slf4jLoggerName, logLevel); // set new value
-    }
-
-    private void setSlf4jLoggerLogLevel(String slf4jLoggerName, int logLevel) {
-        org.slf4j.Logger logger = LoggerFactory.getLogger(slf4jLoggerName);
-        Field currentLogLevelField;
-        try {
-            try {
-                currentLogLevelField = logger.getClass().getDeclaredField("currentLogLevel");
-            } catch (NoSuchFieldException e) { // for Maven 3.5.0+
-                currentLogLevelField = logger.getClass().getSuperclass().getDeclaredField("currentLogLevel");
-            }
-            currentLogLevelField.setAccessible(true);
-            currentLogLevelField.set(logger, logLevel);
-        } catch (Exception e) {
-            // nothing
-        }
-    }
-
-    private void silentSystemStreams() {
-        System.setErr(new PrintStream(new OutputStream() {
-            public void write(int b) {
-            }
-        }));
-        System.setOut(new PrintStream(new OutputStream() {
-            public void write(int b) {
-            }
-        }));
-    }
-
-    /**
-     * Add all files from the source directory to the destination zip file
-     *
-     * @param source      the directory with files to add
-     * @param destination the zip file that should contain the files
-     * @throws IOException      if the io fails
-     * @throws ArchiveException if creating or adding to the archive fails
-     */
-    protected void addFilesToZip(File source, File destination) throws IOException, ArchiveException {
-        OutputStream archiveStream = new FileOutputStream(destination);
-        ArchiveOutputStream archive = new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.ZIP, archiveStream);
-
-        Collection<File> fileList = FileUtils.listFiles(source, null, true);
-
-        for (File file : fileList) {
-            String entryName = getEntryName(source, file);
-            ZipArchiveEntry entry = new ZipArchiveEntry(entryName);
-            archive.putArchiveEntry(entry);
-
-            BufferedInputStream input = new BufferedInputStream(new FileInputStream(file));
-
-            IOUtils.copy(input, archive);
-            input.close();
-            archive.closeArchiveEntry();
-        }
-
-        archive.finish();
-        archiveStream.close();
-    }
-
-    /**
-     * Remove the leading part of each entry that contains the source directory name
-     *
-     * @param source the directory where the file entry is found
-     * @param file   the file that is about to be added
-     * @return the name of an archive entry
-     * @throws IOException if the io fails
-     */
-    private String getEntryName(File source, File file) throws IOException {
-        int index = source.getAbsolutePath().length() + 1;
-        String path = file.getCanonicalPath();
-
-        return path.substring(index);
-    }
-
-    /** Generic dependencies resolver **/
-
-    protected List<org.apache.maven.model.Dependency> resolvedDependencies;
-
-    protected class ResolveDependenciesWithProjectMojo extends ResolveDependenciesMojo {
-
-        public ResolveDependenciesWithProjectMojo(MavenProject project) throws MojoExecutionException {
-            super();
-
-            // inject Maven project
-            Field projectField = null;
-            try {
-                projectField = this.getClass().getSuperclass().getSuperclass().getSuperclass().getSuperclass().getDeclaredField("project");
-                projectField.setAccessible(true);
-                projectField.set(this, project);
-            } catch (IllegalAccessException | NoSuchFieldException e) {
-                throw new MojoExecutionException(e.getLocalizedMessage(), e);
-            }
-
-            // make the goal silent
-            this.setSilent(true);
-        }
-
-    }
-
-    protected List<org.apache.maven.model.Dependency> getDependencies(Predicate<org.apache.maven.model.Dependency> dependencyPredicate) throws MojoExecutionException {
-        if (resolvedDependencies != null) {
-            if (resolvedDependencies.isEmpty()) {
-                return resolvedDependencies;
-            } else {
-                return Lists.newArrayList(Collections2.filter(resolvedDependencies, dependencyPredicate));
-            }
-        }
-
-        resolvedDependencies = new ArrayList<org.apache.maven.model.Dependency>();
-        ResolveDependenciesWithProjectMojo rdm = new ResolveDependenciesWithProjectMojo(project);
-
-        try {
-            rdm.execute();
-            Set<org.apache.maven.artifact.Artifact> dependencies = rdm.getResults().getResolvedDependencies();
-
-            for (org.apache.maven.artifact.Artifact artifact : dependencies) {
-                org.apache.maven.model.Dependency d = new org.apache.maven.model.Dependency();
-                d.setGroupId(artifact.getGroupId());
-                d.setArtifactId(artifact.getArtifactId());
-                d.setVersion(artifact.getVersion());
-                d.setType(artifact.getType());
-                d.setClassifier(artifact.getClassifier());
-                resolvedDependencies.add(d);
-            }
-        } catch (MojoFailureException e) {
-            throw new MojoExecutionException(e.getLocalizedMessage(), e);
-        }
-
-        if (resolvedDependencies.isEmpty()) {
-            return resolvedDependencies;
-        } else {
-            return Lists.newArrayList(Collections2.filter(resolvedDependencies, dependencyPredicate));
-        }
-
-    }
 }

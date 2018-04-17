@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3;
+package t3.utils;
 
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.model.Dependency;
@@ -106,24 +106,7 @@ public class POMManager {
             return null;
         }
 
-        Model model = null;
-        FileInputStream fis = null;
-        InputStreamReader isr = null;
-        try {
-            fis = new FileInputStream(pom);
-            isr = new InputStreamReader(fis, "utf-8"); // FIXME
-            MavenXpp3Reader reader = new MavenXpp3Reader();
-            model = reader.read(isr);
-        } finally {
-            try {
-                isr.close();
-                fis.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return model;
+        return getModelFromPOM(pom);
     }
 
     public static Model getModelOfModule(MavenProject mavenProject, String module) throws IOException, XmlPullParserException {
