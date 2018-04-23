@@ -56,7 +56,7 @@ public class PropertiesEnforcer {
     public static String OS_SOLARIS = "solaris";
     public static String OS_LINUX = "linux";
 
-    private static void setPlatformSpecificProperties(MavenSession session) {
+    public static void setPlatformSpecificProperties(MavenSession session) {
         // CommonMojoInformation.executablesExtension
         String executablesExtension = "";
         if (SystemUtils.IS_OS_WINDOWS) {

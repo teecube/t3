@@ -31,6 +31,7 @@ import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
 import t3.plugin.PluginConfigurator;
+import t3.plugin.PropertiesEnforcer;
 
 import java.io.File;
 
@@ -100,6 +101,7 @@ public abstract class CommonMavenLifecycleParticipant extends AbstractMavenLifec
     @Override
     public void afterProjectsRead(MavenSession session) throws MavenExecutionException {
         fixStandalonePOM(session.getCurrentProject(), new File(session.getRequest().getBaseDirectory()));
+        PropertiesEnforcer.setPlatformSpecificProperties(session);
 
         // plugin manager and properties manager
         propertiesManager = CommonMojo.propertiesManager(session, session.getCurrentProject());

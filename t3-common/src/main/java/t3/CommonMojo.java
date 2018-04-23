@@ -983,7 +983,7 @@ public class CommonMojo extends AbstractMojo {
         return getDependency(groupId, artifactId, version, type, null, silent);
     }
 
-    protected void installDependency(String groupId, String artifactId, String version, String type, String classifier, File file, File localRepositoryPath, boolean silent) throws MojoExecutionException {
+    protected File installDependency(String groupId, String artifactId, String version, String type, String classifier, File file, File localRepositoryPath, boolean silent) throws MojoExecutionException {
         ArrayList<Element> configuration = new ArrayList<Element>();
 
         configuration.add(new Element("file", file.getAbsolutePath()));
@@ -1013,6 +1013,8 @@ public class CommonMojo extends AbstractMojo {
             getEnvironment(),
             silent
         );
+
+        return new File(localRepositoryPath.getAbsolutePath().replace("\\", "/") + "/" + groupId.replace(".", "/") + "/" + artifactId + "/" + version + "/" + artifactId + "-" + version + (classifier != null ? "-" + classifier : "") + "." + type.toLowerCase());
     }
 
         //<editor-fold desc="Generic dependencies resolver">
