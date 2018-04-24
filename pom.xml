@@ -1167,6 +1167,12 @@
 									</goals>
 									<phase>process-classes</phase>
 								</execution>
+                                <execution>
+                                    <id>generated-helpmojo</id>
+                                    <goals>
+                                        <goal>helpmojo</goal>
+                                    </goals>
+                                </execution>
 							</executions>
 						</plugin>
 						<plugin>
