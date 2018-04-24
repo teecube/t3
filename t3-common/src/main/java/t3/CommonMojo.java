@@ -1132,7 +1132,7 @@ public class CommonMojo extends AbstractMojo {
         writeMavenMetadata(localRepository, groupIdPath, "maven-metadata-local.xml", resourcePath);
     }
 
-    protected BuiltProject executeGoal(File pomWithGoal, File globalSettingsFile, File localRepositoryPath, String mavenVersion, List<String> goals) {
+    protected BuiltProject executeGoal(File pomWithGoal, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion, List<String> goals) {
         goals.clear();
 
         goals.add("validate");
@@ -1142,6 +1142,7 @@ public class CommonMojo extends AbstractMojo {
                                                               .setQuiet()
                                                               .setUserSettingsFile(globalSettingsFile)
                                                               .setGlobalSettingsFile(globalSettingsFile)
+                                                              .setUserSettingsFile(userSettingsFile)
                                                               .setLocalRepositoryDirectory(localRepositoryPath)
                                                               .useMaven3Version(mavenVersion)
                                                               .setGoals(goals);
