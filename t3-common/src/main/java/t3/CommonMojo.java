@@ -1132,11 +1132,14 @@ public class CommonMojo extends AbstractMojo {
         writeMavenMetadata(localRepository, groupIdPath, "maven-metadata-local.xml", resourcePath);
     }
 
-    protected BuiltProject executeGoal(File pomWithGoal, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion, List<String> goals) {
-        goals.clear();
-
+    protected BuiltProject executeGoal(File pomWithGoal, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion) {
+        List<String> goals = new ArrayList<String>();
         goals.add("validate");
 
+        return executeGoal(pomWithGoal, globalSettingsFile, userSettingsFile, localRepositoryPath, mavenVersion, goals);
+    }
+
+    protected BuiltProject executeGoal(File pomWithGoal, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion, List<String> goals) {
         // execute the goals to bootstrap the plugin in local repository path
         ConfigurationDistributionStage builder = EmbeddedMaven.forProject(pomWithGoal)
                                                               .setQuiet()
