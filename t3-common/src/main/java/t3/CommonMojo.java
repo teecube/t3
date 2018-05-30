@@ -1134,12 +1134,9 @@ public class CommonMojo extends AbstractMojo {
 
     protected BuiltProject executeGoal(File pomWithGoal, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion) {
         List<String> goals = new ArrayList<String>();
+
         goals.add("validate");
 
-        return executeGoal(pomWithGoal, globalSettingsFile, userSettingsFile, localRepositoryPath, mavenVersion, goals);
-    }
-
-    protected BuiltProject executeGoal(File pomWithGoal, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion, List<String> goals) {
         // execute the goals to bootstrap the plugin in local repository path
         ConfigurationDistributionStage builder = EmbeddedMaven.forProject(pomWithGoal)
                                                               .setQuiet()
@@ -1157,15 +1154,21 @@ public class CommonMojo extends AbstractMojo {
         return result;
     }
 
-    private void enableFailAtEnd(ConfigurationDistributionStage builder) {
+    private DefaultInvocationRequest getRequestFromBuilder(ConfigurationDistributionStage builder) {
         Field requestField;
         try {
             requestField = builder.getClass().getDeclaredField("request");
             requestField.setAccessible(true);
             DefaultInvocationRequest request = (DefaultInvocationRequest) requestField.get(builder);
-            request.setReactorFailureBehavior(ReactorFailureBehavior.FailAtEnd);
+            return request;
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e1) {
         }
+
+        return null;
+    }
+
+    private void enableFailAtEnd(ConfigurationDistributionStage builder) {
+        getRequestFromBuilder(builder).setReactorFailureBehavior(ReactorFailureBehavior.FailAtEnd);
     }
     //</editor-fold>
 
