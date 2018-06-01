@@ -23,6 +23,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.model.FileSet;
+import org.apache.tools.ant.taskdefs.optional.ReplaceRegExp;
 import org.codehaus.plexus.util.FileUtils;
 
 import java.io.*;
@@ -323,4 +324,22 @@ public class Utils {
         return path.substring(index);
     }
 
+    public static void replaceByLine(File file, String match, String replace, boolean byLine, String sourceEncoding) {
+        replaceByLine(file, match, replace, byLine, null, sourceEncoding);
+    }
+
+    public static void replaceByLine(File file, String match, String replace, boolean byLine, String flags, String sourceEncoding) {
+        if (file == null || match == null || replace == null) return;
+
+        ReplaceRegExp replaceRegExp = new ReplaceRegExp();
+        replaceRegExp.setFile(file);
+        replaceRegExp.setMatch(match);
+        replaceRegExp.setReplace(replace);
+        replaceRegExp.setByLine(byLine);
+        replaceRegExp.setEncoding(sourceEncoding);
+        if (flags != null) {
+            replaceRegExp.setFlags(flags);
+        }
+        replaceRegExp.execute();
+    }
 }

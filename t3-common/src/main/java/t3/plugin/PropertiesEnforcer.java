@@ -144,21 +144,16 @@ public class PropertiesEnforcer {
         logger.info(Messages.ENFORCING_GLOBAL_RULES);
         enforceGlobalProperties(session, pluginManager, logger, fromClass, pluginKey);
         logger.info(Messages.ENFORCED_GLOBAL_RULES);
-        if (!"standalone-pom".equals(session.getCurrentProject().getArtifactId())) {
-            logger.info(Messages.MESSAGE_SPACE);
-        }
+        logger.info(Messages.MESSAGE_SPACE);
 
         boolean projectRules = false;
 
         for (MavenProject mavenProject : session.getProjects()) {
             if (projectPackagings.contains(mavenProject.getPackaging())) {
                 if (!projectRules) {
-                    if ("standalone-pom".equals(session.getCurrentProject().getArtifactId())) {
-                        logger.info(Messages.MESSAGE_SPACE);
-                    }
-                    logger.info(Messages.ENFORCING_PER_PROJECT_RULES);
                     projectRules = true;
                 }
+                logger.info(Messages.ENFORCING_PER_PROJECT_RULES);
 
                 // enforce
                 enforceProjectProperties(session, pluginManager, mavenProject, logger, fromClass);

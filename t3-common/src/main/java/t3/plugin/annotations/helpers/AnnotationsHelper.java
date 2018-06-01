@@ -22,7 +22,6 @@ import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
-import org.slf4j.helpers.NOPLogger;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -40,7 +39,8 @@ public class AnnotationsHelper {
     }
 
     public static <A extends Annotation> Set<Field> getFieldsAnnotatedWith(Class<?> fromClass, Class<A> annotationClass, ClassLoader... classLoaders) {
-        Reflections.log = NOPLogger.NOP_LOGGER;
+//        Reflections.log = NOPLogger.NOP_LOGGER;
+        Reflections.log = null;
 
         Reflections reflections = new Reflections(new ConfigurationBuilder()
             .setUrls(ClasspathHelper.forClass(fromClass, classLoaders),
@@ -58,8 +58,8 @@ public class AnnotationsHelper {
     }
 
     public static <A extends Annotation> Set<Class<?>> getTypesAnnotatedWith(Class<?> fromClass, Class<A> annotationClass, ClassLoader... classLoaders) {
-        Reflections.log = NOPLogger.NOP_LOGGER;
-//        Reflections.log = null;
+//        Reflections.log = NOPLogger.NOP_LOGGER;
+        Reflections.log = null;
 
         Reflections reflections = new Reflections(new ConfigurationBuilder()
             .setUrls(ClasspathHelper.forClass(fromClass, classLoaders),

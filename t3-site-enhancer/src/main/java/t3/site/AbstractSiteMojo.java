@@ -25,7 +25,6 @@ import org.apache.maven.model.Profile;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.tools.ant.taskdefs.optional.ReplaceRegExp;
 import org.joox.Context;
 import org.joox.Filter;
 import org.joox.JOOX;
@@ -40,6 +39,7 @@ import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.InputSource;
 import t3.CommonMojo;
+import t3.utils.Utils;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -144,19 +144,7 @@ public abstract class AbstractSiteMojo extends CommonMojo {
     }
 
     protected void replaceByLine(File file, String match, String replace, boolean byLine, String flags) {
-        if (file == null || match == null || replace == null) return;
-
-        ReplaceRegExp replaceRegExp = new ReplaceRegExp();
-        replaceRegExp.setFile(file);
-        replaceRegExp.setMatch(match);
-        replaceRegExp.setReplace(replace);
-        replaceRegExp.setByLine(byLine);
-        replaceRegExp.setEncoding(sourceEncoding);
-        if (flags != null) {
-            replaceRegExp.setFlags(flags);
-        }
-        replaceRegExp.execute();
-
+        Utils.replaceByLine(file, match, replace, byLine, flags, sourceEncoding);
     }
 
     protected void replaceByLine(File file, String match, String replace) {
