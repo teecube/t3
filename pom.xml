@@ -2217,6 +2217,16 @@
 						<includes>
 							<include>plugins-configuration/**/*</include>
 						</includes>
+						<excludes>
+							<exclude>plugins-configuration/dependencies/**/*</exclude>
+						</excludes>
+					</resource>
+					<resource>
+						<directory>src/main/resources</directory>
+						<filtering>true</filtering>
+						<includes>
+							<include>plugins-configuration/dependencies/**/*</include>
+						</includes>
 					</resource>
 					<resource>
 						<directory>src/main/java</directory>
