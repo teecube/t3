@@ -70,6 +70,7 @@ import org.twdata.maven.mojoexecutor.MojoExecutor.*;
 import t3.plugin.PluginManager;
 import t3.plugin.annotations.GlobalParameter;
 import t3.plugin.annotations.injection.ParametersListener;
+import t3.utils.POMManager;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -1132,24 +1133,59 @@ public class CommonMojo extends AbstractMojo {
         writeMavenMetadata(localRepository, groupIdPath, "maven-metadata-local.xml", resourcePath);
     }
 
-    protected BuiltProject executeGoal(File pomWithGoal, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion) {
+    public BuiltProject executeGoal(File pomWithGoal, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion) throws MojoExecutionException {
         List<String> goals = new ArrayList<String>();
 
         goals.add("validate");
 
-        // execute the goals to bootstrap the plugin in local repository path
-        ConfigurationDistributionStage builder = EmbeddedMaven.forProject(pomWithGoal)
-                                                              .setQuiet()
-                                                              .setUserSettingsFile(globalSettingsFile)
-                                                              .setGlobalSettingsFile(globalSettingsFile)
-                                                              .setUserSettingsFile(userSettingsFile)
-                                                              .setLocalRepositoryDirectory(localRepositoryPath)
-                                                              .useMaven3Version(mavenVersion)
-                                                              .setGoals(goals);
+        return executeGoal(pomWithGoal, goals, globalSettingsFile, userSettingsFile, localRepositoryPath, mavenVersion);
+    }
 
-        enableFailAtEnd(builder);
+    public BuiltProject executeGoal(List<String> goals, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion) throws MojoExecutionException {
+        // create a minimalist POM (required)
+        Model model = new Model();
+        model.setModelVersion("4.0.0");
+        model.setGroupId("maven-task");
+        model.setArtifactId("maven-task");
+        model.setVersion("1");
+        model.setPackaging("pom");
 
-        BuiltProject result = builder.ignoreFailure().build();
+        File pomFile = null;
+        try {
+            pomFile = File.createTempFile("pom", ".xml");
+            POMManager.writeModelToPOM(model, pomFile);
+        } catch (IOException e) {
+            throw new MojoExecutionException(e.getLocalizedMessage(), e);
+        }
+
+        return executeGoal(pomFile, goals, globalSettingsFile, userSettingsFile, localRepositoryPath, mavenVersion);
+    }
+
+    protected BuiltProject executeGoal(File pomFile, List<String> goals, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion) throws MojoExecutionException {
+        BuiltProject result = null;
+
+        PrintStream oldSystemErr = System.err;
+        PrintStream oldSystemOut = System.out;
+        try {
+            silentSystemStreams();
+
+            // execute the goals to bootstrap the plugin in local repository path
+            ConfigurationDistributionStage builder = EmbeddedMaven.forProject(pomFile)
+                    .setQuiet()
+                    .setUserSettingsFile(globalSettingsFile)
+                    .setGlobalSettingsFile(globalSettingsFile)
+                    .setUserSettingsFile(userSettingsFile)
+                    .setLocalRepositoryDirectory(localRepositoryPath)
+                    .useMaven3Version(mavenVersion)
+                    .setGoals(goals);
+
+            enableFailAtEnd(builder);
+
+            result = builder.ignoreFailure().build();
+        } finally {
+            System.setErr(oldSystemErr);
+            System.setOut(oldSystemOut);
+        }
 
         return result;
     }
