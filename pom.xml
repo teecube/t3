@@ -1924,7 +1924,7 @@
 
 				<includeSource>true</includeSource>
 
-				<t3.site.gitlab.apiEndPoint>https://git.teecu.be/api/v3</t3.site.gitlab.apiEndPoint>
+				<t3.site.gitlab.apiEndPoint>https://git.teecu.be/api/v4</t3.site.gitlab.apiEndPoint>
 			</properties>
 			<distributionManagement>
 				<site>
