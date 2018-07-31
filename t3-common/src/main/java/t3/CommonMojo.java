@@ -1161,7 +1161,7 @@ public class CommonMojo extends AbstractMojo {
         return executeGoal(pomFile, goals, globalSettingsFile, userSettingsFile, localRepositoryPath, mavenVersion);
     }
 
-    protected BuiltProject executeGoal(File pomFile, List<String> goals, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion) throws MojoExecutionException {
+    public BuiltProject executeGoal(File pomFile, List<String> goals, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion) throws MojoExecutionException {
         BuiltProject result = null;
 
         PrintStream oldSystemErr = System.err;
@@ -1171,13 +1171,13 @@ public class CommonMojo extends AbstractMojo {
 
             // execute the goals to bootstrap the plugin in local repository path
             ConfigurationDistributionStage builder = EmbeddedMaven.forProject(pomFile)
-                    .setQuiet()
-                    .setUserSettingsFile(globalSettingsFile)
-                    .setGlobalSettingsFile(globalSettingsFile)
-                    .setUserSettingsFile(userSettingsFile)
-                    .setLocalRepositoryDirectory(localRepositoryPath)
-                    .useMaven3Version(mavenVersion)
-                    .setGoals(goals);
+                                                                  .setQuiet()
+                                                                  .setUserSettingsFile(globalSettingsFile)
+                                                                  .setGlobalSettingsFile(globalSettingsFile)
+                                                                  .setUserSettingsFile(userSettingsFile)
+                                                                  .setLocalRepositoryDirectory(localRepositoryPath)
+                                                                  .useMaven3Version(mavenVersion)
+                                                                  .setGoals(goals);
 
             enableFailAtEnd(builder);
 
