@@ -46,6 +46,8 @@ import org.apache.maven.settings.Settings;
 import org.apache.maven.shared.filtering.MavenResourcesFiltering;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.InvocationRequest.ReactorFailureBehavior;
+import org.apache.maven.shared.invoker.InvokerLogger;
+import org.apache.maven.shared.invoker.SystemOutLogger;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
@@ -834,7 +836,7 @@ public class CommonMojo extends AbstractMojo {
         }
     }
 
-    protected void silentSystemStreams() {
+    public static void silentSystemStreams() {
         System.setErr(new PrintStream(new OutputStream() {
             public void write(int b) {
             }
@@ -1133,15 +1135,24 @@ public class CommonMojo extends AbstractMojo {
         writeMavenMetadata(localRepository, groupIdPath, "maven-metadata-local.xml", resourcePath);
     }
 
+    /*
     public BuiltProject executeGoal(File pomWithGoal, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion) throws MojoExecutionException {
         List<String> goals = new ArrayList<String>();
 
         goals.add("validate");
 
-        return executeGoal(pomWithGoal, goals, globalSettingsFile, userSettingsFile, localRepositoryPath, mavenVersion);
+        return executeGoal(pomWithGoal, goals, new ArrayList<String>(), new Properties(), globalSettingsFile, userSettingsFile, localRepositoryPath, mavenVersion);
     }
 
     public BuiltProject executeGoal(List<String> goals, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion) throws MojoExecutionException {
+        return executeGoal(goals, new Properties(), globalSettingsFile, userSettingsFile, localRepositoryPath, mavenVersion);
+    }
+
+    public BuiltProject executeGoal(List<String> goals, Properties properties, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion) throws MojoExecutionException {
+        return executeGoal(goals, new ArrayList<String>(), properties, globalSettingsFile, userSettingsFile, localRepositoryPath, mavenVersion);
+    }
+
+    public BuiltProject executeGoal(List<String> goals, List<String> profiles, Properties properties, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion) throws MojoExecutionException {
         // create a minimalist POM (required)
         Model model = new Model();
         model.setModelVersion("4.0.0");
@@ -1158,10 +1169,10 @@ public class CommonMojo extends AbstractMojo {
             throw new MojoExecutionException(e.getLocalizedMessage(), e);
         }
 
-        return executeGoal(pomFile, goals, globalSettingsFile, userSettingsFile, localRepositoryPath, mavenVersion);
+        return executeGoal(pomFile, goals, profiles, properties, globalSettingsFile, userSettingsFile, localRepositoryPath, mavenVersion);
     }
 
-    public BuiltProject executeGoal(File pomFile, List<String> goals, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion) throws MojoExecutionException {
+    public BuiltProject executeGoal(File pomFile, List<String> goals, List<String> profiles, Properties properties, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion) throws MojoExecutionException {
         BuiltProject result = null;
 
         PrintStream oldSystemErr = System.err;
@@ -1170,6 +1181,7 @@ public class CommonMojo extends AbstractMojo {
             silentSystemStreams();
 
             // execute the goals to bootstrap the plugin in local repository path
+            InvokerLogger invokerLogger = new SystemOutLogger();
             ConfigurationDistributionStage builder = EmbeddedMaven.forProject(pomFile)
                                                                   .setQuiet()
                                                                   .setUserSettingsFile(globalSettingsFile)
@@ -1177,7 +1189,9 @@ public class CommonMojo extends AbstractMojo {
                                                                   .setUserSettingsFile(userSettingsFile)
                                                                   .setLocalRepositoryDirectory(localRepositoryPath)
                                                                   .useMaven3Version(mavenVersion)
-                                                                  .setGoals(goals);
+                                                                  .setGoals(goals)
+                                                                  .setProfiles(profiles)
+                                                                  .setProperties(properties).setLogger(invokerLogger);
 
             enableFailAtEnd(builder);
 
@@ -1206,6 +1220,7 @@ public class CommonMojo extends AbstractMojo {
     private void enableFailAtEnd(ConfigurationDistributionStage builder) {
         getRequestFromBuilder(builder).setReactorFailureBehavior(ReactorFailureBehavior.FailAtEnd);
     }
+    */
     //</editor-fold>
 
 }
