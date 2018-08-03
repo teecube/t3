@@ -16,14 +16,17 @@
  */
 package t3.utils;
 
+import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.lifecycle.NoGoalSpecifiedException;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.shared.invoker.*;
 import org.jboss.shrinkwrap.resolver.api.maven.embedded.BuiltProject;
 import org.jboss.shrinkwrap.resolver.api.maven.embedded.EmbeddedMaven;
 import org.jboss.shrinkwrap.resolver.api.maven.embedded.pom.equipped.ConfigurationDistributionStage;
+import t3.log.LoggerPrintStream;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,12 +58,12 @@ public class MavenRunner {
         this.quiet = quiet;
     }
 
-    public PrintStreamLogger getPrintStreamLogger() {
-        return printStreamLogger;
+    public InvokerLogger getInvokerLogger() {
+        return invokerLogger;
     }
 
-    public void setPrintStreamLogger(PrintStreamLogger printStreamLogger) {
-        this.printStreamLogger = printStreamLogger;
+    public void setInvokerLogger(InvokerLogger invokerLogger) {
+        this.invokerLogger = invokerLogger;
     }
 
     public File getUserSettingsFile() {
@@ -139,9 +142,25 @@ public class MavenRunner {
         this.ignoreFailure = ignoreFailure;
     }
 
+    public Log getLog() {
+        return log;
+    }
+
+    public void setLog(Log log) {
+        setLog(log, InvokerLogger.INFO);
+    }
+
+    public void setLog(Log log, int thresold) {
+        this.log = log;
+
+        PrintStream outPrintStream = new LoggerPrintStream(getLog());
+        PrintStreamLogger printStreamLogger = new PrintStreamLogger(outPrintStream, thresold);
+        this.setInvokerLogger(printStreamLogger);
+    }
+
     private File pomFile;
     private Boolean quiet;
-    private PrintStreamLogger printStreamLogger;
+    private InvokerLogger invokerLogger;
     private File userSettingsFile;
     private File globalSettingsFile;
     private File localRepositoryDirectory;
@@ -151,6 +170,7 @@ public class MavenRunner {
     private String mavenVersion;
     private Boolean failAtEnd;
     private Boolean ignoreFailure;
+    private Log log;
 
     public MavenRunner() {
         failAtEnd = false;
@@ -235,15 +255,18 @@ public class MavenRunner {
             });
             builder = builder.setLogger(new PrintStreamLogger(silentPrintStream, InvokerLogger.DEBUG));
         } else {
-            DefaultInvoker invoker = getInvokerFromBuilder(builder);
-            InvocationOutputHandler outputHandler = new PrintStreamHandler(new PrefixPrintStream(System.out, "SUPER PREFIXE "), true);
-            invoker.setOutputHandler(outputHandler);
-
+            if (log != null) {
+                DefaultInvoker invoker = getInvokerFromBuilder(builder);
+                InvocationOutputHandler outputHandler = new PrintStreamHandler(new LoggerPrintStream(log), true);
+                invoker.setOutputHandler(outputHandler);
+            }
             setLogBufferInBuilder(builder);
-            if (printStreamLogger != null) {
-                builder.setLogger(printStreamLogger);
+            if (invokerLogger != null) {
+                builder.setLogger(invokerLogger);
             }
         }
+
+        builder.setInputStream(new NullInputStream(0));
 
         if (userSettingsFile != null && userSettingsFile.exists()) {
             builder = builder.setUserSettingsFile(userSettingsFile);
@@ -282,18 +305,26 @@ public class MavenRunner {
 
         BuiltProject result;
 
-        if (quiet) {
-            PrintStream oldSystemErr = System.err;
-            PrintStream oldSystemOut = System.out;
-            try {
+        PrintStream oldSystemErr = System.err;
+        PrintStream oldSystemOut = System.out;
+        try {
+            if (quiet) {
                 silentSystemStreams();
-                result = builder.build();
-            } finally {
-                System.setErr(oldSystemErr);
-                System.setOut(oldSystemOut);
+            } else {
+                // ignore lines starting with ===
+                System.setOut(new PrintStream(System.out) {
+                    @Override
+                    public void println(String line) {
+                        if (!line.startsWith("===")) {
+                            super.println(line);
+                        }
+                    }
+                });
             }
-        } else {
             result = builder.build();
+        } finally {
+            System.setErr(oldSystemErr);
+            System.setOut(oldSystemOut);
         }
 
         return result;

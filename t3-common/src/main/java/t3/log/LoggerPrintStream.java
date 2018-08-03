@@ -14,24 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package t3.utils;
+package t3.log;
+
+import org.apache.commons.io.output.NullOutputStream;
+import org.apache.maven.plugin.logging.Log;
 
 import java.io.PrintStream;
 
-public class PrefixPrintStream extends PrintStream {
+public class LoggerPrintStream extends PrintStream {
 
-    private final String prefix;
-    private final PrintStream printStream;
+    private final Log log;
 
-    public PrefixPrintStream(PrintStream printStream, String prefix) {
-        super(printStream);
+    public LoggerPrintStream(Log log) {
+        super(new NullOutputStream());
 
-        this.prefix = prefix;
-        this.printStream = printStream;
+        this.log = log;
     }
 
     @Override
-    public void println(String x) {
-        super.println(prefix + x);
+    public void println(String line) {
+        log.info(line);
     }
+
 }
