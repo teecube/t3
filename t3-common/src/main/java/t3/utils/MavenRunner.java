@@ -58,6 +58,14 @@ public class MavenRunner {
         this.quiet = quiet;
     }
 
+    public Boolean getDebug() {
+        return debug;
+    }
+
+    public void setDebug(Boolean debug) {
+        this.debug = debug;
+    }
+
     public InvokerLogger getInvokerLogger() {
         return invokerLogger;
     }
@@ -158,8 +166,41 @@ public class MavenRunner {
         this.setInvokerLogger(printStreamLogger);
     }
 
+    public String getDefaultGroupId() {
+        return defaultGroupId;
+    }
+
+    public void setDefaultGroupId(String defaultGroupId) {
+        this.defaultGroupId = defaultGroupId;
+    }
+
+    public String getDefaultArtifactId() {
+        return defaultArtifactId;
+    }
+
+    public void setDefaultArtifactId(String defaultArtifactId) {
+        this.defaultArtifactId = defaultArtifactId;
+    }
+
+    public String getDefaultVersion() {
+        return defaultVersion;
+    }
+
+    public void setDefaultVersion(String defaultVersion) {
+        this.defaultVersion = defaultVersion;
+    }
+
+    public String getDefaultProjectName() {
+        return defaultProjectName;
+    }
+
+    public void setDefaultProjectName(String defaultProjectName) {
+        this.defaultProjectName = defaultProjectName;
+    }
+
     private File pomFile;
     private Boolean quiet;
+    private Boolean debug;
     private InvokerLogger invokerLogger;
     private File userSettingsFile;
     private File globalSettingsFile;
@@ -171,6 +212,10 @@ public class MavenRunner {
     private Boolean failAtEnd;
     private Boolean ignoreFailure;
     private Log log;
+    private String defaultGroupId;
+    private String defaultArtifactId;
+    private String defaultVersion;
+    private String defaultProjectName;
 
     public MavenRunner() {
         failAtEnd = false;
@@ -179,16 +224,20 @@ public class MavenRunner {
         profiles = new ArrayList<String>();
         properties = new Properties();
         quiet = false;
+        debug = false;
     }
 
-    private File getDefaultPomFile(String groupId, String artifactId) {
+    private File getDefaultPomFile(String groupId, String artifactId, String version, String projectName) {
         // create a minimalist POM
         Model model = new Model();
         model.setModelVersion("4.0.0");
         model.setGroupId(groupId);
         model.setArtifactId(artifactId);
-        model.setVersion("1");
+        model.setVersion(version);
         model.setPackaging("pom");
+        if (projectName != null) {
+            model.setName(projectName);
+        }
 
         File pomFile = null;
         try {
@@ -243,7 +292,10 @@ public class MavenRunner {
 
     public ConfigurationDistributionStage getBuilder() {
         if (pomFile == null || !pomFile.exists()) {
-            pomFile = getDefaultPomFile("maven-task", "maven-task");
+            pomFile = getDefaultPomFile(StringUtils.isNotEmpty(defaultGroupId) ? defaultGroupId : "maven-task",
+                                        StringUtils.isNotEmpty(defaultArtifactId) ? defaultArtifactId : "maven-task",
+                                        StringUtils.isNotEmpty(defaultVersion) ? defaultVersion : "1",
+                                        StringUtils.isNotEmpty(defaultProjectName) ? defaultProjectName : null);
         }
 
         ConfigurationDistributionStage builder = EmbeddedMaven.forProject(pomFile);
@@ -278,12 +330,22 @@ public class MavenRunner {
             builder = builder.setLocalRepositoryDirectory(localRepositoryDirectory);
         }
 
+        builder = builder.setDebug(debug);
         builder = builder.setGoals(goals);
         builder = builder.setProfiles(profiles);
         builder = builder.setProperties(properties);
 
         if (StringUtils.isNotEmpty(mavenVersion)) {
-            builder = (ConfigurationDistributionStage) builder.useMaven3Version(mavenVersion);
+            PrintStream oldSystemErr = System.err;
+            PrintStream oldSystemOut = System.out;
+
+            try {
+                silentSystemStreams();
+                builder = (ConfigurationDistributionStage) builder.useMaven3Version(mavenVersion);
+            } finally {
+                System.setErr(oldSystemErr);
+                System.setOut(oldSystemOut);
+            }
         }
 
         if (failAtEnd) {

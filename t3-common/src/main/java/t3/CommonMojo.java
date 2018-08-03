@@ -976,6 +976,11 @@ public class CommonMojo extends AbstractMojo {
         }
 
         File result = new File(session.getLocalRepository().getBasedir() + "/" + groupId.replace(".", "/") + "/" + artifactId + "/" + version + "/" + artifactId + "-" + version + (classifier != null ? "-" + classifier : "") + "." + type.toLowerCase());
+        if (result.exists()) {
+            try {
+                result = new File(result.getCanonicalPath());
+            } catch (IOException e) {}
+        }
 
         getLog().info("Artifact '" + groupId + ":" + artifactId + ":" + version + ":" + type.toLowerCase() + (classifier != null ? ":" + classifier : "") + "' has been resolved to '" + result.getAbsolutePath() + "'");
 
