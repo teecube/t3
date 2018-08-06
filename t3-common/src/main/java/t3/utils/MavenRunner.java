@@ -324,7 +324,7 @@ public class MavenRunner {
             builder = builder.setUserSettingsFile(userSettingsFile);
         }
         if (globalSettingsFile != null && globalSettingsFile.exists()) {
-            builder = builder.setUserSettingsFile(globalSettingsFile);
+            builder = builder.setGlobalSettingsFile(globalSettingsFile);
         }
         if (localRepositoryDirectory != null && localRepositoryDirectory.exists()) {
             builder = builder.setLocalRepositoryDirectory(localRepositoryDirectory);
