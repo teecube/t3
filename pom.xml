@@ -2090,6 +2090,7 @@
 								<execution>
 									<id>prepare-site</id>
 									<goals>
+										<goal>update-mojo-descriptions</goal>
 										<goal>prepare-general</goal>
 									</goals>
 									<phase>pre-site</phase>
@@ -2099,8 +2100,9 @@
 									<goals>
 										<goal>generate-global-doc</goal>
 										<goal>generate-lifecycles-doc</goal>
-										<goal>generate-changelog</goal>
+										<!--<goal>generate-changelog</goal>-->
 										<goal>update-site</goal>
+										<goal>update-mojo-descriptions</goal>
 										<goal>update-brand</goal>
 										<goal>update-doc-menu</goal>
 										<goal>update-general</goal>

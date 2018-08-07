@@ -21,8 +21,8 @@ import com.sun.tools.javac.tree.JCTree.*;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.ListBuffer;
 import lombok.core.AnnotationValues;
-import lombok.javac.JavacNode;
 import lombok.javac.JavacTreeMaker;
+import lombok.javac.JavacNode;
 import lombok.javac.handlers.JavacHandlerUtil;
 
 import java.lang.annotation.Annotation;
@@ -38,7 +38,7 @@ public class AnnotationReplacementHelper {
 
     private static final List<JCExpression> NIL_EXPRESSION = List.<JCExpression>nil();
 
-    public static <T extends Annotation> void addMethodCallInMethodBody(AnnotationValues<T> annotation, JCAnnotation ast, JavacNode annotationNode, String methodWhereToAddName, java.util.List<String> methodToAddName, boolean addInFirstPosition) {
+    public static <T extends Annotation> void addMethodCallInMethodBody(AnnotationValues<T> annotation, JCTree.JCAnnotation ast, JavacNode annotationNode, String methodWhereToAddName, java.util.List<String> methodToAddName, boolean addInFirstPosition) {
         JavacTreeMaker treeMaker = annotationNode.getTreeMaker();
         JavacNode owner = annotationNode.up(); // the field where the @Annotation applies
         switch (owner.get().getClass().getSimpleName()) {
@@ -111,9 +111,16 @@ public class AnnotationReplacementHelper {
 
                 if (fieldsToIgnore.contains(ident.name.toString())) {
                     if ("description".equals(ident.name.toString()) && value != null) {
-//                        VarSymbol s = (VarSymbol) value.sym;
-//                        String v = s.getConstantValue().toString();
-//                        System.out.println(v);
+                        JCCompilationUnit compilationUnit = (JCCompilationUnit) top.get();
+
+                        Documentifier documentifier = new Documentifier(top.getContext());
+                        documentifier.documentify(compilationUnit, false);
+
+/*
+                        Symbol.VarSymbol s = (Symbol.VarSymbol) value.sym;
+                        String v = s.getConstantValue().toString();
+                        System.out.println(v);
+*/
 
                         JCLiteral com = treeMaker.Literal("/* Hello world */");
                         javadocs.add(com);
@@ -124,16 +131,17 @@ public class AnnotationReplacementHelper {
                 mavenParameterFields.add(treeMaker.Assign(treeMaker.Ident(annotationNode.toName(ident.name.toString())), argument.rhs));
             }
 
-            JCAnnotation addedAnnotation = treeMaker.Annotation(mavenParameterAnnotationType, mavenParameterFields.toList());
+            JCTree.JCAnnotation addedAnnotation = treeMaker.Annotation(mavenParameterAnnotationType, mavenParameterFields.toList());
 
             switch (owner.get().getClass().getSimpleName()) {
             case "JCClassDecl":
-                JCClassDecl classDecl = (JCClassDecl) owner.get();
+                JCTree.JCClassDecl classDecl = (JCClassDecl) owner.get();
                 classDecl.mods.annotations = classDecl.mods.annotations.append(addedAnnotation);;
                 break;
             case "JCVariableDecl":
-                JCVariableDecl fieldDecl = (JCVariableDecl) owner.get();
-                fieldDecl.mods.annotations = fieldDecl.mods.annotations.append(addedAnnotation);;
+                JCTree.JCVariableDecl fieldDecl = (JCVariableDecl) owner.get();
+                fieldDecl.mods.annotations = fieldDecl.mods.annotations.append(addedAnnotation);
+                System.out.println(fieldDecl.getStartPosition());
                 break;
             default:
                 break;
