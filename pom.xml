@@ -2102,9 +2102,9 @@
 										<goal>generate-changelog</goal>
 										<goal>update-site</goal>
 										<goal>update-brand</goal>
-										<goal>update-mojo-descriptions</goal>
 										<goal>update-doc-menu</goal>
 										<goal>update-general</goal>
+										<goal>update-mojo-descriptions</goal>
 									</goals>
 									<configuration>
 										<siteProperties>

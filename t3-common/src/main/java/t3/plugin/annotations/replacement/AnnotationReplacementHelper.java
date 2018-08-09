@@ -16,6 +16,8 @@
  */
 package t3.plugin.annotations.replacement;
 
+import com.sun.tools.javac.parser.Tokens;
+import com.sun.tools.javac.tree.DocCommentTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.*;
 import com.sun.tools.javac.util.List;
@@ -24,9 +26,11 @@ import lombok.core.AnnotationValues;
 import lombok.javac.JavacTreeMaker;
 import lombok.javac.JavacNode;
 import lombok.javac.handlers.JavacHandlerUtil;
+import t3.plugin.annotations.Categories;
 
 import java.lang.annotation.Annotation;
 
+import static com.sun.tools.javac.parser.Tokens.Comment.CommentStyle.JAVADOC;
 import static lombok.javac.handlers.JavacHandlerUtil.chainDots;
 
 /**
@@ -72,12 +76,14 @@ public class AnnotationReplacementHelper {
     public static <T extends Annotation> void duplicateAnnotationWithAnother(final AnnotationValues<T> annotation, final JCAnnotation ast, final JavacNode annotationNode, String annotationToDuplicateCanonicalName, java.util.List<String> annotationToAdd, java.util.List<String> fieldsToIgnore) {
         JavacNode top = annotationNode.top();
 
+        JCCompilationUnit compilationUnit = (JCCompilationUnit) top.get();
+        JCClassDecl classDecl = (JCClassDecl) compilationUnit.getTypeDecls().get(0);
         JavacTreeMaker treeMaker = annotationNode.getTreeMaker();
-        JavacNode owner = annotationNode.up(); // the field where the @Annotation applies
+        JavacNode owner = annotationNode.up(); // the field where the @Annotation applies (field or method)
+
         List<JCAnnotation> annotations = null;
         switch (owner.get().getClass().getSimpleName()) {
         case "JCClassDecl":
-            JCClassDecl classDecl = (JCClassDecl) owner.get();
             annotations = classDecl.mods.annotations;
             break;
         case "JCVariableDecl":
@@ -88,19 +94,21 @@ public class AnnotationReplacementHelper {
         default:
             break;
         }
-        JCAnnotation parameterRuntime = null;
+
+        JCAnnotation annotationToDuplicate = null;
         for (JCAnnotation a : annotations) {
             if (a.annotationType.type.tsym.getQualifiedName().toString().equals(annotationToDuplicateCanonicalName)) {
-                parameterRuntime = a;
+                annotationToDuplicate = a;
             }
         }
 
-        if (parameterRuntime != null) {
+        if (annotationToDuplicate != null) {
             JCExpression mavenParameterAnnotationType = chainDots(owner, annotationToAdd.toArray(new String[0]));
 
             ListBuffer<JCExpression> mavenParameterFields = new ListBuffer<JCExpression>();
             ListBuffer<JCExpression> javadocs = new ListBuffer<JCExpression>();
-            for (JCExpression arg : parameterRuntime.args) {
+
+            for (JCExpression arg : annotationToDuplicate.args) {
                 JCAssign argument = (JCAssign) arg;
                 JCIdent ident = (JCIdent) argument.lhs;
 
@@ -110,21 +118,6 @@ public class AnnotationReplacementHelper {
                 }
 
                 if (fieldsToIgnore.contains(ident.name.toString())) {
-                    if ("description".equals(ident.name.toString()) && value != null) {
-                        JCCompilationUnit compilationUnit = (JCCompilationUnit) top.get();
-
-                        Documentifier documentifier = new Documentifier(top.getContext());
-                        documentifier.documentify(compilationUnit, false);
-
-/*
-                        Symbol.VarSymbol s = (Symbol.VarSymbol) value.sym;
-                        String v = s.getConstantValue().toString();
-                        System.out.println(v);
-*/
-
-                        JCLiteral com = treeMaker.Literal("/* Hello world */");
-                        javadocs.add(com);
-                    }
                     continue;
                 }
 
@@ -135,11 +128,10 @@ public class AnnotationReplacementHelper {
 
             switch (owner.get().getClass().getSimpleName()) {
             case "JCClassDecl":
-                JCTree.JCClassDecl classDecl = (JCClassDecl) owner.get();
                 classDecl.mods.annotations = classDecl.mods.annotations.append(addedAnnotation);;
                 break;
             case "JCVariableDecl":
-                JCTree.JCVariableDecl fieldDecl = (JCVariableDecl) owner.get();
+                JCVariableDecl fieldDecl = (JCVariableDecl) owner.get();
                 fieldDecl.mods.annotations = fieldDecl.mods.annotations.append(addedAnnotation);
                 break;
             default:
@@ -151,4 +143,24 @@ public class AnnotationReplacementHelper {
         }
     }
 
+    public static void moveJavadocDescriptionToAnnotation(AnnotationValues<Categories> annotation, JCAnnotation ast, JavacNode annotationNode) {
+        JCCompilationUnit compilationUnit = (JCCompilationUnit) annotationNode.top().get();
+        JCClassDecl classDecl = (JCClassDecl) compilationUnit.getTypeDecls().get(0);
+
+        replaceDescrition(classDecl, compilationUnit.docComments);
+    }
+
+    private static void replaceDescrition(JCClassDecl classDecl, DocCommentTable docComments) {
+        for (JCTree def : classDecl.defs) {
+            if (def.getClass().getSimpleName().equals("JCClassDecl")) {
+                replaceDescrition((JCClassDecl) def, docComments);
+            } else if (def.getClass().getSimpleName().equals("JCVariableDecl")) {
+                JCVariableDecl variable = (JCVariableDecl) def;
+                Tokens.Comment comment = docComments.getComment(def);
+                if (comment != null && comment.getStyle().equals(JAVADOC)) {
+                    ((JCLiteral) ((JCVariableDecl) def).init).value = comment.getText();
+                }
+            }
+        }
+    }
 }
