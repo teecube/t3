@@ -28,6 +28,7 @@ import org.apache.commons.exec.launcher.CommandLauncher;
 import org.apache.commons.exec.launcher.CommandLauncherFactory;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.MavenExecutionException;
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.execution.MavenSession;
@@ -76,6 +77,9 @@ import t3.utils.POMManager;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
@@ -274,6 +278,27 @@ public class CommonMojo extends AbstractMojo {
 
     protected void skipGoal(String skipParameterName) {
         getLog().info(Messages.SKIPPING + " Set '" + skipParameterName + "' to 'false' to execute this goal");
+    }
+
+
+    protected ClassLoader getClassLoader(MavenProject mavenProject) throws MalformedURLException, DependencyResolutionRequiredException {
+        return getClassLoader(mavenProject, new ArrayList<URL>());
+    }
+
+    protected ClassLoader getClassLoader(MavenProject mavenProject, List<URL> additionalClasspathEntries) throws MalformedURLException, DependencyResolutionRequiredException {
+        List<String> classpathElements = mavenProject.getRuntimeClasspathElements();
+
+        List<URL> projectClasspathList = new ArrayList<URL>();
+        for (String element : classpathElements) {
+            projectClasspathList.add(new File(element).toURI().toURL());
+        }
+
+        for (URL url : additionalClasspathEntries) {
+            projectClasspathList.add(url);
+        }
+
+        URLClassLoader loader = new URLClassLoader(projectClasspathList.toArray(new URL[0]));
+        return loader;
     }
     //</editor-fold>
 
@@ -1139,93 +1164,6 @@ public class CommonMojo extends AbstractMojo {
     protected void writeLocalMavenMetadata(File localRepository, String groupIdPath, String resourcePath) {
         writeMavenMetadata(localRepository, groupIdPath, "maven-metadata-local.xml", resourcePath);
     }
-
-    /*
-    public BuiltProject executeGoal(File pomWithGoal, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion) throws MojoExecutionException {
-        List<String> goals = new ArrayList<String>();
-
-        goals.add("validate");
-
-        return executeGoal(pomWithGoal, goals, new ArrayList<String>(), new Properties(), globalSettingsFile, userSettingsFile, localRepositoryPath, mavenVersion);
-    }
-
-    public BuiltProject executeGoal(List<String> goals, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion) throws MojoExecutionException {
-        return executeGoal(goals, new Properties(), globalSettingsFile, userSettingsFile, localRepositoryPath, mavenVersion);
-    }
-
-    public BuiltProject executeGoal(List<String> goals, Properties properties, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion) throws MojoExecutionException {
-        return executeGoal(goals, new ArrayList<String>(), properties, globalSettingsFile, userSettingsFile, localRepositoryPath, mavenVersion);
-    }
-
-    public BuiltProject executeGoal(List<String> goals, List<String> profiles, Properties properties, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion) throws MojoExecutionException {
-        // create a minimalist POM (required)
-        Model model = new Model();
-        model.setModelVersion("4.0.0");
-        model.setGroupId("maven-task");
-        model.setArtifactId("maven-task");
-        model.setVersion("1");
-        model.setPackaging("pom");
-
-        File pomFile = null;
-        try {
-            pomFile = File.createTempFile("pom", ".xml");
-            POMManager.writeModelToPOM(model, pomFile);
-        } catch (IOException e) {
-            throw new MojoExecutionException(e.getLocalizedMessage(), e);
-        }
-
-        return executeGoal(pomFile, goals, profiles, properties, globalSettingsFile, userSettingsFile, localRepositoryPath, mavenVersion);
-    }
-
-    public BuiltProject executeGoal(File pomFile, List<String> goals, List<String> profiles, Properties properties, File globalSettingsFile, File userSettingsFile, File localRepositoryPath, String mavenVersion) throws MojoExecutionException {
-        BuiltProject result = null;
-
-        PrintStream oldSystemErr = System.err;
-        PrintStream oldSystemOut = System.out;
-        try {
-            silentSystemStreams();
-
-            // execute the goals to bootstrap the plugin in local repository path
-            InvokerLogger invokerLogger = new SystemOutLogger();
-            ConfigurationDistributionStage builder = EmbeddedMaven.forProject(pomFile)
-                                                                  .setQuiet()
-                                                                  .setUserSettingsFile(globalSettingsFile)
-                                                                  .setGlobalSettingsFile(globalSettingsFile)
-                                                                  .setUserSettingsFile(userSettingsFile)
-                                                                  .setLocalRepositoryDirectory(localRepositoryPath)
-                                                                  .useMaven3Version(mavenVersion)
-                                                                  .setGoals(goals)
-                                                                  .setProfiles(profiles)
-                                                                  .setProperties(properties).setLogger(invokerLogger);
-
-            enableFailAtEnd(builder);
-
-            result = builder.ignoreFailure().build();
-        } finally {
-            System.setErr(oldSystemErr);
-            System.setOut(oldSystemOut);
-        }
-
-        return result;
-    }
-
-    private DefaultInvocationRequest getRequestFromBuilder(ConfigurationDistributionStage builder) {
-        Field requestField;
-        try {
-            requestField = builder.getClass().getDeclaredField("request");
-            requestField.setAccessible(true);
-            DefaultInvocationRequest request = (DefaultInvocationRequest) requestField.get(builder);
-            return request;
-        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e1) {
-        }
-
-        return null;
-    }
-
-    private void enableFailAtEnd(ConfigurationDistributionStage builder) {
-        getRequestFromBuilder(builder).setReactorFailureBehavior(ReactorFailureBehavior.FailAtEnd);
-    }
-    */
     //</editor-fold>
 
 }

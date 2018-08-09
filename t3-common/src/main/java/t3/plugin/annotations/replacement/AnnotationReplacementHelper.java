@@ -141,7 +141,6 @@ public class AnnotationReplacementHelper {
             case "JCVariableDecl":
                 JCTree.JCVariableDecl fieldDecl = (JCVariableDecl) owner.get();
                 fieldDecl.mods.annotations = fieldDecl.mods.annotations.append(addedAnnotation);
-                System.out.println(fieldDecl.getStartPosition());
                 break;
             default:
                 break;

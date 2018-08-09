@@ -28,6 +28,7 @@ import t3.plugin.annotations.impl.ParameterImpl;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -75,21 +76,21 @@ public class EnforcerPluginBuilder extends PluginBuilder {
             Set<ParameterImpl> parametersAnnotatations = ParametersHelper.getFieldsAnnotatedWith(parametersAnnotatedFields, Parameter.class);
 
             for (ParameterImpl parameter : parametersAnnotatations) {
-                if (parameter.isRequired() && !parameters.contains(parameter.getProperty())) {
-                    List<String> packagings = parameter.getRequiredForPackagings();
+                if (parameter.required() && !parameters.contains(parameter.property())) {
+                    List<String> packagings = Arrays.asList(parameter.requiredForPackagings());
                     if (packagings != null && !packagings.isEmpty() && !(packagings.size() == 1 && packagings.get(0).isEmpty()) && !packagings.contains(mavenProject.getPackaging())) {
                         continue;
                     }
-                    parameters.add(parameter.getProperty());
+                    parameters.add(parameter.property());
                     Xpp3Dom rule = new Xpp3Dom("requireProperty");
                     Xpp3Dom property = new Xpp3Dom("property");
-                    property.setValue(parameter.getProperty());
+                    property.setValue(parameter.property());
                     Xpp3Dom message = new Xpp3Dom("message");
-                    message.setValue(parameter.getDescription());
+                    message.setValue(parameter.description());
                     Xpp3Dom regex = new Xpp3Dom("regex");
                     regex.setValue(".*");
                     Xpp3Dom regexMessage = new Xpp3Dom("regexMessage");
-                    regexMessage.setValue(parameter.getDescription());
+                    regexMessage.setValue(parameter.description());
                     rule.addChild(property);
                     rule.addChild(message);
                     rule.addChild(regex);

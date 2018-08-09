@@ -37,7 +37,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.*;
 
 import static org.rendersnake.HtmlAttributesFactory.*;
@@ -89,28 +88,12 @@ public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
         return false;
     }
 
-    protected ClassLoader getClassLoader() throws MalformedURLException, DependencyResolutionRequiredException {
-        List<String> classpathElements = project.getRuntimeClasspathElements();
-
-        List<URL> projectClasspathList = new ArrayList<URL>();
-        for (String element : classpathElements) {
-            projectClasspathList.add(new File(element).toURI().toURL());
-        }
-
-        for (URL url : additionalClasspathEntries) {
-            projectClasspathList.add(url);
-        }
-
-        URLClassLoader loader = new URLClassLoader(projectClasspathList.toArray(new URL[0]));
-        return loader;
-    }
-
     private Class<?> getBootstrapClass() throws MalformedURLException, DependencyResolutionRequiredException, ClassNotFoundException {
         if (bootstrapClazz != null) {
             return bootstrapClazz;
         }
 
-        ClassLoader classLoader = getClassLoader();
+        ClassLoader classLoader = getClassLoader(project, additionalClasspathEntries);
         Class<?> clazz = classLoader.loadClass(bootstrapClass);
 
         return clazz;
@@ -119,13 +102,13 @@ public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
     private List<GlobalParameter> getGlobalParameters() throws MalformedURLException, DependencyResolutionRequiredException, ClassNotFoundException {
         List<GlobalParameter> globalParameters = new ArrayList<GlobalParameter>();
 
-        Set<Field> globalParametersAnnotatedFields = AnnotationsHelper.getFieldsAnnotatedWith(getBootstrapClass(), t3.plugin.annotations.GlobalParameter.class, ClasspathHelper.contextClassLoader(), getClassLoader());
+        Set<Field> globalParametersAnnotatedFields = AnnotationsHelper.getFieldsAnnotatedWith(getBootstrapClass(), t3.plugin.annotations.GlobalParameter.class, ClasspathHelper.contextClassLoader(), getClassLoader(project, additionalClasspathEntries));
         Set<ParameterImpl> globalParametersAnnotatations = ParametersHelper.getFieldsAnnotatedWith(globalParametersAnnotatedFields, t3.plugin.annotations.GlobalParameter.class);
 
         boolean firstClass = true;
         for (ParameterImpl parameter : globalParametersAnnotatations) {
             firstClass = !firstClass;
-            globalParameters.add(new GlobalParameter(parameter.getField(), parameter.getType(), parameter.getProperty(), parameter.getDefaultValue(), "-", parameter.getDescription(), parameter.getCategory(), parameter.isValueGuessedByDefault(), firstClass));
+            globalParameters.add(new GlobalParameter(parameter.field(), parameter.type(), parameter.property(), parameter.defaultValue(), "-", parameter.description(), parameter.category(), parameter.valueGuessedByDefault(), firstClass));
         }
         return globalParameters;
     }
@@ -143,7 +126,7 @@ public class GenerateGlobalParametersDocMojo extends AbstractNewPageMojo {
     private List<Category> getParametersCategories() throws MalformedURLException, ClassNotFoundException, DependencyResolutionRequiredException {
         List<Category> parametersCategories = new ArrayList<Category>();
 
-        Set<Class<?>> parametersCategoriesAnnotatedTypes = AnnotationsHelper.getTypesAnnotatedWith(getBootstrapClass(), t3.plugin.annotations.Categories.class, ClasspathHelper.contextClassLoader(), getClassLoader());
+        Set<Class<?>> parametersCategoriesAnnotatedTypes = AnnotationsHelper.getTypesAnnotatedWith(getBootstrapClass(), t3.plugin.annotations.Categories.class, ClasspathHelper.contextClassLoader(), getClassLoader(project, additionalClasspathEntries));
         Set<CategoryImpl> parametersCategoriesAnnotatations = CategoriesHelper.getCategories(parametersCategoriesAnnotatedTypes);
 
         for (CategoryImpl parameter : parametersCategoriesAnnotatations) {

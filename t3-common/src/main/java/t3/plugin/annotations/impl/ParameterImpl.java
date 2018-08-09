@@ -16,6 +16,10 @@
  */
 package t3.plugin.annotations.impl;
 
+import t3.plugin.annotations.GlobalParameter;
+import t3.plugin.annotations.Parameter;
+
+import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
@@ -23,17 +27,20 @@ import java.util.List;
  * @author Mathieu Debove &lt;mad@teecu.be&gt;
  *
  */
-public class ParameterImpl {
+public class ParameterImpl implements Parameter, GlobalParameter {
 
-    private String field;
-    private String type;
     private String property;
     private String defaultValue;
     private boolean required;
-    private List<String> requiredForPackagings;
+
     private String description;
+    private List<String> requiredForPackagings;
+
     private String category; // only for GlobalParameter
     private boolean valueGuessedByDefault; // only for GlobalParameter
+
+    private String type;
+    private String field;
 
     public ParameterImpl(String field, String type, String property, String defaultValue, boolean required, List<String> requiredForPackagings, String description, String category, boolean valueGuessedByDefault) {
         this.field = field;
@@ -41,73 +48,80 @@ public class ParameterImpl {
         this.property = property;
         this.defaultValue = defaultValue;
         this.required = required;
-        this.setRequiredForPackagings(requiredForPackagings);
+        this.requiredForPackagings = requiredForPackagings;
         this.description = description;
         this.category = category;
         this.valueGuessedByDefault = valueGuessedByDefault;
     }
 
-    public String getField() {
-        return field;
-    }
-    public void setField(String field) {
-        this.field = field;
+    // fields from org.apache.maven.plugins.annotations.Parameter
+    public String alias() {
+        return "";
     }
 
-    public String getType() {
-        return type;
-    }
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getProperty() {
+    public String property() {
         return property;
     }
     public void setProperty(String property) {
         this.property = property;
     }
 
-    public String getDefaultValue() {
+    public String defaultValue() {
         return defaultValue;
     }
     public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
     }
 
-    public boolean isRequired() {
+    public boolean required() {
         return required;
     }
     public void setRequired(boolean required) {
         this.required = required;
     }
 
-    public List<String> getRequiredForPackagings() {
-        return requiredForPackagings;
-    }
-    public void setRequiredForPackagings(List<String> requiredForPackagings) {
-        this.requiredForPackagings = requiredForPackagings;
+    public boolean readonly() {
+        return false;
     }
 
-    public String getDescription() {
+    // additional fields
+    public String description() {
         return description;
     }
+
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public String getCategory() {
-        return category;
-    }
-    public void setCategory(String category) {
-        this.category = category;
+    public String[] requiredForPackagings() {
+        return new String[0];
     }
 
-    public boolean isValueGuessedByDefault() {
+    public String category() {
+        return category;
+    }
+    public boolean valueGuessedByDefault() {
         return valueGuessedByDefault;
     }
-    public void setCategory(boolean valueGuessedByDefault) {
-        this.valueGuessedByDefault = valueGuessedByDefault;
+
+    // reflection fields
+    public String field() {
+        return field;
+    }
+    public void setField(String field) {
+        this.field = field;
+    }
+
+    public String type() {
+        return type;
+    }
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @Override
+    public Class<? extends Annotation> annotationType() {
+        return Parameter.class;
     }
 
 }

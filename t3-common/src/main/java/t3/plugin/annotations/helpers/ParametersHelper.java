@@ -77,6 +77,13 @@ public class ParametersHelper {
         }
     }
 
+    public static <A extends Annotation> Set<ParameterImpl> getFieldAnnotatedWith(Field field, Class<A> parameterAnnotation) {
+        Set<Field> fields = new HashSet<Field>();
+        fields.add(field);
+
+        return getFieldsAnnotatedWith(fields, parameterAnnotation);
+    }
+
     public static <A extends Annotation> Set<ParameterImpl> getFieldsAnnotatedWith(Set<Field> fields, Class<A> parameterAnnotation) {
         Set<ParameterImpl> result = new HashSet<ParameterImpl>();
 
