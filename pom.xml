@@ -2369,8 +2369,8 @@
 	</prerequisites>
 
 	<scm>
-		<connection>scm:git:https://git.teecu.be/teecube/t3.git</connection>
-		<developerConnection>scm:git:https://git.teecu.be/teecube/t3.git</developerConnection>
+		<connection>scm:git:ssh://git@git.teecu.be:10022/teecube/t3.git</connection>
+		<developerConnection>scm:git:ssh://git@git.teecu.be:10022/teecube/t3.git</developerConnection>
 		<url>https://git.teecu.be/teecube/t3</url>
 		<tag>HEAD</tag>
 	</scm>
