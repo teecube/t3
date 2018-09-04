@@ -1,4 +1,4 @@
-image: debovema/docker-mvn
+image: debovema/docker-mvn:3.5.0
 
 test:
     script: 
