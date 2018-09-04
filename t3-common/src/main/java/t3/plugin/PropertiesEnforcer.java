@@ -250,7 +250,7 @@ public class PropertiesEnforcer {
             }
         } catch (MojoExecutionException e) {
             logger.error(Messages.MESSAGE_SPACE);
-            logger.error(mavenProject.getGroupId() + ":" + mavenProject.getArtifactId() + " failed.");
+            logger.error("Project '" + mavenProject.getGroupId() + ":" + mavenProject.getArtifactId() + "' failed.");
             enforceFailure(e, logger);
         }
     }
@@ -292,12 +292,19 @@ public class PropertiesEnforcer {
         logger.fatalError(Messages.MESSAGE_SPACE);
         logger.fatalError(Messages.ENFORCER_RULES_FAILURE);
         logger.fatalError(Messages.MESSAGE_SPACE);
-        String message = e.getCause().getLocalizedMessage();
-        message = formatMessage(message);
-//        if (message != null) {
-//            message = message.substring(message.indexOf("\n")+1);
-//            message = "\n" + message;
-//        }
+        String message = "";
+        Throwable cause = e.getCause();
+        if (cause == null) {
+            cause = e;
+        }
+        if (cause != null && cause.getLocalizedMessage() != null) {
+            message = cause.getLocalizedMessage();
+            message = formatMessage(message);
+            //        if (message != null) {
+            //            message = message.substring(message.indexOf("\n")+1);
+            //            message = "\n" + message;
+            //        }
+        }
         throw new MavenExecutionException(message, new MojoExecutionException(message));
     }
 }

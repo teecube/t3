@@ -118,13 +118,23 @@
 			<dependency>
 				<groupId>org.apache.maven</groupId>
 				<artifactId>maven-core</artifactId>
-				<version>3.3.3</version>
+				<version>3.5.4</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.maven</groupId>
 				<artifactId>maven-model</artifactId>
-				<version>3.3.3</version>
+				<version>3.5.4</version>
 			</dependency>
+			<dependency>
+				<groupId>org.apache.maven</groupId>
+				<artifactId>maven-plugin-api</artifactId>
+				<version>3.5.4</version>
+			</dependency>
+            <dependency>
+                <groupId>org.apache.maven.plugin-tools</groupId>
+                <artifactId>maven-plugin-annotations</artifactId>
+                <version>3.5.2</version>
+            </dependency>
 			<dependency>
 				<groupId>org.apache.maven</groupId>
 				<artifactId>maven-project</artifactId>
@@ -137,36 +147,26 @@
 				</exclusions>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.maven</groupId>
-				<artifactId>maven-plugin-api</artifactId>
-				<version>3.3.3</version>
-			</dependency>
-			<dependency>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.7</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.maven.plugin-tools</groupId>
-				<artifactId>maven-plugin-annotations</artifactId>
-				<version>3.2</version>
+				<version>3.1.0</version>
 			</dependency>
 
 			<!-- Apache commons -->
 			<dependency>
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
-				<version>2.4</version>
+				<version>2.6</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>
-				<version>3.3.2</version>
+				<version>3.8</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-collections4</artifactId>
-				<version>4.1</version>
+				<version>4.2</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.commons</groupId>
@@ -176,7 +176,7 @@
 			<dependency>
 				<groupId>org.apache.ant</groupId>
 				<artifactId>ant</artifactId>
-				<version>1.9.4</version>
+				<version>1.10.5</version>
 			</dependency>
 
 			<!-- others -->
@@ -193,7 +193,7 @@
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
-				<version>14.0.1</version>
+				<version>26.0-jre</version>
 			</dependency>
 			<dependency>
 				<groupId>dom4j</groupId>
@@ -203,7 +203,7 @@
 			<dependency>
 				<groupId>org.jooq</groupId>
 				<artifactId>joox</artifactId>
-				<version>1.3.0</version>
+				<version>1.6.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.rendersnake</groupId>
@@ -222,7 +222,7 @@
 			<dependency>
 				<groupId>org.kohsuke.metainf-services</groupId>
 				<artifactId>metainf-services</artifactId>
-				<version>1.6</version>
+				<version>1.8</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -413,39 +413,38 @@
 				<java.target.version>1.7</java.target.version>
 
 				<!-- default Maven artifacts versions -->
-				<maven.version>3.3.3</maven.version>
+				<maven.version>3.5.4</maven.version>
 				<maven.project>3.0-alpha-2</maven.project>
-				<maven.archiver>3.0.0</maven.archiver>
-				<maven.embedder>3.3.1</maven.embedder>
+				<maven.archiver>3.2.0</maven.archiver>
 
-				<maven.plugin.annotations>3.2</maven.plugin.annotations>
-				<maven.plugin.clean>2.6.1</maven.plugin.clean>
-				<maven.plugin.compiler>3.3</maven.plugin.compiler>
+				<maven.plugin.annotations>3.5.2</maven.plugin.annotations>
+				<maven.plugin.clean>3.1.0</maven.plugin.clean>
+				<maven.plugin.compiler>3.8.0</maven.plugin.compiler>
 				<maven.plugin.deploy>2.8.2</maven.plugin.deploy> <!-- WARN: references exist in Java code -->
 				<maven.plugin.install>2.5.2</maven.plugin.install> <!-- WARN: references exist in Java code -->
-				<maven.plugin.resources>2.7</maven.plugin.resources>
-				<maven.plugin.site>3.4</maven.plugin.site>
-				<maven.plugin.tools-api>3.2</maven.plugin.tools-api>
+				<maven.plugin.resources>3.1.0</maven.plugin.resources>
+				<maven.plugin.site>3.7.1</maven.plugin.site>
+				<maven.plugin.tools-api>3.5.2</maven.plugin.tools-api>
 
-				<maven.plugin.jar>2.5</maven.plugin.jar>
-				<maven.plugin.source>2.4</maven.plugin.source>
+				<maven.plugin.jar>3.1.0</maven.plugin.jar>
+				<maven.plugin.source>3.0.1</maven.plugin.source>
 
 				<maven.plugin.changelog>2.3</maven.plugin.changelog>
-				<maven.plugin.javadoc>2.10.3</maven.plugin.javadoc>
+				<maven.plugin.javadoc>3.0.1</maven.plugin.javadoc>
 				<maven.plugin.jxr>2.5</maven.plugin.jxr>
-				<maven.plugin.project-info-reports>2.8</maven.plugin.project-info-reports>
+				<maven.plugin.project-info-reports>3.0.0</maven.plugin.project-info-reports>
 
-				<maven.plugin.antrun>1.7</maven.plugin.antrun>
-				<maven.plugin.archetype>2.2</maven.plugin.archetype>
-				<maven.plugin.assembly>2.5.2</maven.plugin.assembly>
+				<maven.plugin.antrun>1.8</maven.plugin.antrun>
+				<maven.plugin.archetype>3.0.1</maven.plugin.archetype>
+				<maven.plugin.assembly>3.1.0</maven.plugin.assembly>
 				<maven.plugin.dependency>3.0.2</maven.plugin.dependency> <!-- WARN: references exist in Java code -->
 				<maven.plugin.enforcer>1.4.1</maven.plugin.enforcer> <!-- WARN: references exist in Java code -->
-				<maven.plugin.help>2.2</maven.plugin.help>
-				<maven.plugin.invoker>1.9</maven.plugin.invoker>
-				<maven.plugin.plugin>3.5</maven.plugin.plugin>
+				<maven.plugin.help>3.1.0</maven.plugin.help>
+				<maven.plugin.invoker>3.1.0</maven.plugin.invoker>
+				<maven.plugin.plugin>3.5.2</maven.plugin.plugin>
 				<maven.plugin.release>2.5.3</maven.plugin.release>
 
-				<plexus.component.metadata>1.6</plexus.component.metadata>
+				<plexus.component.metadata>1.7.1</plexus.component.metadata>
 
 				<siteDisplayURL/>
 			</properties>
@@ -1394,7 +1393,7 @@
 			        <dependency>
 			            <groupId>org.apache.maven</groupId>
 			            <artifactId>maven-embedder</artifactId>
-						<version>${maven.embedder}</version>
+						<version>${maven.version}</version>
 			        </dependency>
 				</dependencies>
 			</dependencyManagement>
@@ -1419,41 +1418,44 @@
 				</file>
 			</activation>
 			<properties>
-				<apache.plugin.commons-collections>4.1</apache.plugin.commons-collections>
+				<apache.plugin.commons-collections>4.2</apache.plugin.commons-collections>
 				<apache.plugin.commons-configuration>1.10</apache.plugin.commons-configuration>
 				<apache.plugin.commons-exec>1.3</apache.plugin.commons-exec>
-				<apache.plugin.commons-io>2.4</apache.plugin.commons-io>
-				<apache.plugin.commons-lang3>3.3.2</apache.plugin.commons-lang3>
-				<apache.plugin.ant>1.9.4</apache.plugin.ant>
-				<apache.plugin.commons-compress>1.14</apache.plugin.commons-compress>
+				<apache.plugin.commons-io>2.6</apache.plugin.commons-io>
+				<apache.plugin.commons-lang3>3.8</apache.plugin.commons-lang3>
+				<apache.plugin.ant>1.10.5</apache.plugin.ant>
+				<apache.plugin.commons-compress>1.18</apache.plugin.commons-compress>
 
 				<junit.plugin>4.12</junit.plugin>
 
-				<mycila.plugin.license>2.11</mycila.plugin.license>
+				<mycila.plugin.license>3.0</mycila.plugin.license>
 
-				<jvnet.maven-jaxb2-plugin>0.13.1</jvnet.maven-jaxb2-plugin>
+				<jvnet.maven-jaxb2-plugin>0.14.0</jvnet.maven-jaxb2-plugin>
 				<codehaus.build-helper-maven-plugin>3.0.0</codehaus.build-helper-maven-plugin>
 				
-				<org.reflections.version>0.9.9</org.reflections.version>
+				<org.reflections.version>0.9.11</org.reflections.version>
 				<mojo-executor.version>2.3.0</mojo-executor.version>
-				<guava.version>14.0.1</guava.version>
+				<guava.version>26.0-jre</guava.version>
 				<dom4j.version>1.6.1</dom4j.version>
-				<joox.version>1.3.0</joox.version>
+				<joox.version>1.5.0</joox.version>
 				
-				<plexus-utils.version>3.0.21</plexus-utils.version>
+				<plexus-utils.version>3.1.0</plexus-utils.version>
 				<icu4j.version>52.1</icu4j.version>
 				
-				<rendersnake-version>1.8</rendersnake-version>
-				<moxy-version>2.6.4</moxy-version>
-				<javax.mail-api>1.5.2</javax.mail-api>
+				<rendersnake-version>1.9.0</rendersnake-version>
+				<moxy-version>2.7.3</moxy-version>
+				<javax.mail-api>1.6.2</javax.mail-api>
 				<truezip-version>1.2</truezip-version>
-				<jdom-version>2.0.5</jdom-version>
-				<jaxen-version>1.1.3</jaxen-version>
-				<logback-version>1.1.3</logback-version>
-				<lombok-version>1.14.8</lombok-version>
-				<metainf-services-version>1.6</metainf-services-version>
-				<jackson-version>2.8.7</jackson-version>						
-				<joda-time-version>2.9.7</joda-time-version>						
+				<jdom-version>2.0.6</jdom-version>
+				<jaxen-version>1.1.6</jaxen-version>
+				<logback-version>1.2.3</logback-version>
+				<lombok-version>1.14.8</lombok-version> <!-- do not update version. details:
+                * https://stackoverflow.com/questions/35550460/writing-custom-lombok-annotation-handlers
+                * https://groups.google.com/forum/#!topic/project-lombok/xI177a9BykQ
+                -->
+				<metainf-services-version>1.8</metainf-services-version>
+				<jackson-version>2.9.6</jackson-version>
+				<joda-time-version>2.10</joda-time-version>
 				<unirest-version>1.4.9</unirest-version>						
 			</properties>
 			<dependencyManagement>
@@ -2369,7 +2371,7 @@
 	</organization>
 
 	<prerequisites>
-		<maven>3.3.3</maven>
+		<maven>3.5.0</maven>
 	</prerequisites>
 
 	<scm>

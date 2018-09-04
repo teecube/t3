@@ -94,7 +94,7 @@ public class ParameterImpl implements Parameter, GlobalParameter {
     }
 
     public String[] requiredForPackagings() {
-        return new String[0];
+        return requiredForPackagings.toArray(new String[0]);
     }
 
     public String category() {
