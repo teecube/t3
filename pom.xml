@@ -1439,7 +1439,11 @@
 				<dom4j.version>1.6.1</dom4j.version>
 				<joox.version>1.5.0</joox.version>
 				
+				<plexus-archiver.version>3.6.0</plexus-archiver.version>
+				<plexus-container-default.version>1.7.1</plexus-container-default.version>
+				<plexus-interpolation.version>1.25</plexus-interpolation.version>
 				<plexus-utils.version>3.1.0</plexus-utils.version>
+
 				<icu4j.version>52.1</icu4j.version>
 				
 				<rendersnake-version>1.9.0</rendersnake-version>
@@ -1509,6 +1513,21 @@
 					</dependency>
 
 					<!-- generated help mojo has a dependency to plexus-utils -->
+					<dependency>
+						<groupId>org.codehaus.plexus</groupId>
+						<artifactId>plexus-archiver</artifactId>
+						<version>${plexus-archiver.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.codehaus.plexus</groupId>
+						<artifactId>plexus-container-default</artifactId>
+						<version>${plexus-container-default.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.codehaus.plexus</groupId>
+						<artifactId>plexus-interpolation</artifactId>
+						<version>${plexus-interpolation.version}</version>
+					</dependency>
 					<dependency>
 						<groupId>org.codehaus.plexus</groupId>
 						<artifactId>plexus-utils</artifactId>
