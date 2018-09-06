@@ -330,7 +330,7 @@
 				<ecosystemLongName><![CDATA[<span class="color-highlight">T</span>IBCO <span class="color-highlight">E</span>nterprise <span class="color-highlight">E</span>xtensions]]></ecosystemLongName>
 				<ecosystemNameHighlight><![CDATA[<i>T<span class="color-highlight">³</span></i>]]></ecosystemNameHighlight>
 				<ecosystemNameHighlight2><![CDATA[T<span class="color-highlight">³</span>]]></ecosystemNameHighlight2>
-				<ecosystemSlogan><![CDATA[<i>&laquo;tee<span class="color-highlight">cube</span>&raquo;</i>, ${ecosystemLongName}]]></ecosystemSlogan>
+				<ecosystemSlogan><![CDATA[&lt;i>&laquo;tee&lt;span class="color-highlight">cube&lt;/span>&raquo;&lt;/i>, ${ecosystemLongName}]]></ecosystemSlogan>
 				<ecosystemSlogan2><![CDATA[T<span class="color-highlight">³</span> = <span class="color-highlight">T</span>IC T<span class="color-highlight">A</span>C TO<span class="color-highlight">E</span>]]></ecosystemSlogan2>
 				<ecosystemPronounced><![CDATA[(pronounced <i>&laquo;tee-cube&raquo;</i>)]]></ecosystemPronounced>
 				<ecosystemSumUp><![CDATA[
@@ -430,9 +430,9 @@
 				<maven.plugin.source>3.0.1</maven.plugin.source>
 
 				<maven.plugin.changelog>2.3</maven.plugin.changelog>
-				<maven.plugin.javadoc>3.0.1</maven.plugin.javadoc>
+				<maven.plugin.javadoc>2.10.3</maven.plugin.javadoc>
 				<maven.plugin.jxr>2.5</maven.plugin.jxr>
-				<maven.plugin.project-info-reports>3.0.0</maven.plugin.project-info-reports>
+				<maven.plugin.project-info-reports>2.8</maven.plugin.project-info-reports>
 
 				<maven.plugin.antrun>1.8</maven.plugin.antrun>
 				<maven.plugin.archetype>3.0.1</maven.plugin.archetype>
@@ -465,6 +465,13 @@
 								<source>${java.source.version}</source>
 								<target>${java.target.version}</target>
 							</configuration>
+							<dependencies>
+								<dependency>
+									<groupId>org.projectlombok</groupId>
+									<artifactId>lombok</artifactId>
+									<version>1.14.8</version>
+								</dependency>
+							</dependencies>
 						</plugin>
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
@@ -484,48 +491,69 @@
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-site-plugin</artifactId>
-							<version>${maven.plugin.site}</version>
+							<version>3.7.1</version>
 							<inherited>true</inherited>
 							<dependencies>
 								<dependency>
+									<!-- Docs Maven Skin -->
+									<groupId>com.bernardomg.maven.skins</groupId>
+									<artifactId>docs-maven-skin</artifactId>
+									<version>1.3.3</version>
+								</dependency>
+								<!--
+								<dependency>
+									<groupId>org.apache.velocity</groupId>
+									<artifactId>velocity-tools</artifactId>
+									<version>2.0</version>
+								</dependency>
+								-->
+								<!--
+								<dependency>
+									<groupId>org.apache.maven.doxia</groupId>
+									<artifactId>doxia-core</artifactId>
+									<version>1.7</version>
+								</dependency>								<dependency>
 									<groupId>org.apache.maven.doxia</groupId>
 									<artifactId>doxia-module-markdown</artifactId>
-									<version>1.6</version>
+									<version>1.7</version>
 								</dependency>
 								<dependency>
 									<groupId>lt.velykis.maven.skins</groupId>
 									<artifactId>reflow-velocity-tools</artifactId>
 									<version>1.1.1</version>
 								</dependency>
+								-->
 								<!-- Reflow skin requires Velocity >= 1.7 -->
+								<!--
 								<dependency>
 									<groupId>org.apache.velocity</groupId>
 									<artifactId>velocity</artifactId>
 									<version>1.7</version>
 								</dependency>
-								<dependency> <!-- add support for ssh/scp -->
+								<dependency> - add support for ssh/scp -
 									<groupId>org.apache.maven.wagon</groupId>
 									<artifactId>wagon-ssh</artifactId>
 									<version>2.10</version>
 								</dependency>
-								<!-- add support for WebDAV -->
+								- add support for WebDAV -
 								<dependency>
 									<groupId>org.apache.maven.wagon</groupId>
 									<artifactId>wagon-webdav-jackrabbit</artifactId>
 									<version>2.10</version>
 								</dependency>
-								<!-- force slf4j 1.6.x or it fails due to missing class StaticLoggerBinder -->
+								- force slf4j 1.6.x or it fails due to missing class StaticLoggerBinder -
 								<dependency>
 									<groupId>org.slf4j</groupId>
 									<artifactId>slf4j-api</artifactId>
 									<version>1.6.1</version>
 								</dependency>
-								<!-- for UmlGraph inside Javadoc -->
+								- for UmlGraph inside Javadoc -
 								<dependency>
 									<groupId>org.umlgraph</groupId>
 									<artifactId>umlgraph</artifactId>
 									<version>5.6.6</version>
 								</dependency>
+								-->
 							</dependencies>
 							<executions>
 								<execution>
@@ -1611,6 +1639,10 @@
 						<groupId>org.projectlombok</groupId>
 						<artifactId>lombok</artifactId>
 						<version>${lombok-version}</version>
+					</dependency>					<dependency>
+						<groupId>org.projectlombok</groupId>
+						<artifactId>lombok-utils</artifactId>
+						<version>${lombok-version}</version>
 					</dependency>
 					<dependency>
 						<groupId>org.kohsuke.metainf-services</groupId>
@@ -2125,11 +2157,13 @@
 										<goal>generate-global-doc</goal>
 										<goal>generate-lifecycles-doc</goal>
 										<goal>generate-changelog</goal>
+										<!--
 										<goal>update-site</goal>
 										<goal>update-brand</goal>
 										<goal>update-doc-menu</goal>
 										<goal>update-general</goal>
 										<goal>update-mojo-descriptions</goal>
+										-->
 									</goals>
 									<configuration>
 										<siteProperties>

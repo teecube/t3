@@ -135,6 +135,13 @@
 			<artifactId>lombok</artifactId>
 			<scope>compile</scope>
 		</dependency>
+		<!--
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok-utils</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		-->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok.ast</artifactId>
