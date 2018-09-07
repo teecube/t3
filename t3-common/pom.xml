@@ -136,12 +136,6 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok.ast</artifactId>
-			<version>0.2</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.kohsuke.metainf-services</groupId>
 			<artifactId>metainf-services</artifactId>
 			<scope>compile</scope>

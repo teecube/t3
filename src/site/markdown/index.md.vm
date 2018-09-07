@@ -24,18 +24,20 @@ $h1 ${ticDisplayedName}
 
 The ${ticFullName} (${ticAcronym}) provides a full lifecyle management for
 applications based on TIBCO products.
-<div>[Learn more »](${siteDisplayURL}/${ticURLBase}/index.html)</div>
+
+[Learn more »](${siteDisplayURL}/${ticURLBase}/index.html)
 
 $h1 ${tacDisplayedName}
 
 The ${tacFullName} (${tacAcronym}) accelerates development with ready-to-use
 solutions for common design patterns.
-<div>[Learn more »](${siteDisplayURL}/${tacURLBase}/index.html)</div>
+
+[Learn more »](${siteDisplayURL}/${tacURLBase}/index.html)
 
 ---
 
 $h1 ${toeDisplayedName}
 
 The ${toeFullName} (${toeAcronym}) provides Cloud enablement features.
-<!--<div>Soon...</div>-->
-<div>[Learn more »](${siteDisplayURL}/${toeURLBase}/index.html)</div>
+
+[Learn more »](${siteDisplayURL}/${toeURLBase}/index.html)

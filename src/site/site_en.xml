@@ -5,7 +5,7 @@
 	xsi:schemaLocation="http://maven.apache.org/DECORATION/1.8.0 http://maven.apache.org/xsd/decoration-1.8.0.xsd">
 
 	<body>
-		<head>
+		<head><![CDATA[
 			<link rel="stylesheet" href="$resourcePath/css/github.min.css"/>
 			<link rel="stylesheet" href="$resourcePath/css/font-awesome.css"/>
 			
@@ -24,7 +24,7 @@
 			<link rel="icon" type="image/png" sizes="96x96" href="$resourcePath/favicon/favicon-96x96.png" />
 			<link rel="icon" type="image/png" sizes="16x16" href="$resourcePath/favicon/favicon-16x16.png" />
 			<link rel="manifest" href="$resourcePath/favicon/manifest.json" />
-		</head>
+		]]></head>
 
 		<menu name="Documentation" ref="reports"></menu>
 
@@ -61,7 +61,7 @@
 			<skinAttribution>false</skinAttribution>
 
 			<brand></brand>
-			<slogan><![CDATA[${ecosystemSlogan}]]></slogan>
+			<slogan><![CDATA[${this.ecosystemSlogan}]]></slogan>
 
 			<bottomNav maxSpan="9">
 				<column></column>
@@ -71,7 +71,7 @@
 
 			<bottomDescription>
 		        <![CDATA[
-				${ecosystemSumUp}
+				${this.ecosystemSumUp}
 		        ]]>
 			</bottomDescription>
 
@@ -99,7 +99,7 @@
 	<bannerLeft>
 		<name>
           <![CDATA[
-          ${siteTopCaption}
+          ${this.siteTopCaption}
           ]]>
 		</name>
 		<href>./index.html</href>
@@ -108,7 +108,7 @@
  	<skin>
 		<groupId>lt.velykis.maven.skins</groupId>
 		<artifactId>reflow-maven-skin</artifactId>
-		<version>1.1.2-SNAPSHOT</version>
+		<version>1.1.1</version>
 	</skin>
 
 </project>
