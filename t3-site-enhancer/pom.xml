@@ -84,6 +84,22 @@
 				    <groupId>com.vladsch.flexmark</groupId>
 				    <artifactId>flexmark-all</artifactId>
 				</dependency>
+
+				<dependency>
+					<groupId>io.teecube.maven.skins</groupId>
+					<artifactId>reflow-maven-skin</artifactId>
+					<version>1.1.2</version>
+				</dependency>
+				<dependency>
+					<groupId>io.teecube.maven.skins</groupId>
+					<artifactId>reflow-velocity-tools</artifactId>
+					<version>1.1.2</version>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.maven.doxia</groupId>
+					<artifactId>doxia-module-markdown</artifactId>
+					<version>1.8</version>
+				</dependency>
 			</dependencies>
 		</profile>
 	</profiles>
