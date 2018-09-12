@@ -426,7 +426,7 @@
 				<maven.plugin.changelog>2.3</maven.plugin.changelog>
 				<maven.plugin.javadoc>3.0.1</maven.plugin.javadoc>
 				<maven.plugin.jxr>2.5</maven.plugin.jxr>
-				<maven.plugin.project-info-reports>3.0.0</maven.plugin.project-info-reports>
+				<maven.plugin.project-info-reports>2.9</maven.plugin.project-info-reports>
 
 				<maven.plugin.antrun>1.8</maven.plugin.antrun>
 				<maven.plugin.archetype>3.0.1</maven.plugin.archetype>
@@ -491,6 +491,19 @@
 							<configuration>
 								<chmod>false</chmod>
 							</configuration>
+							<dependencies>
+								<dependency>
+									<groupId>io.teecube.maven.skins</groupId>
+									<artifactId>reflow-velocity-tools</artifactId>
+									<version>1.1.2</version>
+								</dependency>
+								<dependency>
+									<!-- Reflow skin requires velocity 1.7 -->
+									<groupId>org.apache.velocity</groupId>
+									<artifactId>velocity</artifactId>
+									<version>1.7</version>
+								</dependency>
+							</dependencies>
 						</plugin>
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
@@ -1249,7 +1262,7 @@
 								<id>non-aggregate</id>
 								<inherited>false</inherited>
 								<reports>
-									<report>ci-management</report>
+									<report>cim</report>
 									<report>dependencies</report>
 									<!-- <report>dependency-convergence</report> -->
 									<report>dependency-info</report>
@@ -1258,7 +1271,7 @@
 									<!-- <report>help</report> -->
 									<!-- <report>index</report> -->
 									<!-- <report>issue-tracking</report> -->
-									<report>licenses</report>
+									<report>license</report>
 									<!-- <report>mailing-list</report> -->
 									<!-- <report>modules</report> -->
 									<report>plugin-management</report>
