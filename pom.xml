@@ -1214,8 +1214,8 @@
 							<sourceFileIncludes>
 								<include>**\/\*Mojo.java</include>
 							</sourceFileIncludes>
-						<tags>
-							<tag>
+							<tags>
+								<tag>
 									<name>example.</name>
 									<placement>aoptcmf</placement>
 									<head>Example :</head>
@@ -1367,6 +1367,22 @@
 			            <artifactId>maven-embedder</artifactId>
 						<version>${maven.version}</version>
 			        </dependency>
+
+					<dependency>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-site-plugin</artifactId>
+						<version>${maven.plugin.site}</version>
+						<exclusions>
+							<exclusion>
+								<groupId>org.sonatype.aether</groupId>
+								<artifactId>aether-util</artifactId>
+							</exclusion>
+							<exclusion>
+								<groupId>org.eclipse.aether</groupId>
+								<artifactId>aether-util</artifactId>
+							</exclusion>
+						</exclusions>
+					</dependency>
 				</dependencies>
 			</dependencyManagement>
 		</profile>
