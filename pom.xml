@@ -2039,6 +2039,12 @@
 									<artifactId>joox</artifactId>
 									<version>${joox.version}</version>
 								</dependency>
+
+								<dependency>
+									<groupId>org.apache.maven.resolver</groupId>
+									<artifactId>maven-resolver-util</artifactId>
+									<version>1.1.1</version>
+								</dependency>
 							</dependencies>
 							<configuration>
 								<topMenus>
