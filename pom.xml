@@ -1946,6 +1946,12 @@
 									<groupId>io.teecube.t3</groupId>
 									<artifactId>t3-common</artifactId>
 									<version>0.0.15</version> <!-- unleash: 1=<version>${project.version}</version> 3=<version>${project.version}</version> -->
+									<exclusions>
+										<exclusion>
+											<groupId>org.eclipse.aether</groupId>
+											<artifactId>aether-util</artifactId>
+										</exclusion>
+									</exclusions>
 								</dependency>
 								<dependency>
 									<groupId>org.rendersnake</groupId>
