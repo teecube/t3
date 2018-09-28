@@ -139,6 +139,12 @@
 				<groupId>org.apache.maven</groupId>
 				<artifactId>maven-project</artifactId>
 				<version>3.0-alpha-2</version>
+				<exclusions>
+					<exclusion>
+						<groupId>com.google.collections</groupId>
+						<artifactId>google-collections</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -178,6 +184,12 @@
 				<groupId>org.reflections</groupId>
 				<artifactId>reflections</artifactId>
 				<version>0.9.11</version>
+				<!--<exclusions>-->
+					<!--<exclusion>-->
+						<!--<groupId>com.google.collections</groupId>-->
+						<!--<artifactId>google-collections</artifactId>-->
+					<!--</exclusion>-->
+				<!--</exclusions>-->
 			</dependency>
 			<dependency>
 				<groupId>org.twdata.maven</groupId>
@@ -426,12 +438,12 @@
 				<maven.plugin.changelog>2.3</maven.plugin.changelog>
 				<maven.plugin.javadoc>3.0.1</maven.plugin.javadoc>
 				<maven.plugin.jxr>2.5</maven.plugin.jxr>
-				<maven.plugin.project-info-reports>2.9</maven.plugin.project-info-reports>
+				<maven.plugin.project-info-reports>3.0.0</maven.plugin.project-info-reports>
 
 				<maven.plugin.antrun>1.8</maven.plugin.antrun>
 				<maven.plugin.archetype>3.0.1</maven.plugin.archetype>
 				<maven.plugin.assembly>3.1.0</maven.plugin.assembly>
-				<maven.plugin.dependency>3.0.2</maven.plugin.dependency> <!-- WARN: references exist in Java code -->
+				<maven.plugin.dependency>3.1.1</maven.plugin.dependency> <!-- WARN: references exist in Java code -->
 				<maven.plugin.enforcer>1.4.1</maven.plugin.enforcer> <!-- WARN: references exist in Java code -->
 				<maven.plugin.help>3.1.0</maven.plugin.help>
 				<maven.plugin.invoker>3.1.0</maven.plugin.invoker>
@@ -1262,7 +1274,7 @@
 								<id>non-aggregate</id>
 								<inherited>false</inherited>
 								<reports>
-									<report>cim</report>
+									<report>ci-management</report>
 									<report>dependencies</report>
 									<!-- <report>dependency-convergence</report> -->
 									<report>dependency-info</report>
@@ -1271,7 +1283,7 @@
 									<!-- <report>help</report> -->
 									<!-- <report>index</report> -->
 									<!-- <report>issue-tracking</report> -->
-									<report>license</report>
+									<report>licenses</report>
 									<!-- <report>mailing-list</report> -->
 									<!-- <report>modules</report> -->
 									<report>plugin-management</report>
@@ -1297,6 +1309,12 @@
 						<groupId>org.apache.maven</groupId>
 						<artifactId>maven-project</artifactId>
 						<version>${maven.project}</version>
+						<exclusions>
+							<exclusion>
+								<groupId>com.google.collections</groupId>
+								<artifactId>google-collections</artifactId>
+							</exclusion>
+						</exclusions>
 					</dependency>
 					<dependency>
 						<groupId>org.apache.maven</groupId>
@@ -1328,6 +1346,12 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-dependency-plugin</artifactId>
 						<version>${maven.plugin.dependency}</version>
+						<exclusions>
+							<exclusion>
+								<groupId>org.eclipse.aether</groupId>
+								<artifactId>aether-util</artifactId>
+							</exclusion>
+						</exclusions>
 					</dependency>
 					<dependency>
 						<groupId>org.apache.maven.plugins</groupId>
@@ -1513,6 +1537,12 @@
 						<groupId>org.reflections</groupId>
 						<artifactId>reflections</artifactId>
 						<version>${org.reflections.version}</version>
+						<!--<exclusions>-->
+							<!--<exclusion>-->
+								<!--<groupId>com.google.collections</groupId>-->
+								<!--<artifactId>google-collections</artifactId>-->
+							<!--</exclusion>-->
+						<!--</exclusions>-->
 					</dependency>
 					<dependency>
 						<groupId>org.twdata.maven</groupId>
@@ -1974,12 +2004,6 @@
 									<groupId>org.apache.maven</groupId>
 									<artifactId>maven-project</artifactId>
 									<version>${maven.project}</version>
-									<exclusions>
-										<exclusion>
-											<groupId>com.google.collections</groupId>
-											<artifactId>google-collections</artifactId>
-										</exclusion>
-									</exclusions>
 								</dependency>
 								<dependency>
 									<groupId>org.apache.maven</groupId>
@@ -2024,6 +2048,12 @@
 									<groupId>org.reflections</groupId>
 									<artifactId>reflections</artifactId>
 									<version>${org.reflections.version}</version>
+									<!--<exclusions>-->
+										<!--<exclusion>-->
+											<!--<groupId>com.google.collections</groupId>-->
+											<!--<artifactId>google-collections</artifactId>-->
+										<!--</exclusion>-->
+									<!--</exclusions>-->
 								</dependency>
 								<dependency>
 									<groupId>org.twdata.maven</groupId>

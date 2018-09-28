@@ -883,7 +883,7 @@ public class CommonMojo extends AbstractMojo {
     //<editor-fold desc="Advanded Maven dependencies management">
     public static final String mavenPluginsGroupId = "org.apache.maven.plugins";
     public static final String mavenPluginDependencyArtifactId = "maven-dependency-plugin";
-    public static final String mavenPluginDependencyVersion = "3.0.2";
+    public static final String mavenPluginDependencyVersion = "3.1.1";
     public static final String mavenPluginDeployArtifactId = "maven-deploy-plugin";
     public static final String mavenPluginDeployVersion = "2.8.2";
     public static final String mavenPluginInstallArtifactId = "maven-install-plugin";
