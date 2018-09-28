@@ -1,12 +1,11 @@
-.idea/
+# Eclipse
 .classpath
 .project
 .settings/
+# IntelliJ
+.idea
+*.iml
+# Maven
 target/
-tic/
-tic
-tac/
-tac
-toe/
-toe
+# Misc
 git*.sh
