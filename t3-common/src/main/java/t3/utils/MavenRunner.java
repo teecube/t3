@@ -58,6 +58,14 @@ public class MavenRunner {
         this.quiet = quiet;
     }
 
+    public Boolean isQuietForErrors() {
+        return quietErrors;
+    }
+
+    public void setQuietForErrors(Boolean quietErrors) {
+        this.quietErrors = quietErrors;
+    }
+
     public Boolean getDebug() {
         return debug;
     }
@@ -200,6 +208,7 @@ public class MavenRunner {
 
     private File pomFile;
     private Boolean quiet;
+    private Boolean quietErrors;
     private Boolean debug;
     private InvokerLogger invokerLogger;
     private File userSettingsFile;
@@ -224,6 +233,7 @@ public class MavenRunner {
         profiles = new ArrayList<String>();
         properties = new Properties();
         quiet = false;
+        quietErrors = false;
         debug = false;
     }
 
@@ -382,6 +392,13 @@ public class MavenRunner {
                         }
                     }
                 });
+
+                if (quietErrors) {
+                    System.setErr(new PrintStream(new OutputStream() {
+                        public void write(int b) {
+                        }
+                    }));
+                }
             }
             result = builder.build();
         } finally {
