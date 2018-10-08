@@ -16,5 +16,5 @@ as of ${ecosystemNameHighlight}&nbsp;__${ecosystemVersion}__.
 | | [${ticDisplayedName} - ${ticDisplayedBW6MavenName}](${siteDisplayURL}/${ticBW6MavenURLBase}/index.html)      | ${ticBW6MavenVersion}  | ${ticGroupId}:${ticBW6MavenArtifactId}:${ticBW6MavenVersion}   |
 | [${tacDisplayedName}](${siteDisplayURL}/${tacURLBase}/index.html)                                          |   | ${tacVersion}          | ${tacGroupId}:${tacArtifactId}:${tacVersion}                   |
 | [${toeDisplayedName}](${siteDisplayURL}/${toeURLBase}/index.html)                                          |   | ${toeVersion}          | ${toeGroupId}:${toeArtifactId}:${toeVersion}                   |
-| | [${toeDisplayedName} - ${toeDisplayedInstallerName}](${siteDisplayURL}/${toeInstallerURLBase}/index.html)    | ${toeInstallerVersion} | ${ticGroupId}:${toeInstallerArtifactId}:${toeInstallerVersion} |
-| | [${toeDisplayedName} - ${toeDisplayedDomainsName}](${siteDisplayURL}/${toeDomainsURLBase}/index.html)        | ${toeDomainsVersion}   | ${ticGroupId}:${toeDomainsArtifactId}:${toeDomainsVersion}     |
+| | [${toeDisplayedName} - ${toeDisplayedInstallerName}](${siteDisplayURL}/${toeInstallerURLBase}/index.html)    | ${toeInstallerVersion} | ${toeGroupId}:${toeInstallerArtifactId}:${toeInstallerVersion} |
+| | [${toeDisplayedName} - ${toeDisplayedDomainsName}](${siteDisplayURL}/${toeDomainsURLBase}/index.html)        | ${toeDomainsVersion}   | ${toeGroupId}:${toeDomainsArtifactId}:${toeDomainsVersion}     |
