@@ -2421,10 +2421,6 @@
 		<url>${ecosystemCompanyURL}</url> <!-- unleash: 2=<url>${ecosystemCompanyURL}</url> 3=<url>&#36;{ecosystemCompanyURL}</url> -->
 	</organization>
 
-	<prerequisites>
-		<maven>3.5.0</maven>
-	</prerequisites>
-
 	<scm>
 		<connection>scm:git:https://git.teecu.be/teecube/t3.git</connection>
 		<developerConnection>scm:git:https://git.teecu.be/teecube/t3.git</developerConnection>
