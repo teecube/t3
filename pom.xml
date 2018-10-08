@@ -315,6 +315,14 @@
 											<regex>.+</regex>
 											<regexMessage>repositorySnapshotURL property must exist and must not be empty</regexMessage>
 										</requireProperty>
+										<requireProperty>
+											<property>gpg.keyname</property>
+											<message>
+												<![CDATA[gpg.keyname is required]]>
+											</message>
+											<regex>.+</regex>
+											<regexMessage>gpg.keyname property must exist and must not be empty</regexMessage>
+										</requireProperty>
 									</rules>
 								</configuration>
 							</execution>
@@ -327,11 +335,10 @@
 						<version>1.6</version>
 						<configuration>
 							<gpgArguments>
-								<arg>--no-random-seed-file</arg>
-								<arg>--no-permission-warning</arg>
+								<arg>--pinentry-mode</arg>
+								<arg>loopback</arg>
 							</gpgArguments>
-							<keyname>19781536</keyname>
-							<passphraseServerId>t3.gpg</passphraseServerId>
+							<passphraseServerId>${gpg.keyname}</passphraseServerId>
 						</configuration>
 						<executions>
 							<execution>
