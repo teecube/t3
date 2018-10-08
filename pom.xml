@@ -130,11 +130,11 @@
 				<artifactId>maven-plugin-api</artifactId>
 				<version>3.5.4</version>
 			</dependency>
-            <dependency>
-                <groupId>org.apache.maven.plugin-tools</groupId>
-                <artifactId>maven-plugin-annotations</artifactId>
-                <version>3.5.2</version>
-            </dependency>
+			<dependency>
+				<groupId>org.apache.maven.plugin-tools</groupId>
+				<artifactId>maven-plugin-annotations</artifactId>
+				<version>3.5.2</version>
+			</dependency>
 			<dependency>
 				<groupId>org.apache.maven</groupId>
 				<artifactId>maven-project</artifactId>
@@ -145,6 +145,33 @@
 						<artifactId>google-collections</artifactId>
 					</exclusion>
 				</exclusions>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.maven</groupId>
+				<artifactId>maven-embedder</artifactId>
+				<version>${maven.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.1</version> <!-- WARN: references exist in Java code -->
+			</dependency>
+			<dependency>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.8.2</version> <!-- WARN: references exist in Java code -->
+			</dependency>
+			<dependency>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>1.4.1</version> <!-- WARN: references exist in Java code -->
+			</dependency>
+			<dependency>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>2.5.2</version> <!-- WARN: references exist in Java code -->
 			</dependency>
 			<dependency>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -170,6 +197,11 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-compress</artifactId>
+				<version>1.18</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-exec</artifactId>
 				<version>1.3</version>
 			</dependency>
@@ -184,12 +216,6 @@
 				<groupId>org.reflections</groupId>
 				<artifactId>reflections</artifactId>
 				<version>0.9.11</version>
-				<!--<exclusions>-->
-					<!--<exclusion>-->
-						<!--<groupId>com.google.collections</groupId>-->
-						<!--<artifactId>google-collections</artifactId>-->
-					<!--</exclusion>-->
-				<!--</exclusions>-->
 			</dependency>
 			<dependency>
 				<groupId>org.twdata.maven</groupId>
@@ -220,7 +246,7 @@
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
 				<version>1.14.8</version>
-                <!-- do not update version. details:
+				<!-- do not update version. details:
                 * https://stackoverflow.com/questions/35550460/writing-custom-lombok-annotation-handlers
                 * https://groups.google.com/forum/#!topic/project-lombok/xI177a9BykQ
                 -->
@@ -230,11 +256,52 @@
 				<artifactId>metainf-services</artifactId>
 				<version>1.8</version>
 			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.7.5</version>
+			</dependency>
+			<dependency>
+				<groupId>com.mashape.unirest</groupId>
+				<artifactId>unirest-java</artifactId>
+				<version>1.4.9</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-core</artifactId>
+				<version>2.9.6</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>2.9.6</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-annotations</artifactId>
+				<version>2.9.6</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.datatype</groupId>
+				<artifactId>jackson-datatype-joda</artifactId>
+				<version>2.9.6</version>
+			</dependency>
+			<dependency>
+				<groupId>joda-time</groupId>
+				<artifactId>joda-time</artifactId>
+				<version>2.10</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.vladsch.flexmark</groupId>
+				<artifactId>flexmark-all</artifactId>
+                <version>0.19.3</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<profiles>
-	    <profile>
+		<profile>
 			<id>release-profile</id>
 			<activation>
 				<!-- activation is triggered by maven-release-plugin -->
@@ -242,7 +309,7 @@
 					<name>performRelease</name>
 					<value>true</value>
 				</property>
-            </activation>
+			</activation>
 			<build>
 				<plugins>
 					<plugin>
@@ -738,7 +805,7 @@
 											<requireProperty>
 												<property>ticDisplayedName</property>
 												<message>
-												<![CDATA[ticDisplayedName is required]]>
+													<![CDATA[ticDisplayedName is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>ticDisplayedName</regexMessage>
@@ -746,7 +813,7 @@
 											<requireProperty>
 												<property>ticFullName</property>
 												<message>
-												<![CDATA[ticFullName is required]]>
+													<![CDATA[ticFullName is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>ticFullName</regexMessage>
@@ -754,7 +821,7 @@
 											<requireProperty>
 												<property>ticSlogan</property>
 												<message>
-												<![CDATA[ticSlogan is required]]>
+													<![CDATA[ticSlogan is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>ticSlogan</regexMessage>
@@ -762,7 +829,7 @@
 											<requireProperty>
 												<property>ticAcronym</property>
 												<message>
-												<![CDATA[ticAcronym is required]]>
+													<![CDATA[ticAcronym is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>ticAcronym</regexMessage>
@@ -770,7 +837,7 @@
 											<requireProperty>
 												<property>ticGroupId</property>
 												<message>
-												<![CDATA[ticGroupId is required]]>
+													<![CDATA[ticGroupId is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>ticGroupId</regexMessage>
@@ -778,7 +845,7 @@
 											<requireProperty>
 												<property>ticArtifactId</property>
 												<message>
-												<![CDATA[ticArtifactId is required]]>
+													<![CDATA[ticArtifactId is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>ticArtifactId</regexMessage>
@@ -786,7 +853,7 @@
 											<requireProperty>
 												<property>ticURLBase</property>
 												<message>
-												<![CDATA[ticURLBase is required]]>
+													<![CDATA[ticURLBase is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>ticURLBase</regexMessage>
@@ -795,7 +862,7 @@
 											<requireProperty>
 												<property>ticBW6MavenGroupId</property>
 												<message>
-												<![CDATA[ticBW6MavenGroupId is required]]>
+													<![CDATA[ticBW6MavenGroupId is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>ticBW6MavenGroupId</regexMessage>
@@ -803,7 +870,7 @@
 											<requireProperty>
 												<property>ticBW6MavenArtifactId</property>
 												<message>
-												<![CDATA[ticBW6MavenArtifactId is required]]>
+													<![CDATA[ticBW6MavenArtifactId is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>ticBW6MavenArtifactId</regexMessage>
@@ -811,7 +878,7 @@
 											<requireProperty>
 												<property>ticBW6MavenURLBase</property>
 												<message>
-												<![CDATA[ticBW6MavenURLBase is required]]>
+													<![CDATA[ticBW6MavenURLBase is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>ticBW6MavenURLBase</regexMessage>
@@ -819,7 +886,7 @@
 											<requireProperty>
 												<property>ticBW6MavenName</property>
 												<message>
-												<![CDATA[ticBW6MavenName is required]]>
+													<![CDATA[ticBW6MavenName is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>ticBW6MavenName</regexMessage>
@@ -827,7 +894,7 @@
 											<requireProperty>
 												<property>ticDisplayedBW6MavenName</property>
 												<message>
-												<![CDATA[ticDisplayedBW6MavenName is required]]>
+													<![CDATA[ticDisplayedBW6MavenName is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>ticDisplayedBW6MavenName</regexMessage>
@@ -836,7 +903,7 @@
 											<requireProperty>
 												<property>ticBW5MavenGroupId</property>
 												<message>
-												<![CDATA[ticBW5MavenGroupId is required]]>
+													<![CDATA[ticBW5MavenGroupId is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>ticBW5MavenGroupId</regexMessage>
@@ -844,7 +911,7 @@
 											<requireProperty>
 												<property>ticBW5MavenArtifactId</property>
 												<message>
-												<![CDATA[ticBW5MavenArtifactId is required]]>
+													<![CDATA[ticBW5MavenArtifactId is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>ticBW5MavenArtifactId</regexMessage>
@@ -852,7 +919,7 @@
 											<requireProperty>
 												<property>ticBW5MavenURLBase</property>
 												<message>
-												<![CDATA[ticBW5MavenURLBase is required]]>
+													<![CDATA[ticBW5MavenURLBase is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>ticBW5MavenURLBase</regexMessage>
@@ -860,7 +927,7 @@
 											<requireProperty>
 												<property>ticBW5MavenName</property>
 												<message>
-												<![CDATA[ticBW5MavenName is required]]>
+													<![CDATA[ticBW5MavenName is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>ticBW5MavenName</regexMessage>
@@ -868,7 +935,7 @@
 											<requireProperty>
 												<property>ticDisplayedBW5MavenName</property>
 												<message>
-												<![CDATA[ticDisplayedBW5MavenName is required]]>
+													<![CDATA[ticDisplayedBW5MavenName is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>ticDisplayedBW5MavenName</regexMessage>
@@ -877,7 +944,7 @@
 											<requireProperty>
 												<property>tacName</property>
 												<message>
-												<![CDATA[tacName is required]]>
+													<![CDATA[tacName is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>tacName</regexMessage>
@@ -885,7 +952,7 @@
 											<requireProperty>
 												<property>tacDisplayedName</property>
 												<message>
-												<![CDATA[tacDisplayedName is required]]>
+													<![CDATA[tacDisplayedName is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>tacDisplayedName</regexMessage>
@@ -893,7 +960,7 @@
 											<requireProperty>
 												<property>tacFullName</property>
 												<message>
-												<![CDATA[tacFullName is required]]>
+													<![CDATA[tacFullName is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>tacFullName</regexMessage>
@@ -901,7 +968,7 @@
 											<requireProperty>
 												<property>tacSlogan</property>
 												<message>
-												<![CDATA[tacSlogan is required]]>
+													<![CDATA[tacSlogan is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>tacSlogan</regexMessage>
@@ -909,7 +976,7 @@
 											<requireProperty>
 												<property>tacAcronym</property>
 												<message>
-												<![CDATA[tacAcronym is required]]>
+													<![CDATA[tacAcronym is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>tacAcronym</regexMessage>
@@ -917,7 +984,7 @@
 											<requireProperty>
 												<property>tacGroupId</property>
 												<message>
-												<![CDATA[tacGroupId is required]]>
+													<![CDATA[tacGroupId is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>tacGroupId</regexMessage>
@@ -925,7 +992,7 @@
 											<requireProperty>
 												<property>tacArtifactId</property>
 												<message>
-												<![CDATA[tacArtifactId is required]]>
+													<![CDATA[tacArtifactId is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>tacArtifactId</regexMessage>
@@ -933,7 +1000,7 @@
 											<requireProperty>
 												<property>tacURLBase</property>
 												<message>
-												<![CDATA[tacURLBase is required]]>
+													<![CDATA[tacURLBase is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>tacURLBase</regexMessage>
@@ -942,7 +1009,7 @@
 											<requireProperty>
 												<property>toeName</property>
 												<message>
-												<![CDATA[toeName is required]]>
+													<![CDATA[toeName is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>toeName</regexMessage>
@@ -950,7 +1017,7 @@
 											<requireProperty>
 												<property>toeDisplayedName</property>
 												<message>
-												<![CDATA[toeDisplayedName is required]]>
+													<![CDATA[toeDisplayedName is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>toeDisplayedName</regexMessage>
@@ -958,7 +1025,7 @@
 											<requireProperty>
 												<property>toeFullName</property>
 												<message>
-												<![CDATA[toeFullName is required]]>
+													<![CDATA[toeFullName is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>toeFullName</regexMessage>
@@ -966,7 +1033,7 @@
 											<requireProperty>
 												<property>toeSlogan</property>
 												<message>
-												<![CDATA[toeSlogan is required]]>
+													<![CDATA[toeSlogan is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>toeSlogan</regexMessage>
@@ -974,7 +1041,7 @@
 											<requireProperty>
 												<property>toeAcronym</property>
 												<message>
-												<![CDATA[toeAcronym is required]]>
+													<![CDATA[toeAcronym is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>toeAcronym</regexMessage>
@@ -982,7 +1049,7 @@
 											<requireProperty>
 												<property>toeGroupId</property>
 												<message>
-												<![CDATA[toeGroupId is required]]>
+													<![CDATA[toeGroupId is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>toeGroupId</regexMessage>
@@ -990,7 +1057,7 @@
 											<requireProperty>
 												<property>toeArtifactId</property>
 												<message>
-												<![CDATA[toeArtifactId is required]]>
+													<![CDATA[toeArtifactId is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>toeArtifactId</regexMessage>
@@ -998,7 +1065,7 @@
 											<requireProperty>
 												<property>toeURLBase</property>
 												<message>
-												<![CDATA[toeURLBase is required]]>
+													<![CDATA[toeURLBase is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>toeURLBase</regexMessage>
@@ -1007,7 +1074,7 @@
 											<requireProperty>
 												<property>toeInstallerGroupId</property>
 												<message>
-												<![CDATA[toeInstallerGroupId is required]]>
+													<![CDATA[toeInstallerGroupId is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>toeInstallerGroupId</regexMessage>
@@ -1015,7 +1082,7 @@
 											<requireProperty>
 												<property>toeInstallerArtifactId</property>
 												<message>
-												<![CDATA[toeInstallerArtifactId is required]]>
+													<![CDATA[toeInstallerArtifactId is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>toeInstallerArtifactId</regexMessage>
@@ -1023,7 +1090,7 @@
 											<requireProperty>
 												<property>toeInstallerURLBase</property>
 												<message>
-												<![CDATA[toeInstallerURLBase is required]]>
+													<![CDATA[toeInstallerURLBase is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>toeInstallerURLBase</regexMessage>
@@ -1031,7 +1098,7 @@
 											<requireProperty>
 												<property>toeInstallerName</property>
 												<message>
-												<![CDATA[toeInstallerName is required]]>
+													<![CDATA[toeInstallerName is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>toeInstallerName</regexMessage>
@@ -1039,7 +1106,7 @@
 											<requireProperty>
 												<property>toeDisplayedInstallerName</property>
 												<message>
-												<![CDATA[toeDisplayedInstallerName is required]]>
+													<![CDATA[toeDisplayedInstallerName is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>toeDisplayedInstallerName</regexMessage>
@@ -1048,7 +1115,7 @@
 											<requireProperty>
 												<property>toeDomainsGroupId</property>
 												<message>
-												<![CDATA[toeDomainsGroupId is required]]>
+													<![CDATA[toeDomainsGroupId is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>toeDomainsGroupId</regexMessage>
@@ -1056,7 +1123,7 @@
 											<requireProperty>
 												<property>toeDomainsArtifactId</property>
 												<message>
-												<![CDATA[toeDomainsArtifactId is required]]>
+													<![CDATA[toeDomainsArtifactId is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>toeDomainsArtifactId</regexMessage>
@@ -1064,7 +1131,7 @@
 											<requireProperty>
 												<property>toeDomainsURLBase</property>
 												<message>
-												<![CDATA[toeDomainsURLBase is required]]>
+													<![CDATA[toeDomainsURLBase is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>toeDomainsURLBase</regexMessage>
@@ -1072,7 +1139,7 @@
 											<requireProperty>
 												<property>toeDomainsName</property>
 												<message>
-												<![CDATA[toeDomainsName is required]]>
+													<![CDATA[toeDomainsName is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>toeDomainsName</regexMessage>
@@ -1080,7 +1147,7 @@
 											<requireProperty>
 												<property>toeDisplayedDomainsName</property>
 												<message>
-												<![CDATA[toeDisplayedDomainsName is required]]>
+													<![CDATA[toeDisplayedDomainsName is required]]>
 												</message>
 												<regex>.*</regex>
 												<regexMessage>toeDisplayedDomainsName</regexMessage>
@@ -1147,13 +1214,13 @@
 									</goals>
 									<phase>process-classes</phase>
 								</execution>
-                                <execution>
-                                    <id>generated-helpmojo</id>
-                                    <goals>
-                                        <goal>helpmojo</goal>
-                                    </goals>
+								<execution>
+									<id>generated-helpmojo</id>
+									<goals>
+										<goal>helpmojo</goal>
+									</goals>
 									<phase>generate-sources</phase>
-                                </execution>
+								</execution>
 							</executions>
 						</plugin>
 						<plugin>
@@ -1205,7 +1272,6 @@
 							</reportSet>
 						</reportSets>
 						<configuration>
-							<aggregate>false</aggregate>
 							<detectLinks>true</detectLinks>
 							<detectOfflineLinks>false</detectOfflineLinks>
 							<links>
@@ -1221,8 +1287,8 @@
 							<sourceFileIncludes>
 								<include>**\/\*Mojo.java</include>
 							</sourceFileIncludes>
-						<tags>
-							<tag>
+							<tags>
+								<tag>
 									<name>example.</name>
 									<placement>aoptcmf</placement>
 									<head>Example :</head>
@@ -1234,7 +1300,6 @@
 								<artifactId>umlgraph</artifactId>
 								<version>5.6.6</version>
 							</docletArtifact>
-							<additionalparam>-views</additionalparam>
 							<useStandardDocletOptions>false</useStandardDocletOptions>
 							<skip>${maven.javadoc.skip}</skip>
 						</configuration>
@@ -1265,7 +1330,6 @@
 						<version>${maven.plugin.project-info-reports}</version>
 						<configuration>
 							<dependencyDetailsEnabled>true</dependencyDetailsEnabled>
-							<dependencyLocationsEnabled>true</dependencyLocationsEnabled>
 							<skip>${mpir.skip}</skip>
 						</configuration>
 						<!-- <inherited>false</inherited> -->
@@ -1381,11 +1445,11 @@
 						<version>${maven.plugin.annotations}</version>
 					</dependency>
 
-			        <dependency>
-			            <groupId>org.apache.maven</groupId>
-			            <artifactId>maven-embedder</artifactId>
+					<dependency>
+						<groupId>org.apache.maven</groupId>
+						<artifactId>maven-embedder</artifactId>
 						<version>${maven.version}</version>
-			        </dependency>
+					</dependency>
 				</dependencies>
 			</dependencyManagement>
 		</profile>
@@ -1403,7 +1467,7 @@
 		<profile> <!-- Additional plugins & dependencies -->
 			<id>additional</id>
 			<activation>
-                <activeByDefault>true</activeByDefault>
+				<activeByDefault>true</activeByDefault>
 				<file>
 					<missing>ignore.additional.dependencies</missing>
 				</file>
@@ -1423,20 +1487,20 @@
 
 				<jvnet.maven-jaxb2-plugin>0.14.0</jvnet.maven-jaxb2-plugin>
 				<codehaus.build-helper-maven-plugin>3.0.0</codehaus.build-helper-maven-plugin>
-				
+
 				<org.reflections.version>0.9.11</org.reflections.version>
 				<mojo-executor.version>2.3.0</mojo-executor.version>
 				<guava.version>26.0-jre</guava.version>
 				<dom4j.version>1.6.1</dom4j.version>
 				<joox.version>1.3.0</joox.version> <!-- do not update -->
-				
+
 				<plexus-archiver.version>3.6.0</plexus-archiver.version>
 				<plexus-container-default.version>1.7.1</plexus-container-default.version>
 				<plexus-interpolation.version>1.25</plexus-interpolation.version>
 				<plexus-utils.version>3.1.0</plexus-utils.version>
 
 				<icu4j.version>52.1</icu4j.version>
-				
+
 				<rendersnake-version>1.9.0</rendersnake-version>
 				<moxy-version>2.7.3</moxy-version>
 				<javax.mail-api>1.6.2</javax.mail-api>
@@ -1451,7 +1515,7 @@
 				<metainf-services-version>1.8</metainf-services-version>
 				<jackson-version>2.9.6</jackson-version>
 				<joda-time-version>2.10</joda-time-version>
-				<unirest-version>1.4.9</unirest-version>						
+				<unirest-version>1.4.9</unirest-version>
 			</properties>
 			<dependencyManagement>
 				<dependencies>
@@ -1525,7 +1589,7 @@
 						<version>${plexus-utils.version}</version>
 					</dependency>
 
-					<!-- force version of this transitive dependencies to avoid this bug: 
+					<!-- force version of this transitive dependencies to avoid this bug:
 						https://bugs.eclipse.org/bugs/show_bug.cgi?id=418583 -->
 					<dependency>
 						<groupId>com.ibm.icu</groupId>
@@ -1537,12 +1601,6 @@
 						<groupId>org.reflections</groupId>
 						<artifactId>reflections</artifactId>
 						<version>${org.reflections.version}</version>
-						<!--<exclusions>-->
-							<!--<exclusion>-->
-								<!--<groupId>com.google.collections</groupId>-->
-								<!--<artifactId>google-collections</artifactId>-->
-							<!--</exclusion>-->
-						<!--</exclusions>-->
 					</dependency>
 					<dependency>
 						<groupId>org.twdata.maven</groupId>
@@ -1643,15 +1701,15 @@
 					</dependency>
 
 					<dependency>
-					    <groupId>com.mashape.unirest</groupId>
-					    <artifactId>unirest-java</artifactId>
-					    <version>${unirest-version}</version>
+						<groupId>com.mashape.unirest</groupId>
+						<artifactId>unirest-java</artifactId>
+						<version>${unirest-version}</version>
 					</dependency>
 
 					<dependency>
-					    <groupId>com.vladsch.flexmark</groupId>
-					    <artifactId>flexmark-all</artifactId>
-					    <version>0.19.3</version>
+						<groupId>com.vladsch.flexmark</groupId>
+						<artifactId>flexmark-all</artifactId>
+						<version>0.19.3</version>
 					</dependency>
 					<dependency>
 						<groupId>org.slf4j</groupId>
@@ -1660,9 +1718,9 @@
 					</dependency>
 
 					<dependency>
-					    <groupId>org.kohsuke</groupId>
-					    <artifactId>wordnet-random-name</artifactId>
-					    <version>1.3</version>
+						<groupId>org.kohsuke</groupId>
+						<artifactId>wordnet-random-name</artifactId>
+						<version>1.3</version>
 					</dependency>
 				</dependencies>
 			</dependencyManagement>
@@ -1683,9 +1741,7 @@
 									<source>
 										import java.util.Date
 										import java.text.MessageFormat
-										def
-										vartimestamp = MessageFormat.format("{0,date,yyyy}", new
-										Date())
+										def	vartimestamp = MessageFormat.format("{0,date,yyyy}", new Date())
 										project.properties['currentYear'] = vartimestamp
 									</source>
 								</configuration>
@@ -1743,7 +1799,7 @@
 												//println "Setting $propertyName to $result"
 												project.properties["$propertyName"] = result
 											} else {
-												project.properties["$propertyName"] = "unknown"												
+												project.properties["$propertyName"] = "unknown"
 											}
 										}
 										setCurrentVersion((project.properties["ticGroupId"] + "." + project.properties["ticArtifactId"]).replaceAll("\\.", "/"), "ticVersion")
@@ -1753,7 +1809,7 @@
 										setCurrentVersion((project.properties["toeGroupId"] + "." + project.properties["toeArtifactId"]).replaceAll("\\.", "/"), "toeVersion")
 										setCurrentVersion((project.properties["toeInstallerGroupId"] + "." + project.properties["toeInstallerArtifactId"]).replaceAll("\\.", "/"), "toeInstallerVersion")
 										setCurrentVersion((project.properties["toeDomainsGroupId"] + "." + project.properties["toeDomainsArtifactId"]).replaceAll("\\.", "/"), "toeDomainsVersion")
-									]]></source>
+										]]></source>
 								</configuration>
 							</execution>
 							<execution>
@@ -1809,7 +1865,7 @@
 												//println "Setting $propertyName to $result"
 												project.properties["$propertyName"] = result
 											} else {
-												project.properties["$propertyName"] = "unknown"												
+												project.properties["$propertyName"] = "unknown"
 											}
 										}
 										setCurrentVersion((project.properties["ticGroupId"] + "." + project.properties["ticArtifactId"]).replaceAll("\\.", "/"), "ticVersion")
@@ -1819,7 +1875,7 @@
 										setCurrentVersion((project.properties["toeGroupId"] + "." + project.properties["toeArtifactId"]).replaceAll("\\.", "/"), "toeVersion")
 										setCurrentVersion((project.properties["toeInstallerGroupId"] + "." + project.properties["toeInstallerArtifactId"]).replaceAll("\\.", "/"), "toeInstallerVersion")
 										setCurrentVersion((project.properties["toeDomainsGroupId"] + "." + project.properties["toeDomainsArtifactId"]).replaceAll("\\.", "/"), "toeDomainsVersion")
-									]]></source>
+										]]></source>
 								</configuration>
 							</execution>
 						</executions>
@@ -1906,7 +1962,7 @@
 								</execution>
 							</executions>
 						</plugin>
- 						<plugin>
+						<plugin>
 							<groupId>org.codehaus.mojo</groupId>
 							<artifactId>build-helper-maven-plugin</artifactId>
 							<version>${codehaus.build-helper-maven-plugin}</version>
@@ -2015,7 +2071,7 @@
 									<artifactId>maven-resources-plugin</artifactId>
 									<version>${maven.plugin.resources}</version>
 								</dependency>
-						
+
 								<!-- Apache commons -->
 								<dependency>
 									<groupId>commons-io</groupId>
@@ -2042,18 +2098,12 @@
 									<artifactId>ant</artifactId>
 									<version>${apache.plugin.ant}</version>
 								</dependency>
-						
+
 								<!-- others -->
 								<dependency>
 									<groupId>org.reflections</groupId>
 									<artifactId>reflections</artifactId>
 									<version>${org.reflections.version}</version>
-									<!--<exclusions>-->
-										<!--<exclusion>-->
-											<!--<groupId>com.google.collections</groupId>-->
-											<!--<artifactId>google-collections</artifactId>-->
-										<!--</exclusion>-->
-									<!--</exclusions>-->
 								</dependency>
 								<dependency>
 									<groupId>org.twdata.maven</groupId>
