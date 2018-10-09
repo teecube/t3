@@ -79,17 +79,11 @@ public class UpdateGeneralMojo extends AbstractReplaceAllMojo {
         Match document = JOOX.$(htmlFile);
 
         // remove ignored parameters
-        Match td = document.xpath("//tr[./td/b/a/@href='#ignoredParameters']");
-        td.remove();
+        Match tr = document.xpath("//tr[./td/tt/a/@href='#ignoredParameters']");
+        tr.remove();
 
-        Match hre = document.xpath("//p[./b/a/@name='ignoredParameters']/following-sibling::hr[1]");
-        hre.remove();
-        Match ul = document.xpath("//p[./b/a/@name='ignoredParameters']/following-sibling::ul[1]");
-        ul.remove();
-        Match div = document.xpath("//p[./b/a/@name='ignoredParameters']/following-sibling::div[1]");
+        Match div = document.xpath("//div[@class='section'][./h4/@id='a.3CignoredParameters.3E']");
         div.remove();
-        Match p = document.xpath("//p[./b/a/@name='ignoredParameters']");
-        p.remove();
 
         printDocument(document.document(), htmlFile);
     }

@@ -78,10 +78,13 @@ public class UpdateMojoDescriptionsMojo extends AbstractReplaceAllMojo {
                                 Match td = document.xpath("//tr[./td/tt/a/@href='#" + ((ParameterImpl)parameter).field() + "']/td[4]");
                                 String content = td.content();
                                 content = content.replace("(no description)", parameter.description());
+                                content = content.trim().replace("\n", "").replace("\r", "");
                                 td.content(content);
 
                                 Match div = document.xpath("//h4[@id='a.3C" + ((ParameterImpl)parameter).field() + ".3E']/following-sibling::div[1]");
-                                div.content(parameter.description());
+                                content = parameter.description();
+                                content = content.trim().replace("\n", "").replace("\r", "");
+                                div.content(content);
                             }
                         }
                         printDocument(document.document(), htmlFile);
@@ -179,6 +182,7 @@ public class UpdateMojoDescriptionsMojo extends AbstractReplaceAllMojo {
                 ClassLoader projectClassLoader = getClassLoader(project);
                 Class<?> loadedClass = projectClassLoader.loadClass(className);
 
+                // @Parameters
                 Set<Field> fieldsWithParameterAnnotation = AnnotationsHelper.getFieldsAnnotatedWith(loadedClass, Parameter.class, ClasspathHelper.contextClassLoader(), projectClassLoader);
 
                 for (Field field : fieldsWithParameterAnnotation) {
@@ -194,6 +198,28 @@ public class UpdateMojoDescriptionsMojo extends AbstractReplaceAllMojo {
                     }
                 }
 
+                // add parameters form parent classes too
+                for (String canonicalName : parametersOfClass.keySet()) {
+                    List<String> parentClasses = new ArrayList<String>();
+
+                    Class<?> clazz = projectClassLoader.loadClass(canonicalName);
+                    clazz = clazz.getSuperclass();
+
+                    while (clazz != null) {
+                        parentClasses.add(clazz.getCanonicalName());
+                        clazz = clazz.getSuperclass();
+                    }
+
+                    List<t3.plugin.annotations.Parameter> parametersForThisClass = parametersOfClass.get(canonicalName);
+                    for (String parentClass : parentClasses) {
+                        List<t3.plugin.annotations.Parameter> parametersOfParent = parametersOfClass.get(parentClass);
+                        if (parametersOfParent != null) {
+                            parametersForThisClass.addAll(parametersOfParent);
+                        }
+                    }
+                }
+
+                // @GlobalParameters
                 Set<Field> fieldsWithGlobalParameterAnnotation = AnnotationsHelper.getFieldsAnnotatedWith(loadedClass, GlobalParameter.class, ClasspathHelper.contextClassLoader(), projectClassLoader);
 
                 for (Field field : fieldsWithGlobalParameterAnnotation) {
