@@ -23,8 +23,8 @@ import com.sun.tools.javac.tree.JCTree.*;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.ListBuffer;
 import lombok.core.AnnotationValues;
-import lombok.javac.JavacTreeMaker;
 import lombok.javac.JavacNode;
+import lombok.javac.JavacTreeMaker;
 import lombok.javac.handlers.JavacHandlerUtil;
 import t3.plugin.annotations.Categories;
 
@@ -158,7 +158,7 @@ public class AnnotationReplacementHelper {
                 JCVariableDecl variable = (JCVariableDecl) def;
                 Tokens.Comment comment = docComments.getComment(def);
                 if (comment != null && comment.getStyle().equals(JAVADOC)) {
-                    ((JCLiteral) ((JCVariableDecl) def).init).value = comment.getText();
+                    ((JCLiteral) variable.init).value = comment.getText();
                 }
             }
         }

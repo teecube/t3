@@ -75,12 +75,12 @@ public class UpdateMojoDescriptionsMojo extends AbstractReplaceAllMojo {
                             if (StringUtils.isNotEmpty(description)) {
                                 if (parameter.description().equals(parameter.property())) continue;
 
-                                Match td = document.xpath("//tr[./td/b/a/@href='#" + ((ParameterImpl)parameter).field() + "']/td[4]");
+                                Match td = document.xpath("//tr[./td/tt/a/@href='#" + ((ParameterImpl)parameter).field() + "']/td[4]");
                                 String content = td.content();
                                 content = content.replace("(no description)", parameter.description());
                                 td.content(content);
 
-                                Match div = document.xpath("//p[./b/a/@name='" + ((ParameterImpl)parameter).field() + "']/following-sibling::div[1]");
+                                Match div = document.xpath("//h4[@id='a.3C" + ((ParameterImpl)parameter).field() + ".3E']/following-sibling::div[1]");
                                 div.content(parameter.description());
                             }
                         }
