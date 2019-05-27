@@ -91,22 +91,22 @@
 			<dependency>
 				<groupId>org.apache.maven</groupId>
 				<artifactId>maven-core</artifactId>
-				<version>3.5.4</version>
+				<version>3.6.1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.maven</groupId>
 				<artifactId>maven-model</artifactId>
-				<version>3.5.4</version>
+				<version>3.6.1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.maven</groupId>
 				<artifactId>maven-plugin-api</artifactId>
-				<version>3.5.4</version>
+				<version>3.6.1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.maven.plugin-tools</groupId>
 				<artifactId>maven-plugin-annotations</artifactId>
-				<version>3.5.2</version>
+				<version>3.6.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.maven</groupId>
@@ -123,7 +123,7 @@
 			<dependency>
 				<groupId>org.apache.maven</groupId>
 				<artifactId>maven-embedder</artifactId>
-				<version>3.5.4</version>
+				<version>3.6.1</version>
 			</dependency>
 
 			<dependency>
@@ -468,18 +468,18 @@
 				<java.target.version>1.7</java.target.version>
 
 				<!-- default Maven artifacts versions -->
-				<maven.version>3.5.4</maven.version>
+				<maven.version>3.6.1</maven.version>
 				<maven.project>3.0-alpha-2</maven.project>
 				<maven.archiver>3.2.0</maven.archiver>
 
-				<maven.plugin.annotations>3.5.2</maven.plugin.annotations>
+				<maven.plugin.annotations>3.6.0</maven.plugin.annotations>
 				<maven.plugin.clean>3.1.0</maven.plugin.clean>
 				<maven.plugin.compiler>3.8.0</maven.plugin.compiler>
 				<maven.plugin.deploy>2.8.2</maven.plugin.deploy> <!-- WARN: references exist in Java code -->
 				<maven.plugin.install>2.5.2</maven.plugin.install> <!-- WARN: references exist in Java code -->
 				<maven.plugin.resources>3.1.0</maven.plugin.resources>
 				<maven.plugin.site>3.7.1</maven.plugin.site>
-				<maven.plugin.tools-api>3.5.2</maven.plugin.tools-api>
+				<maven.plugin.tools-api>3.6.0</maven.plugin.tools-api>
 
 				<maven.plugin.jar>3.1.0</maven.plugin.jar>
 				<maven.plugin.source>3.0.1</maven.plugin.source>
@@ -496,7 +496,7 @@
 				<maven.plugin.enforcer>1.4.1</maven.plugin.enforcer> <!-- WARN: references exist in Java code -->
 				<maven.plugin.help>3.1.0</maven.plugin.help>
 				<maven.plugin.invoker>3.1.0</maven.plugin.invoker>
-				<maven.plugin.plugin>3.5.2</maven.plugin.plugin>
+				<maven.plugin.plugin>3.6.0</maven.plugin.plugin>
 				<maven.plugin.release>2.5.3</maven.plugin.release>
 
 				<plexus.component.metadata>1.7.1</plexus.component.metadata>
