@@ -147,18 +147,22 @@ public class AnnotationReplacementHelper {
         JCCompilationUnit compilationUnit = (JCCompilationUnit) annotationNode.top().get();
         JCClassDecl classDecl = (JCClassDecl) compilationUnit.getTypeDecls().get(0);
 
-        replaceDescrition(classDecl, compilationUnit.docComments);
+        replaceDescription(classDecl, compilationUnit.docComments, annotationNode.getTreeMaker());
     }
 
-    private static void replaceDescrition(JCClassDecl classDecl, DocCommentTable docComments) {
+    private static void replaceDescription(JCClassDecl classDecl, DocCommentTable docComments, JavacTreeMaker treeMaker) {
         for (JCTree def : classDecl.defs) {
             if (def.getClass().getSimpleName().equals("JCClassDecl")) {
-                replaceDescrition((JCClassDecl) def, docComments);
+                replaceDescription((JCClassDecl) def, docComments, treeMaker);
             } else if (def.getClass().getSimpleName().equals("JCVariableDecl")) {
                 JCVariableDecl variable = (JCVariableDecl) def;
                 Tokens.Comment comment = docComments.getComment(def);
                 if (comment != null && comment.getStyle().equals(JAVADOC)) {
-                    ((JCLiteral) variable.init).value = comment.getText();
+                    if (variable.init instanceof JCLiteral) {
+                        ((JCLiteral) variable.init).value = comment.getText();
+                    } else {
+                        variable.init = treeMaker.Literal(comment.getText());
+                    }
                 }
             }
         }
