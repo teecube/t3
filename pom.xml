@@ -242,22 +242,22 @@
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-core</artifactId>
-				<version>2.9.6</version>
+				<version>2.9.9</version>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
-				<version>2.9.6</version>
+				<version>2.9.9</version>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-annotations</artifactId>
-				<version>2.9.6</version>
+				<version>2.9.9</version>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.datatype</groupId>
 				<artifactId>jackson-datatype-joda</artifactId>
-				<version>2.9.6</version>
+				<version>2.9.9</version>
 			</dependency>
 			<dependency>
 				<groupId>joda-time</groupId>
@@ -1495,7 +1495,7 @@
                 * https://groups.google.com/forum/#!topic/project-lombok/xI177a9BykQ
                 -->
 				<metainf-services-version>1.8</metainf-services-version>
-				<jackson-version>2.9.6</jackson-version>
+				<jackson-version>2.9.9</jackson-version>
 				<joda-time-version>2.10</joda-time-version>
 				<unirest-version>1.4.9</unirest-version>
 			</properties>
