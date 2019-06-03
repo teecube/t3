@@ -35,6 +35,7 @@ public class ParameterImpl implements Parameter, GlobalParameter {
 
     private String description;
     private List<String> requiredForPackagings;
+    private boolean hideDocumentation;
 
     private String category; // only for GlobalParameter
     private boolean valueGuessedByDefault; // only for GlobalParameter
@@ -42,7 +43,7 @@ public class ParameterImpl implements Parameter, GlobalParameter {
     private String type;
     private String field;
 
-    public ParameterImpl(String field, String type, String property, String defaultValue, boolean required, List<String> requiredForPackagings, String description, String category, boolean valueGuessedByDefault) {
+    public ParameterImpl(String field, String type, String property, String defaultValue, boolean required, List<String> requiredForPackagings, String description, boolean hideDocumentation, String category, boolean valueGuessedByDefault) {
         this.field = field;
         this.type = type;
         this.property = property;
@@ -50,6 +51,7 @@ public class ParameterImpl implements Parameter, GlobalParameter {
         this.required = required;
         this.requiredForPackagings = requiredForPackagings;
         this.description = description;
+        this.hideDocumentation = hideDocumentation;
         this.category = category;
         this.valueGuessedByDefault = valueGuessedByDefault;
     }
@@ -88,13 +90,19 @@ public class ParameterImpl implements Parameter, GlobalParameter {
     public String description() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
 
     public String[] requiredForPackagings() {
         return requiredForPackagings.toArray(new String[0]);
+    }
+
+    public boolean hideDocumentation() {
+        return hideDocumentation;
+    }
+    public void setDescription(boolean hideDocumentation) {
+        this.hideDocumentation = hideDocumentation;
     }
 
     public String category() {

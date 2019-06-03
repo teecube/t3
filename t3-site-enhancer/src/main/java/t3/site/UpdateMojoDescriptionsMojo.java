@@ -71,17 +71,24 @@ public class UpdateMojoDescriptionsMojo extends AbstractReplaceAllMojo {
                     List<t3.plugin.annotations.Parameter> parameters = parametersOfClass.get(canonicalClassName);
                     if (parameters != null) {
                         for (t3.plugin.annotations.Parameter parameter : parameters) {
+                            Match tr = document.xpath("//tr[./td/tt/a/@href='#" + ((ParameterImpl)parameter).field() + "']");
+                            Match div = document.xpath("//div[./h4/@id='a.3C" + ((ParameterImpl)parameter).field() + ".3E']");
+                            if (parameter.hideDocumentation()) {
+                                tr.remove();
+                                div.remove();
+                                continue;
+                            }
                             String description = parameter.description();
                             if (StringUtils.isNotEmpty(description)) {
                                 if (parameter.description().equals(parameter.property())) continue;
 
-                                Match td = document.xpath("//tr[./td/tt/a/@href='#" + ((ParameterImpl)parameter).field() + "']/td[4]");
+                                Match td = tr.xpath("td[4]");
                                 String content = td.content();
                                 content = content.replace("(no description)", parameter.description());
                                 content = content.trim().replace("\n", "").replace("\r", "");
                                 td.content(content);
 
-                                Match div = document.xpath("//h4[@id='a.3C" + ((ParameterImpl)parameter).field() + ".3E']/following-sibling::div[1]");
+                                div = div.xpath("div[1]");
                                 content = parameter.description();
                                 content = content.trim().replace("\n", "").replace("\r", "");
                                 div.content(content);

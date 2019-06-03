@@ -56,6 +56,11 @@ public class ParametersHelper {
         return (String) getObject(annotation, "description");
     }
 
+    private static boolean getHideDocumentation(Annotation annotation) {
+        Object o = getObject(annotation, "hideDocumentation");
+        return o != null ? (Boolean) o : false;
+    }
+
     private static String getCategory(Annotation annotation) {
         Object o = getObject(annotation, "category");
         return o != null ? (String) o : null;
@@ -96,6 +101,7 @@ public class ParametersHelper {
             boolean required = false;
             List<String> requiredForPackagings = null;
             String description = null;
+            boolean hideDocumentation = false;
             String category = null;
             boolean valueGuessedByDefault = true;
 
@@ -105,6 +111,7 @@ public class ParametersHelper {
                 required = getRequired(annotation);
                 requiredForPackagings = getRequiredForPackagings(annotation);
                 description = getDescription(annotation);
+                hideDocumentation = getHideDocumentation(annotation);
                 category = getCategory(annotation);
                 valueGuessedByDefault = getValueGuessedByDefault(annotation);
             } else {
@@ -115,13 +122,14 @@ public class ParametersHelper {
                         required = getRequired(a);
                         requiredForPackagings = getRequiredForPackagings(a);
                         description = getDescription(a);
+                        hideDocumentation = getHideDocumentation(a);
                         category = getCategory(a);
                         valueGuessedByDefault = getValueGuessedByDefault(a);
                     }
                 }
             }
             if (property != null) {
-                result.add(new ParameterImpl(field.getName(), field.getType().getCanonicalName(), property, defaultValue, required, requiredForPackagings, description, category, valueGuessedByDefault));
+                result.add(new ParameterImpl(field.getName(), field.getType().getCanonicalName(), property, defaultValue, required, requiredForPackagings, description, hideDocumentation, category, valueGuessedByDefault));
             }
         }
 

@@ -55,4 +55,5 @@ public @interface Parameter
     // additional fields
     String description() default "";
     String[] requiredForPackagings() default "";
+    boolean hideDocumentation() default false;
 }

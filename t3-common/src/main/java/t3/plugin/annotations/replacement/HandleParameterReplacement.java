@@ -66,6 +66,7 @@ public class HandleParameterReplacement extends JavacAnnotationHandler<Parameter
         List<String> fieldsToIgnore = new ArrayList<>();
         fieldsToIgnore.add("description");
         fieldsToIgnore.add("requiredForPackagings");
+        fieldsToIgnore.add("hideDocumentation");
 
         // no inheritance possible
         AnnotationReplacementHelper.duplicateAnnotationWithAnother(annotation, ast, annotationNode, getAnnotationCanonicalName(), getReplacementClassElements(), fieldsToIgnore);
