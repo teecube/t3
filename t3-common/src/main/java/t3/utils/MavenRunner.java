@@ -74,6 +74,14 @@ public class MavenRunner {
         this.debug = debug;
     }
 
+    public Boolean getOffline() {
+        return offline;
+    }
+
+    public void setOffline(Boolean offline) {
+        this.offline = offline;
+    }
+
     public InvokerLogger getInvokerLogger() {
         return invokerLogger;
     }
@@ -210,6 +218,7 @@ public class MavenRunner {
     private Boolean quiet;
     private Boolean quietErrors;
     private Boolean debug;
+    private Boolean offline;
     private InvokerLogger invokerLogger;
     private File userSettingsFile;
     private File globalSettingsFile;
@@ -235,6 +244,7 @@ public class MavenRunner {
         quiet = false;
         quietErrors = false;
         debug = false;
+        offline = false;
     }
 
     private File getDefaultPomFile(String groupId, String artifactId, String version, String projectName) {
@@ -341,6 +351,7 @@ public class MavenRunner {
         }
 
         builder = builder.setDebug(debug);
+        builder = builder.setOffline(offline);
         builder = builder.setGoals(goals);
         builder = builder.setProfiles(profiles);
         builder = builder.setProperties(properties);
