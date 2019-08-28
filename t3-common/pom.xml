@@ -22,25 +22,6 @@
 		<maven.site.deploy.skip>true</maven.site.deploy.skip>
 	</properties>
 
-	<profiles>
-		<profile> <!-- Additional plugins & dependencies -->
-			<id>additional</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-		</profile>
-	</profiles>
-
-	<build>
-		<resources>
-			<resource>
-				<directory>src/main/resources/maven</directory>
-				<filtering>true</filtering>
-				<targetPath>maven</targetPath>
-			</resource>
-		</resources>
-	</build>
-
 	<dependencies>
 		<!-- Maven dependencies -->
 		<dependency>
