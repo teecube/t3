@@ -3,14 +3,14 @@
 
 	<groupId>io.teecube</groupId>
 	<artifactId>t3</artifactId>
-	<version>0.0.18-SNAPSHOT</version>
+	<version>0.1.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>${ecosystemName}</name> <!-- unleash: 2=<name>${ecosystemName}</name> 3=<name>&#36;{ecosystemName}</name> -->
 	<description>${ecosystemDescription}</description> <!-- unleash: 2=<description>${ecosystemDescription}</description> 3=<description>&#36;{ecosystemDescription}</description> -->
 
 	<properties>
-		<releaseVersion>0.0.17</releaseVersion> <!-- unleash: 1=<releaseVersion>${project.version}</releaseVersion> 3=<releaseVersion>${unleash.releaseVersion}</releaseVersion> -->
+		<releaseVersion>0.1.0</releaseVersion> <!-- unleash: 1=<releaseVersion>${project.version}</releaseVersion> 3=<releaseVersion>${unleash.releaseVersion}</releaseVersion> -->
 		<inceptionYear>2016</inceptionYear>
 
 		<!-- site configuration and branding -->
@@ -23,7 +23,7 @@
 		<ecosystemGroupId>io.teecube</ecosystemGroupId>
 		<ecosystemGroupIdCommon>io.teecube.t3</ecosystemGroupIdCommon>
 		<ecosystemArtifactId>t3</ecosystemArtifactId>
-		<ecosystemVersion>0.0.18-SNAPSHOT</ecosystemVersion> <!-- unleash: 1=<ecosystemVersion>${project.version}</ecosystemVersion> 3=<ecosystemVersion>${unleash.developmentVersion}</ecosystemVersion> -->
+		<ecosystemVersion>0.1.1-SNAPSHOT</ecosystemVersion> <!-- unleash: 1=<ecosystemVersion>${project.version}</ecosystemVersion> 3=<ecosystemVersion>${unleash.developmentVersion}</ecosystemVersion> -->
 
 		<!-- source configuration -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -1128,12 +1128,12 @@
 			<dependency>
 				<groupId>io.teecube.t3</groupId>
 				<artifactId>t3-common</artifactId>
-				<version>0.0.18-SNAPSHOT</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${unleash.developmentVersion}</version> -->
+				<version>0.1.1-SNAPSHOT</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${unleash.developmentVersion}</version> -->
 			</dependency>
 			<dependency>
 				<groupId>io.teecube.t3</groupId>
 				<artifactId>t3-site-enhancer</artifactId>
-				<version>0.0.18-SNAPSHOT</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${unleash.developmentVersion}</version> -->
+				<version>0.1.1-SNAPSHOT</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${unleash.developmentVersion}</version> -->
 			</dependency>
 
 			<!-- Maven dependencies -->
@@ -1669,7 +1669,7 @@
 						<plugin>
 							<groupId>io.teecube.t3</groupId>
 							<artifactId>t3-site-enhancer</artifactId>
-							<version>0.0.17</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${project.version}</version> -->
+							<version>0.1.0</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${project.version}</version> -->
 							<configuration>
 								<topMenus>
 									<topMenu>
