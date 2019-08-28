@@ -3,14 +3,14 @@
 
 	<groupId>io.teecube</groupId>
 	<artifactId>t3</artifactId>
-	<version>0.0.18-SNAPSHOT</version>
+	<version>0.1.0</version>
 	<packaging>pom</packaging>
 
-	<name>${ecosystemName}</name> <!-- unleash: 2=<name>${ecosystemName}</name> 3=<name>&#36;{ecosystemName}</name> -->
-	<description>${ecosystemDescription}</description> <!-- unleash: 2=<description>${ecosystemDescription}</description> 3=<description>&#36;{ecosystemDescription}</description> -->
+	<name>T³</name> <!-- unleash: 2=<name>${ecosystemName}</name> 3=<name>&#36;{ecosystemName}</name> -->
+	<description>T³ (teecube) stands for TIBCO Enterprise Extensions, it provides Maven plugins for Application Lifecycle Management (TIC), advanced components (TAC) and cloud-enabler features (TOE) for TIBCO products and projects.</description> <!-- unleash: 2=<description>${ecosystemDescription}</description> 3=<description>&#36;{ecosystemDescription}</description> -->
 
 	<properties>
-		<releaseVersion>0.0.17</releaseVersion> <!-- unleash: 1=<releaseVersion>${project.version}</releaseVersion> 3=<releaseVersion>${unleash.releaseVersion}</releaseVersion> -->
+		<releaseVersion>0.1.0</releaseVersion> <!-- unleash: 1=<releaseVersion>${project.version}</releaseVersion> 3=<releaseVersion>${unleash.releaseVersion}</releaseVersion> -->
 		<inceptionYear>2016</inceptionYear>
 
 		<!-- site configuration and branding -->
@@ -23,7 +23,7 @@
 		<ecosystemGroupId>io.teecube</ecosystemGroupId>
 		<ecosystemGroupIdCommon>io.teecube.t3</ecosystemGroupIdCommon>
 		<ecosystemArtifactId>t3</ecosystemArtifactId>
-		<ecosystemVersion>0.0.18-SNAPSHOT</ecosystemVersion> <!-- unleash: 1=<ecosystemVersion>${project.version}</ecosystemVersion> 3=<ecosystemVersion>${unleash.developmentVersion}</ecosystemVersion> -->
+		<ecosystemVersion>0.1.0</ecosystemVersion> <!-- unleash: 1=<ecosystemVersion>${project.version}</ecosystemVersion> 3=<ecosystemVersion>${unleash.developmentVersion}</ecosystemVersion> -->
 
 		<!-- source configuration -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -1128,12 +1128,12 @@
 			<dependency>
 				<groupId>io.teecube.t3</groupId>
 				<artifactId>t3-common</artifactId>
-				<version>0.0.18-SNAPSHOT</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${unleash.developmentVersion}</version> -->
+				<version>0.1.0</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${unleash.developmentVersion}</version> -->
 			</dependency>
 			<dependency>
 				<groupId>io.teecube.t3</groupId>
 				<artifactId>t3-site-enhancer</artifactId>
-				<version>0.0.18-SNAPSHOT</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${unleash.developmentVersion}</version> -->
+				<version>0.1.0</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${unleash.developmentVersion}</version> -->
 			</dependency>
 
 			<!-- Maven dependencies -->
@@ -1669,7 +1669,7 @@
 						<plugin>
 							<groupId>io.teecube.t3</groupId>
 							<artifactId>t3-site-enhancer</artifactId>
-							<version>0.0.17</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${project.version}</version> -->
+							<version>0.1.0</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${project.version}</version> -->
 							<configuration>
 								<topMenus>
 									<topMenu>
@@ -1955,11 +1955,11 @@
 	<distributionManagement>
 		<repository>
 			<id>t3.repo</id>
-			<url>${repositoryReleaseURL}</url> <!-- unleash: 2=<url>${repositoryReleaseURL}</url> 3=<url>&#36;{repositoryReleaseURL}</url> -->
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url> <!-- unleash: 2=<url>${repositoryReleaseURL}</url> 3=<url>&#36;{repositoryReleaseURL}</url> -->
 		</repository>
 		<snapshotRepository>
 			<id>t3.repo.snapshot</id>
-			<url>${repositorySnapshotURL}</url> <!-- unleash: 2=<url>${repositorySnapshotURL}</url> 3=<url>&#36;{repositorySnapshotURL}</url> -->
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url> <!-- unleash: 2=<url>${repositorySnapshotURL}</url> 3=<url>&#36;{repositorySnapshotURL}</url> -->
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -1971,17 +1971,17 @@
 	</licenses>
 
 	<organization>
-		<name>${ecosystemCompany}</name> <!-- unleash: 2=<name>${ecosystemCompany}</name> 3=<name>&#36;{ecosystemCompany}</name> -->
-		<url>${ecosystemCompanyURL}</url> <!-- unleash: 2=<url>${ecosystemCompanyURL}</url> 3=<url>&#36;{ecosystemCompanyURL}</url> -->
+		<name>teecube</name> <!-- unleash: 2=<name>${ecosystemCompany}</name> 3=<name>&#36;{ecosystemCompany}</name> -->
+		<url>https://teecu.be</url> <!-- unleash: 2=<url>${ecosystemCompanyURL}</url> 3=<url>&#36;{ecosystemCompanyURL}</url> -->
 	</organization>
 
 	<scm>
 		<connection>scm:git:https://git.teecu.be/teecube/t3.git</connection>
 		<developerConnection>scm:git:https://git.teecu.be/teecube/t3.git</developerConnection>
 		<url>https://git.teecu.be/teecube/t3</url>
-		<tag>HEAD</tag>
+		<tag>v0.1.0</tag>
 	</scm>
 
-	<url>${siteURL}</url> <!-- unleash: 2=<url>${siteURL}</url> 3=<url>&#36;{siteURL}</url> -->
+	<url>https://teecu.be/t3/0.1.0/</url> <!-- unleash: 2=<url>${siteURL}</url> 3=<url>&#36;{siteURL}</url> -->
 
 </project>
