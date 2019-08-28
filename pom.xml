@@ -3,7 +3,7 @@
 
 	<groupId>io.teecube</groupId>
 	<artifactId>t3</artifactId>
-	<version>0.0.18-SNAPSHOT</version>
+	<version>0.0.17</version>
 	<packaging>pom</packaging>
 
 	<name>${ecosystemName}</name> <!-- unleash: 2=<name>${ecosystemName}</name> 3=<name>&#36;{ecosystemName}</name> -->
@@ -13,6 +13,7 @@
 		<releaseVersion>0.0.17</releaseVersion> <!-- unleash: 1=<releaseVersion>${project.version}</releaseVersion> 3=<releaseVersion>${unleash.releaseVersion}</releaseVersion> -->
 		<project.scm.id>t3.git</project.scm.id>
 
+		<siteDisplayURL/>
 		<siteTopCaption>${ecosystemNameHighlight2}</siteTopCaption>
 		<siteTopLink>${siteURL}</siteTopLink>
 
@@ -29,6 +30,14 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<inceptionYear>2016</inceptionYear>
+
+		<java.source.version>1.7</java.source.version>
+		<java.target.version>1.7</java.target.version>
+
+		<mycila.plugin.license>3.0</mycila.plugin.license>
+		<jvnet.maven-jaxb2-plugin>0.14.0</jvnet.maven-jaxb2-plugin>
+		<codehaus.build-helper-maven-plugin>3.0.0</codehaus.build-helper-maven-plugin>
+		<logback-version>1.2.3</logback-version>
 	</properties>
 
 	<modules>
@@ -46,6 +55,710 @@
 		</extensions>
 		<pluginManagement>
 			<plugins>
+				<!-- Maven plugins -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>3.1.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.8.1</version>
+					<configuration>
+						<source>${java.source.version}</source>
+						<target>${java.target.version}</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.8.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>2.5.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>3.1.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.8.2</version>
+					<inherited>true</inherited>
+					<executions>
+						<execution>
+							<id>attach-descriptor</id>
+							<goals>
+								<goal>attach-descriptor</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<chmod>false</chmod>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>io.teecube.maven.skins</groupId>
+							<artifactId>reflow-velocity-tools</artifactId>
+							<version>1.1.3</version>
+						</dependency>
+						<dependency>
+							<!-- Reflow skin requires velocity 1.7 -->
+							<groupId>org.apache.velocity</groupId>
+							<artifactId>velocity</artifactId>
+							<version>1.7</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.1.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>3.1.0</version>
+					<executions>
+						<execution>
+							<id>attach-sources</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>3.1.1</version>
+					<configuration>
+						<detectLinks>true</detectLinks>
+						<detectOfflineLinks>false</detectOfflineLinks>
+						<failOnError>false</failOnError>
+						<linksource>true</linksource>
+						<sourceFileIncludes>
+							<include>**\/\*.java</include>
+						</sourceFileIncludes>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.8</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-archetype-plugin</artifactId>
+					<version>3.1.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>3.1.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>3.1.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>1.4.1</version>
+					<executions>
+						<execution>
+							<id>enforce-common-properties</id>
+							<goals>
+								<goal>enforce</goal>
+							</goals>
+							<phase>pre-site</phase>
+							<configuration>
+								<rules>
+									<!-- T³ -->
+									<requireProperty>
+										<property>ecosystemName</property>
+										<message>
+											<![CDATA[ecosystemName is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ecosystemName</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ecosystemFullName</property>
+										<message>
+											<![CDATA[ecosystemFullName is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ecosystemFullName</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ecosystemPhoneticName</property>
+										<message>
+											<![CDATA[ecosystemPhoneticName is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ecosystemPhoneticName</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ecosystemLongName</property>
+										<message>
+											<![CDATA[ecosystemLongName is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ecosystemLongName</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ecosystemNameHighlight</property>
+										<message>
+											<![CDATA[ecosystemNameHighlight is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ecosystemNameHighlight</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ecosystemNameHighlight2</property>
+										<message>
+											<![CDATA[ecosystemNameHighlight2 is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ecosystemNameHighlight2</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ecosystemSlogan</property>
+										<message>
+											<![CDATA[ecosystemSlogan is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ecosystemSlogan</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ecosystemSlogan2</property>
+										<message>
+											<![CDATA[ecosystemSlogan2 is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ecosystemSlogan2</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ecosystemPronounced</property>
+										<message>
+											<![CDATA[ecosystemPronounced is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ecosystemPronounced</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ecosystemSumUp</property>
+										<message>
+											<![CDATA[ecosystemSumUp is required]]>
+										</message>
+									</requireProperty>
+									<requireProperty>
+										<property>ecosystemSumUpRaw</property>
+										<message>
+											<![CDATA[ecosystemSumUpRaw is required]]>
+										</message>
+									</requireProperty>
+									<requireProperty>
+										<property>ecosystemGroupId</property>
+										<message>
+											<![CDATA[ecosystemGroupId is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ecosystemGroupId</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ecosystemGroupIdCommon</property>
+										<message>
+											<![CDATA[ecosystemGroupIdCommon is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ecosystemGroupIdCommon</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ecosystemArtifactId</property>
+										<message>
+											<![CDATA[ecosystemArtifactId is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ecosystemArtifactId</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ecosystemVersion</property>
+										<message>
+											<![CDATA[ecosystemVersion is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ecosystemVersion</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ecosystemCompany</property>
+										<message>
+											<![CDATA[ecosystemCompany is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ecosystemCompany</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ecosystemCompanyURL</property>
+										<message>
+											<![CDATA[ecosystemCompanyURL is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ecosystemCompanyURL</regexMessage>
+									</requireProperty>
+									<!-- TIC -->
+									<requireProperty>
+										<property>ticName</property>
+										<message>
+											<![CDATA[ticName is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ticName</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ticDisplayedName</property>
+										<message>
+											<![CDATA[ticDisplayedName is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ticDisplayedName</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ticFullName</property>
+										<message>
+											<![CDATA[ticFullName is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ticFullName</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ticSlogan</property>
+										<message>
+											<![CDATA[ticSlogan is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ticSlogan</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ticAcronym</property>
+										<message>
+											<![CDATA[ticAcronym is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ticAcronym</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ticGroupId</property>
+										<message>
+											<![CDATA[ticGroupId is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ticGroupId</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ticArtifactId</property>
+										<message>
+											<![CDATA[ticArtifactId is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ticArtifactId</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ticURLBase</property>
+										<message>
+											<![CDATA[ticURLBase is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ticURLBase</regexMessage>
+									</requireProperty>
+									<!-- TIC BW6 -->
+									<requireProperty>
+										<property>ticBW6MavenGroupId</property>
+										<message>
+											<![CDATA[ticBW6MavenGroupId is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ticBW6MavenGroupId</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ticBW6MavenArtifactId</property>
+										<message>
+											<![CDATA[ticBW6MavenArtifactId is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ticBW6MavenArtifactId</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ticBW6MavenURLBase</property>
+										<message>
+											<![CDATA[ticBW6MavenURLBase is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ticBW6MavenURLBase</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ticBW6MavenName</property>
+										<message>
+											<![CDATA[ticBW6MavenName is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ticBW6MavenName</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ticDisplayedBW6MavenName</property>
+										<message>
+											<![CDATA[ticDisplayedBW6MavenName is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ticDisplayedBW6MavenName</regexMessage>
+									</requireProperty>
+									<!-- TIC BW5 -->
+									<requireProperty>
+										<property>ticBW5MavenGroupId</property>
+										<message>
+											<![CDATA[ticBW5MavenGroupId is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ticBW5MavenGroupId</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ticBW5MavenArtifactId</property>
+										<message>
+											<![CDATA[ticBW5MavenArtifactId is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ticBW5MavenArtifactId</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ticBW5MavenURLBase</property>
+										<message>
+											<![CDATA[ticBW5MavenURLBase is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ticBW5MavenURLBase</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ticBW5MavenName</property>
+										<message>
+											<![CDATA[ticBW5MavenName is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ticBW5MavenName</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>ticDisplayedBW5MavenName</property>
+										<message>
+											<![CDATA[ticDisplayedBW5MavenName is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>ticDisplayedBW5MavenName</regexMessage>
+									</requireProperty>
+									<!-- TAC -->
+									<requireProperty>
+										<property>tacName</property>
+										<message>
+											<![CDATA[tacName is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>tacName</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>tacDisplayedName</property>
+										<message>
+											<![CDATA[tacDisplayedName is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>tacDisplayedName</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>tacFullName</property>
+										<message>
+											<![CDATA[tacFullName is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>tacFullName</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>tacSlogan</property>
+										<message>
+											<![CDATA[tacSlogan is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>tacSlogan</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>tacAcronym</property>
+										<message>
+											<![CDATA[tacAcronym is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>tacAcronym</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>tacGroupId</property>
+										<message>
+											<![CDATA[tacGroupId is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>tacGroupId</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>tacArtifactId</property>
+										<message>
+											<![CDATA[tacArtifactId is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>tacArtifactId</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>tacURLBase</property>
+										<message>
+											<![CDATA[tacURLBase is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>tacURLBase</regexMessage>
+									</requireProperty>
+									<!-- TOE -->
+									<requireProperty>
+										<property>toeName</property>
+										<message>
+											<![CDATA[toeName is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>toeName</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>toeDisplayedName</property>
+										<message>
+											<![CDATA[toeDisplayedName is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>toeDisplayedName</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>toeFullName</property>
+										<message>
+											<![CDATA[toeFullName is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>toeFullName</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>toeSlogan</property>
+										<message>
+											<![CDATA[toeSlogan is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>toeSlogan</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>toeAcronym</property>
+										<message>
+											<![CDATA[toeAcronym is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>toeAcronym</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>toeGroupId</property>
+										<message>
+											<![CDATA[toeGroupId is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>toeGroupId</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>toeArtifactId</property>
+										<message>
+											<![CDATA[toeArtifactId is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>toeArtifactId</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>toeURLBase</property>
+										<message>
+											<![CDATA[toeURLBase is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>toeURLBase</regexMessage>
+									</requireProperty>
+									<!-- TOE Installer -->
+									<requireProperty>
+										<property>toeInstallerGroupId</property>
+										<message>
+											<![CDATA[toeInstallerGroupId is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>toeInstallerGroupId</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>toeInstallerArtifactId</property>
+										<message>
+											<![CDATA[toeInstallerArtifactId is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>toeInstallerArtifactId</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>toeInstallerURLBase</property>
+										<message>
+											<![CDATA[toeInstallerURLBase is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>toeInstallerURLBase</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>toeInstallerName</property>
+										<message>
+											<![CDATA[toeInstallerName is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>toeInstallerName</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>toeDisplayedInstallerName</property>
+										<message>
+											<![CDATA[toeDisplayedInstallerName is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>toeDisplayedInstallerName</regexMessage>
+									</requireProperty>
+									<!-- TOE Domains -->
+									<requireProperty>
+										<property>toeDomainsGroupId</property>
+										<message>
+											<![CDATA[toeDomainsGroupId is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>toeDomainsGroupId</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>toeDomainsArtifactId</property>
+										<message>
+											<![CDATA[toeDomainsArtifactId is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>toeDomainsArtifactId</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>toeDomainsURLBase</property>
+										<message>
+											<![CDATA[toeDomainsURLBase is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>toeDomainsURLBase</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>toeDomainsName</property>
+										<message>
+											<![CDATA[toeDomainsName is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>toeDomainsName</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>toeDisplayedDomainsName</property>
+										<message>
+											<![CDATA[toeDisplayedDomainsName is required]]>
+										</message>
+										<regex>.*</regex>
+										<regexMessage>toeDisplayedDomainsName</regexMessage>
+									</requireProperty>
+								</rules>
+							</configuration>
+						</execution>
+						<execution>
+							<id>enforce-site</id>
+							<goals>
+								<goal>enforce</goal>
+							</goals>
+							<phase>pre-site</phase>
+							<configuration>
+								<rules>
+									<requireProperty>
+										<property>siteDisplayURL</property>
+										<message><![CDATA[siteDisplayURL]]></message>
+										<regex>.+</regex>
+										<regexMessage>siteDisplayURL property must exist and must not be empty</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>siteUploadURL</property>
+										<message><![CDATA[siteUploadURL]]></message>
+										<regex>.*</regex>
+										<regexMessage>siteUploadURL</regexMessage>
+									</requireProperty>
+									<requireProperty>
+										<property>siteUploadProtocol</property>
+										<message><![CDATA[siteUploadProtocol]]></message>
+										<regex>.*</regex>
+										<regexMessage>siteUploadProtocol</regexMessage>
+									</requireProperty>
+								</rules>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-help-plugin</artifactId>
+					<version>3.2.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-invoker-plugin</artifactId>
+					<version>3.2.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-plugin-plugin</artifactId>
+					<version>3.6.0</version>
+					<configuration>
+						<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+						<extractors>
+							<extractor>java-annotations</extractor>
+						</extractors>
+					</configuration>
+					<executions>
+						<execution>
+							<id>default-descriptor</id>
+							<goals>
+								<goal>descriptor</goal>
+							</goals>
+							<phase>process-classes</phase>
+						</execution>
+						<execution>
+							<id>generated-helpmojo</id>
+							<goals>
+								<goal>helpmojo</goal>
+							</goals>
+							<phase>generate-sources</phase>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.5.3</version>
+					<configuration>
+						<tagNameFormat>@{project.artifactId}/@{project.version}</tagNameFormat>
+						<autoVersionSubmodules>true</autoVersionSubmodules>
+						<useReleaseProfile>true</useReleaseProfile>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.plexus</groupId>
+					<artifactId>plexus-component-metadata</artifactId>
+					<version>2.0.0</version>
+				</plugin>
 				<plugin>
 					<groupId>com.itemis.maven.plugins</groupId>
 					<artifactId>unleash-maven-plugin</artifactId>
@@ -72,7 +785,108 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+			</plugin>
+		</plugins>
 	</build>
+
+	<reporting>
+		<excludeDefaults>true</excludeDefaults>
+		<outputDirectory>${project.build.directory}/site</outputDirectory>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-changelog-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.1.1</version>
+				<reportSets>
+					<reportSet>
+						<id>non-aggregate</id>
+						<reports>
+							<report>javadoc</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+				<configuration>
+					<detectLinks>true</detectLinks>
+					<detectOfflineLinks>false</detectOfflineLinks>
+					<linksource>true</linksource>
+					<sourceFileIncludes>
+						<include>**\/\*Mojo.java</include>
+					</sourceFileIncludes>
+					<doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+					<docletArtifact>
+						<groupId>org.umlgraph</groupId>
+						<artifactId>umlgraph</artifactId>
+						<version>5.6.6</version>
+					</docletArtifact>
+					<useStandardDocletOptions>false</useStandardDocletOptions>
+					<skip>${maven.javadoc.skip}</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>3.0.0</version>
+				<reportSets>
+					<reportSet>
+						<id>non-aggregate</id>
+						<reports>
+							<report>jxr</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+				<configuration>
+					<excludes>
+						<exclude>com/tibco/**/*</exclude>
+					</excludes>
+					<linkJavadoc>true</linkJavadoc>
+					<skip>${maven.jxr.skip}</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<dependencyDetailsEnabled>true</dependencyDetailsEnabled>
+					<skip>${mpir.skip}</skip>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<id>non-aggregate</id>
+						<inherited>false</inherited>
+						<reports>
+							<report>ci-management</report>
+							<report>dependencies</report>
+							<report>dependency-info</report>
+							<report>dependency-management</report>
+							<report>licenses</report>
+							<report>plugin-management</report>
+							<report>plugins</report>
+							<report>scm</report>
+							<report>summary</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-plugin-plugin</artifactId>
+				<version>3.6.0</version>
+			</plugin>
+		</plugins>
+	</reporting>
 
 	<dependencyManagement>
 		<dependencies>
@@ -100,6 +914,11 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.maven</groupId>
+				<artifactId>maven-artifact</artifactId>
+				<version>3.6.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.maven</groupId>
 				<artifactId>maven-plugin-api</artifactId>
 				<version>3.6.1</version>
 			</dependency>
@@ -119,13 +938,11 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
-
 			<dependency>
 				<groupId>org.apache.maven</groupId>
 				<artifactId>maven-embedder</artifactId>
 				<version>3.6.1</version>
 			</dependency>
-
 			<dependency>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -151,8 +968,33 @@
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>3.1.0</version>
 			</dependency>
+			<dependency>
+				<groupId>org.apache.maven.plugin-tools</groupId>
+				<artifactId>maven-plugin-tools-api</artifactId>
+				<version>3.6.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.maven</groupId>
+				<artifactId>maven-archiver</artifactId>
+				<version>3.4.0</version>
+			</dependency>
 
 			<!-- Apache commons -->
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-collections4</artifactId>
+				<version>4.4</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-configuration</groupId>
+				<artifactId>commons-configuration</artifactId>
+				<version>1.10</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-exec</artifactId>
+				<version>1.3</version>
+			</dependency>
 			<dependency>
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
@@ -161,30 +1003,64 @@
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>
-				<version>3.8.1</version>
+				<version>3.9</version>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-collections4</artifactId>
-				<version>4.2</version>
+				<groupId>org.apache.ant</groupId>
+				<artifactId>ant</artifactId>
+				<version>1.10.6</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-compress</artifactId>
 				<version>1.18</version>
 			</dependency>
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-exec</artifactId>
-				<version>1.3</version>
+
+			<!-- Codehaus -->
+			<dependency> <!-- generated help mojo has a dependency to plexus-utils -->
+				<groupId>org.codehaus.plexus</groupId>
+				<artifactId>plexus-archiver</artifactId>
+				<version>4.1.0</version>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.ant</groupId>
-				<artifactId>ant</artifactId>
-				<version>1.10.5</version>
+				<groupId>org.codehaus.plexus</groupId>
+				<artifactId>plexus-container-default</artifactId>
+				<version>2.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.plexus</groupId>
+				<artifactId>plexus-interpolation</artifactId>
+				<version>1.26</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.plexus</groupId>
+				<artifactId>plexus-utils</artifactId>
+				<version>3.2.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>truezip-utils</artifactId>
+				<version>1.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>truezip-maven-plugin</artifactId>
+				<version>1.2</version>
 			</dependency>
 
 			<!-- others -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.12</version>
+			</dependency>
+			<dependency>
+				<groupId>com.ibm.icu</groupId>
+				<artifactId>icu4j</artifactId>
+				<version>64.2</version>
+				<!-- force version of this transitive dependencies to avoid this bug:
+					https://bugs.eclipse.org/bugs/show_bug.cgi?id=418583 -->
+			</dependency>
 			<dependency>
 				<groupId>org.reflections</groupId>
 				<artifactId>reflections</artifactId>
@@ -208,36 +1084,46 @@
 			<dependency>
 				<groupId>org.jooq</groupId>
 				<artifactId>joox</artifactId>
-				<version>1.6.0</version>
+				<version>1.3.0</version> <!-- do not update -->
 			</dependency>
 			<dependency>
 				<groupId>org.rendersnake</groupId>
 				<artifactId>rendersnake</artifactId>
-				<version>1.8</version>
+				<version>1.9.0</version>
+			</dependency>
+			<dependency> <!-- using MOXy to have proper namespace prefixes handling -->
+				<groupId>org.eclipse.persistence</groupId>
+				<artifactId>org.eclipse.persistence.moxy</artifactId>
+				<version>2.7.4</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.mail</groupId>
+				<artifactId>javax.mail-api</artifactId>
+				<version>1.6.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jdom</groupId>
+				<artifactId>jdom2</artifactId>
+				<version>2.0.6</version>
+			</dependency>
+			<dependency>
+				<groupId>jaxen</groupId>
+				<artifactId>jaxen</artifactId>
+				<version>1.2.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
-				<version>1.14.8</version>
 				<!-- do not update version. details:
-                * https://stackoverflow.com/questions/35550460/writing-custom-lombok-annotation-handlers
-                * https://groups.google.com/forum/#!topic/project-lombok/xI177a9BykQ
-                -->
+					* https://stackoverflow.com/questions/35550460/writing-custom-lombok-annotation-handlers
+					* https://groups.google.com/forum/#!topic/project-lombok/xI177a9BykQ
+				-->
+				<version>1.14.8</version>
 			</dependency>
 			<dependency>
 				<groupId>org.kohsuke.metainf-services</groupId>
 				<artifactId>metainf-services</artifactId>
 				<version>1.8</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>1.7.5</version>
-			</dependency>
-			<dependency>
-				<groupId>com.mashape.unirest</groupId>
-				<artifactId>unirest-java</artifactId>
-				<version>1.4.9</version>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
@@ -262,13 +1148,27 @@
 			<dependency>
 				<groupId>joda-time</groupId>
 				<artifactId>joda-time</artifactId>
-				<version>2.10</version>
+				<version>2.10.3</version>
 			</dependency>
-
+			<dependency>
+				<groupId>com.mashape.unirest</groupId>
+				<artifactId>unirest-java</artifactId>
+				<version>1.4.9</version>
+			</dependency>
 			<dependency>
 				<groupId>com.vladsch.flexmark</groupId>
 				<artifactId>flexmark-all</artifactId>
-                <version>0.19.3</version>
+				<version>0.19.3</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.7.5</version>
+			</dependency>
+			<dependency>
+				<groupId>org.kohsuke</groupId>
+				<artifactId>wordnet-random-name</artifactId>
+				<version>1.3</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -277,7 +1177,7 @@
 		<profile>
 			<id>release-profile</id>
 			<activation>
-				<!-- activation is triggered by maven-release-plugin -->
+				<!-- activation is triggered by maven-release-plugin or unleash -->
 				<property>
 					<name>performRelease</name>
 					<value>true</value>
@@ -288,7 +1188,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-enforcer-plugin</artifactId>
-						<version>${maven.plugin.enforcer}</version>
+						<version>1.4.1</version>
 						<executions>
 							<execution>
 								<id>enforce-release-properties</id>
@@ -455,986 +1355,6 @@
 				<toeDisplayedDomainsName><![CDATA[<span class="color-highlight">D</span>omains <span class="color-highlight">M</span>anager]]></toeDisplayedDomainsName>
 			</properties>
 		</profile>
-		<profile> <!-- Maven plugins & dependencies -->
-			<id>maven</id> <!-- Maven plugins and dependencies -->
-			<activation>
-				<activeByDefault>true</activeByDefault>
-				<file>
-					<missing>ignore.maven.dependencies</missing>
-				</file>
-			</activation>
-			<properties>
-				<java.source.version>1.7</java.source.version>
-				<java.target.version>1.7</java.target.version>
-
-				<!-- default Maven artifacts versions -->
-				<maven.version>3.6.1</maven.version>
-				<maven.project>3.0-alpha-2</maven.project>
-				<maven.archiver>3.2.0</maven.archiver>
-
-				<maven.plugin.annotations>3.6.0</maven.plugin.annotations>
-				<maven.plugin.clean>3.1.0</maven.plugin.clean>
-				<maven.plugin.compiler>3.8.0</maven.plugin.compiler>
-				<maven.plugin.deploy>2.8.2</maven.plugin.deploy> <!-- WARN: references exist in Java code -->
-				<maven.plugin.install>2.5.2</maven.plugin.install> <!-- WARN: references exist in Java code -->
-				<maven.plugin.resources>3.1.0</maven.plugin.resources>
-				<maven.plugin.site>3.7.1</maven.plugin.site>
-				<maven.plugin.tools-api>3.6.0</maven.plugin.tools-api>
-
-				<maven.plugin.jar>3.1.0</maven.plugin.jar>
-				<maven.plugin.source>3.0.1</maven.plugin.source>
-
-				<maven.plugin.changelog>2.3</maven.plugin.changelog>
-				<maven.plugin.javadoc>3.0.1</maven.plugin.javadoc>
-				<maven.plugin.jxr>2.5</maven.plugin.jxr>
-				<maven.plugin.project-info-reports>3.0.0</maven.plugin.project-info-reports>
-
-				<maven.plugin.antrun>1.8</maven.plugin.antrun>
-				<maven.plugin.archetype>3.0.1</maven.plugin.archetype>
-				<maven.plugin.assembly>3.1.0</maven.plugin.assembly>
-				<maven.plugin.dependency>3.1.1</maven.plugin.dependency> <!-- WARN: references exist in Java code -->
-				<maven.plugin.enforcer>1.4.1</maven.plugin.enforcer> <!-- WARN: references exist in Java code -->
-				<maven.plugin.help>3.1.0</maven.plugin.help>
-				<maven.plugin.invoker>3.1.0</maven.plugin.invoker>
-				<maven.plugin.plugin>3.6.0</maven.plugin.plugin>
-				<maven.plugin.release>2.5.3</maven.plugin.release>
-
-				<plexus.component.metadata>1.7.1</plexus.component.metadata>
-
-				<siteDisplayURL/>
-			</properties>
-
-			<build>
-				<pluginManagement>
-					<plugins>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-clean-plugin</artifactId>
-							<version>${maven.plugin.clean}</version>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-compiler-plugin</artifactId>
-							<version>${maven.plugin.compiler}</version>
-							<configuration>
-								<source>${java.source.version}</source>
-								<target>${java.target.version}</target>
-							</configuration>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-deploy-plugin</artifactId>
-							<version>${maven.plugin.deploy}</version>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-install-plugin</artifactId>
-							<version>${maven.plugin.install}</version>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-resources-plugin</artifactId>
-							<version>${maven.plugin.resources}</version>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-site-plugin</artifactId>
-							<version>${maven.plugin.site}</version>
-							<inherited>true</inherited>
-							<executions>
-								<execution>
-									<id>attach-descriptor</id>
-									<goals>
-										<goal>attach-descriptor</goal>
-									</goals>
-								</execution>
-							</executions>
-							<configuration>
-								<chmod>false</chmod>
-							</configuration>
-							<dependencies>
-								<dependency>
-									<groupId>io.teecube.maven.skins</groupId>
-									<artifactId>reflow-velocity-tools</artifactId>
-									<version>1.1.3</version>
-								</dependency>
-								<dependency>
-									<!-- Reflow skin requires velocity 1.7 -->
-									<groupId>org.apache.velocity</groupId>
-									<artifactId>velocity</artifactId>
-									<version>1.7</version>
-								</dependency>
-							</dependencies>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-jar-plugin</artifactId>
-							<version>${maven.plugin.jar}</version>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-source-plugin</artifactId>
-							<version>${maven.plugin.source}</version>
-							<executions>
-								<execution>
-									<id>attach-sources</id>
-									<goals>
-										<goal>jar</goal>
-									</goals>
-								</execution>
-							</executions>
-						</plugin>
-
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-javadoc-plugin</artifactId>
-							<version>${maven.plugin.javadoc}</version>
-							<configuration>
-								<detectLinks>true</detectLinks>
-								<detectOfflineLinks>false</detectOfflineLinks>
-								<failOnError>false</failOnError>
-								<links>
-									<link>http://java.sun.com/javase/6/docs/api</link>
-									<link>http://maven.apache.org/ref/${maven.version}/maven-artifact/apidocs</link>
-									<link>http://maven.apache.org/shared/maven-reporting-api/apidocs</link>
-									<link>http://maven.apache.org/ref/${maven.version}/maven-plugin-api/apidocs</link>
-									<link>http://maven.apache.org/ref/${maven.version}/maven-model/apidocs</link>
-									<link>http://maven.apache.org/ref/${maven.version}/maven-core/apidocs</link>
-									<link>http://maven.apache.org/ref/${maven.version}/maven-settings/apidocs</link>
-								</links>
-								<linksource>true</linksource>
-								<sourceFileIncludes>
-									<include>**\/\*.java</include>
-								</sourceFileIncludes>
-							</configuration>
-						</plugin>
-
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-antrun-plugin</artifactId>
-							<version>${maven.plugin.antrun}</version>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-archetype-plugin</artifactId>
-							<version>${maven.plugin.archetype}</version>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-assembly-plugin</artifactId>
-							<version>${maven.plugin.assembly}</version>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-dependency-plugin</artifactId>
-							<version>${maven.plugin.dependency}</version>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-enforcer-plugin</artifactId>
-							<version>${maven.plugin.enforcer}</version>
-							<executions>
-								<execution>
-									<id>enforce-common-properties</id>
-									<goals>
-										<goal>enforce</goal>
-									</goals>
-									<phase>pre-site</phase>
-									<configuration>
-										<rules>
-											<!-- T³ -->
-											<requireProperty>
-												<property>ecosystemName</property>
-												<message>
-													<![CDATA[ecosystemName is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ecosystemName</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ecosystemFullName</property>
-												<message>
-													<![CDATA[ecosystemFullName is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ecosystemFullName</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ecosystemPhoneticName</property>
-												<message>
-													<![CDATA[ecosystemPhoneticName is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ecosystemPhoneticName</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ecosystemLongName</property>
-												<message>
-													<![CDATA[ecosystemLongName is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ecosystemLongName</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ecosystemNameHighlight</property>
-												<message>
-													<![CDATA[ecosystemNameHighlight is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ecosystemNameHighlight</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ecosystemNameHighlight2</property>
-												<message>
-													<![CDATA[ecosystemNameHighlight2 is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ecosystemNameHighlight2</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ecosystemSlogan</property>
-												<message>
-													<![CDATA[ecosystemSlogan is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ecosystemSlogan</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ecosystemSlogan2</property>
-												<message>
-													<![CDATA[ecosystemSlogan2 is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ecosystemSlogan2</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ecosystemPronounced</property>
-												<message>
-													<![CDATA[ecosystemPronounced is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ecosystemPronounced</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ecosystemSumUp</property>
-												<message>
-													<![CDATA[ecosystemSumUp is required]]>
-												</message>
-											</requireProperty>
-											<requireProperty>
-												<property>ecosystemSumUpRaw</property>
-												<message>
-													<![CDATA[ecosystemSumUpRaw is required]]>
-												</message>
-											</requireProperty>
-											<requireProperty>
-												<property>ecosystemGroupId</property>
-												<message>
-													<![CDATA[ecosystemGroupId is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ecosystemGroupId</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ecosystemGroupIdCommon</property>
-												<message>
-													<![CDATA[ecosystemGroupIdCommon is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ecosystemGroupIdCommon</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ecosystemArtifactId</property>
-												<message>
-													<![CDATA[ecosystemArtifactId is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ecosystemArtifactId</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ecosystemVersion</property>
-												<message>
-													<![CDATA[ecosystemVersion is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ecosystemVersion</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ecosystemCompany</property>
-												<message>
-													<![CDATA[ecosystemCompany is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ecosystemCompany</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ecosystemCompanyURL</property>
-												<message>
-													<![CDATA[ecosystemCompanyURL is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ecosystemCompanyURL</regexMessage>
-											</requireProperty>
-											<!-- TIC -->
-											<requireProperty>
-												<property>ticName</property>
-												<message>
-													<![CDATA[ticName is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ticName</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ticDisplayedName</property>
-												<message>
-													<![CDATA[ticDisplayedName is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ticDisplayedName</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ticFullName</property>
-												<message>
-													<![CDATA[ticFullName is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ticFullName</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ticSlogan</property>
-												<message>
-													<![CDATA[ticSlogan is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ticSlogan</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ticAcronym</property>
-												<message>
-													<![CDATA[ticAcronym is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ticAcronym</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ticGroupId</property>
-												<message>
-													<![CDATA[ticGroupId is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ticGroupId</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ticArtifactId</property>
-												<message>
-													<![CDATA[ticArtifactId is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ticArtifactId</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ticURLBase</property>
-												<message>
-													<![CDATA[ticURLBase is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ticURLBase</regexMessage>
-											</requireProperty>
-											<!-- TIC BW6 -->
-											<requireProperty>
-												<property>ticBW6MavenGroupId</property>
-												<message>
-													<![CDATA[ticBW6MavenGroupId is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ticBW6MavenGroupId</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ticBW6MavenArtifactId</property>
-												<message>
-													<![CDATA[ticBW6MavenArtifactId is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ticBW6MavenArtifactId</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ticBW6MavenURLBase</property>
-												<message>
-													<![CDATA[ticBW6MavenURLBase is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ticBW6MavenURLBase</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ticBW6MavenName</property>
-												<message>
-													<![CDATA[ticBW6MavenName is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ticBW6MavenName</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ticDisplayedBW6MavenName</property>
-												<message>
-													<![CDATA[ticDisplayedBW6MavenName is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ticDisplayedBW6MavenName</regexMessage>
-											</requireProperty>
-											<!-- TIC BW5 -->
-											<requireProperty>
-												<property>ticBW5MavenGroupId</property>
-												<message>
-													<![CDATA[ticBW5MavenGroupId is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ticBW5MavenGroupId</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ticBW5MavenArtifactId</property>
-												<message>
-													<![CDATA[ticBW5MavenArtifactId is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ticBW5MavenArtifactId</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ticBW5MavenURLBase</property>
-												<message>
-													<![CDATA[ticBW5MavenURLBase is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ticBW5MavenURLBase</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ticBW5MavenName</property>
-												<message>
-													<![CDATA[ticBW5MavenName is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ticBW5MavenName</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>ticDisplayedBW5MavenName</property>
-												<message>
-													<![CDATA[ticDisplayedBW5MavenName is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>ticDisplayedBW5MavenName</regexMessage>
-											</requireProperty>
-											<!-- TAC -->
-											<requireProperty>
-												<property>tacName</property>
-												<message>
-													<![CDATA[tacName is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>tacName</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>tacDisplayedName</property>
-												<message>
-													<![CDATA[tacDisplayedName is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>tacDisplayedName</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>tacFullName</property>
-												<message>
-													<![CDATA[tacFullName is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>tacFullName</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>tacSlogan</property>
-												<message>
-													<![CDATA[tacSlogan is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>tacSlogan</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>tacAcronym</property>
-												<message>
-													<![CDATA[tacAcronym is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>tacAcronym</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>tacGroupId</property>
-												<message>
-													<![CDATA[tacGroupId is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>tacGroupId</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>tacArtifactId</property>
-												<message>
-													<![CDATA[tacArtifactId is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>tacArtifactId</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>tacURLBase</property>
-												<message>
-													<![CDATA[tacURLBase is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>tacURLBase</regexMessage>
-											</requireProperty>
-											<!-- TOE -->
-											<requireProperty>
-												<property>toeName</property>
-												<message>
-													<![CDATA[toeName is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>toeName</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>toeDisplayedName</property>
-												<message>
-													<![CDATA[toeDisplayedName is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>toeDisplayedName</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>toeFullName</property>
-												<message>
-													<![CDATA[toeFullName is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>toeFullName</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>toeSlogan</property>
-												<message>
-													<![CDATA[toeSlogan is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>toeSlogan</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>toeAcronym</property>
-												<message>
-													<![CDATA[toeAcronym is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>toeAcronym</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>toeGroupId</property>
-												<message>
-													<![CDATA[toeGroupId is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>toeGroupId</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>toeArtifactId</property>
-												<message>
-													<![CDATA[toeArtifactId is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>toeArtifactId</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>toeURLBase</property>
-												<message>
-													<![CDATA[toeURLBase is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>toeURLBase</regexMessage>
-											</requireProperty>
-											<!-- TOE Installer -->
-											<requireProperty>
-												<property>toeInstallerGroupId</property>
-												<message>
-													<![CDATA[toeInstallerGroupId is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>toeInstallerGroupId</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>toeInstallerArtifactId</property>
-												<message>
-													<![CDATA[toeInstallerArtifactId is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>toeInstallerArtifactId</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>toeInstallerURLBase</property>
-												<message>
-													<![CDATA[toeInstallerURLBase is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>toeInstallerURLBase</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>toeInstallerName</property>
-												<message>
-													<![CDATA[toeInstallerName is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>toeInstallerName</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>toeDisplayedInstallerName</property>
-												<message>
-													<![CDATA[toeDisplayedInstallerName is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>toeDisplayedInstallerName</regexMessage>
-											</requireProperty>
-											<!-- TOE Domains -->
-											<requireProperty>
-												<property>toeDomainsGroupId</property>
-												<message>
-													<![CDATA[toeDomainsGroupId is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>toeDomainsGroupId</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>toeDomainsArtifactId</property>
-												<message>
-													<![CDATA[toeDomainsArtifactId is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>toeDomainsArtifactId</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>toeDomainsURLBase</property>
-												<message>
-													<![CDATA[toeDomainsURLBase is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>toeDomainsURLBase</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>toeDomainsName</property>
-												<message>
-													<![CDATA[toeDomainsName is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>toeDomainsName</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>toeDisplayedDomainsName</property>
-												<message>
-													<![CDATA[toeDisplayedDomainsName is required]]>
-												</message>
-												<regex>.*</regex>
-												<regexMessage>toeDisplayedDomainsName</regexMessage>
-											</requireProperty>
-										</rules>
-									</configuration>
-								</execution>
-								<execution>
-									<id>enforce-site</id>
-									<goals>
-										<goal>enforce</goal>
-									</goals>
-									<phase>pre-site</phase>
-									<configuration>
-										<rules>
-											<requireProperty>
-												<property>siteDisplayURL</property>
-												<message><![CDATA[siteDisplayURL]]></message>
-												<regex>.+</regex>
-												<regexMessage>siteDisplayURL property must exist and must not be empty</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>siteUploadURL</property>
-												<message><![CDATA[siteUploadURL]]></message>
-												<regex>.*</regex>
-												<regexMessage>siteUploadURL</regexMessage>
-											</requireProperty>
-											<requireProperty>
-												<property>siteUploadProtocol</property>
-												<message><![CDATA[siteUploadProtocol]]></message>
-												<regex>.*</regex>
-												<regexMessage>siteUploadProtocol</regexMessage>
-											</requireProperty>
-										</rules>
-									</configuration>
-								</execution>
-							</executions>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-help-plugin</artifactId>
-							<version>${maven.plugin.help}</version>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-invoker-plugin</artifactId>
-							<version>${maven.plugin.invoker}</version>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-plugin-plugin</artifactId>
-							<version>${maven.plugin.plugin}</version>
-							<configuration>
-								<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-								<extractors>
-									<extractor>java-annotations</extractor>
-								</extractors>
-							</configuration>
-							<executions>
-								<execution>
-									<id>default-descriptor</id>
-									<goals>
-										<goal>descriptor</goal>
-									</goals>
-									<phase>process-classes</phase>
-								</execution>
-								<execution>
-									<id>generated-helpmojo</id>
-									<goals>
-										<goal>helpmojo</goal>
-									</goals>
-									<phase>generate-sources</phase>
-								</execution>
-							</executions>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-release-plugin</artifactId>
-							<version>${maven.plugin.release}</version>
-							<configuration>
-								<tagNameFormat>@{project.artifactId}/@{project.version}</tagNameFormat>
-								<autoVersionSubmodules>true</autoVersionSubmodules>
-								<useReleaseProfile>true</useReleaseProfile>
-							</configuration>
-						</plugin>
-						<plugin>
-							<groupId>org.codehaus.plexus</groupId>
-							<artifactId>plexus-component-metadata</artifactId>
-							<version>${plexus.component.metadata}</version>
-						</plugin>
-					</plugins>
-				</pluginManagement>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-					</plugin>
-				</plugins>
-			</build>
-			<reporting>
-				<excludeDefaults>true</excludeDefaults>
-				<outputDirectory>${project.build.directory}/site</outputDirectory>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-changelog-plugin</artifactId>
-						<version>${maven.plugin.changelog}</version>
-						<configuration>
-							<skip>true</skip>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>${maven.plugin.javadoc}</version>
-						<reportSets>
-							<reportSet>
-								<id>non-aggregate</id>
-								<reports>
-									<report>javadoc</report>
-								</reports>
-							</reportSet>
-						</reportSets>
-						<configuration>
-							<detectLinks>true</detectLinks>
-							<detectOfflineLinks>false</detectOfflineLinks>
-							<links>
-								<link>http://java.sun.com/javase/6/docs/api</link>
-								<link>http://maven.apache.org/ref/${maven.version}/maven-artifact/apidocs</link>
-								<link>http://maven.apache.org/shared/maven-reporting-api/apidocs</link>
-								<link>http://maven.apache.org/ref/${maven.version}/maven-plugin-api/apidocs</link>
-								<link>http://maven.apache.org/ref/${maven.version}/maven-model/apidocs</link>
-								<link>http://maven.apache.org/ref/${maven.version}/maven-core/apidocs</link>
-								<link>http://maven.apache.org/ref/${maven.version}/maven-settings/apidocs</link>
-							</links>
-							<linksource>true</linksource>
-							<sourceFileIncludes>
-								<include>**\/\*Mojo.java</include>
-							</sourceFileIncludes>
-							<tags>
-								<tag>
-									<name>example.</name>
-									<placement>aoptcmf</placement>
-									<head>Example :</head>
-								</tag>
-							</tags>
-							<doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
-							<docletArtifact>
-								<groupId>org.umlgraph</groupId>
-								<artifactId>umlgraph</artifactId>
-								<version>5.6.6</version>
-							</docletArtifact>
-							<useStandardDocletOptions>false</useStandardDocletOptions>
-							<skip>${maven.javadoc.skip}</skip>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-jxr-plugin</artifactId>
-						<version>${maven.plugin.jxr}</version>
-						<reportSets>
-							<reportSet>
-								<id>non-aggregate</id>
-								<reports>
-									<report>jxr</report>
-								</reports>
-							</reportSet>
-						</reportSets>
-						<configuration>
-							<excludes>
-								<exclude>com/tibco/**/*</exclude>
-							</excludes>
-							<linkJavadoc>true</linkJavadoc>
-							<skip>${maven.jxr.skip}</skip>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-project-info-reports-plugin</artifactId>
-						<version>${maven.plugin.project-info-reports}</version>
-						<configuration>
-							<dependencyDetailsEnabled>true</dependencyDetailsEnabled>
-							<skip>${mpir.skip}</skip>
-						</configuration>
-						<!-- <inherited>false</inherited> -->
-						<reportSets>
-							<reportSet>
-								<id>non-aggregate</id>
-								<inherited>false</inherited>
-								<reports>
-									<report>ci-management</report>
-									<report>dependencies</report>
-									<!-- <report>dependency-convergence</report> -->
-									<report>dependency-info</report>
-									<report>dependency-management</report>
-									<!-- <report>distribution-management</report> -->
-									<!-- <report>help</report> -->
-									<!-- <report>index</report> -->
-									<!-- <report>issue-tracking</report> -->
-									<report>licenses</report>
-									<!-- <report>mailing-list</report> -->
-									<!-- <report>modules</report> -->
-									<report>plugin-management</report>
-									<report>plugins</report>
-									<!-- <report>project-team</report> -->
-									<report>scm</report>
-									<report>summary</report>
-								</reports>
-							</reportSet>
-						</reportSets>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-plugin-plugin</artifactId>
-						<version>${maven.plugin.plugin}</version>
-					</plugin>
-				</plugins>
-			</reporting>
-			<dependencyManagement>
-				<dependencies>
-					<!-- Maven dependencies -->
-					<dependency>
-						<groupId>org.apache.maven</groupId>
-						<artifactId>maven-project</artifactId>
-						<version>${maven.project}</version>
-						<exclusions>
-							<exclusion>
-								<groupId>com.google.collections</groupId>
-								<artifactId>google-collections</artifactId>
-							</exclusion>
-						</exclusions>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.maven</groupId>
-						<artifactId>maven-core</artifactId>
-						<version>${maven.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.maven</groupId>
-						<artifactId>maven-model</artifactId>
-						<version>${maven.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.maven</groupId>
-						<artifactId>maven-plugin-api</artifactId>
-						<version>${maven.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.maven.plugin-tools</groupId>
-						<artifactId>maven-plugin-tools-api</artifactId>
-						<version>${maven.plugin.tools-api}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.maven</groupId>
-						<artifactId>maven-archiver</artifactId>
-						<version>${maven.archiver}</version>
-					</dependency>
-
-					<dependency>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-dependency-plugin</artifactId>
-						<version>${maven.plugin.dependency}</version>
-						<exclusions>
-							<exclusion>
-								<groupId>org.eclipse.aether</groupId>
-								<artifactId>aether-util</artifactId>
-							</exclusion>
-						</exclusions>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-deploy-plugin</artifactId>
-						<version>${maven.plugin.deploy}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-enforcer-plugin</artifactId>
-						<version>${maven.plugin.enforcer}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-install-plugin</artifactId>
-						<version>${maven.plugin.install}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-resources-plugin</artifactId>
-						<version>${maven.plugin.resources}</version>
-					</dependency>
-
-					<!-- dependencies to annotations -->
-					<dependency>
-						<groupId>org.apache.maven.plugin-tools</groupId>
-						<artifactId>maven-plugin-annotations</artifactId>
-						<version>${maven.plugin.annotations}</version>
-					</dependency>
-
-					<dependency>
-						<groupId>org.apache.maven</groupId>
-						<artifactId>maven-embedder</artifactId>
-						<version>${maven.version}</version>
-					</dependency>
-				</dependencies>
-			</dependencyManagement>
-		</profile>
 		<profile>
 			<id>skip-reports</id>
 			<activation>
@@ -1454,258 +1374,6 @@
 					<missing>ignore.additional.dependencies</missing>
 				</file>
 			</activation>
-			<properties>
-				<apache.plugin.commons-collections>4.2</apache.plugin.commons-collections>
-				<apache.plugin.commons-configuration>1.10</apache.plugin.commons-configuration>
-				<apache.plugin.commons-exec>1.3</apache.plugin.commons-exec>
-				<apache.plugin.commons-io>2.6</apache.plugin.commons-io>
-				<apache.plugin.commons-lang3>3.8.1</apache.plugin.commons-lang3>
-				<apache.plugin.ant>1.10.5</apache.plugin.ant>
-				<apache.plugin.commons-compress>1.18</apache.plugin.commons-compress>
-
-				<junit.plugin>4.12</junit.plugin>
-
-				<mycila.plugin.license>3.0</mycila.plugin.license>
-
-				<jvnet.maven-jaxb2-plugin>0.14.0</jvnet.maven-jaxb2-plugin>
-				<codehaus.build-helper-maven-plugin>3.0.0</codehaus.build-helper-maven-plugin>
-
-				<org.reflections.version>0.9.11</org.reflections.version>
-				<mojo-executor.version>2.3.0</mojo-executor.version>
-				<guava.version>26.0-jre</guava.version>
-				<dom4j.version>1.6.1</dom4j.version>
-				<joox.version>1.3.0</joox.version> <!-- do not update -->
-
-				<plexus-archiver.version>3.6.0</plexus-archiver.version>
-				<plexus-container-default.version>1.7.1</plexus-container-default.version>
-				<plexus-interpolation.version>1.25</plexus-interpolation.version>
-				<plexus-utils.version>3.1.0</plexus-utils.version>
-
-				<icu4j.version>52.1</icu4j.version>
-
-				<rendersnake-version>1.9.0</rendersnake-version>
-				<moxy-version>2.7.3</moxy-version>
-				<javax.mail-api>1.6.2</javax.mail-api>
-				<truezip-version>1.2</truezip-version>
-				<jdom-version>2.0.6</jdom-version>
-				<jaxen-version>1.1.6</jaxen-version>
-				<logback-version>1.2.3</logback-version>
-				<lombok-version>1.14.8</lombok-version> <!-- do not update version. details:
-                * https://stackoverflow.com/questions/35550460/writing-custom-lombok-annotation-handlers
-                * https://groups.google.com/forum/#!topic/project-lombok/xI177a9BykQ
-                -->
-				<metainf-services-version>1.8</metainf-services-version>
-				<jackson-version>2.9.9</jackson-version>
-				<joda-time-version>2.10</joda-time-version>
-				<unirest-version>1.4.9</unirest-version>
-			</properties>
-			<dependencyManagement>
-				<dependencies>
-					<dependency>
-						<groupId>io.teecube.t3</groupId>
-						<artifactId>t3-common</artifactId>
-						<version>0.0.18-SNAPSHOT</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${unleash.developmentVersion}</version> -->
-					</dependency>
-
-					<dependency>
-						<groupId>org.apache.commons</groupId>
-						<artifactId>commons-collections4</artifactId>
-						<version>${apache.plugin.commons-collections}</version>
-					</dependency>
-					<dependency>
-						<groupId>commons-configuration</groupId>
-						<artifactId>commons-configuration</artifactId>
-						<version>${apache.plugin.commons-configuration}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.commons</groupId>
-						<artifactId>commons-exec</artifactId>
-						<version>${apache.plugin.commons-exec}</version>
-					</dependency>
-					<dependency>
-						<groupId>commons-io</groupId>
-						<artifactId>commons-io</artifactId>
-						<version>${apache.plugin.commons-io}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.commons</groupId>
-						<artifactId>commons-lang3</artifactId>
-						<version>${apache.plugin.commons-lang3}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.ant</groupId>
-						<artifactId>ant</artifactId>
-						<version>${apache.plugin.ant}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.commons</groupId>
-						<artifactId>commons-compress</artifactId>
-						<version>${apache.plugin.commons-compress}</version>
-					</dependency>
-
-					<dependency>
-						<groupId>junit</groupId>
-						<artifactId>junit</artifactId>
-						<version>${junit.plugin}</version>
-					</dependency>
-
-					<!-- generated help mojo has a dependency to plexus-utils -->
-					<dependency>
-						<groupId>org.codehaus.plexus</groupId>
-						<artifactId>plexus-archiver</artifactId>
-						<version>${plexus-archiver.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.codehaus.plexus</groupId>
-						<artifactId>plexus-container-default</artifactId>
-						<version>${plexus-container-default.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.codehaus.plexus</groupId>
-						<artifactId>plexus-interpolation</artifactId>
-						<version>${plexus-interpolation.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.codehaus.plexus</groupId>
-						<artifactId>plexus-utils</artifactId>
-						<version>${plexus-utils.version}</version>
-					</dependency>
-
-					<!-- force version of this transitive dependencies to avoid this bug:
-						https://bugs.eclipse.org/bugs/show_bug.cgi?id=418583 -->
-					<dependency>
-						<groupId>com.ibm.icu</groupId>
-						<artifactId>icu4j</artifactId>
-						<version>${icu4j.version}</version>
-					</dependency>
-
-					<dependency>
-						<groupId>org.reflections</groupId>
-						<artifactId>reflections</artifactId>
-						<version>${org.reflections.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.twdata.maven</groupId>
-						<artifactId>mojo-executor</artifactId>
-						<version>${mojo-executor.version}</version>
-					</dependency>
-
-					<dependency>
-						<groupId>com.google.guava</groupId>
-						<artifactId>guava</artifactId>
-						<version>${guava.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>dom4j</groupId>
-						<artifactId>dom4j</artifactId>
-						<version>${dom4j.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.jooq</groupId>
-						<artifactId>joox</artifactId>
-						<version>${joox.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.rendersnake</groupId>
-						<artifactId>rendersnake</artifactId>
-						<version>${rendersnake-version}</version>
-					</dependency>
-
-					<!-- We use MOXy to have proper namespace prefixes handling -->
-					<dependency>
-						<groupId>org.eclipse.persistence</groupId>
-						<artifactId>org.eclipse.persistence.moxy</artifactId>
-						<version>${moxy-version}</version>
-					</dependency>
-
-					<dependency>
-						<groupId>javax.mail</groupId>
-						<artifactId>javax.mail-api</artifactId>
-						<version>${javax.mail-api}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>truezip-utils</artifactId>
-						<version>${truezip-version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>truezip-maven-plugin</artifactId>
-						<version>${truezip-version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.jdom</groupId>
-						<artifactId>jdom2</artifactId>
-						<version>${jdom-version}</version>
-					</dependency>
-					<dependency>
-						<groupId>jaxen</groupId>
-						<artifactId>jaxen</artifactId>
-						<version>${jaxen-version}</version>
-					</dependency>
-
-					<dependency>
-						<groupId>org.projectlombok</groupId>
-						<artifactId>lombok</artifactId>
-						<version>${lombok-version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.kohsuke.metainf-services</groupId>
-						<artifactId>metainf-services</artifactId>
-						<version>${metainf-services-version}</version>
-					</dependency>
-
-					<dependency>
-						<groupId>com.fasterxml.jackson.core</groupId>
-						<artifactId>jackson-core</artifactId>
-						<version>${jackson-version}</version>
-					</dependency>
-					<dependency>
-						<groupId>com.fasterxml.jackson.core</groupId>
-						<artifactId>jackson-databind</artifactId>
-						<version>${jackson-version}</version>
-					</dependency>
-					<dependency>
-						<groupId>com.fasterxml.jackson.core</groupId>
-						<artifactId>jackson-annotations</artifactId>
-						<version>${jackson-version}</version>
-					</dependency>
-					<dependency>
-						<groupId>com.fasterxml.jackson.datatype</groupId>
-						<artifactId>jackson-datatype-joda</artifactId>
-						<version>${jackson-version}</version>
-					</dependency>
-
-					<dependency>
-						<groupId>joda-time</groupId>
-						<artifactId>joda-time</artifactId>
-						<version>${joda-time-version}</version>
-					</dependency>
-
-					<dependency>
-						<groupId>com.mashape.unirest</groupId>
-						<artifactId>unirest-java</artifactId>
-						<version>${unirest-version}</version>
-					</dependency>
-
-					<dependency>
-						<groupId>com.vladsch.flexmark</groupId>
-						<artifactId>flexmark-all</artifactId>
-						<version>0.19.3</version>
-					</dependency>
-					<dependency>
-						<groupId>org.slf4j</groupId>
-						<artifactId>slf4j-api</artifactId>
-						<version>1.7.5</version>
-					</dependency>
-
-					<dependency>
-						<groupId>org.kohsuke</groupId>
-						<artifactId>wordnet-random-name</artifactId>
-						<version>1.3</version>
-					</dependency>
-				</dependencies>
-			</dependencyManagement>
 			<build>
 				<plugins>
 					<!-- Creating current year element -->
@@ -2009,111 +1677,6 @@
 							<groupId>io.teecube.t3</groupId>
 							<artifactId>t3-site-enhancer</artifactId>
 							<version>0.0.17</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${project.version}</version> -->
-							<dependencies>
-								<dependency>
-									<groupId>io.teecube.t3</groupId>
-									<artifactId>t3-common</artifactId>
-									<version>0.0.17</version> <!-- unleash: 1=<version>${project.version}</version> 3=<version>${project.version}</version> -->
-									<exclusions>
-										<exclusion>
-											<groupId>org.eclipse.aether</groupId>
-											<artifactId>aether-util</artifactId>
-										</exclusion>
-									</exclusions>
-								</dependency>
-								<dependency>
-									<groupId>org.rendersnake</groupId>
-									<artifactId>rendersnake</artifactId>
-									<version>${rendersnake-version}</version>
-								</dependency>
-
-								<!-- Maven dependencies -->
-								<dependency>
-									<groupId>org.apache.maven</groupId>
-									<artifactId>maven-core</artifactId>
-									<version>${maven.version}</version>
-								</dependency>
-								<dependency>
-									<groupId>org.apache.maven</groupId>
-									<artifactId>maven-model</artifactId>
-									<version>${maven.version}</version>
-								</dependency>
-								<dependency>
-									<groupId>org.apache.maven</groupId>
-									<artifactId>maven-project</artifactId>
-									<version>${maven.project}</version>
-								</dependency>
-								<dependency>
-									<groupId>org.apache.maven</groupId>
-									<artifactId>maven-plugin-api</artifactId>
-									<version>${maven.version}</version>
-								</dependency>
-								<dependency>
-									<groupId>org.apache.maven.plugins</groupId>
-									<artifactId>maven-resources-plugin</artifactId>
-									<version>${maven.plugin.resources}</version>
-								</dependency>
-
-								<!-- Apache commons -->
-								<dependency>
-									<groupId>commons-io</groupId>
-									<artifactId>commons-io</artifactId>
-									<version>${apache.plugin.commons-io}</version>
-								</dependency>
-								<dependency>
-									<groupId>org.apache.commons</groupId>
-									<artifactId>commons-lang3</artifactId>
-									<version>${apache.plugin.commons-lang3}</version>
-								</dependency>
-								<dependency>
-									<groupId>org.apache.commons</groupId>
-									<artifactId>commons-collections4</artifactId>
-									<version>${apache.plugin.commons-collections}</version>
-								</dependency>
-								<dependency>
-									<groupId>org.apache.commons</groupId>
-									<artifactId>commons-exec</artifactId>
-									<version>${apache.plugin.commons-exec}</version>
-								</dependency>
-								<dependency>
-									<groupId>org.apache.ant</groupId>
-									<artifactId>ant</artifactId>
-									<version>${apache.plugin.ant}</version>
-								</dependency>
-
-								<!-- others -->
-								<dependency>
-									<groupId>org.reflections</groupId>
-									<artifactId>reflections</artifactId>
-									<version>${org.reflections.version}</version>
-								</dependency>
-								<dependency>
-									<groupId>org.twdata.maven</groupId>
-									<artifactId>mojo-executor</artifactId>
-									<version>${mojo-executor.version}</version>
-								</dependency>
-								<dependency>
-									<groupId>com.google.guava</groupId>
-									<artifactId>guava</artifactId>
-									<version>${guava.version}</version>
-								</dependency>
-								<dependency>
-									<groupId>dom4j</groupId>
-									<artifactId>dom4j</artifactId>
-									<version>${dom4j.version}</version>
-								</dependency>
-								<dependency>
-									<groupId>org.jooq</groupId>
-									<artifactId>joox</artifactId>
-									<version>${joox.version}</version>
-								</dependency>
-
-								<dependency>
-									<groupId>org.apache.maven.resolver</groupId>
-									<artifactId>maven-resolver-util</artifactId>
-									<version>1.1.1</version>
-								</dependency>
-							</dependencies>
 							<configuration>
 								<topMenus>
 									<topMenu>
@@ -2354,27 +1917,22 @@
 				<dependency>
 					<groupId>org.apache.maven.plugin-tools</groupId>
 					<artifactId>maven-plugin-annotations</artifactId>
-					<version>${maven.plugin.annotations}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.maven</groupId>
 					<artifactId>maven-plugin-api</artifactId>
-					<version>${maven.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.maven</groupId>
 					<artifactId>maven-model</artifactId>
-					<version>${maven.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.maven</groupId>
 					<artifactId>maven-artifact</artifactId>
-					<version>${maven.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.maven</groupId>
 					<artifactId>maven-project</artifactId>
-					<version>${maven.project}</version>
 				</dependency>
 
 				<!-- logging -->
