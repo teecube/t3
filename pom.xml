@@ -3,7 +3,7 @@
 
 	<groupId>io.teecube</groupId>
 	<artifactId>t3</artifactId>
-	<version>0.0.18-SNAPSHOT</version>
+	<version>0.0.17</version>
 	<packaging>pom</packaging>
 
 	<name>${ecosystemName}</name> <!-- unleash: 2=<name>${ecosystemName}</name> 3=<name>&#36;{ecosystemName}</name> -->
@@ -29,6 +29,28 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<inceptionYear>2016</inceptionYear>
+
+		<apache.plugin.commons-collections>4.2</apache.plugin.commons-collections>
+		<apache.plugin.commons-exec>1.3</apache.plugin.commons-exec>
+		<apache.plugin.commons-io>2.6</apache.plugin.commons-io>
+		<apache.plugin.commons-lang3>3.8.1</apache.plugin.commons-lang3>
+		<apache.plugin.ant>1.10.5</apache.plugin.ant>
+
+		<mycila.plugin.license>3.0</mycila.plugin.license>
+
+		<jvnet.maven-jaxb2-plugin>0.14.0</jvnet.maven-jaxb2-plugin>
+		<codehaus.build-helper-maven-plugin>3.0.0</codehaus.build-helper-maven-plugin>
+
+		<org.reflections.version>0.9.11</org.reflections.version>
+		<mojo-executor.version>2.3.0</mojo-executor.version>
+		<guava.version>26.0-jre</guava.version>
+		<dom4j.version>1.6.1</dom4j.version>
+		<joox.version>1.3.0</joox.version> <!-- do not update -->
+
+		<rendersnake-version>1.9.0</rendersnake-version>
+		<moxy-version>2.7.3</moxy-version>
+		<javax.mail-api>1.6.2</javax.mail-api>
+		<logback-version>1.2.3</logback-version>
 	</properties>
 
 	<modules>
@@ -154,24 +176,14 @@
 
 			<!-- Apache commons -->
 			<dependency>
-				<groupId>commons-io</groupId>
-				<artifactId>commons-io</artifactId>
-				<version>2.6</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-lang3</artifactId>
-				<version>3.8.1</version>
-			</dependency>
-			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-collections4</artifactId>
-				<version>4.2</version>
+				<version>4.4</version>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-compress</artifactId>
-				<version>1.18</version>
+				<groupId>commons-configuration</groupId>
+				<artifactId>commons-configuration</artifactId>
+				<version>1.10</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.commons</groupId>
@@ -179,12 +191,64 @@
 				<version>1.3</version>
 			</dependency>
 			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>2.6</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>3.9</version>
+			</dependency>
+			<dependency>
 				<groupId>org.apache.ant</groupId>
 				<artifactId>ant</artifactId>
-				<version>1.10.5</version>
+				<version>1.10.6</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-compress</artifactId>
+				<version>1.18</version>
 			</dependency>
 
 			<!-- others -->
+
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.12</version>
+			</dependency>
+
+			<!-- generated help mojo has a dependency to plexus-utils -->
+			<dependency>
+				<groupId>org.codehaus.plexus</groupId>
+				<artifactId>plexus-archiver</artifactId>
+				<version>4.1.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.plexus</groupId>
+				<artifactId>plexus-container-default</artifactId>
+				<version>2.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.plexus</groupId>
+				<artifactId>plexus-interpolation</artifactId>
+				<version>1.26</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.plexus</groupId>
+				<artifactId>plexus-utils</artifactId>
+				<version>3.2.1</version>
+			</dependency>
+
+			<!-- force version of this transitive dependencies to avoid this bug:
+				https://bugs.eclipse.org/bugs/show_bug.cgi?id=418583 -->
+			<dependency>
+				<groupId>com.ibm.icu</groupId>
+				<artifactId>icu4j</artifactId>
+				<version>64.2</version>
+			</dependency>
+
 			<dependency>
 				<groupId>org.reflections</groupId>
 				<artifactId>reflections</artifactId>
@@ -195,6 +259,7 @@
 				<artifactId>mojo-executor</artifactId>
 				<version>2.3.0</version>
 			</dependency>
+
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
@@ -208,37 +273,62 @@
 			<dependency>
 				<groupId>org.jooq</groupId>
 				<artifactId>joox</artifactId>
-				<version>1.6.0</version>
+				<version>1.3.0</version> <!-- do not update -->
 			</dependency>
 			<dependency>
 				<groupId>org.rendersnake</groupId>
 				<artifactId>rendersnake</artifactId>
-				<version>1.8</version>
+				<version>1.9.0</version>
 			</dependency>
+
+			<!-- We use MOXy to have proper namespace prefixes handling -->
+			<dependency>
+				<groupId>org.eclipse.persistence</groupId>
+				<artifactId>org.eclipse.persistence.moxy</artifactId>
+				<version>2.7.4</version>
+			</dependency>
+
+			<dependency>
+				<groupId>javax.mail</groupId>
+				<artifactId>javax.mail-api</artifactId>
+				<version>1.6.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>truezip-utils</artifactId>
+				<version>1.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>truezip-maven-plugin</artifactId>
+				<version>1.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jdom</groupId>
+				<artifactId>jdom2</artifactId>
+				<version>2.0.6</version>
+			</dependency>
+			<dependency>
+				<groupId>jaxen</groupId>
+				<artifactId>jaxen</artifactId>
+				<version>1.2.0</version>
+			</dependency>
+
 			<dependency>
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
-				<version>1.14.8</version>
 				<!-- do not update version. details:
-                * https://stackoverflow.com/questions/35550460/writing-custom-lombok-annotation-handlers
-                * https://groups.google.com/forum/#!topic/project-lombok/xI177a9BykQ
-                -->
+					* https://stackoverflow.com/questions/35550460/writing-custom-lombok-annotation-handlers
+					* https://groups.google.com/forum/#!topic/project-lombok/xI177a9BykQ
+				-->
+				<version>1.14.8</version>
 			</dependency>
 			<dependency>
 				<groupId>org.kohsuke.metainf-services</groupId>
 				<artifactId>metainf-services</artifactId>
 				<version>1.8</version>
 			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>1.7.5</version>
-			</dependency>
-			<dependency>
-				<groupId>com.mashape.unirest</groupId>
-				<artifactId>unirest-java</artifactId>
-				<version>1.4.9</version>
-			</dependency>
+
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-core</artifactId>
@@ -259,16 +349,34 @@
 				<artifactId>jackson-datatype-joda</artifactId>
 				<version>2.9.9</version>
 			</dependency>
+
 			<dependency>
 				<groupId>joda-time</groupId>
 				<artifactId>joda-time</artifactId>
-				<version>2.10</version>
+				<version>2.10.3</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.mashape.unirest</groupId>
+				<artifactId>unirest-java</artifactId>
+				<version>1.4.9</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.vladsch.flexmark</groupId>
 				<artifactId>flexmark-all</artifactId>
-                <version>0.19.3</version>
+				<version>0.19.3</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.7.5</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.kohsuke</groupId>
+				<artifactId>wordnet-random-name</artifactId>
+				<version>1.3</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -1454,255 +1562,12 @@
 					<missing>ignore.additional.dependencies</missing>
 				</file>
 			</activation>
-			<properties>
-				<apache.plugin.commons-collections>4.2</apache.plugin.commons-collections>
-				<apache.plugin.commons-configuration>1.10</apache.plugin.commons-configuration>
-				<apache.plugin.commons-exec>1.3</apache.plugin.commons-exec>
-				<apache.plugin.commons-io>2.6</apache.plugin.commons-io>
-				<apache.plugin.commons-lang3>3.8.1</apache.plugin.commons-lang3>
-				<apache.plugin.ant>1.10.5</apache.plugin.ant>
-				<apache.plugin.commons-compress>1.18</apache.plugin.commons-compress>
-
-				<junit.plugin>4.12</junit.plugin>
-
-				<mycila.plugin.license>3.0</mycila.plugin.license>
-
-				<jvnet.maven-jaxb2-plugin>0.14.0</jvnet.maven-jaxb2-plugin>
-				<codehaus.build-helper-maven-plugin>3.0.0</codehaus.build-helper-maven-plugin>
-
-				<org.reflections.version>0.9.11</org.reflections.version>
-				<mojo-executor.version>2.3.0</mojo-executor.version>
-				<guava.version>26.0-jre</guava.version>
-				<dom4j.version>1.6.1</dom4j.version>
-				<joox.version>1.3.0</joox.version> <!-- do not update -->
-
-				<plexus-archiver.version>3.6.0</plexus-archiver.version>
-				<plexus-container-default.version>1.7.1</plexus-container-default.version>
-				<plexus-interpolation.version>1.25</plexus-interpolation.version>
-				<plexus-utils.version>3.1.0</plexus-utils.version>
-
-				<icu4j.version>52.1</icu4j.version>
-
-				<rendersnake-version>1.9.0</rendersnake-version>
-				<moxy-version>2.7.3</moxy-version>
-				<javax.mail-api>1.6.2</javax.mail-api>
-				<truezip-version>1.2</truezip-version>
-				<jdom-version>2.0.6</jdom-version>
-				<jaxen-version>1.1.6</jaxen-version>
-				<logback-version>1.2.3</logback-version>
-				<lombok-version>1.14.8</lombok-version> <!-- do not update version. details:
-                * https://stackoverflow.com/questions/35550460/writing-custom-lombok-annotation-handlers
-                * https://groups.google.com/forum/#!topic/project-lombok/xI177a9BykQ
-                -->
-				<metainf-services-version>1.8</metainf-services-version>
-				<jackson-version>2.9.9</jackson-version>
-				<joda-time-version>2.10</joda-time-version>
-				<unirest-version>1.4.9</unirest-version>
-			</properties>
 			<dependencyManagement>
 				<dependencies>
 					<dependency>
 						<groupId>io.teecube.t3</groupId>
 						<artifactId>t3-common</artifactId>
 						<version>0.0.18-SNAPSHOT</version> <!-- unleash: 2=<version>${project.version}</version> 3=<version>${unleash.developmentVersion}</version> -->
-					</dependency>
-
-					<dependency>
-						<groupId>org.apache.commons</groupId>
-						<artifactId>commons-collections4</artifactId>
-						<version>${apache.plugin.commons-collections}</version>
-					</dependency>
-					<dependency>
-						<groupId>commons-configuration</groupId>
-						<artifactId>commons-configuration</artifactId>
-						<version>${apache.plugin.commons-configuration}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.commons</groupId>
-						<artifactId>commons-exec</artifactId>
-						<version>${apache.plugin.commons-exec}</version>
-					</dependency>
-					<dependency>
-						<groupId>commons-io</groupId>
-						<artifactId>commons-io</artifactId>
-						<version>${apache.plugin.commons-io}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.commons</groupId>
-						<artifactId>commons-lang3</artifactId>
-						<version>${apache.plugin.commons-lang3}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.ant</groupId>
-						<artifactId>ant</artifactId>
-						<version>${apache.plugin.ant}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.commons</groupId>
-						<artifactId>commons-compress</artifactId>
-						<version>${apache.plugin.commons-compress}</version>
-					</dependency>
-
-					<dependency>
-						<groupId>junit</groupId>
-						<artifactId>junit</artifactId>
-						<version>${junit.plugin}</version>
-					</dependency>
-
-					<!-- generated help mojo has a dependency to plexus-utils -->
-					<dependency>
-						<groupId>org.codehaus.plexus</groupId>
-						<artifactId>plexus-archiver</artifactId>
-						<version>${plexus-archiver.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.codehaus.plexus</groupId>
-						<artifactId>plexus-container-default</artifactId>
-						<version>${plexus-container-default.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.codehaus.plexus</groupId>
-						<artifactId>plexus-interpolation</artifactId>
-						<version>${plexus-interpolation.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.codehaus.plexus</groupId>
-						<artifactId>plexus-utils</artifactId>
-						<version>${plexus-utils.version}</version>
-					</dependency>
-
-					<!-- force version of this transitive dependencies to avoid this bug:
-						https://bugs.eclipse.org/bugs/show_bug.cgi?id=418583 -->
-					<dependency>
-						<groupId>com.ibm.icu</groupId>
-						<artifactId>icu4j</artifactId>
-						<version>${icu4j.version}</version>
-					</dependency>
-
-					<dependency>
-						<groupId>org.reflections</groupId>
-						<artifactId>reflections</artifactId>
-						<version>${org.reflections.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.twdata.maven</groupId>
-						<artifactId>mojo-executor</artifactId>
-						<version>${mojo-executor.version}</version>
-					</dependency>
-
-					<dependency>
-						<groupId>com.google.guava</groupId>
-						<artifactId>guava</artifactId>
-						<version>${guava.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>dom4j</groupId>
-						<artifactId>dom4j</artifactId>
-						<version>${dom4j.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.jooq</groupId>
-						<artifactId>joox</artifactId>
-						<version>${joox.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.rendersnake</groupId>
-						<artifactId>rendersnake</artifactId>
-						<version>${rendersnake-version}</version>
-					</dependency>
-
-					<!-- We use MOXy to have proper namespace prefixes handling -->
-					<dependency>
-						<groupId>org.eclipse.persistence</groupId>
-						<artifactId>org.eclipse.persistence.moxy</artifactId>
-						<version>${moxy-version}</version>
-					</dependency>
-
-					<dependency>
-						<groupId>javax.mail</groupId>
-						<artifactId>javax.mail-api</artifactId>
-						<version>${javax.mail-api}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>truezip-utils</artifactId>
-						<version>${truezip-version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>truezip-maven-plugin</artifactId>
-						<version>${truezip-version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.jdom</groupId>
-						<artifactId>jdom2</artifactId>
-						<version>${jdom-version}</version>
-					</dependency>
-					<dependency>
-						<groupId>jaxen</groupId>
-						<artifactId>jaxen</artifactId>
-						<version>${jaxen-version}</version>
-					</dependency>
-
-					<dependency>
-						<groupId>org.projectlombok</groupId>
-						<artifactId>lombok</artifactId>
-						<version>${lombok-version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.kohsuke.metainf-services</groupId>
-						<artifactId>metainf-services</artifactId>
-						<version>${metainf-services-version}</version>
-					</dependency>
-
-					<dependency>
-						<groupId>com.fasterxml.jackson.core</groupId>
-						<artifactId>jackson-core</artifactId>
-						<version>${jackson-version}</version>
-					</dependency>
-					<dependency>
-						<groupId>com.fasterxml.jackson.core</groupId>
-						<artifactId>jackson-databind</artifactId>
-						<version>${jackson-version}</version>
-					</dependency>
-					<dependency>
-						<groupId>com.fasterxml.jackson.core</groupId>
-						<artifactId>jackson-annotations</artifactId>
-						<version>${jackson-version}</version>
-					</dependency>
-					<dependency>
-						<groupId>com.fasterxml.jackson.datatype</groupId>
-						<artifactId>jackson-datatype-joda</artifactId>
-						<version>${jackson-version}</version>
-					</dependency>
-
-					<dependency>
-						<groupId>joda-time</groupId>
-						<artifactId>joda-time</artifactId>
-						<version>${joda-time-version}</version>
-					</dependency>
-
-					<dependency>
-						<groupId>com.mashape.unirest</groupId>
-						<artifactId>unirest-java</artifactId>
-						<version>${unirest-version}</version>
-					</dependency>
-
-					<dependency>
-						<groupId>com.vladsch.flexmark</groupId>
-						<artifactId>flexmark-all</artifactId>
-						<version>0.19.3</version>
-					</dependency>
-					<dependency>
-						<groupId>org.slf4j</groupId>
-						<artifactId>slf4j-api</artifactId>
-						<version>1.7.5</version>
-					</dependency>
-
-					<dependency>
-						<groupId>org.kohsuke</groupId>
-						<artifactId>wordnet-random-name</artifactId>
-						<version>1.3</version>
 					</dependency>
 				</dependencies>
 			</dependencyManagement>
